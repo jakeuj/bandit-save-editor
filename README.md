@@ -2,7 +2,7 @@
 
 《塔防山賊模擬器》的繁體中文存檔修改器。使用瀏覽器讀取 `.dat`，修改後匯出副本；存檔全程在本機處理。
 
-**[開啟修改器](https://jakeuj.github.io/bandit-save-editor/)**
+**[開啟修改器](https://blog.jakeuj.com/bandit-save-editor/)**
 
 ## 功能
 
@@ -54,6 +54,6 @@ node --test tests/save-core.test.cjs
 
 GitHub Pages 的來源為 `main` 分支根目錄，`.nojekyll` 停用 Jekyll 處理。推送 `main` 後由 GitHub Pages 自動部署。
 
-網站入口為 `index.html`。搜尋與分享資訊設定在 HTML `<head>`，可編輯的分享圖片來源為 `assets/social-card.svg`，對外提供 `assets/share-card-v1.png`。
+網站入口為 `index.html`。搜尋與分享資訊設定在 HTML `<head>`，可編輯的分享圖片來源為 `assets/social-card.svg`，對外提供 `assets/share-card-v2.png`。
 
 本 repository 不含玩家存檔、比對報告或完整遊戲程式。
