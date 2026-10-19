@@ -1,0 +1,13 @@
+# Player data and local inspection artifacts must stay outside this repository.
+*.dat
+*.dat.*
+*.bak
+*.log
+*.csv
+node_modules/
+playwright-report/
+test-results/
+.env
+.env.*
+.DS_Store
+Thumbs.db
