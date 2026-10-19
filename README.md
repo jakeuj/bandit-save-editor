@@ -52,7 +52,7 @@ node --test tests/save-core.test.cjs
 
 ## GitHub Pages
 
-GitHub Pages 的來源為 `main` 分支根目錄，`.nojekyll` 停用 Jekyll 處理。推送 `main` 後由 GitHub Pages 自動部署。
+GitHub Pages 使用 `.github/workflows/pages.yml` 發布。推送 `main` 後，流程會先驗證核心讀寫功能，再將 `index.html`、`sitemap.xml`、`.nojekyll` 與 `assets/` 打包部署；也可從 Actions 手動執行。網站不需要 Jekyll 或其他建置工具。
 
 網站入口為 `index.html`。搜尋與分享資訊設定在 HTML `<head>`，可編輯的分享圖片來源為 `assets/social-card.svg`，對外提供 `assets/share-card-v2.png`。
 

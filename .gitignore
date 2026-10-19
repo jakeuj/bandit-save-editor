@@ -5,6 +5,7 @@
 *.log
 *.csv
 node_modules/
+_site/
 playwright-report/
 test-results/
 .env
