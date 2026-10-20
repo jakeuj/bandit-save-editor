@@ -135,3 +135,7 @@ node scripts/verify-game.cjs --state /outside/repo/state.json --stop
 ### Mac 存檔位置補充
 
 V1.0.9.1 的 `savedir/eaNsave.dat` 是「雲存檔」下載快取，`backup/eaNsave.dat` 為自動備份。手動「讀檔」使用 `save\\eaNsave.dat`；目前 Mac 準備工具未正規化這一組路徑，因此在 `game/` 下產生**檔名包含反斜線**的 `save\ea1save.dat` 等檔案，而非 `save/` 子目錄。本輪已實際寫入並在重啟後讀回此路徑；沒有修改正式啟動器。修改存檔須放回取出時的同一位置，並選對應讀檔分頁。
+
+### 正式發布
+
+功能提交 `e5487de` 的 [GitHub Pages 工作流程](https://github.com/jakeuj/bandit-save-editor/actions/runs/39394230752)已通過建置與部署。正式首頁、`index.html` 離線下載內容、Mac 指南、sitemap、favicon、分享圖及準備工具皆為 HTTP 200，與本機發布內容逐 byte 一致；HTML SHA-256 為 `d946a9726ab60840e855a35c8d4c120f37a65bf85f22d01b9d0b5a0e48dcb6a4`。正式頁面圖鑑顯示 724／843／22／1762 筆索引資訊，無瀏覽器錯誤，390px 圖鑑頁面無水平溢位。
