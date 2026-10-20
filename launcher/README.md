@@ -1,0 +1,23 @@
+# macOS ARM64 實驗啟動器
+
+使用自己 Steam 安裝的《塔防山賊模擬器》資料，以及官方 NW.js SDK 0.82.0 ARM64。已在 Apple M4 Max 上驗證原生主選單、Steam 雲存檔清單及支援者 DLC 辨識；完整遊玩、存檔寫入、雲端上傳與成就仍待驗證。
+
+需要 macOS Apple Silicon 與 Python 3.9 或更新版本。此目錄只包含準備工具，不提供遊戲內容或玩家存檔。
+
+```sh
+python3 launcher/prepare-macos.py
+```
+
+預設從 `NGO-Steam-0` bottle 的 `bandit` 安裝目錄複製，輸出到 `~/bandit-mac-port`；可用 `--source`、`--output` 指定其他位置。首次下載官方 runtime 約 141 MiB，並核對固定 SHA-256。工具僅支援已核對的遊戲腳本指紋，遊戲更新時會停止，需重新調查。
+
+準備完成後，雙擊 `~/bandit-mac-port/啟動山賊.command`。遊戲必須由此啟動器開啟，因為修正後的資料根目錄使用啟動時的 working directory。
+
+- Steam 安裝目錄與原始存檔不會被改動。
+- 首次準備複製 `savedir` 與 `record.dat`；之後準備不會覆蓋 Mac 進度。
+- Mac 存檔位於 `~/bandit-mac-port/game/savedir`，自動備份位於 `game/backup`，與 Windows 存檔分開。
+- Chromium profile 位於 `~/bandit-mac-port/profile`，啟動 log 位於 `logs/game.log`。
+- 原版 Greenworks 與 Steam 驗證保留。若要使用 Steam 功能，需另外開啟並登入 **Mac 版 Steam**；CrossOver 裡的 Windows Steam 無法供 macOS dylib 使用。
+
+修正範圍是 Construct NW.js `AppFolder`、AJAX 外置檔案 fallback、`savedir`／`backup` 分隔符，以及 icon manifest 的路徑。不修改 Steam 身分、授權、成就或 DLC 判定。
+
+調查證據與 Nevergrind 比較見 [macOS runtime 調查](../docs/research/macos-runtime-investigation.md)。

@@ -52,8 +52,14 @@ node --test tests/save-core.test.cjs
 
 ## GitHub Pages
 
-GitHub Pages 使用 `.github/workflows/pages.yml` 發布。推送 `main` 後，流程會先驗證核心讀寫功能，再將 `index.html`、`sitemap.xml`、`.nojekyll` 與 `assets/` 打包部署；也可從 Actions 手動執行。網站不需要 Jekyll 或其他建置工具。
+GitHub Pages 使用 `.github/workflows/pages.yml` 發布。推送 `main` 後，流程會先驗證核心讀寫功能，再將 `index.html`、`mac.html`、`sitemap.xml`、`.nojekyll`、`assets/` 與 `launcher/prepare-macos.py` 打包部署；也可從 Actions 手動執行。網站不需要 Jekyll 或其他建置工具。
 
 網站入口為 `index.html`。搜尋與分享資訊設定在 HTML `<head>`，可編輯的分享圖片來源為 `assets/social-card.svg`，對外提供 `assets/share-card-v2.png`。
 
 本 repository 不含玩家存檔、比對報告或完整遊戲程式。
+
+## macOS 原生執行研究
+
+已以 NW.js 0.82.0 ARM64 原生開啟遊戲，並確認 Steam 雲存檔清單與 DLC 辨識。隔離副本的準備工具與啟動方式見 [launcher/README.md](launcher/README.md)，CrossOver GPU 錯誤、實測範圍及 Nevergrind 比較見 [調查筆記](docs/research/macos-runtime-investigation.md)。
+
+網站提供 [Mac 原生執行指南](https://blog.jakeuj.com/bandit-save-editor/mac.html) 與準備工具下載。

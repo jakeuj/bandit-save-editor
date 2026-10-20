@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'self'; base-uri 'none'; form-action 'none'">
+<title>塔防山賊模擬器 Mac 原生執行指南｜山寨帳房</title>
+<meta name="description" content="在 Apple Silicon Mac 上用 NW.js 0.82.0 ARM64 執行塔防山賊模擬器。下載準備工具，使用自己安裝的遊戲資料，保留原始存檔，查看 Steam 與存檔驗證進度。">
+<link rel="canonical" href="https://blog.jakeuj.com/bandit-save-editor/mac.html">
+<link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
+<link rel="sitemap" type="application/xml" href="./sitemap.xml">
+<meta name="theme-color" content="#0f1719">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:site_name" content="山寨帳房">
+<meta property="og:title" content="塔防山賊模擬器 Mac 原生執行指南｜山寨帳房">
+<meta property="og:description" content="下載 Apple Silicon Mac 準備工具，使用自己的遊戲資料與獨立存檔副本。附已驗證功能與待確認事項。">
+<meta property="og:url" content="https://blog.jakeuj.com/bandit-save-editor/mac.html">
+<meta property="og:image" content="https://blog.jakeuj.com/bandit-save-editor/assets/share-card-v2.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="山寨帳房：塔防山賊模擬器存檔工具。">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="塔防山賊模擬器 Mac 原生執行指南｜山寨帳房">
+<meta name="twitter:description" content="Apple Silicon 原生啟動、獨立存檔與 Steam 功能的準備及驗證指南。">
+<meta name="twitter:image" content="https://blog.jakeuj.com/bandit-save-editor/assets/share-card-v2.png">
+<meta name="twitter:image:alt" content="山寨帳房：塔防山賊模擬器存檔工具。">
+<style>
+:root{color-scheme:dark;--bg:#0f1719;--panel:#172124;--line:#2b393c;--text:#ecf0e9;--muted:#a6b7b9;--gold:#e8bb72;--teal:#88c9b5}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.8 "Segoe UI","Microsoft JhengHei",sans-serif}a{color:var(--teal);text-underline-offset:4px}a:focus-visible,summary:focus-visible{outline:2px solid var(--gold);outline-offset:5px}main{max-width:1000px;margin:auto;padding:28px 28px 64px}nav{display:flex;justify-content:space-between;gap:20px;border-bottom:1px solid var(--line);padding-bottom:20px;font-size:14px}.brand{color:var(--gold);font-weight:700;letter-spacing:3px;text-decoration:none}header{padding:56px 0 30px}.eyebrow{color:var(--gold);font-size:12px;letter-spacing:3px}h1{font-size:clamp(30px,5vw,46px);line-height:1.35;letter-spacing:1px;margin:14px 0 20px}h2{font-size:23px;margin:0 0 15px}h3{font-size:17px;margin:0 0 9px}p{margin:0 0 14px}.lead{color:var(--muted);max-width:760px}.actions{display:flex;flex-wrap:wrap;gap:12px;margin:25px 0 0}.button{display:inline-block;padding:11px 19px;border:1px solid var(--line);border-radius:8px;text-decoration:none}.button.primary{background:var(--gold);color:#241e14;font-weight:700;border-color:var(--gold)}.button:hover{filter:brightness(1.1)}.label{display:inline-block;border:1px solid #40504a;border-radius:20px;padding:2px 12px;color:var(--teal);font-size:12px;margin-bottom:12px}section{margin-top:32px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:26px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.muted,small{color:var(--muted)}.date{font-size:12px;color:var(--muted)}ul,ol{padding-left:23px;margin:0}li{margin:7px 0}.steps>li{padding:5px 0 18px 8px}.steps>li:last-child{padding-bottom:0}.steps p{color:var(--muted);font-size:14px}code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.88em;overflow-wrap:anywhere;color:var(--gold)}pre{background:#10191c;border:1px solid var(--line);border-radius:8px;padding:15px;overflow:auto;max-width:100%;line-height:1.6}pre code{white-space:pre-wrap;word-break:break-word}.notice{background:#29271e;border-left:3px solid var(--gold);padding:15px 18px;color:#d7c7ab;margin:22px 0 0;font-size:14px}details{margin-top:16px}summary{cursor:pointer;color:var(--teal)}details p{margin-top:12px}.paths p{font-size:14px}footer{border-top:1px solid var(--line);margin-top:40px;padding-top:20px;color:var(--muted);font-size:13px}
+@media(max-width:640px){main{padding:20px 18px 40px}header{padding-top:36px}.grid{grid-template-columns:1fr}.panel{padding:21px}nav{font-size:12px}.actions{flex-direction:column}.button{text-align:center}.steps>li{padding-left:0}}
+</style>
+</head>
+<body>
+<main>
+ <nav aria-label="網站導覽"><a class="brand" href="./">山寨帳房</a><a href="./">返回存檔修改器 →</a></nav>
+ <header>
+  <div class="eyebrow">BANDIT / MACOS</div>
+  <h1>在 Mac 上，重回你的山寨。</h1>
+  <p class="lead">《塔防山賊模擬器》可以用 macOS 版 NW.js 執行。這份實驗啟動器使用你自己安裝的遊戲資料，建立 Apple Silicon 原生副本，原始遊戲與存檔留在原處。</p>
+  <div class="actions"><a class="button primary" href="./launcher/prepare-macos.py" download="prepare-macos.py">下載 Mac 準備工具 ↓</a><a class="button" href="https://github.com/jakeuj/bandit-save-editor/tree/main/launcher">查看程式與完整說明</a></div>
+ </header>
+ <div class="grid">
+  <section class="panel" aria-labelledby="verified"><span class="label">已實測</span><h2 id="verified">原生畫面與 Steam 連線</h2><ul><li>Apple M4 Max，以 ARM64 原生開啟主選單。</li><li>WebGL 2 繪圖。</li><li>Steam 雲存檔清單顯示角色與進度。</li><li>支援者 DLC 正確辨識。</li></ul><p class="date" style="margin:16px 0 0">測試日期：2026-10-20 · 遊戲 V1.0.9.1</p></section>
+  <section class="panel" aria-labelledby="pending"><span class="label">仍待驗證</span><h2 id="pending">完整遊玩與存檔流程</h2><ul><li>讀檔後進入遊戲及長時間穩定性。</li><li>遊戲內存檔與重啟續玩。</li><li>Steam 雲端上傳及成就。</li><li>DLC 遊戲內獎勵領取。</li></ul><p class="date" style="margin:16px 0 0">目前的成功畫面尚不代表以上項目已通過。</p></section>
+ </div>
+ <section class="panel" aria-labelledby="setup"><h2 id="setup">準備與啟動</h2>
+  <p class="muted">需要 Apple Silicon Mac（M 系列）、Python 3.9 以上，以及自己透過 Steam 安裝的遊戲檔案。Steam 功能需開啟並登入 Mac 版 Steam。</p>
+  <ol class="steps">
+   <li><h3>下載準備工具</h3><p>將上方的 <code>prepare-macos.py</code> 儲存到「下載項目」。工具不包含遊戲；首次執行會從 NW.js 官方下載約 141 MiB 的執行環境，並驗證檔案。</p></li>
+   <li><h3>在「終端機」執行</h3><pre><code>python3 ~/Downloads/prepare-macos.py</code></pre><p>預設讀取 CrossOver 的 <code>NGO-Steam-0</code> bottle 中，Steam <code>steamapps/common/bandit</code> 的遊戲資料。如果你的遊戲在別處，加上 <code>--source</code>，並將以下範例路徑改成實際的 bandit 資料夾：</p><pre><code>python3 ~/Downloads/prepare-macos.py --source "/你的 Steam 遊戲目錄/bandit"</code></pre></li>
+   <li><h3>開啟 Mac Steam，再啟動遊戲</h3><p>在 Finder 按 <kbd>⌘⇧G</kbd> 前往 <code>~/bandit-mac-port</code>，雙擊 <code>啟動山賊.command</code>。之後都從這個啟動器開啟遊戲。</p></li>
+  </ol>
+  <p class="notice">此工具目前只支援已核對的遊戲版本。若顯示「遊戲版本已變更」，請保留訊息並等待重新核對；不要直接略過檢查。</p>
+ </section>
+ <section class="panel paths" aria-labelledby="saves"><h2 id="saves">你的 Mac 存檔在哪裡？</h2>
+  <p>遊戲副本放在 <code>~/bandit-mac-port/game</code>；本機存檔在 <code>~/bandit-mac-port/game/savedir</code>，自動備份在 <code>game/backup</code>。</p>
+  <p>首次準備會複製原有存檔，之後重新準備會保留 Mac 進度。Mac 與 Windows 的本機存檔分開；搬移進度前，先比對並備份兩邊。</p>
+  <p>要用山寨帳房修改 Mac 存檔，選取 <code>savedir</code> 內的 <code>ea1save.dat</code>、<code>ea2save.dat</code> 或 <code>ea3save.dat</code>。結束遊戲後，再將已備份的修改副本放回相同位置。</p>
+  <a href="./">開啟山寨帳房存檔修改器 →</a>
+ </section>
+ <section class="panel" aria-labelledby="questions"><h2 id="questions">遇到問題</h2>
+  <details><summary>主選單可以開，但本機存檔顯示「沒有記錄」</summary><p>請確認使用產生的 <code>啟動山賊.command</code> 開啟，並檢查 <code>game/savedir</code> 是否有存檔。準備工具已修正 Mac 目錄與 Windows 分隔符的差異；直接開啟 NW.js 執行檔可能讀到別的位置。</p></details>
+  <details><summary>讀不到 Steam 雲存檔或 DLC</summary><p>先開啟並登入 Mac 版 Steam，再重新啟動遊戲。CrossOver 裡的 Windows Steam 無法提供這個原生副本所需的 Mac Steam 連線。</p></details>
+  <details><summary>CrossOver 為什麼開不起來？</summary><p>本次測試觀察到 GPU 子程序反覆當機；Mac 原生執行是另一條已驗證能開啟畫面的路線。詳細錯誤、Nevergrind 比較及測試範圍，見 <a href="https://github.com/jakeuj/bandit-save-editor/blob/main/docs/research/macos-runtime-investigation.md">調查筆記</a>。</p></details>
+  <details><summary>從哪裡查看錯誤訊息？</summary><p>啟動紀錄位於 <code>~/bandit-mac-port/logs/game.log</code>。回報時提供相關錯誤片段與遊戲版本即可，先移除個人資料。</p></details>
+ </section>
+ <footer>山寨帳房的獨立實驗工具。使用 NW.js 0.82.0 ARM64 與遊戲原附 Steam 模組；不提供遊戲檔案。<br><a href="https://nwjs.io/blog/v0.82.0/">NW.js 官方版本說明</a> · <a href="https://github.com/jakeuj/bandit-save-editor">GitHub 專案</a></footer>
+</main>
+</body>
+</html>
