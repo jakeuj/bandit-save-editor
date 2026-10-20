@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-20",
+  "gameVersion": "V1.0.9.1",
+  "eventFingerprint": "6661d77209c0e98069219965908fd4d6b9ee3dca84763c158dcd5f0a863df665",
+  "runtimeFingerprint": "58d634814f9ee8145ad553ffde60a6a511b5f68cf27f7ba86933d66216901998",
+  "environment": "macOS 27.0.1 / Apple M4 Max / NW.js 0.82.0 ARM64",
+  "method": "獨立 app、遊戲、profile 與存檔；由原版讀取進度函式讀檔、原版存檔函式寫出，停止程序後重新啟動並讀取遊戲寫出的檔案",
+  "checks": {
+    "loadedIntoMainLayout": true,
+    "nativeSaveWritten": true,
+    "processRestartedAndReloaded": true,
+    "allTenObservedCellsMatch": true,
+    "originalSaveHashesUnchanged": true,
+    "steamMutationsRedirectedToLocalMirror": true
+  },
+  "groups": {
+    "names": true,
+    "characterExperience": true,
+    "professionExperience": true,
+    "skillExperience": true
+  },
+  "scenarios": [
+    "山寨與角色改名",
+    "角色由 1 級跨至 3 級，餘額 500",
+    "已習得職業由 1 級跨至 3 級，保留一位小數餘額 1.5",
+    "伐木技藝由 1 級跨至 3 級，餘額 500",
+    "共用經驗與共用池投入／退款基數不因直接經驗增加而改動"
+  ],
+  "limits": [
+    "測試透過真實遊戲函式及本機檔案路徑；沒有模擬所有滑鼠選單操作",
+    "載入後暫停模擬時間以避免工作經驗干擾；不是長時間遊玩測試",
+    "未驗證真實雲端上傳、成就或統計寫入"
+  ],
+  "fingerprints": {
+    "data.json": "6661d77209c0e98069219965908fd4d6b9ee3dca84763c158dcd5f0a863df665",
+    "scripts/c3runtime.js": "58d634814f9ee8145ad553ffde60a6a511b5f68cf27f7ba86933d66216901998",
+    "cl.json": "c121cf702eb6a4edb184d7180ad83d41aa90efca4a1e5e21e652dd1ff24f47b7",
+    "js.json": "5c360c93cd1248fe96d0373428ddae4649698574d032b333432e4b777fcc0ee4",
+    "zy.json": "8dd8ccc0a6318d3e3a58bc4d9951fb57d281b812e8b3ce1ba68847eb5283c75c",
+    "sx.json": "8ec27d0f6adec862459a91bc02e20105651cbe39c2cd399ff212e21d42f8ad99",
+    "wp.json": "14516d34cedf209c497fca10699e179c26c43558c2a3253bc87c8b33493a82c4",
+    "kj.json": "b051136f1366eb1c990004a4fa8a2d8f90339c7defbc10eb90c68c2ff36e5309",
+    "jz.json": "4f2e35465ef62b3ead01daf7feef4355f9e5115de3ff471b3d926b98d925c620",
+    "rw.json": "705f541917d9a62cff9ef5805032fd29496fdc98b03a7f065ff3fc6fab937b4b",
+    "tf.json": "c8a3005201d8f17a0899584baf7e0286b073aa84d4697807edcd44e00902fa1f",
+    "ss.json": "4350cb979c4026ce0d8dc25e7807fde3d29a1d42fbd2e499673614a4f67e1bc7",
+    "lw.json": "7a4f5a5bfd5967f3a74e36aa9a0c2cda132619b2908bdc39b1406da4b346bde6"
+  }
+}

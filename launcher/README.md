@@ -1,6 +1,6 @@
 # macOS ARM64 實驗啟動器
 
-使用自己 Steam 安裝的《塔防山賊模擬器》資料，以及官方 NW.js SDK 0.82.0 ARM64。已在 Apple M4 Max 上驗證原生主選單、Steam 雲存檔清單及支援者 DLC 辨識；完整遊玩、存檔寫入、雲端上傳與成就仍待驗證。
+使用自己 Steam 安裝的《塔防山賊模擬器》資料，以及官方 NW.js SDK 0.82.0 ARM64。已在 Apple M4 Max 上驗證原生主選單、Steam 雲存檔清單及支援者 DLC 辨識；另以隔離測試確認載入修改副本、本機存檔及重啟讀回。長時間遊玩、真實雲端上傳與成就仍待驗證。
 
 需要 macOS Apple Silicon 與 Python 3.9 或更新版本。此目錄只包含準備工具，不提供遊戲內容或玩家存檔。
 
@@ -14,7 +14,8 @@ python3 launcher/prepare-macos.py
 
 - Steam 安裝目錄與原始存檔不會被改動。
 - 首次準備複製 `savedir` 與 `record.dat`；之後準備不會覆蓋 Mac 進度。
-- Mac 存檔位於 `~/bandit-mac-port/game/savedir`，自動備份位於 `game/backup`，與 Windows 存檔分開。
+- Mac「雲存檔」快取位於 `~/bandit-mac-port/game/savedir`，自動備份位於 `game/backup`，與 Windows 存檔分開。
+- V1.0.9.1 的手動「讀檔」使用 `save\\eaNsave.dat`。目前準備工具未正規化這組路徑，在 Mac 的 `game/` 下會產生檔名含反斜線的 `save\ea1save.dat` 等檔案。隔離測試已確認可寫入並重啟讀回；搬移或修改時保留實際檔名與位置，不能當成 `save/` 子目錄。
 - Chromium profile 位於 `~/bandit-mac-port/profile`，啟動 log 位於 `logs/game.log`。
 - 原版 Greenworks 與 Steam 驗證保留。若要使用 Steam 功能，需另外開啟並登入 **Mac 版 Steam**；CrossOver 裡的 Windows Steam 無法供 macOS dylib 使用。
 

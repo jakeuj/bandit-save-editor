@@ -4,7 +4,7 @@
 
 ## 結論
 
-**已成功沿用 Nevergrind「保留遊戲資料、換 macOS NW.js runtime」的方向，使用 NW.js SDK 0.82.0 osx-arm64 在 Apple M4 Max 原生開啟遊戲。** 已確認主選單、WebGL 2、Steam 模組載入；使用者畫面也證實雲存檔清單及支援者 DLC 辨識。完整讀檔進入遊戲、存檔寫入、重啟後續玩、雲端上傳及長時間穩定性仍待驗證。
+**已成功沿用 Nevergrind「保留遊戲資料、換 macOS NW.js runtime」的方向，使用 NW.js SDK 0.82.0 osx-arm64 在 Apple M4 Max 原生開啟遊戲。** 已確認主選單、WebGL 2、Steam 模組載入；使用者畫面也證實雲存檔清單及支援者 DLC 辨識。本輪隔離測試另確認修改副本進入主畫面、本機寫檔及重啟讀回；真實雲端上傳、成就與長時間穩定性仍待驗證。詳見 [存檔知識驗證紀錄](save-knowledge.md)。
 
 這不是把 `game.exe` 轉成 macOS 執行檔，而是由 macOS／ARM64 NW.js 執行相同 HTML、JavaScript、WebAssembly 與資產。NW.js 官方支援此種 macOS `app.nw` 封裝。[NW.js 封裝文件](https://docs.nwjs.io/For%20Users/Package%20and%20Distribute/)
 
@@ -47,7 +47,7 @@ Greengrinds 作者文件指定 NW.js 0.82.0，其他版本可能需替換原生 
 | Steam | 首次未開 Mac Steam 時初始化失敗；Mac Steam 啟動後，載入 `Steam.AppBundle/Steam/Contents/MacOS/steamclient.dylib` 成功 |
 | Steam Cloud 讀取 | 使用者提供畫面可見最新存檔及雲檔 1–3 的角色、地點、日期與遊玩時間；尚未驗證下載後進入遊戲或上傳 |
 | DLC | 使用者提供畫面右下角「支持者包 DLC」為綠色勾選；尚未測試遊戲內獎勵領取 |
-| 本機存檔 | 複製四份 `.dat` 至獨立 `savedir`，逐一 SHA-256 比對與原檔一致；修正讀寫路徑，尚未完成遊戲內寫入及重啟驗證 |
+| 本機存檔 | 初期複製四份 `.dat` 至獨立 `savedir` 並核對 SHA-256；本輪以隔離遊戲真實讀寫事件確認新增修改、寫檔及重啟讀回；來源存檔未變 |
 
 可重複準備工具：[`launcher/prepare-macos.py`](../../launcher/prepare-macos.py)，詳見 [launcher 說明](../../launcher/README.md)。本機已建立：
 

@@ -43,8 +43,8 @@
   <div class="actions"><a class="button primary" href="./launcher/prepare-macos.py" download="prepare-macos.py">下載 Mac 準備工具 ↓</a><a class="button" href="https://github.com/jakeuj/bandit-save-editor/tree/main/launcher">查看程式與完整說明</a></div>
  </header>
  <div class="grid">
-  <section class="panel" aria-labelledby="verified"><span class="label">已實測</span><h2 id="verified">原生畫面與 Steam 連線</h2><ul><li>Apple M4 Max，以 ARM64 原生開啟主選單。</li><li>WebGL 2 繪圖。</li><li>Steam 雲存檔清單顯示角色與進度。</li><li>支援者 DLC 正確辨識。</li></ul><p class="date" style="margin:16px 0 0">測試日期：2026-10-20 · 遊戲 V1.0.9.1</p></section>
-  <section class="panel" aria-labelledby="pending"><span class="label">仍待驗證</span><h2 id="pending">完整遊玩與存檔流程</h2><ul><li>讀檔後進入遊戲及長時間穩定性。</li><li>遊戲內存檔與重啟續玩。</li><li>Steam 雲端上傳及成就。</li><li>DLC 遊戲內獎勵領取。</li></ul><p class="date" style="margin:16px 0 0">目前的成功畫面尚不代表以上項目已通過。</p></section>
+  <section class="panel" aria-labelledby="verified"><span class="label">已實測</span><h2 id="verified">原生畫面、本機存檔與 Steam 連線</h2><ul><li>Apple M4 Max，以 ARM64 原生開啟主選單及遊戲主畫面。</li><li>WebGL 2 繪圖。</li><li>Steam 雲存檔清單與支援者 DLC 辨識。</li><li>隔離副本載入山寨帳房的新名稱與經驗修改。</li><li>遊戲本機存檔，結束後重啟讀回相同數值。</li></ul><p class="date" style="margin:16px 0 0">測試日期：2026-10-20 · 遊戲 V1.0.9.1。讀寫測試使用隔離副本，暫停模擬時間核對數值。</p></section>
+  <section class="panel" aria-labelledby="pending"><span class="label">仍待驗證</span><h2 id="pending">長時間遊玩與線上寫入</h2><ul><li>完整遊玩與長時間穩定性。</li><li>Steam 雲端上傳及成就。</li><li>DLC 遊戲內獎勵領取。</li></ul><p class="date" style="margin:16px 0 0">隔離測試將 Steam 寫入導向本機紀錄，尚未測試真實線上寫入。</p></section>
  </div>
  <section class="panel" aria-labelledby="setup"><h2 id="setup">準備與啟動</h2>
   <p class="muted">需要 Apple Silicon Mac（M 系列）、Python 3.9 以上，以及自己透過 Steam 安裝的遊戲檔案。Steam 功能需開啟並登入 Mac 版 Steam。</p>
@@ -56,13 +56,14 @@
   <p class="notice">此工具目前只支援已核對的遊戲版本。若顯示「遊戲版本已變更」，請保留訊息並等待重新核對；不要直接略過檢查。</p>
  </section>
  <section class="panel paths" aria-labelledby="saves"><h2 id="saves">你的 Mac 存檔在哪裡？</h2>
-  <p>遊戲副本放在 <code>~/bandit-mac-port/game</code>；本機存檔在 <code>~/bandit-mac-port/game/savedir</code>，自動備份在 <code>game/backup</code>。</p>
+  <p>遊戲副本放在 <code>~/bandit-mac-port/game</code>。請依遊戲的讀檔分頁選取對應進度：</p>
+  <ul><li><strong>雲存檔快取：</strong><code>game/savedir/eaNsave.dat</code></li><li><strong>自動備份：</strong><code>game/backup/eaNsave.dat</code></li><li><strong>手動讀檔：</strong>目前會在 <code>game/</code> 產生檔名包含反斜線的 <code>save\eaNsave.dat</code>；它不是 <code>save/</code> 子目錄。</li></ul>
   <p>首次準備會複製原有存檔，之後重新準備會保留 Mac 進度。Mac 與 Windows 的本機存檔分開；搬移進度前，先比對並備份兩邊。</p>
-  <p>要用山寨帳房修改 Mac 存檔，選取 <code>savedir</code> 內的 <code>ea1save.dat</code>、<code>ea2save.dat</code> 或 <code>ea3save.dat</code>。結束遊戲後，再將已備份的修改副本放回相同位置。</p>
+  <p><code>N</code> 是檔位 1、2 或 3。用山寨帳房編輯後，結束遊戲，將已備份的修改副本放回取出時的相同位置，再選對應分頁讀取。</p>
   <a href="./">開啟山寨帳房存檔修改器 →</a>
  </section>
  <section class="panel" aria-labelledby="questions"><h2 id="questions">遇到問題</h2>
-  <details><summary>主選單可以開，但本機存檔顯示「沒有記錄」</summary><p>請確認使用產生的 <code>啟動山賊.command</code> 開啟，並檢查 <code>game/savedir</code> 是否有存檔。準備工具已修正 Mac 目錄與 Windows 分隔符的差異；直接開啟 NW.js 執行檔可能讀到別的位置。</p></details>
+  <details><summary>主選單可以開，但「讀檔」顯示「沒有記錄」</summary><p>先確認是否選對分頁：<code>savedir</code> 對應「雲存檔」，不代表手動讀檔有紀錄。請使用產生的 <code>啟動山賊.command</code> 開啟，並依上方位置核對存檔；直接開啟 NW.js 執行檔可能讀到別的位置。</p></details>
   <details><summary>讀不到 Steam 雲存檔或 DLC</summary><p>先開啟並登入 Mac 版 Steam，再重新啟動遊戲。CrossOver 裡的 Windows Steam 無法提供這個原生副本所需的 Mac Steam 連線。</p></details>
   <details><summary>CrossOver 為什麼開不起來？</summary><p>本次測試觀察到 GPU 子程序反覆當機；Mac 原生執行是另一條已驗證能開啟畫面的路線。詳細錯誤、Nevergrind 比較及測試範圍，見 <a href="https://github.com/jakeuj/bandit-save-editor/blob/main/docs/research/macos-runtime-investigation.md">調查筆記</a>。</p></details>
   <details><summary>從哪裡查看錯誤訊息？</summary><p>啟動紀錄位於 <code>~/bandit-mac-port/logs/game.log</code>。回報時提供相關錯誤片段與遊戲版本即可，先移除個人資料。</p></details>
