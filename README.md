@@ -2,7 +2,7 @@
 
 《塔防山賊模擬器》的繁體中文存檔修改器。使用瀏覽器讀取 `.dat`，修改後匯出副本；存檔全程在本機處理。
 
-**[開啟修改器](https://blog.jakeuj.com/bandit-save-editor/)**
+**[開啟修改器](https://bandit.jakeuj.com/)**
 
 ## 功能
 
@@ -86,9 +86,9 @@ node scripts/build-editor.cjs
 
 ## GitHub Pages
 
-GitHub Pages 使用 `.github/workflows/pages.yml` 發布。推送 `main` 後，流程會先驗證核心讀寫功能，再將 `index.html`、`mac.html`、`sitemap.xml`、`.nojekyll`、`assets/` 與 `launcher/prepare-macos.py` 打包部署；也可從 Actions 手動執行。網站不需要 Jekyll 或其他建置工具。
+GitHub Pages 使用 `.github/workflows/pages.yml` 發布。推送 `main` 後，流程會先驗證核心讀寫功能，再將 `index.html`、`mac.html`、`sitemap.xml`、`robots.txt`、`.nojekyll`、`assets/` 與 `launcher/prepare-macos.py` 打包部署；也可從 Actions 手動執行。網站不需要 Jekyll 或其他建置工具。
 
-網站入口為 `index.html`。搜尋與分享資訊設定在 HTML `<head>`，可編輯的分享圖片來源為 `assets/social-card.svg`，對外提供 `assets/share-card-v2.png`。
+網站入口為 `index.html`。搜尋與分享資訊設定在 HTML `<head>`，可編輯的分享圖片來源為 `assets/social-card.svg`，對外提供 `assets/share-card-v3.png`。
 
 本 repository 不含玩家存檔、比對報告或完整遊戲程式。
 
@@ -96,4 +96,4 @@ GitHub Pages 使用 `.github/workflows/pages.yml` 發布。推送 `main` 後，�
 
 已以 NW.js 0.82.0 ARM64 原生開啟遊戲，並確認 Steam 雲存檔清單與 DLC 辨識；本輪另以隔離副本確認新增修改的載入、本機存檔及重啟讀回。長時間遊玩、真實雲端上傳與成就仍待驗證。副本準備與三類存檔位置見 [launcher/README.md](launcher/README.md)，CrossOver GPU 錯誤、實測範圍及 Nevergrind 比較見 [調查筆記](docs/research/macos-runtime-investigation.md)。
 
-網站提供 [Mac 原生執行指南](https://blog.jakeuj.com/bandit-save-editor/mac.html) 與準備工具下載。
+網站提供 [Mac 原生執行指南](https://bandit.jakeuj.com/mac.html) 與準備工具下載。
