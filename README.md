@@ -38,8 +38,14 @@
 | 科技點 | `data[4][2][0]` |
 | 操練點 | `data[5][2][0]` |
 | 材料數量 | `data[材料編號][6][0]` |
+| 山寨／角色名稱 | `data[1][1][0]`／`data[角色編號][1][2]` |
+| 角色等級／自然經驗餘額 | `data[角色編號][3][2]`／`data[角色編號][4][2]` |
+| 職業等級／經驗餘額 | `data[角色編號][職業編號][4]`／`data[角色編號][職業編號][5]` |
+| 技藝上限／等級／經驗餘額 | `data[角色編號][21+k][2]`／`data[角色編號][30+k][2]`／`data[角色編號][39+k][2]`，`k` 為 1–9 |
 
 材料名稱取自遊戲資料表；部分資料為重複名稱或占位名稱，不代表遊戲內都已開放。共用經驗與角色、職業、技藝經驗各自儲存。
+
+上表是辨識座標；等級與經驗餘額須透過「角色養成」一起結算，不能單獨修改。技藝上限目前唯讀。
 
 v2 依據 2026-10-20、遊戲 V1.0.9.1 的事件與 JavaScript 製作。程式證據、成長公式及遊戲驗證記錄見 [存檔知識調查](docs/research/save-knowledge.md)。遊戲更新後需要重新核對；存檔本身沒有可靠的完整 build 指紋，介面會顯示知識對應版本，不能只靠陣列尺寸保證新版相容。
 
@@ -64,7 +70,19 @@ node scripts/extract-game.cjs --source /path/to/unpacked/game --audit /tmp/bandi
 node scripts/build-editor.cjs
 ```
 
-來源指紋不符時停止；先核對新版事件與公式，再更新規則。原始分析、遊戲與個人存檔始終留在 repo 外。隔離遊戲驗證工具 `scripts/verify-game.cjs` 使用 Node.js 22 以上，保留真實授權初始化，將 Cloud、成就與統計寫入導向測試目錄。
+事件／runtime 指紋未知時停止；其他資料表指紋改變時，重建不保留原本的新增可寫旗標。先核對新版事件與公式，再更新規則及完整驗證紀錄。原始分析、遊戲與個人存檔始終留在 repo 外。隔離遊戲驗證工具 `scripts/verify-game.cjs` 使用 Node.js 22 以上，保留真實授權初始化，將 Cloud、成就與統計寫入導向測試目錄。
+
+## 文件入口
+
+| 需求 | 文件 |
+| --- | --- |
+| 核心 API、來源維護、知識更新、驗證與發布 | [維護指引](docs/maintenance.md) |
+| 欄位座標、成長公式、事件來源及實測範圍 | [存檔知識調查](docs/research/save-knowledge.md) |
+| Mac 準備、三類存檔位置與啟動方式 | [啟動器說明](launcher/README.md) |
+| CrossOver 問題、原生 runtime 與 Steam 調查 | [Mac 執行研究](docs/research/macos-runtime-investigation.md) |
+| 尚待驗收項目 | [SDD 任務](sdd/save-knowledge/tasks.md) |
+
+離線相依性檢查及線上 HTML 下載已通過；直接開啟本機 HTML 的完整 UI 流程仍待 Chrome／Edge 人工確認，步驟見維護指引。真實 Cloud 上傳、成就、DLC 獎勵及長時間遊玩亦維持待驗證。
 
 ## GitHub Pages
 
