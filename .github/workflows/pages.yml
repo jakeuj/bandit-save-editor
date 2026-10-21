@@ -29,7 +29,7 @@ jobs:
       - name: Prepare static files
         run: |
           mkdir -p _site
-          cp index.html mac.html manifest.webmanifest sw.js sitemap.xml .nojekyll _site/
+          cp index.html mac.html manifest.webmanifest sw.js sitemap.xml robots.txt .nojekyll _site/
           cp -R assets _site/assets
           mkdir -p _site/launcher
           cp launcher/prepare-macos.py _site/launcher/
