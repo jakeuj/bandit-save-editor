@@ -7,6 +7,8 @@ const htmlPath = path.join(root, 'index.html');
 let html = fs.readFileSync(htmlPath, 'utf8');
 const knowledge = JSON.parse(fs.readFileSync(path.join(root, 'knowledge/catalog.json'), 'utf8'));
 knowledge.professionGuide = JSON.parse(fs.readFileSync(path.join(root, 'knowledge/profession-guide.json'), 'utf8'));
+const versionLabel = knowledge.gameVersion.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+html = html.replace(/(<span data-knowledge-version>)[\s\S]*?(<\/span>)/g, (_, start, end) => start + versionLabel + end);
 const proofPath=path.join(root,'knowledge/verification.json');
 if(Object.values(knowledge.verification).some(Boolean)){
   if(!fs.existsSync(proofPath))throw Error('寫入閘門缺少遊戲驗證紀錄');

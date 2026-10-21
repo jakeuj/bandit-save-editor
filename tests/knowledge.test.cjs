@@ -16,6 +16,9 @@ test('catalog includes 22 planes, 724 functions, 847 write sites and localized n
  const C=core(),K=C.KNOWLEDGE;
  assert.equal(K.planes.length,22);assert.equal(K.functions.length,724);assert.equal(K.evidence.length,847);
  assert.equal(K.catalogs.attributes.find(v=>v.id===72).name,'最終增產');
+ const versionLabels=[...source.matchAll(/<span data-knowledge-version>(.*?)<\/span>/g)];
+ assert.equal(versionLabels.length,4);
+ for(const [,label] of versionLabels)assert.equal(label,K.gameVersion);
  assert.equal(K.catalogs.professions.find(v=>v.id===2).name,'嘍囉');
  assert.equal(C.SKILLS.length,9);assert.equal(C.SKILLS[7],'研究');
 });
