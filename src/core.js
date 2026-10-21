@@ -48,6 +48,75 @@
  for(const e of KNOWLEDGE.evidence){const k=`${e.z},${e.y}`;if(!evidenceIndex.has(k))evidenceIndex.set(k,[]);evidenceIndex.get(k).push(e);}
  const C=(x,y,z)=>({x,y,z});
  const activeCharacter=(m,x)=>Number.isInteger(x)&&x>0&&exists(m.original,C(x,0,2))&&typeof get(m,C(x,1,2))==='string'&&get(m,C(x,0,2))>0;
+ const EDIT_GROUPS={equipment:'equipmentLevel',training:'professionTrainingCap',technology:'advancedTechnologyLevel'};
+ function buildingLevel(m,template){
+  let level=0;
+  for(let x=1;x<m.original.size[0];x++)if(get(m,C(x,0,1))===x&&get(m,C(x,1,1))===template){const n=get(m,C(x,5,1));if(!Number.isSafeInteger(n)||n<0)throw Error('建築等級資料不符。');level=Math.max(level,n);}
+  return level;
+ }
+ function busyFacility(m,target,buildingTemplate){
+  for(let x=1;x<m.original.size[0];x++)if(get(m,C(x,0,21))===x&&get(m,C(x,3,21))===target){
+   const parent=get(m,C(x,2,21));if(Number.isSafeInteger(parent)&&parent>0&&parent<m.original.size[0]&&get(m,C(parent,1,1))===buildingTemplate)return true;
+  }
+  return false;
+ }
+ function editingInfo(m,kind,id){
+  if(!Number.isSafeInteger(id)||id<1||id>=m.original.size[0])throw Error('無效的資料編號。');
+  let coordinate,normalMax,min=1,name;
+  if(kind==='equipment'){
+   const item=catalogMaps.items.get(get(m,C(id,1,9))),quality=get(m,C(id,5,9)),owner=get(m,C(id,7,9));
+   if(get(m,C(id,0,9))!==id||!item||item.category!=='裝備'||['宝物','内丹'].includes(item.kind)||!Number.isInteger(item.slot)||item.slot<1||item.slot>6)throw Error('只支援裝備庫內的有效一般裝備，不包含寶物及內丹。');
+   if(!Number.isSafeInteger(quality)||quality<1||!Number.isSafeInteger(owner)||owner<0)throw Error('裝備品質或歸屬資料不符。');
+   let references=0;
+   for(let x=1;x<m.original.size[0];x++)if(activeCharacter(m,x))for(let slot=1;slot<=6;slot++)if(get(m,C(x,15+slot,2))===id){references++;if(owner!==x||slot!==item.slot)throw Error('裝備穿戴雙向指標不一致。');}
+   if(owner>0&&(!activeCharacter(m,owner)||references!==1)||owner===0&&references!==0)throw Error('裝備穿戴雙向指標不一致。');
+   coordinate=C(id,6,9);normalMax=10+(quality-1)*5;name=item.name;
+  }else if(kind==='training'){
+   const profession=catalogMaps.professions.get(id);if(!profession)throw Error('無效的職業編號。');
+   if(get(m,C(id,15,0))!==0||busyFacility(m,id,6))throw Error('此職業正在操練，請先在遊戲內停止。');
+   for(let x=1;x<m.original.size[0];x++)if(activeCharacter(m,x)){const level=get(m,C(x,id,4));if(!Number.isSafeInteger(level)||level<0)throw Error('角色職業等級資料不符。');min=Math.max(min,level);}
+   coordinate=C(id,5,0);const building=buildingLevel(m,6);normalMax=building?5+(building+1)*5:0;name=profession.name;
+  }else if(kind==='technology'){
+   const technology=catalogMaps.technologies.get(id);if(!technology?.advanced)throw Error('只支援有效的進階科技（31–44）。');
+   if(get(m,C(id,13,0))!==0||busyFacility(m,id,5))throw Error('此科技正在研究，請先在遊戲內停止。');
+   coordinate=C(id,4,0);const building=buildingLevel(m,5);normalMax=building?Math.min(technology.tableLimit-1,Math.max(1,(building+1)*60-1)):0;name=technology.name;
+  }else throw Error('未知的修改類型。');
+  const current=get(m,coordinate);if(!Number.isSafeInteger(current)||current<0||kind==='equipment'&&current<1)throw Error('現有數值與欄位型別不符。');
+  const group=EDIT_GROUPS[kind],limits=KNOWLEDGE.editingLimits?.[kind];
+  return {kind,id,name,coordinate,current,min,normalMax,advancedMax:limits?.maxById?.[id]??limits?.max??0,verified:!!KNOWLEDGE.verification[group],advancedVerified:!!KNOWLEDGE.verification[group+'Advanced']};
+ }
+ function setEditingValue(m,kind,id,value,advanced=false){
+  if(typeof advanced!=='boolean')throw Error('進階模式參數不正確。');
+  const info=editingInfo(m,kind,id);
+  if(!info.verified||advanced&&!info.advancedVerified)throw Error('此修改模式尚未完成隔離遊戲驗證，目前停用。');
+  if(!Number.isSafeInteger(value)||value<info.min)throw Error(`請輸入不小於 ${info.min} 的安全整數；操練上限不得低於角色現有職業等級。`);
+  const max=advanced?info.advancedMax:Math.min(info.normalMax,info.advancedMax);
+  if(value>max)throw Error(`超出${advanced?'已驗證的進階':'一般模式'}上限 ${max}。`);
+  if(kind==='equipment'){
+   const tier=get(m,C(id,3,9));
+   if(!Number.isSafeInteger(tier)||tier<1||![(tier-1)*30+value,(tier*6/9-1)*30+4*value].every(d=>Number.isFinite(10*1.05**d-1)))throw Error('裝備等階或升級公式超出可計算範圍。');
+  }
+  if(kind==='training'){
+   const tier=catalogMaps.professions.get(id).tier,d=tier<4?10*(tier-1)+value+1:50*(tier-3)+(tier-1)*(value+1);
+   if(!Number.isFinite(35*d**1.9*1.0375**d*3)||!Number.isFinite(150*d**1.7*1.009**d*5))throw Error('操練公式超出可計算範圍。');
+  }
+  if(kind==='technology'&&id===32&&400+2*value>m.original.size[0]-1)throw Error('背包容量會超過這份存檔的實體空間。');
+  if(kind==='technology'&&[32,44].includes(id)){
+   let held=0;
+   for(let x=1;x<m.original.size[0];x++)if(id===32?get(m,C(x,0,7))>0:get(m,C(x,0,1))>0&&get(m,C(x,1,1))===67)held++;
+   if(held>(id===32?400+2*value:10+Math.floor((value+1)/5)))throw Error('下調後的容量小於現有物品或置物台數量。');
+  }
+  if(kind==='technology'){
+   const d=value+6,cost=35*d**1.9*1.0375**d,currency=150*d**1.7*1.009**d;
+   if(!Number.isFinite(cost)||!Number.isFinite(currency))throw Error('科技公式超出可計算範圍。');
+  }
+  const previous=m.currentGroup;m.currentGroup=`editing:${kind}:${id}`;
+  try{transaction(m,()=>put(m,info.coordinate,value,`${info.name}・${kind==='training'?'操練上限':'等級'}`),`${advanced?'進階・':''}${info.name}調整`);}finally{m.currentGroup=previous;}
+  return {...info,value};
+ }
+ const setEquipmentLevel=(m,{itemId,level,advanced=false})=>setEditingValue(m,'equipment',itemId,level,advanced);
+ const setProfessionTrainingCap=(m,{professionId,cap,advanced=false})=>setEditingValue(m,'training',professionId,cap,advanced);
+ const setAdvancedTechnologyLevel=(m,{technologyId,level,advanced=false})=>setEditingValue(m,'technology',technologyId,level,advanced);
  /** @returns {FieldDescriptor} */
  function resolveField(m,c){
   if(!exists(m.original,c))throw Error('座標超出這份存檔的範圍。');
@@ -93,6 +162,10 @@
   if(f.related.length&&![50,56,59].includes(y)&&((z===2&&[3,4].includes(y))||(z===2&&y>=31&&y<=48)||[4,5].includes(z)))f.reason='請由角色養成增加經驗，等級與餘額一起結算';
   if(z===12)f.description='屬性與其他角色狀態相關；遊戲另在暫存物件重算數值，第一版不直接寫入。';
   if([7,9].includes(z)&&f.known)f.description='物品實體的原始資料；詞條、係數、背包位置與穿戴歸屬需一起核實，第一版唯讀。';
+  if(z===9&&y===6||z===0&&y===5&&catalogMaps.professions.has(x)||z===0&&y===4&&catalogMaps.technologies.get(x)?.advanced){
+   const kind=z===9?'equipment':y===5?'training':'technology';
+   try{const info=editingInfo(m,kind,x);f.status=info.verified?'遊戲驗證':'程式證據';f.reason='請使用具名修改操作；自訂座標不可繞過模式及關聯檢查';f.description=`一般上限 ${info.normalMax}；進階已驗證上限 ${info.advancedMax}。${kind==='training'?'職業自然成長仍受原版 30 級限制。':''}`;}catch(e){f.reason=e.message;}
+  }
   return f;
  }
  function put(m,c,value,label){
@@ -184,5 +257,5 @@
   if(patches.length!==m.changes.size)throw Error('部分修改座標未能定位，已停止匯出。');
   const parts=[];let previous=0;for(const p of patches){parts.push(m.text.slice(previous,p.start),p.value);previous=p.end;}parts.push(m.text.slice(previous));return parts.join('');
  }
- globalThis.SaveCore={BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,listEntities,catalogName,transaction,undo,restore,labelFor,diff,serialize};
+ globalThis.SaveCore={BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,listEntities,catalogName,transaction,undo,restore,labelFor,diff,serialize};
 })();

@@ -14,13 +14,24 @@
     "steamMutationsRedirectedToLocalMirror": true,
     "allThirteenTestedSourceHashesMatch": true,
     "realSteamInitialization": true,
-    "restartUsesDifferentProcess": true
+    "restartUsesDifferentProcess": true,
+    "advancedNormalAndOvercapNativeRoundtrip": true,
+    "nativeEquipmentAndTechnologyEffectsFinite": true,
+    "nativeEquipmentUnequipReequip": true,
+    "subsequentProfessionTransferAndExperience": true,
+    "subsequentResearchAndTrainingStartStop": true
   },
   "groups": {
     "names": true,
     "characterExperience": true,
     "professionExperience": true,
-    "skillExperience": true
+    "skillExperience": true,
+    "equipmentLevel": true,
+    "equipmentLevelAdvanced": true,
+    "professionTrainingCap": true,
+    "professionTrainingCapAdvanced": true,
+    "advancedTechnologyLevel": true,
+    "advancedTechnologyLevelAdvanced": true
   },
   "scenarios": [
     "山寨與角色改名",
@@ -33,7 +44,8 @@
     "測試透過真實遊戲函式及本機檔案路徑；沒有模擬所有滑鼠選單操作",
     "載入後暫停模擬時間以避免工作經驗干擾；不是長時間遊玩測試",
     "未驗證真實雲端上傳、成就或統計寫入",
-    "本輪為 Windows x64 正式版來源；不表示新版 macOS 啟動器已通過驗證"
+    "本輪為 Windows x64 正式版來源；不表示新版 macOS 啟動器已通過驗證",
+    "v2.1 超限只開放實測範圍 1–1000，科技 33 上限 299；不宣稱所有安全整數均可玩。"
   ],
   "fingerprints": {
     "data.json": "32a36accc1b97e9bb3498eb3be76950e1e72b2e8f7a0cf9ce293b57aa5e0d820",
@@ -50,5 +62,66 @@
     "ss.json": "4350cb979c4026ce0d8dc25e7807fde3d29a1d42fbd2e499673614a4f67e1bc7",
     "lw.json": "7a4f5a5bfd5967f3a74e36aa9a0c2cda132619b2908bdc39b1406da4b346bde6"
   },
-  "steamBuildId": "26094666"
+  "steamBuildId": "26094666",
+  "editingLimits": {
+    "equipment": {
+      "max": 1000
+    },
+    "training": {
+      "max": 1000
+    },
+    "technology": {
+      "max": 1000,
+      "maxById": {
+        "33": 299
+      }
+    }
+  },
+  "advancedEditing": {
+    "date": "2026-10-21",
+    "sourceFiles": 13,
+    "cases": [
+      {
+        "name": "downgrade-and-unlock",
+        "equipmentLevel": 3,
+        "trainingCap": 10,
+        "technologyLevels": 1,
+        "nativeSaveAndRestart": true
+      },
+      {
+        "name": "normal-upper",
+        "equipmentLevel": 10,
+        "trainingCap": 15,
+        "technologyLevels": 119,
+        "nativeSaveAndRestart": true
+      },
+      {
+        "name": "over-cap",
+        "equipmentLevel": 11,
+        "trainingCap": 16,
+        "technologyLevels": 120,
+        "nativeSaveAndRestart": true
+      },
+      {
+        "name": "advanced-boundary",
+        "equipmentLevel": 1000,
+        "trainingCap": 1000,
+        "technologyLevels": 1000,
+        "technology33Exception": 299,
+        "nativeSaveAndRestart": true
+      },
+      {
+        "name": "subsequent-actions",
+        "equipmentLevel": 3,
+        "trainingCap": 10,
+        "technologyLevels": 1,
+        "nativeSaveAndRestart": true
+      }
+    ],
+    "effects": "115 項原版裝備屬性計算及 70 項科技加成皆有限，重啟後完全一致",
+    "scope": "一般裝備一組穿戴實體；14 個有效進階科技；代表職業解鎖、轉職、自然經驗與操練；研究啟動／停止。不是所有裝備、角色組合或長時間遊玩測試。",
+    "additionalReviewedFingerprint": {
+      "jc.json": "b5f2319b039dee5c6b185ced4a0fdf8fede0b0c0c4793449bd7956dcc0ca857e"
+    }
+  }
 }

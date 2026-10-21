@@ -3,6 +3,19 @@
  const stat=(name,value)=>`<div class="stat"><strong>${esc(fmt(value))}</strong><span>${esc(name)}</span></div>`;
  const short=v=>{const text=fmt(v);return text.length>150?text.slice(0,150)+'…':text;};
  const sourceHtml=rows=>rows.length?rows.map(e=>`<div class="source-detail">${esc(e.function)}<br>${esc(e.sheet)} · SID ${esc(e.sid)}</div>`).join(''):'<span class="source-detail">尚未定位欄位事件</span>';
+ const editingState=Object.fromEntries(['equipment','training','technology'].map(kind=>[kind,{id:null,advanced:false}]));
+ function renderEditing(kind){
+  const state=editingState[kind],title={equipment:'裝備等級',training:'職業操練上限',technology:'進階科技等級'}[kind];
+  const choices=kind==='equipment'?C.listEntities(model,'inventory').filter(v=>v.z===9):K.catalogs[kind==='training'?'professions':'technologies'].filter(v=>kind!=='technology'||v.advanced);
+  const old=document.querySelector(`[data-edit-value="${kind}"]`)?.value;
+  if(!choices.some(v=>v.id===state.id))state.id=choices[0]?.id??null;
+  let info,error='';try{info=C.editingInfo(model,kind,state.id);}catch(e){error=e.message;}
+  const enabled=info?.verified&&(!state.advanced||info.advancedVerified),max=state.advanced?info?.advancedMax:Math.min(info?.normalMax??0,info?.advancedMax??0);
+  $(kind+'Editor').innerHTML=`<h3>${title}</h3><div class="toolbar"><select data-edit-target="${kind}" aria-label="選擇${title}目標">${choices.map(v=>`<option value="${v.id}" ${v.id===state.id?'selected':''}>#${v.id} ${esc(v.name)}</option>`).join('')}</select><label class="check"><input type="checkbox" data-edit-mode="${kind}" ${state.advanced?'checked':''}>進階模式</label></div><p class="muted small-text">${info?`目前 ${htmlValue(info.current)} · 一般上限 ${htmlValue(info.normalMax)} · 進階驗證上限 ${htmlValue(info.advancedMax)}`:esc(error)}</p><div class="toolbar"><label>目標數值<input type="number" min="${info?.min??1}" max="${max??0}" step="1" value="${info?.current||info?.min||1}" data-edit-value="${kind}" aria-label="${title}目標數值" ${info?'':'disabled'}></label><button class="small primary" data-edit-apply="${kind}" ${enabled?'':'disabled'}>套用${title}</button></div><p class="muted small-text" role="status">${esc(error||(!enabled?'此修改模式尚待隔離遊戲驗證，目前停用。':state.advanced?'已驗證範圍內可超過原版上限；不扣取得成本。':'一般模式遵守原版上限，不扣取得成本。'))}${kind==='training'?' 職業自然成長仍受原版 30 級限制。':kind==='technology'?' 目標為存檔值；遊戲科技提示的 Lv 為此值加一。':''}</p>`;
+  // Preserve an unsubmitted number while toggling modes, but reset after applying or changing target.
+  if(state.preserveValue&&old!==undefined)document.querySelector(`[data-edit-value="${kind}"]`).value=old;
+  state.preserveValue=false;
+ }
  function paged(kind,list,render,container){
   const size=50,max=Math.max(0,Math.ceil(list.length/size)-1);knowledgePages[kind]=Math.min(knowledgePages[kind],max);
   const page=knowledgePages[kind],start=page*size;
@@ -21,7 +34,7 @@
   $('characterName').value=read(x,1,2);$('renameCharacterBtn').disabled=!K.verification.names;
   $('characterSummary').innerHTML=stat('角色等級',read(x,3,2))+stat('自然經驗餘額',read(x,4,2))+stat('等級上限',(Math.floor(read(x,50,2))+1)*30)+stat('目前職業',C.catalogName('professions',read(x,6,2)))+stat('共用池已投入經驗',read(x,56,2))+stat('自動轉職預設',read(x,59,2));
   $('skillRows').innerHTML=C.SKILLS.map((name,i)=>`<tr><td>${esc(name)}</td><td>${htmlValue(read(x,31+i,2))} / ${htmlValue(read(x,22+i,2))}</td><td>${htmlValue(read(x,40+i,2))}</td><td>${htmlValue(C.experienceNeed.skill(read(x,31+i,2)))}</td></tr>`).join('');
-  $('growthStatus').textContent=Object.values(K.verification).every(Boolean)?'新增寫入已通過隔離驗證':'部分功能待遊戲驗證';
+  $('growthStatus').textContent=['names','characterExperience','professionExperience','skillExperience'].every(k=>K.verification[k])?'名稱與經驗已通過隔離驗證':'部分養成功能待遊戲驗證';
   renderGrowth();
  }
  function renderGrowth(){
@@ -40,14 +53,16 @@
   $('settlementName').value=read(1,1,0);$('renameSettlementBtn').disabled=!K.verification.names;
   $('settlementSummary').innerHTML=stat('山寨等級',read(2,1,0))+stat('目前地圖',read(4,1,0))+stat('累計遊玩秒數',read(15,1,0));
   const kind=$('settlementCategory').value,q=$('settlementSearch').value.trim().toLowerCase();
-  $('settlementNote').textContent=['buildings','facilities','quests'].includes(kind)?'以下為遊戲資料表，不代表已建造、已擁有或已完成。配置與進程請從欄位圖鑑對照原始記錄。':'對照已核對的存檔欄位；此處不修改等級、研究狀態或解鎖。';
+  $('settlementNote').textContent=['buildings','facilities','quests'].includes(kind)?'以下為遊戲資料表，不代表已建造、已擁有或已完成。配置與進程請從欄位圖鑑對照原始記錄。':'可從下方調整操練上限或進階科技；研究與操練進行中不修改。';
   const rows=K.catalogs[kind].filter(r=>`${r.id} ${r.name} ${r.category}`.toLowerCase().includes(q));
   paged('settlement',rows,r=>`<tr><td><span class="mono muted">#${r.id}</span> ${esc(r.name)}</td><td>${esc(r.category)}</td><td>${kind==='technologies'?`科技等級 ${htmlValue(read(r.id,4,0))} · 研究狀態 ${htmlValue(read(r.id,13,0))}`:kind==='professions'?`操練上限 ${htmlValue(read(r.id,5,0))}`:'資料表 · 唯讀'}</td></tr>`,'settlementRows');
+  renderEditing('training');renderEditing('technology');
  }
  function renderInventory(){
   const q=$('inventorySearch').value.trim().toLowerCase(),z=$('inventoryPlane').value;
   const rows=C.listEntities(model,'inventory').filter(r=>(!z||r.z===Number(z))&&`${r.id} ${r.name} ${r.detail}`.toLowerCase().includes(q));
   paged('inventory',rows,r=>`<tr><td class="mono">#${r.id} / ${esc(read(r.id,1,r.z))}</td><td>${esc(r.name)}</td><td>${r.z===7?'背包':'裝備庫／穿戴'}</td><td>${htmlValue(read(r.id,5,r.z))} / Lv ${htmlValue(read(r.id,6,r.z))}</td><td><button class="small" data-inspect-item="${r.id}" data-plane="${r.z}">查看欄位</button></td></tr>`,'inventoryRows');
+  renderEditing('equipment');
  }
  function renderAtlas(){
   const z=Number($('atlasPlane').value),plane=K.planes[z],q=$('atlasSearch').value.trim().toLowerCase();
@@ -86,4 +101,15 @@
   const options={kind:$('growthKind').value,characterId:Number($('characterSelect').value),id:Number($('growthTarget').value),amount:Number($('growthAmount').value)};
   perform(()=>C.addExperience(model,options));
  };
+ document.addEventListener('change',e=>{
+  const kind=e.target.dataset.editTarget||e.target.dataset.editMode;if(!kind||!model)return;
+  if(e.target.dataset.editTarget)editingState[kind].id=Number(e.target.value);
+  else{editingState[kind].advanced=e.target.checked;editingState[kind].preserveValue=true;}
+  renderEditing(kind);
+ });
+ document.addEventListener('click',e=>{
+  const kind=e.target.closest('[data-edit-apply]')?.dataset.editApply;if(!kind||!model)return;
+  const state=editingState[kind],input=document.querySelector(`[data-edit-value="${kind}"]`);
+  try{const value=num(input),options={advanced:state.advanced};perform(()=>kind==='equipment'?C.setEquipmentLevel(model,{...options,itemId:state.id,level:value}):kind==='training'?C.setProfessionTrainingCap(model,{...options,professionId:state.id,cap:value}):C.setAdvancedTechnologyLevel(model,{...options,technologyId:state.id,level:value}));}catch(error){toast(error.message,true);}
+ });
  document.addEventListener('click',e=>{const b=e.target.closest('[data-inspect-item]');if(!b)return;atlasEntityId=Number(b.dataset.inspectItem);$('atlasPlane').value=b.dataset.plane;$('atlasSearch').value='';knowledgePages.atlas=0;showTab('atlas');});

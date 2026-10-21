@@ -5013,3909 +5013,5515 @@
       {
         "id": 1,
         "name": "柴斧",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 2,
         "name": "竹槍",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 3,
         "name": "石錘",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 4,
         "name": "匕首",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 5,
         "name": "獵弓",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 6,
         "name": "礦鍬",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 7,
         "name": "折扇",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 8,
         "name": "木杖",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 9,
         "name": "鐮刀",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 10,
         "name": "蠻力護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 11,
         "name": "影刃護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 12,
         "name": "符咒護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 13,
         "name": "勁力手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 14,
         "name": "靈巧手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 15,
         "name": "細膩手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 16,
         "name": "勇武頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 17,
         "name": "飛影頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 18,
         "name": "明慧頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 19,
         "name": "虎腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 20,
         "name": "風行腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 21,
         "name": "悟心腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 22,
         "name": "力士戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 23,
         "name": "影刺戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 24,
         "name": "書生戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 25,
         "name": "蠻骨項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 26,
         "name": "雀羽項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 27,
         "name": "靈珠項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 28,
         "name": "土匪之槍",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 29,
         "name": "土匪之護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 30,
         "name": "土匪之頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 31,
         "name": "土匪之戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 32,
         "name": "盜賊之弓",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 33,
         "name": "盜賊之護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 34,
         "name": "盜賊之頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 35,
         "name": "盜賊之戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 36,
         "name": "書生之杖",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 37,
         "name": "書生之護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 38,
         "name": "書生之頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 39,
         "name": "書生之戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 40,
         "name": "樵夫之斧",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 41,
         "name": "樵夫之手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 42,
         "name": "樵夫之腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 43,
         "name": "樵夫之項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 44,
         "name": "礦工之鍬",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 45,
         "name": "礦工之手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 46,
         "name": "礦工之腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 47,
         "name": "礦工之項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 48,
         "name": "師爺之扇",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 49,
         "name": "師爺之手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 50,
         "name": "師爺之腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 51,
         "name": "師爺之項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 52,
         "name": "掠奪內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 53,
         "name": "悟道內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 54,
         "name": "精藝內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 55,
         "name": "練氣力量丹",
-        "category": "丹藥"
+        "category": "丹藥",
+        "kind": "普通丹药",
+        "slot": 0
       },
       {
         "id": 56,
         "name": "練氣敏捷丹",
-        "category": "丹藥"
+        "category": "丹藥",
+        "kind": "普通丹药",
+        "slot": 0
       },
       {
         "id": 57,
         "name": "練氣智力丹",
-        "category": "丹藥"
+        "category": "丹藥",
+        "kind": "普通丹药",
+        "slot": 0
       },
       {
         "id": 58,
         "name": "碎甲內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 59,
         "name": "貫穿內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 60,
         "name": "焚天內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 61,
         "name": "廣收內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 62,
         "name": "精造內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 63,
         "name": "宏圖內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 64,
         "name": "築基力量丹",
-        "category": "丹藥"
+        "category": "丹藥",
+        "kind": "普通丹药",
+        "slot": 0
       },
       {
         "id": 65,
         "name": "築基敏捷丹",
-        "category": "丹藥"
+        "category": "丹藥",
+        "kind": "普通丹药",
+        "slot": 0
       },
       {
         "id": 66,
         "name": "築基智力丹",
-        "category": "丹藥"
+        "category": "丹藥",
+        "kind": "普通丹药",
+        "slot": 0
       },
       {
         "id": 67,
         "name": "金丹力量丹",
-        "category": "丹藥"
+        "category": "丹藥",
+        "kind": "普通丹药",
+        "slot": 0
       },
       {
         "id": 68,
         "name": "金丹敏捷丹",
-        "category": "丹藥"
+        "category": "丹藥",
+        "kind": "普通丹药",
+        "slot": 0
       },
       {
         "id": 69,
         "name": "金丹智力丹",
-        "category": "丹藥"
+        "category": "丹藥",
+        "kind": "普通丹药",
+        "slot": 0
       },
       {
         "id": 70,
         "name": "元嬰力量丹",
-        "category": "丹藥"
+        "category": "丹藥",
+        "kind": "普通丹药",
+        "slot": 0
       },
       {
         "id": 71,
         "name": "元嬰敏捷丹",
-        "category": "丹藥"
+        "category": "丹藥",
+        "kind": "普通丹药",
+        "slot": 0
       },
       {
         "id": 72,
         "name": "元嬰智力丹",
-        "category": "丹藥"
+        "category": "丹藥",
+        "kind": "普通丹药",
+        "slot": 0
       },
       {
         "id": 73,
         "name": "化神力量丹",
-        "category": "丹藥"
+        "category": "丹藥",
+        "kind": "普通丹药",
+        "slot": 0
       },
       {
         "id": 74,
         "name": "化神敏捷丹",
-        "category": "丹藥"
+        "category": "丹藥",
+        "kind": "普通丹药",
+        "slot": 0
       },
       {
         "id": 75,
         "name": "化神智力丹",
-        "category": "丹藥"
+        "category": "丹藥",
+        "kind": "普通丹药",
+        "slot": 0
       },
       {
         "id": 76,
         "name": "砍山斧",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 77,
         "name": "寨槍",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 78,
         "name": "震地錘",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 79,
         "name": "短劍",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 80,
         "name": "長弓",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 81,
         "name": "探礦鍬",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 82,
         "name": "紙扇",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 83,
         "name": "藥木杖",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 84,
         "name": "割草鐮",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 85,
         "name": "虎威護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 86,
         "name": "疾風護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 87,
         "name": "法力護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 88,
         "name": "厚實手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 89,
         "name": "迅捷手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 90,
         "name": "入微手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 91,
         "name": "虎嘯頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 92,
         "name": "流風頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 93,
         "name": "悟真頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 94,
         "name": "熊腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 95,
         "name": "雲行腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 96,
         "name": "悟性腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 97,
         "name": "勇士戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 98,
         "name": "暗影戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 99,
         "name": "術士戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 100,
         "name": "虎牙項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 101,
         "name": "風羽項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 102,
         "name": "法珠項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 103,
         "name": "劈嶺斧",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 104,
         "name": "穿甲槍",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 105,
         "name": "裂骨錘",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 106,
         "name": "長劍",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 107,
         "name": "硬弓",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 108,
         "name": "鐵嘴鍬",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 109,
         "name": "玉扇",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 110,
         "name": "靈木杖",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 111,
         "name": "刈田鐮",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 112,
         "name": "狂戰護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 113,
         "name": "飛燕護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 114,
         "name": "玄機護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 115,
         "name": "剛勁手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 116,
         "name": "輕風手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 117,
         "name": "慧心手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 118,
         "name": "戰狂頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 119,
         "name": "追月頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 120,
         "name": "知微頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 121,
         "name": "龍腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 122,
         "name": "月行腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 123,
         "name": "道心腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 124,
         "name": "戰卒戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 125,
         "name": "遊俠戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 126,
         "name": "方士戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 127,
         "name": "狼牙項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 128,
         "name": "燕羽項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 129,
         "name": "玄珠項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 130,
         "name": "崩岩斧",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 131,
         "name": "破陣槍",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 132,
         "name": "轟山錘",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 133,
         "name": "銳鋒劍",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 134,
         "name": "穿楊弓",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 135,
         "name": "碎石鍬",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 136,
         "name": "乾坤扇",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 137,
         "name": "聚靈杖",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 138,
         "name": "豐收鐮",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 139,
         "name": "崩山護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 140,
         "name": "閃電護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 141,
         "name": "道法護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 142,
         "name": "沈重手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 143,
         "name": "精准手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 144,
         "name": "悟道手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 145,
         "name": "霸王頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 146,
         "name": "逐日頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 147,
         "name": "知命頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 148,
         "name": "蠻王腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 149,
         "name": "星行腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 150,
         "name": "法眼腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 151,
         "name": "驍將戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 152,
         "name": "獵手戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 153,
         "name": "謀士戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 154,
         "name": "龍鱗項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 155,
         "name": "鷹羽項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 156,
         "name": "道珠項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 157,
         "name": "裂地斧",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 158,
         "name": "龍膽槍",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 159,
         "name": "雷霆錘",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 160,
         "name": "寒星劍",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 161,
         "name": "落日弓",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 162,
         "name": "穿山鍬",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 163,
         "name": "陰陽扇",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 164,
         "name": "凝元杖",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 165,
         "name": "裂風鐮",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 166,
         "name": "碎星護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 167,
         "name": "幻影護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 168,
         "name": "真理護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 169,
         "name": "渾厚手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 170,
         "name": "精妙手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 171,
         "name": "通玄手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 172,
         "name": "金剛頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 173,
         "name": "踏星頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 174,
         "name": "洞微頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 175,
         "name": "力王腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 176,
         "name": "影行腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 177,
         "name": "真知腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 178,
         "name": "悍將戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 179,
         "name": "刺客戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 180,
         "name": "策士戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 181,
         "name": "龍角項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 182,
         "name": "隼羽項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 183,
         "name": "真珠項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 184,
         "name": "斷岳斧",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 185,
         "name": "霸王槍",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 186,
         "name": "撼天錘",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 187,
         "name": "倚風劍",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 188,
         "name": "驚弦弓",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 189,
         "name": "撼地鍬",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 190,
         "name": "玄機扇",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 191,
         "name": "天機杖",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 192,
         "name": "斬月鐮",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 193,
         "name": "破空護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 194,
         "name": "隱月護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 195,
         "name": "天道護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 196,
         "name": "磅礡手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 197,
         "name": "絕妙手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 198,
         "name": "明理手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 199,
         "name": "怒目頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 200,
         "name": "凌空頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 201,
         "name": "察機頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 202,
         "name": "威王腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 203,
         "name": "虛行腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 204,
         "name": "天眼腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 205,
         "name": "虎將戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 206,
         "name": "鬼影戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 207,
         "name": "軍師戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 208,
         "name": "麒麟項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 209,
         "name": "雕羽項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 210,
         "name": "天珠項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 211,
         "name": "填海斧",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 212,
         "name": "驚雷槍",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 213,
         "name": "隕星錘",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 214,
         "name": "驚鴻劍",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 215,
         "name": "射日弓",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 216,
         "name": "尋脈鍬",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 217,
         "name": "星辰扇",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 218,
         "name": "太清杖",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 219,
         "name": "飛星鐮",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 220,
         "name": "威天護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 221,
         "name": "鬼魅護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 222,
         "name": "仙法護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 223,
         "name": "擎天手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 224,
         "name": "入神手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 225,
         "name": "洞真手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 226,
         "name": "天將頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 227,
         "name": "御風頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 228,
         "name": "明天頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 229,
         "name": "神王腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 230,
         "name": "空行腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 231,
         "name": "慧眼腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 232,
         "name": "大將戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 233,
         "name": "無影戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 234,
         "name": "天師戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 235,
         "name": "饕餮項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 236,
         "name": "鸞羽項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 237,
         "name": "仙珠項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 238,
         "name": "覆世斧",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 239,
         "name": "游龍槍",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 240,
         "name": "誅魔錘",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 241,
         "name": "絕影劍",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 242,
         "name": "裂空弓",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 243,
         "name": "探靈鍬",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 244,
         "name": "涅槃扇",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 245,
         "name": "紫微杖",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 246,
         "name": "飲血鐮",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 247,
         "name": "神力護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 248,
         "name": "虛無護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 249,
         "name": "聖靈護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 250,
         "name": "撼地手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 251,
         "name": "出塵手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 252,
         "name": "化仙手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 253,
         "name": "武神頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 254,
         "name": "乘雲頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 255,
         "name": "覺道頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 256,
         "name": "天王腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 257,
         "name": "無行腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 258,
         "name": "聖心腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 259,
         "name": "武聖戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 260,
         "name": "幻影戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 261,
         "name": "仙師戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 262,
         "name": "玄武項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 263,
         "name": "凰羽項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 264,
         "name": "聖珠項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 265,
         "name": "開天斧",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 266,
         "name": "逆天槍",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 267,
         "name": "須彌錘",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 268,
         "name": "無極劍",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 269,
         "name": "穹蒼弓",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 270,
         "name": "破虛鍬",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 271,
         "name": "混沌扇",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 272,
         "name": "太極杖",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 273,
         "name": "噬魂鐮",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 1
       },
       {
         "id": 274,
         "name": "洪荒護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 275,
         "name": "虛空護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 276,
         "name": "神諭護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 277,
         "name": "開山手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 278,
         "name": "化境手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 279,
         "name": "通神手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 2
       },
       {
         "id": 280,
         "name": "戰神頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 281,
         "name": "凌虛頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 282,
         "name": "開天頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 283,
         "name": "至尊腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 284,
         "name": "極行腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 285,
         "name": "神識腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 3
       },
       {
         "id": 286,
         "name": "軍神戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 287,
         "name": "天影戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 288,
         "name": "神算戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 289,
         "name": "龍魂項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 290,
         "name": "鳳翎項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 291,
         "name": "神珠項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "普通",
+        "slot": 4
       },
       {
         "id": 292,
         "name": "寨勇之槍",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 293,
         "name": "寨勇之護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 294,
         "name": "寨勇之頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 295,
         "name": "寨勇之戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 296,
         "name": "飛賊之弓",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 297,
         "name": "飛賊之護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 298,
         "name": "飛賊之頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 299,
         "name": "飛賊之戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 300,
         "name": "道童之杖",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 301,
         "name": "道童之護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 302,
         "name": "道童之頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 303,
         "name": "道童之戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 304,
         "name": "蠻兵之錘",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 305,
         "name": "蠻兵之護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 306,
         "name": "蠻兵之頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 307,
         "name": "蠻兵之戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 308,
         "name": "夜影之鍬",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 309,
         "name": "夜影之護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 310,
         "name": "夜影之頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 311,
         "name": "夜影之戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 312,
         "name": "道士之鐮",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 313,
         "name": "道士之護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 314,
         "name": "道士之頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 315,
         "name": "道士之戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 316,
         "name": "猛將之斧",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 317,
         "name": "猛將之護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 318,
         "name": "猛將之頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 319,
         "name": "猛將之戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 320,
         "name": "神偷之弓",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 321,
         "name": "神偷之護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 322,
         "name": "神偷之頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 323,
         "name": "神偷之戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 324,
         "name": "術士之扇",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 325,
         "name": "術士之護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 326,
         "name": "術士之頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 327,
         "name": "術士之戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 328,
         "name": "鐵衛之槍",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 329,
         "name": "鐵衛之護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 330,
         "name": "鐵衛之頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 331,
         "name": "鐵衛之戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 332,
         "name": "刺客之弓",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 333,
         "name": "刺客之護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 334,
         "name": "刺客之頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 335,
         "name": "刺客之戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 336,
         "name": "方士之杖",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 337,
         "name": "方士之護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 338,
         "name": "方士之頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 339,
         "name": "方士之戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 340,
         "name": "虎將之錘",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 341,
         "name": "虎將之護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 342,
         "name": "虎將之頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 343,
         "name": "虎將之戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 344,
         "name": "遊俠之鍬",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 345,
         "name": "遊俠之護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 346,
         "name": "遊俠之頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 347,
         "name": "遊俠之戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 348,
         "name": "魔徒之鐮",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 349,
         "name": "魔徒之護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 350,
         "name": "魔徒之頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 351,
         "name": "魔徒之戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 352,
         "name": "力士之斧",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 353,
         "name": "力士之護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 354,
         "name": "力士之頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 355,
         "name": "力士之戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 356,
         "name": "獵手之弓",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 357,
         "name": "獵手之護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 358,
         "name": "獵手之頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 359,
         "name": "獵手之戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 360,
         "name": "道人之扇",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 361,
         "name": "道人之護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 362,
         "name": "道人之頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 363,
         "name": "道人之戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 364,
         "name": "戰狂之槍",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 365,
         "name": "戰狂之護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 366,
         "name": "戰狂之頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 367,
         "name": "戰狂之戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 368,
         "name": "殺手之弓",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 369,
         "name": "殺手之護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 370,
         "name": "殺手之頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 371,
         "name": "殺手之戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 372,
         "name": "魔尊之杖",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 373,
         "name": "魔尊之護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 374,
         "name": "魔尊之頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 375,
         "name": "魔尊之戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 376,
         "name": "天罡之錘",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 377,
         "name": "天罡之護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 378,
         "name": "天罡之頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 379,
         "name": "天罡之戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 380,
         "name": "天狼之鍬",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 381,
         "name": "天狼之護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 382,
         "name": "天狼之頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 383,
         "name": "天狼之戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 384,
         "name": "天機之鐮",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 385,
         "name": "天機之護腕",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 386,
         "name": "天機之頭巾",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 387,
         "name": "天機之戒指",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 388,
         "name": "教頭之劍",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 389,
         "name": "教頭之手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 390,
         "name": "教頭之腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 391,
         "name": "教頭之項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 392,
         "name": "匠人之弓",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 393,
         "name": "匠人之手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 394,
         "name": "匠人之腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 395,
         "name": "匠人之項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 396,
         "name": "藥師之杖",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 397,
         "name": "藥師之手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 398,
         "name": "藥師之腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 399,
         "name": "藥師之項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 400,
         "name": "鐵匠之槍",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 401,
         "name": "鐵匠之手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 402,
         "name": "鐵匠之腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 403,
         "name": "鐵匠之項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 404,
         "name": "工造之錘",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 405,
         "name": "工造之手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 406,
         "name": "工造之腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 407,
         "name": "工造之項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 408,
         "name": "文書之扇",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 409,
         "name": "文書之手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 410,
         "name": "文書之腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 411,
         "name": "文書之項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 412,
         "name": "伐丁之斧",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 413,
         "name": "伐丁之手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 414,
         "name": "伐丁之腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 415,
         "name": "伐丁之項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 416,
         "name": "石工之鍬",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 417,
         "name": "石工之手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 418,
         "name": "石工之腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 419,
         "name": "石工之項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 420,
         "name": "農夫之鐮",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 421,
         "name": "農夫之手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 422,
         "name": "農夫之腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 423,
         "name": "農夫之項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 424,
         "name": "教官之劍",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 425,
         "name": "教官之手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 426,
         "name": "教官之腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 427,
         "name": "教官之項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 428,
         "name": "巧匠之弓",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 429,
         "name": "巧匠之手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 430,
         "name": "巧匠之腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 431,
         "name": "巧匠之項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 432,
         "name": "丹師之杖",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 433,
         "name": "丹師之手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 434,
         "name": "丹師之腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 435,
         "name": "丹師之項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 436,
         "name": "鍛工之槍",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 437,
         "name": "鍛工之手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 438,
         "name": "鍛工之腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 439,
         "name": "鍛工之項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 440,
         "name": "構匠之錘",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 441,
         "name": "構匠之手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 442,
         "name": "構匠之腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 443,
         "name": "構匠之項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 444,
         "name": "謀士之扇",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 445,
         "name": "謀士之手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 446,
         "name": "謀士之腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 447,
         "name": "謀士之項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 448,
         "name": "樵客之斧",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 449,
         "name": "樵客之手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 450,
         "name": "樵客之腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 451,
         "name": "樵客之項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 452,
         "name": "礦首之鍬",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 453,
         "name": "礦首之手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 454,
         "name": "礦首之腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 455,
         "name": "礦首之項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 456,
         "name": "花農之鐮",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 457,
         "name": "花農之手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 458,
         "name": "花農之腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 459,
         "name": "花農之項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 460,
         "name": "武師之劍",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 461,
         "name": "武師之手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 462,
         "name": "武師之腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 463,
         "name": "武師之項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 464,
         "name": "大匠之弓",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 465,
         "name": "大匠之手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 466,
         "name": "大匠之腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 467,
         "name": "大匠之項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 468,
         "name": "醫師之杖",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 469,
         "name": "醫師之手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 470,
         "name": "醫師之腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 471,
         "name": "醫師之項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 472,
         "name": "冶師之槍",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 473,
         "name": "冶師之手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 474,
         "name": "冶師之腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 475,
         "name": "冶師之項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 476,
         "name": "匠師之錘",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 477,
         "name": "匠師之手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 478,
         "name": "匠師之腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 479,
         "name": "匠師之項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 480,
         "name": "學士之扇",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 1
       },
       {
         "id": 481,
         "name": "學士之手套",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 2
       },
       {
         "id": 482,
         "name": "學士之腰帶",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 3
       },
       {
         "id": 483,
         "name": "學士之項鍊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "套装",
+        "slot": 4
       },
       {
         "id": 484,
         "name": "歷戰內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 485,
         "name": "蠻力內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 486,
         "name": "洞察內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 487,
         "name": "重擊內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 488,
         "name": "靈技內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 489,
         "name": "克火內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 490,
         "name": "神斧內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 491,
         "name": "百鍊內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 492,
         "name": "基石內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 493,
         "name": "破甲內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 494,
         "name": "靈巧內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 495,
         "name": "猛擊內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 496,
         "name": "掃蕩內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 497,
         "name": "避雷內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 498,
         "name": "克木內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 499,
         "name": "礦霸內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 500,
         "name": "神工內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 501,
         "name": "博學內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 502,
         "name": "勤務內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 503,
         "name": "慧根內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 504,
         "name": "悟性內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 505,
         "name": "破鋒內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 506,
         "name": "鎮水內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 507,
         "name": "烈焰內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 508,
         "name": "綠野內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 509,
         "name": "丹道內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 510,
         "name": "練兵內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 511,
         "name": "極效內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 512,
         "name": "猛將內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 513,
         "name": "聚氣內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 514,
         "name": "斬首內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 515,
         "name": "驚雷內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 516,
         "name": "荊棘內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 517,
         "name": "林叟內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 518,
         "name": "煉師內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 519,
         "name": "巨匠內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 520,
         "name": "精乾內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 521,
         "name": "飛影內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 522,
         "name": "深淵內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 523,
         "name": "霸王內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 524,
         "name": "怒濤內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 525,
         "name": "厚土內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 526,
         "name": "礦翁內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 527,
         "name": "巧匠內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 528,
         "name": "智叟內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 529,
         "name": "廣域內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 530,
         "name": "術師內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 531,
         "name": "巧手內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 532,
         "name": "疾風內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 533,
         "name": "穿刺內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 534,
         "name": "天機內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 535,
         "name": "農仙內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 536,
         "name": "藥王內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 537,
         "name": "武魁內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 538,
         "name": "強襲內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 539,
         "name": "匠師內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 540,
         "name": "神工內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 541,
         "name": "遠射內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 542,
         "name": "影刃內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 543,
         "name": "克土內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 544,
         "name": "煉鍛內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 545,
         "name": "鬼斧內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 546,
         "name": "淵博內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 547,
         "name": "刺骨內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 548,
         "name": "宗師內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 549,
         "name": "速冷內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 550,
         "name": "神伐內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 551,
         "name": "碎岩內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 552,
         "name": "豐穣內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 553,
         "name": "營造內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 554,
         "name": "仙丹內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 555,
         "name": "鐵血內丹",
-        "category": "內丹"
+        "category": "內丹",
+        "kind": "内丹",
+        "slot": 5
       },
       {
         "id": 556,
         "name": "銅護符",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 557,
         "name": "獸牙墜",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 558,
         "name": "獸骨鏈",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 559,
         "name": "速攻靴",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 560,
         "name": "鋒刃石",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 561,
         "name": "遠射標",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 562,
         "name": "技玉",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 563,
         "name": "技能符",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 564,
         "name": "雷紋石",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 565,
         "name": "水紋石",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 566,
         "name": "火紋石",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 567,
         "name": "木紋石",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 568,
         "name": "土紋石",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 569,
         "name": "採集鐮",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 570,
         "name": "工匠錘",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 571,
         "name": "營造尺",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 572,
         "name": "精工戒",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 573,
         "name": "經驗符",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 574,
         "name": "學徒筆記",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 575,
         "name": "內丹草",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 576,
         "name": "錢袋",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 577,
         "name": "裂傷爪",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 578,
         "name": "穿心箭",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 579,
         "name": "聚靈珠",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 580,
         "name": "暴擊玉",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 581,
         "name": "疾風令",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 582,
         "name": "鋒銳符",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 583,
         "name": "遠射手札",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 584,
         "name": "靈韻珠",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 585,
         "name": "銳金符",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 586,
         "name": "玄冰令",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 587,
         "name": "炎爆符",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 588,
         "name": "荊棘珠",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 589,
         "name": "岩崩墜",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 590,
         "name": "採鐮",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 591,
         "name": "百鍊錘",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 592,
         "name": "營造令",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 593,
         "name": "伐木師手札",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 594,
         "name": "名匠錐",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 595,
         "name": "興業尺",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 596,
         "name": "修行手冊",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 597,
         "name": "匠師札",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 598,
         "name": "掠財令",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 599,
         "name": "內丹經",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 600,
         "name": "悟道玉",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 601,
         "name": "練氣符",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 602,
         "name": "狂戰令",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 603,
         "name": "迅影牌",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 604,
         "name": "玄法杖",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 605,
         "name": "萬爆符",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 606,
         "name": "速攻旗",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 607,
         "name": "破陣旗",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 608,
         "name": "清場鐘",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 609,
         "name": "千機符",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 610,
         "name": "射手令",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 611,
         "name": "強攻符",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 612,
         "name": "雷霆破甲令",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 613,
         "name": "寒冰破陣符",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 614,
         "name": "焚天烈焰令",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 615,
         "name": "萬木春生珠",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 616,
         "name": "厚土載物印",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 617,
         "name": "山鬼斧",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 618,
         "name": "破岩鋤",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 619,
         "name": "百草鏟",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 620,
         "name": "鍛星錘",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 621,
         "name": "天工針",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 622,
         "name": "青烏爐",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 623,
         "name": "量天尺",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 624,
         "name": "天機盤",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 625,
         "name": "點將令",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 626,
         "name": "修行玉",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 627,
         "name": "傳功卷",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 628,
         "name": "聚財符",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 629,
         "name": "全才錄",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 630,
         "name": "秘寶圖",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 631,
         "name": "破軍戰神令",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 632,
         "name": "追風逐影牌",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 633,
         "name": "三清仙師杖",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 634,
         "name": "天爆地裂符",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 635,
         "name": "疾風迅雷旗",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 636,
         "name": "千機萬變符",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 637,
         "name": "屠神滅魔令",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 638,
         "name": "撼地戰神錘",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 639,
         "name": "軍師謀策扇",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 640,
         "name": "雷霆劍氣符",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 641,
         "name": "玄水寒冰令",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 642,
         "name": "離火焚天印",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 643,
         "name": "乙木長生珠",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 644,
         "name": "戊土厚土鐘",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 645,
         "name": "戰魂牌",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 646,
         "name": "征伐令",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 647,
         "name": "煉體丹經",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 648,
         "name": "斬龍斧",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 649,
         "name": "裂地鋤",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 650,
         "name": "萬物犁",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 651,
         "name": "補天錘",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 652,
         "name": "七竅針",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 653,
         "name": "九轉爐",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 654,
         "name": "神工尺",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 655,
         "name": "河洛盤",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 656,
         "name": "虎符令",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 657,
         "name": "掠財戰令",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 658,
         "name": "賞金獵人章",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 659,
         "name": "九轉金丹",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 660,
         "name": "傳道卷",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 661,
         "name": "大道丹書",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 662,
         "name": "霸王神力印",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 663,
         "name": "影舞天襲鐘",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 664,
         "name": "紫霄神雷符",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 665,
         "name": "穿雲貫日弓",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 666,
         "name": "裂地撼天錘",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 667,
         "name": "火神爆炎令",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 668,
         "name": "玄冰凍神令",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 669,
         "name": "臥龍軍師扇",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 670,
         "name": "一擊必殺符",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 671,
         "name": "屠魔大聖令",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 672,
         "name": "雷霆斬仙符",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 673,
         "name": "玄水冰封令",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 674,
         "name": "離火焚世印",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 675,
         "name": "乙木萬劍訣",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 676,
         "name": "戊土鎮岳鐘",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 677,
         "name": "戰聖印",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 678,
         "name": "破陣悟道旗",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 679,
         "name": "文武佩",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 680,
         "name": "百工聖祖令",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 681,
         "name": "開山斧",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 682,
         "name": "移山鋤",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 683,
         "name": "青帝鏟",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 684,
         "name": "熔仙錘",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 685,
         "name": "織女梭",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 686,
         "name": "丹鼎爐",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 687,
         "name": "魯班尺",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 688,
         "name": "八卦盤",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 689,
         "name": "太公令",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 690,
         "name": "奪寶戰旗",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 691,
         "name": "戰神賞金令",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 692,
         "name": "混沌道果",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 693,
         "name": "盤古開天斧",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 694,
         "name": "黃泉引渡刺",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 695,
         "name": "鴻鈞造化杖",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 696,
         "name": "后羿射日弓",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 697,
         "name": "共工觸山錘",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 698,
         "name": "炎帝焚天令",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 699,
         "name": "冰夷封河令",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 700,
         "name": "太乙雷神符",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 701,
         "name": "水伯天吳令",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 702,
         "name": "祝融神火印",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 703,
         "name": "句芒青帝珠",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 704,
         "name": "后土黃靈鐘",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 705,
         "name": "誅仙四劍",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 706,
         "name": "東皇太一鐘",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 707,
         "name": "姜尚封神榜",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 708,
         "name": "刑天戰魂印",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 709,
         "name": "玉虛道法卷",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 710,
         "name": "鬥戰勝佛令",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 711,
         "name": "文曲星官筆",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 712,
         "name": "有巢神工令",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 713,
         "name": "太上八卦爐",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 714,
         "name": "媧皇造物鼎",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 715,
         "name": "玄女兵法",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 716,
         "name": "巨靈神斧",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 717,
         "name": "愚公移山鋤",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 718,
         "name": "神農百草犁",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 719,
         "name": "天工開物卷",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 720,
         "name": "魯班營造尺",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 721,
         "name": "伏羲八卦盤",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 722,
         "name": "聚寶仙盆",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 723,
         "name": "財神金蛟剪",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 724,
         "name": "混沌道胎",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 725,
         "name": "創世神印",
-        "category": "裝備"
+        "category": "裝備",
+        "kind": "宝物",
+        "slot": 6
       },
       {
         "id": 726,
         "name": "煉虛力量丹",
-        "category": "丹藥"
+        "category": "丹藥",
+        "kind": "普通丹药",
+        "slot": 0
       },
       {
         "id": 727,
         "name": "煉虛敏捷丹",
-        "category": "丹藥"
+        "category": "丹藥",
+        "kind": "普通丹药",
+        "slot": 0
       },
       {
         "id": 728,
         "name": "煉虛智力丹",
-        "category": "丹藥"
+        "category": "丹藥",
+        "kind": "普通丹药",
+        "slot": 0
       },
       {
         "id": 729,
         "name": "合體力量丹",
-        "category": "丹藥"
+        "category": "丹藥",
+        "kind": "普通丹药",
+        "slot": 0
       },
       {
         "id": 730,
         "name": "合體敏捷丹",
-        "category": "丹藥"
+        "category": "丹藥",
+        "kind": "普通丹药",
+        "slot": 0
       },
       {
         "id": 731,
         "name": "合體智力丹",
-        "category": "丹藥"
+        "category": "丹藥",
+        "kind": "普通丹药",
+        "slot": 0
       },
       {
         "id": 732,
         "name": "大乘力量丹",
-        "category": "丹藥"
+        "category": "丹藥",
+        "kind": "普通丹药",
+        "slot": 0
       },
       {
         "id": 733,
         "name": "大乘敏捷丹",
-        "category": "丹藥"
+        "category": "丹藥",
+        "kind": "普通丹药",
+        "slot": 0
       },
       {
         "id": 734,
         "name": "大乘智力丹",
-        "category": "丹藥"
+        "category": "丹藥",
+        "kind": "普通丹药",
+        "slot": 0
       },
       {
         "id": 735,
         "name": "渡劫力量丹",
-        "category": "丹藥"
+        "category": "丹藥",
+        "kind": "普通丹药",
+        "slot": 0
       },
       {
         "id": 736,
         "name": "渡劫敏捷丹",
-        "category": "丹藥"
+        "category": "丹藥",
+        "kind": "普通丹药",
+        "slot": 0
       },
       {
         "id": 737,
         "name": "渡劫智力丹",
-        "category": "丹藥"
+        "category": "丹藥",
+        "kind": "普通丹药",
+        "slot": 0
       }
     ],
     "technologies": [
       {
         "id": 1,
         "name": "營房",
-        "category": "基礎"
+        "category": "基礎",
+        "advanced": false,
+        "tableLimit": 1,
+        "buildingId": 1
       },
       {
         "id": 2,
         "name": "書院",
-        "category": "基礎"
+        "category": "基礎",
+        "advanced": false,
+        "tableLimit": 1,
+        "buildingId": 2
       },
       {
         "id": 3,
         "name": "招募處",
-        "category": "基礎"
+        "category": "基礎",
+        "advanced": false,
+        "tableLimit": 1,
+        "buildingId": 3
       },
       {
         "id": 4,
         "name": "鍛造屋",
-        "category": "基礎"
+        "category": "基礎",
+        "advanced": false,
+        "tableLimit": 1,
+        "buildingId": 4
       },
       {
         "id": 5,
         "name": "聚義堂",
-        "category": "基礎"
+        "category": "基礎",
+        "advanced": false,
+        "tableLimit": 1,
+        "buildingId": 5
       },
       {
         "id": 6,
         "name": "城市投資",
-        "category": "基礎"
+        "category": "基礎",
+        "advanced": false,
+        "tableLimit": 1,
+        "buildingId": 4
       },
       {
         "id": 7,
         "name": "調整難度",
-        "category": "基礎"
+        "category": "基礎",
+        "advanced": false,
+        "tableLimit": 1,
+        "buildingId": 4
       },
       {
         "id": 8,
         "name": "擴張山寨",
-        "category": "基礎"
+        "category": "基礎",
+        "advanced": false,
+        "tableLimit": 1,
+        "buildingId": 6
       },
       {
         "id": 9,
         "name": "煉丹坊",
-        "category": "基礎"
+        "category": "基礎",
+        "advanced": false,
+        "tableLimit": 1,
+        "buildingId": 7
       },
       {
         "id": 10,
         "name": "工藝所",
-        "category": "基礎"
+        "category": "基礎",
+        "advanced": false,
+        "tableLimit": 1,
+        "buildingId": 8
       },
       {
         "id": 11,
         "name": "團隊技術",
-        "category": "基礎"
+        "category": "基礎",
+        "advanced": false,
+        "tableLimit": 1,
+        "buildingId": 6
       },
       {
         "id": 12,
         "name": "校場",
-        "category": "基礎"
+        "category": "基礎",
+        "advanced": false,
+        "tableLimit": 1,
+        "buildingId": 8
       },
       {
         "id": 13,
         "name": "建造局",
-        "category": "基礎"
+        "category": "基礎",
+        "advanced": false,
+        "tableLimit": 1,
+        "buildingId": 9
       },
       {
         "id": 14,
         "name": "林場",
-        "category": "基礎"
+        "category": "基礎",
+        "advanced": false,
+        "tableLimit": 1,
+        "buildingId": 10
       },
       {
         "id": 15,
         "name": "礦坑",
-        "category": "基礎"
+        "category": "基礎",
+        "advanced": false,
+        "tableLimit": 1,
+        "buildingId": 10
       },
       {
         "id": 16,
         "name": "農莊",
-        "category": "基礎"
+        "category": "基礎",
+        "advanced": false,
+        "tableLimit": 1,
+        "buildingId": 9
       },
       {
         "id": 17,
         "name": "渡劫台",
-        "category": "基礎"
+        "category": "基礎",
+        "advanced": false,
+        "tableLimit": 1,
+        "buildingId": 9
       },
       {
         "id": 18,
         "name": "置物台",
-        "category": "基礎"
+        "category": "基礎",
+        "advanced": false,
+        "tableLimit": 1,
+        "buildingId": 10
       },
       {
         "id": 19,
         "name": "主動尋訪",
-        "category": "基礎"
+        "category": "基礎",
+        "advanced": false,
+        "tableLimit": 1,
+        "buildingId": 6
       },
       {
         "id": 20,
         "name": "自動召喚靈獸",
-        "category": "基礎"
+        "category": "基礎",
+        "advanced": false,
+        "tableLimit": 1,
+        "buildingId": 8
       },
       {
         "id": 21,
         "name": "自動城市挑戰",
-        "category": "基礎"
+        "category": "基礎",
+        "advanced": false,
+        "tableLimit": 1,
+        "buildingId": 7
       },
       {
         "id": 22,
         "name": "製造技術",
-        "category": "基礎"
+        "category": "基礎",
+        "advanced": false,
+        "tableLimit": 1,
+        "buildingId": 9
       },
       {
         "id": 23,
         "name": "發展技術",
-        "category": "基礎"
+        "category": "基礎",
+        "advanced": false,
+        "tableLimit": 1,
+        "buildingId": 9
       },
       {
         "id": 24,
         "name": "採集技術",
-        "category": "基礎"
+        "category": "基礎",
+        "advanced": false,
+        "tableLimit": 1,
+        "buildingId": 11
       },
       {
         "id": 25,
         "name": "修煉技術",
-        "category": "基礎"
+        "category": "基礎",
+        "advanced": false,
+        "tableLimit": 1,
+        "buildingId": 11
       },
       {
         "id": 26,
         "name": "司職任免",
-        "category": "基礎"
+        "category": "基礎",
+        "advanced": false,
+        "tableLimit": 1,
+        "buildingId": 11
       },
       {
         "id": 27,
         "name": "監牢",
-        "category": "基礎"
+        "category": "基礎",
+        "advanced": false,
+        "tableLimit": 1,
+        "buildingId": 10
       },
       {
         "id": 28,
         "name": "裝飾物",
-        "category": "基礎"
+        "category": "基礎",
+        "advanced": false,
+        "tableLimit": 1,
+        "buildingId": 7
       },
       {
         "id": 29,
         "name": "空白",
-        "category": ""
+        "category": "",
+        "advanced": false,
+        "tableLimit": null,
+        "buildingId": ""
       },
       {
         "id": 30,
         "name": "空白",
-        "category": ""
+        "category": "",
+        "advanced": false,
+        "tableLimit": null,
+        "buildingId": ""
       },
       {
         "id": 31,
         "name": "主堂技術",
-        "category": "團隊"
+        "category": "團隊",
+        "advanced": true,
+        "tableLimit": 300,
+        "buildingId": 0
       },
       {
         "id": 32,
         "name": "營房技術",
-        "category": "團隊"
+        "category": "團隊",
+        "advanced": true,
+        "tableLimit": 300,
+        "buildingId": 0
       },
       {
         "id": 33,
         "name": "招募技術",
-        "category": "團隊"
+        "category": "團隊",
+        "advanced": true,
+        "tableLimit": 300,
+        "buildingId": 0
       },
       {
         "id": 34,
         "name": "伐木技術",
-        "category": "採集"
+        "category": "採集",
+        "advanced": true,
+        "tableLimit": 300,
+        "buildingId": 0
       },
       {
         "id": 35,
         "name": "種植技術",
-        "category": "採集"
+        "category": "採集",
+        "advanced": true,
+        "tableLimit": 300,
+        "buildingId": 0
       },
       {
         "id": 36,
         "name": "採礦技術",
-        "category": "採集"
+        "category": "採集",
+        "advanced": true,
+        "tableLimit": 300,
+        "buildingId": 0
       },
       {
         "id": 37,
         "name": "鍛造技術",
-        "category": "製造"
+        "category": "製造",
+        "advanced": true,
+        "tableLimit": 300,
+        "buildingId": 0
       },
       {
         "id": 38,
         "name": "工藝技術",
-        "category": "製造"
+        "category": "製造",
+        "advanced": true,
+        "tableLimit": 300,
+        "buildingId": 0
       },
       {
         "id": 39,
         "name": "煉丹技術",
-        "category": "製造"
+        "category": "製造",
+        "advanced": true,
+        "tableLimit": 300,
+        "buildingId": 0
       },
       {
         "id": 40,
         "name": "研究技術",
-        "category": "發展"
+        "category": "發展",
+        "advanced": true,
+        "tableLimit": 300,
+        "buildingId": 0
       },
       {
         "id": 41,
         "name": "操練技術",
-        "category": "發展"
+        "category": "發展",
+        "advanced": true,
+        "tableLimit": 300,
+        "buildingId": 0
       },
       {
         "id": 42,
         "name": "修煉技術",
-        "category": "修煉"
+        "category": "修煉",
+        "advanced": true,
+        "tableLimit": 300,
+        "buildingId": 0
       },
       {
         "id": 43,
         "name": "城牆技術",
-        "category": "發展"
+        "category": "發展",
+        "advanced": true,
+        "tableLimit": 300,
+        "buildingId": 0
       },
       {
         "id": 44,
         "name": "靈物技術",
-        "category": "修煉"
+        "category": "修煉",
+        "advanced": true,
+        "tableLimit": 300,
+        "buildingId": 0
       }
     ],
     "buildings": [
@@ -27223,10 +28829,30 @@
       ]
     }
   ],
+  "editingLimits": {
+    "equipment": {
+      "max": 1000
+    },
+    "training": {
+      "max": 1000
+    },
+    "technology": {
+      "max": 1000,
+      "maxById": {
+        "33": 299
+      }
+    }
+  },
   "verification": {
     "names": true,
     "characterExperience": true,
     "professionExperience": true,
-    "skillExperience": true
+    "skillExperience": true,
+    "equipmentLevel": true,
+    "equipmentLevelAdvanced": true,
+    "professionTrainingCap": true,
+    "professionTrainingCapAdvanced": true,
+    "advancedTechnologyLevel": true,
+    "advancedTechnologyLevelAdvanced": true
   }
 }

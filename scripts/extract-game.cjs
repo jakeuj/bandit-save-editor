@@ -106,6 +106,13 @@ function createCatalog(game) {
     const { data } = JSON.parse(fs.readFileSync(path.join(game.root, file + '.json'), 'utf8'));
     catalogs[kind] = data.map((r, id) => ({ id, name: r[nameColumn]?.[0], category: typeColumn === null ? '' : r[typeColumn]?.[0] })).filter(r => r.id && typeof r.name === 'string' && r.name.trim());
     if (kind === 'materials') for (const r of catalogs[kind]) r.tier = data[r.id][2][0];
+    if (kind === 'items') for (const r of catalogs[kind]) {
+      r.kind = data[r.id][4][0]; r.slot = data[r.id][6][0];
+    }
+    if (kind === 'technologies') for (const r of catalogs[kind]) {
+      r.advanced = r.id >= 31 && r.id <= 44 && Number.isSafeInteger(data[r.id][5][0]);
+      r.tableLimit = Number.isSafeInteger(data[r.id][5][0]) ? data[r.id][5][0] : null;
+    }
     if (kind === 'professions') for (const r of catalogs[kind]) {
       r.tier = data[r.id][3][0];
       r.family = data[r.id][4][0];
@@ -131,7 +138,7 @@ function createCatalog(game) {
   });
   // An index of write locations, not copies of the game's expressions or event bodies.
   const evidence = writes.map(o => ({ sid: o.sid, actionSid: o.actionSid, function: o.function, sheet: o.sheet, x: o.params[0]?.constant ?? '*', y: o.params[1]?.constant ?? '*', z: o.params[2]?.constant ?? '*', refs: o.params.map(p => p.expression ?? null) }));
-  return { glossary, catalog: { version: 1, game: 'szmnqea', gameVersion: reviewed.version, fingerprints: game.fingerprints, counts: { functions: game.functions.length, setXYZ: writes.length, arrayActions: game.operations.length,readSites:game.reads.length }, planes, catalogs, functions: game.functions, evidence, verification: { names: false, characterExperience: false, professionExperience: false, skillExperience: false } } };
+  return { glossary, catalog: { version: 1, game: 'szmnqea', gameVersion: reviewed.version, fingerprints: game.fingerprints, counts: { functions: game.functions.length, setXYZ: writes.length, arrayActions: game.operations.length,readSites:game.reads.length }, planes, catalogs, functions: game.functions, evidence, editingLimits: {equipment:{max:1000},training:{max:1000},technology:{max:1000,maxById:{33:299}}}, verification: { names: false, characterExperience: false, professionExperience: false, skillExperience: false, equipmentLevel:false,equipmentLevelAdvanced:false,professionTrainingCap:false,professionTrainingCapAdvanced:false,advancedTechnologyLevel:false,advancedTechnologyLevelAdvanced:false } } };
 }
 
 if (require.main === module) {
@@ -160,7 +167,7 @@ if (require.main === module) {
   const output = path.resolve(value('--output', 'knowledge/catalog.json'));
   if (fs.existsSync(output)) {
     const old = JSON.parse(fs.readFileSync(output, 'utf8'));
-    if (JSON.stringify(old.fingerprints) === JSON.stringify(catalog.fingerprints)) catalog.verification = old.verification;
+    if (JSON.stringify(old.fingerprints) === JSON.stringify(catalog.fingerprints)) catalog.verification = {...catalog.verification,...old.verification};
   }
   fs.mkdirSync(path.dirname(output), { recursive: true });
   fs.writeFileSync(output, JSON.stringify(catalog, null, 2) + '\n');

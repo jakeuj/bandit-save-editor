@@ -16,6 +16,7 @@ if(Object.values(knowledge.verification).some(Boolean)){
   if(proof.eventFingerprint!==knowledge.fingerprints['data.json']||proof.runtimeFingerprint!==knowledge.fingerprints['scripts/c3runtime.js']||!Object.values(proof.checks).every(v=>v===true))throw Error('遊戲驗證紀錄與來源不相符');
   if(!proof.fingerprints||Object.keys(proof.fingerprints).length!==Object.keys(knowledge.fingerprints).length||Object.entries(knowledge.fingerprints).some(([file,hash])=>proof.fingerprints[file]!==hash))throw Error('資料表指紋與遊戲驗證紀錄不相符');
   for(const [group,enabled]of Object.entries(knowledge.verification))if(enabled&&proof.groups[group]!==true)throw Error('驗證未涵蓋寫入群組：'+group);
+  if(['equipmentLevel','professionTrainingCap','advancedTechnologyLevel'].some(group=>knowledge.verification[group]||knowledge.verification[group+'Advanced'])&&JSON.stringify(proof.editingLimits)!==JSON.stringify(knowledge.editingLimits))throw Error('進階修改範圍與遊戲驗證紀錄不相符');
 }
 for (const [id, file] of [['save-core', 'core'], ['save-ui', 'ui'], ['save-pwa', 'pwa']]) {
   const code = fs.readFileSync(path.join(root, `src/${file}.js`), 'utf8').replace('/*__KNOWLEDGE__*/null', JSON.stringify(knowledge).replace(/</g, '\\u003c')).replace('/*__KNOWLEDGE_UI__*/',()=>fs.readFileSync(path.join(root,'src/knowledge-ui.js'),'utf8')).replace('/*__PROFESSION_UI__*/',()=>fs.readFileSync(path.join(root,'src/profession-ui.js'),'utf8'));

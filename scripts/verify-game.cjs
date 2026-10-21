@@ -63,12 +63,15 @@ async function setup(){
  const base=JSON.parse(fs.readFileSync(saveFile,'utf8').replace(/^\uFEFF/,''));
  // Only the disposable baseline changes; the actual editor still performs precise raw-text edits.
  base.data[1][3][2]=1;base.data[1][4][2]=0;base.data[1][50][2]=0;base.data[1][1][4]=1;base.data[1][1][5]=0;base.data[1][5][0]=5;base.data[1][59][2]=0;base.data[1][6][2]=1;base.data[1][31][2]=1;base.data[1][40][2]=0;base.data[1][22][2]=15;
+ const scenarioPath=opt('--scenario'),scenario=scenarioPath?JSON.parse(fs.readFileSync(scenarioPath,'utf8')):null;
+ for(const [x,y,z,value]of scenario?.baseline||[])base.data[x][y][z]=value;
  const model=C.parse(JSON.stringify(base));
  C.transaction(model,()=>{C.setField(model,{x:1,y:1,z:0},'驗證山寨');C.setField(model,{x:1,y:1,z:2},'驗證甲');});
  C.addExperience(model,{kind:'character',characterId:1,amount:6500});
  C.addExperience(model,{kind:'profession',characterId:1,id:1,amount:6500});
  C.addExperience(model,{kind:'profession',characterId:1,id:1,amount:1.5});
  C.addExperience(model,{kind:'skill',characterId:1,id:1,amount:21500});
+ for(const operation of scenario?.operations||[]){if(!['setEquipmentLevel','setProfessionTrainingCap','setAdvancedTechnologyLevel'].includes(operation.method))throw Error('Unsupported scenario operation');C[operation.method](model,operation.options);}
  const modified=C.serialize(model),expected=JSON.parse(modified).data;
  for(let slot=1;slot<=3;slot++)fs.writeFileSync(path.join(game,`savedir/ea${slot}save.dat`),modified);
  fs.mkdirSync(path.join(game,'backup'),{recursive:true});
@@ -82,7 +85,7 @@ async function setup(){
  fs.appendFileSync(path.join(game,'greenworks.js'),guard);
  fs.appendFileSync(path.join(game,'greenworks.js'),`\n(()=>{const gw=module.exports,fs=require('fs'),path=require('path'),base=${JSON.stringify(dir)},init=gw.init;gw.init=function(...a){const result=init.apply(this,a);fs.writeFileSync(path.join(base,'steam-init.json'),JSON.stringify({initialized:true,platform:process.platform,arch:process.arch,nw:process.versions.nw}));return result;};if(typeof gw.enableCloud==='function')gw.enableCloud=()=>{fs.appendFileSync(path.join(base,'steam-writes.jsonl'),JSON.stringify({method:'enableCloud'})+'\\n');return true;};})();\n`);
  const port=Number(opt('--port','19384'));
- const cells=[[1,1,0],[1,1,2],[1,3,2],[1,4,2],[1,1,4],[1,1,5],[1,31,2],[1,40,2],[2,2,0],[1,56,2]];
+ const cells=scenario?.observe||[[1,1,0],[1,1,2],[1,3,2],[1,4,2],[1,1,4],[1,1,5],[1,31,2],[1,40,2],[2,2,0],[1,56,2]];
  const state={dir,game,source,runtime,port,fingerprints,before,cells,gameVersion:catalog.gameVersion,expected:cells.map(([x,y,z])=>expected[x][y][z]),assertions:[]};
  state.pid=launch(state);
  fs.writeFileSync(path.join(dir,'state.json'),JSON.stringify(state,null,2));console.log('STATE '+path.join(dir,'state.json'));
@@ -93,18 +96,26 @@ class CDP{
  send(method,params={},sessionId){const id=++this.next;return new Promise((resolve,reject)=>{const timer=setTimeout(()=>{this.pending.delete(id);reject(Error('CDP timeout: '+method));},20000);this.pending.set(id,{resolve:v=>{clearTimeout(timer);resolve(v);},reject:e=>{clearTimeout(timer);reject(e);}});this.ws.send(JSON.stringify({id,method,params,...(sessionId?{sessionId}:{})}));});}
  close(){this.ws.close();}
 }
-async function connect(state){const b=await(await fetch(`http://127.0.0.1:${state.port}/json/version`)).json();const cdp=new CDP(b.webSocketDebuggerUrl);await cdp.ready();const {targetInfos}=await cdp.send('Target.getTargets');const page=targetInfos.find(t=>t.type==='page');const {sessionId:pageSession}=await cdp.send('Target.attachToTarget',{targetId:page.targetId,flatten:true});await cdp.send('Target.setAutoAttach',{autoAttach:true,waitForDebuggerOnStart:false,flatten:true},pageSession);await cdp.send('Runtime.enable',{},pageSession);const worker=cdp.events.find(e=>e.method==='Target.attachedToTarget'&&e.params.targetInfo.type==='worker'&&e.params.targetInfo.url.includes('workermain.js'));if(!worker){cdp.close();throw Error('Construct worker not found: '+JSON.stringify(cdp.events.filter(e=>e.method==='Target.attachedToTarget').map(e=>e.params.targetInfo)));}return {cdp,sessionId:worker.params.sessionId};}
+async function connect(state){const b=await(await fetch(`http://127.0.0.1:${state.port}/json/version`)).json();const cdp=new CDP(b.webSocketDebuggerUrl);await cdp.ready();const {targetInfos}=await cdp.send('Target.getTargets');const page=targetInfos.find(t=>t.type==='page');if(!page){cdp.close();throw Error('Game page not ready; probe again after startup');}const {sessionId:pageSession}=await cdp.send('Target.attachToTarget',{targetId:page.targetId,flatten:true});await cdp.send('Target.setAutoAttach',{autoAttach:true,waitForDebuggerOnStart:false,flatten:true},pageSession);await cdp.send('Runtime.enable',{},pageSession);const worker=cdp.events.find(e=>e.method==='Target.attachedToTarget'&&e.params.targetInfo.type==='worker'&&e.params.targetInfo.url.includes('workermain.js'));if(!worker){cdp.close();throw Error('Construct worker not found: '+JSON.stringify(cdp.events.filter(e=>e.method==='Target.attachedToTarget').map(e=>e.params.targetInfo)));}return {cdp,sessionId:worker.params.sessionId};}
 async function evaluate(state,expression){const {cdp,sessionId}=await connect(state);try{const r=await cdp.send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true},sessionId);if(r.exceptionDetails)throw Error(JSON.stringify(r.exceptionDetails));return r.result.value;}finally{cdp.close();}}
 async function probe(state){
  const result=await evaluate(state,`(()=>{const r=self.__banditValidationRuntime,a=r.GetObjectClassByName('save').GetInstances()[0].GetSdkInstance();if(r.GetMainRunningLayout().GetName()==='主界面')r.SetTimeScale(0);return {layout:r.GetMainRunningLayout().GetName(),values:${JSON.stringify(state.cells)}.map(([x,y,z])=>a.At(x,y,z))};})()`);
  console.log(JSON.stringify(result));return result;
 }
+async function waitMain(state,mainOnly=true){
+ const deadline=Date.now()+30000;let last;
+  while(Date.now()<deadline){try{const layout=await evaluate(state,"self.__banditValidationRuntime.GetMainRunningLayout().GetName()");if(layout==='主界面'||!mainOnly&&layout==='开始界面')return;}catch(e){last=e;}
+  await new Promise(resolve=>setTimeout(resolve,250));
+ }
+ throw Error('Main layout did not become ready'+(last?': '+last.message:''));
+}
 async function run(){
- if(args.includes('--help')){console.log('Node 22+, Windows/macOS: verify-game.cjs --setup --source UNPACKED_GAME --runtime NWJS [--save-file ORIGINAL.dat] [--catalog CANDIDATE.json] [--artifacts OUTSIDE_REPO]\n--state /outside/repo/state.json --probe | --load [--mode 存档|备份|云存档] | --save | --assert | --stop | --restart\nStop the disposable process before --restart. Wait for the title/main layout before --load/--assert.');return;}
+ if(args.includes('--help')){console.log('Node 22+, Windows/macOS: verify-game.cjs --setup --source UNPACKED_GAME --runtime NWJS [--save-file ORIGINAL.dat] [--catalog CANDIDATE.json] [--artifacts OUTSIDE_REPO] [--scenario SCENARIO.json]\n--state /outside/repo/state.json --probe | --load [--mode 存档|备份|云存档] | --save | --assert | --stop | --restart\nStop the disposable process before --restart. Wait for the title/main layout before --load/--assert.');return;}
  if(args.includes('--setup'))return setup();
  const state=JSON.parse(fs.readFileSync(opt('--state'),'utf8'));
  if(args.includes('--probe'))await probe(state);
  if(args.includes('--load')){
+  await waitMain(state,false);
   const mode=opt('--mode','云存档');
   console.log(await evaluate(state,`(()=>{const r=self.__banditValidationRuntime,f=r.GetEventSheetManager().GetFunctionBlockByName('读取进度'),b=f.GetEventBlock();b.RunAsExpressionFunctionCall(b.GetSolModifiersIncludingParents(),f.IsCopyPicked(),f.GetReturnType(),f.GetDefaultReturnValue(),1,${JSON.stringify(mode)});return 'Requested real game file-load function';})()`));
  }
@@ -112,8 +123,9 @@ async function run(){
   if(ownedProcess(state))throw Error('Stop the disposable process before restarting');
   state.previousPid=state.pid;state.pid=launch(state);state.restarted=true;fs.writeFileSync(opt('--state'),JSON.stringify(state,null,2));console.log('Restarted disposable test game');
  }
- if(args.includes('--save'))console.log(await evaluate(state,`(()=>{const r=self.__banditValidationRuntime,f=r.GetEventSheetManager().GetFunctionBlockByName('存档'),b=f.GetEventBlock();b.RunAsExpressionFunctionCall(b.GetSolModifiersIncludingParents(),f.IsCopyPicked(),f.GetReturnType(),f.GetDefaultReturnValue(),1,0,'主动');return 'Requested native game save slot 1';})()`));
+ if(args.includes('--save')){await waitMain(state);console.log(await evaluate(state,`(()=>{const r=self.__banditValidationRuntime,f=r.GetEventSheetManager().GetFunctionBlockByName('存档'),b=f.GetEventBlock();b.RunAsExpressionFunctionCall(b.GetSolModifiersIncludingParents(),f.IsCopyPicked(),f.GetReturnType(),f.GetDefaultReturnValue(),1,0,'主动');return 'Requested native game save slot 1';})()`));}
  if(args.includes('--assert')){
+  await waitMain(state);
   const got=await probe(state);if(got.layout!=='主界面'||JSON.stringify(got.values)!==JSON.stringify(state.expected))throw Error('Actual engine state does not match edited save');
   const savedFile=path.join(state.game,'save\\ea1save.dat');
   if(!fs.existsSync(savedFile))throw Error('Native manual-save file was not created');
@@ -128,4 +140,4 @@ async function run(){
  if(args.includes('--stop')){if(!ownedProcess(state))throw Error('Disposable process already stopped');if(process.platform==='win32')execFileSync('taskkill',['/PID',String(state.pid),'/T','/F'],{windowsHide:true});else process.kill(state.pid,'SIGTERM');console.log('Stopped disposable test game');}
 }
 if(require.main===module)run().catch(e=>{console.error(e.stack);process.exitCode=1;});
-module.exports={CDP,connect,evaluate};
+module.exports={CDP,connect,evaluate,waitMain};

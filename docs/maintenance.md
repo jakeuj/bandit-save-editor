@@ -33,7 +33,7 @@ node --test tests/*.test.cjs
 
 欄位圖鑑摘要由 `src/knowledge-ui.js` 讀取同一份內嵌知識的 `K.gameVersion`。摘要正確不代表其他標籤已同步：本次 V1.0.10.2 首次發布時曾出現摘要為新版、標籤仍為舊版，後由提交 `7adcb01` 修正。`tests/knowledge.test.cjs` 目前核對四個標記均等於內嵌的 `gameVersion`；新增或移除標示時，連同預期數量一起調整。`--check` 會重算產物，拒絕版本文字或 PWA 內容未同步的提交。
 
-更新順序為核對來源與實測紀錄、重建 catalog、執行建置及測試，再提交 catalog、驗證紀錄與產生的 HTML／`sw.js`。版本標示只是呈現知識基準，開放寫入仍受完整來源指紋及 `verification.json` 限制。側欄的編輯器版本 `v2.0` 與 Mac runtime 相容版本各有用途，不隨此標記改寫。
+更新順序為核對來源與實測紀錄、重建 catalog、執行建置及測試，再提交 catalog、驗證紀錄與產生的 HTML／`sw.js`。版本標示只是呈現知識基準，開放寫入仍受完整來源指紋及 `verification.json` 限制。側欄的編輯器版本 `v2.1` 與 Mac runtime 相容版本各有用途，不隨此標記改寫。
 
 ## PWA 維護與驗收
 
@@ -76,10 +76,16 @@ Manifest 的 `start_url` 與 `scope` 使用 `./`，省略 `id`，由瀏覽器以
 | `setField(model, coord, value)` | 寫入已確認且開放的欄位，檢查原型別、字串限制及數值範圍 |
 | `set(model, coord, value)` | 保留既有介面；已知欄位轉入相同限制，未辨識的數值座標維持手動整數功能 |
 | `addExperience(model, options)` | `kind` 為 `character`、`profession` 或 `skill`；另帶 `characterId`、`amount`，職業／技藝另帶 `id` |
+| `editingInfo(model, kind, id)` | `kind` 為 `equipment`／`training`／`technology`；回傳目前值、一般／進階上限與各自驗證狀態，無效實體或忙碌進程會拒絕 |
+| `setEquipmentLevel(model, {itemId, level, advanced})` | 只改有效一般裝備等級，檢查完整穿戴互指，排除寶物／內丹 |
+| `setProfessionTrainingCap(model, {professionId, cap, advanced})` | 阻擋操練中；下限為所有角色已取得的該職業最高等級；不解除自然成長30級 |
+| `setAdvancedTechnologyLevel(model, {technologyId, level, advanced})` | 限31–44；輸入存檔值（遊戲提示Lv加一）；阻擋研究中，檢查容量與計算範圍 |
 | `transaction(model, fn, label)` | 同步批次交易；失敗還原全部變更，成功形成一筆復原紀錄 |
 | `restore(model, coord)`／`undo(model)` | 前者還原指定變更，經驗則還原同一項的累計關聯修改；後者回到前一筆交易 |
 
 等級與經驗餘額由 `addExperience` 一起結算，不能透過 `setField` 或自訂座標單獨寫入。直接增加經驗不扣取得成本，也不改共用池投入／退款基數。欄位設定仍沿用 `version: 1`、`game: 'szmnqea'` 與 `fields` 格式；設定格式相容不代表可以繞過已知欄位限制。
+
+三項進階修改的 `advanced` 預設 false，一般／進階各有獨立驗證群組。公開值域由 catalog 的 `editingLimits` 與 verification 完全比對，目前上限1000、科技33另限299。自訂座標及舊 `set` 保持唯讀，只能使用具名操作；相同目標的累計修改整組還原。來源、公式及本輪實測見 [v2.1 研究](research/advanced-editing.md)。瀏覽器讀取存檔使用 `TextDecoder` 的 `ignoreBOM:true` 保留 BOM，避免 `File.text()` 消去原字元。
 
 玩家名稱與其他存檔字串進入 HTML 時使用文字節點或 HTML 跳脫；序列化則使用 JSON 字串跳脫，兩者用途不同。預覽、比對及唯讀檢視也要保留這項處理。
 
@@ -109,6 +115,8 @@ node scripts/extract-game.cjs --source /path/to/unpacked/game --audit-only --aud
 4. 確認遊戲載入、遊戲寫檔、停止測試程序後重啟讀回及來源存檔雜湊；測試只在獨立 app／遊戲／profile 中執行，保留授權初始化，Steam 寫入導向本機鏡像與紀錄。
 5. 將去識別結果與相符指紋寫入 `verification.json`，再開啟對應群組。建置會核對全部來源指紋、檢查結果及群組覆蓋，未通過就停止。
 
+v2.1 可使用 repo 外 `--scenario` JSON：`baseline` 為 `[x,y,z,value]` 陣列、`operations` 指定三項具名 API 的 `method`／`options`、`observe` 列出預期核對座標。工具只接受這三項操作，候選旗標僅存在隔離 VM；不直接修改公開 catalog。`--load` 等待主畫面，`--save`／`--assert` 確認布局就緒後執行；`scripts/verify-advanced.cjs --state /outside/state.json` 記錄原版屬性／加成，重啟後加 `--compare` 核對。原始 scenario、結果、SID 呼叫及玩家資料仍留在 repo 外。
+
 完整解析輸出、遊戲內容、玩家存檔、測試 state 與原始 log 均留在 repo 外。`--setup` 產生的測試狀態包含本機路徑及玩家資料，不能作為公開驗證紀錄提交。
 
 ## 離線 HTML 人工驗收
@@ -128,3 +136,6 @@ node scripts/extract-game.cjs --source /path/to/unpacked/game --audit-only --aud
 正式驗收以本次提交的 SHA 找到相同 `headSha` 的 run，確認 build／deploy 都成功；HTTP 內容以 `git show SHA:PATH` 的原始 bytes 比對，避免 Windows checkout 行尾轉換造成誤判。接著用瀏覽器開啟正式欄位圖鑑，同時確認版本標籤與索引摘要。若 PWA 顯示「新版已備妥」，先匯出尚未保存的修改，再關閉所有同站帳房分頁與 App 視窗後重開；重新整理可能仍由舊 Worker 提供內容。保留可看見版本的截圖於 repo 外，HTTP 成功與瀏覽器結果分別記錄。
 
 2026-10-21 的 V1.0.10.2 正式發布已驗證至提交 `7adcb01f9f0ddef749c1474850877df79ad78dd9`；對應部署、資產比對、畫面結果及驗收範圍集中於 [V1.0.10.2 正式發布紀錄](research/v1.0.10.2-audit.md#正式發布驗證)。後續版本以自己的提交重做核對。
+
+
+v2.1 的桌面／390px、精確匯出及隔離遊戲結果見 [進階修改實測](research/advanced-editing.md#2026-10-21-windows-隔離實測)。本輪 `file://` 被工具政策阻擋，直接開檔驗收保持待辦；不可引用舊版資源測試當作三項新功能已實測。
