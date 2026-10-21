@@ -60581,7 +60581,7 @@
     "backpackEquipmentLevel": true,
     "backpackEquipmentAffixCoefficient": true,
     "backpackEquipmentAffixReplacement": true,
-    "equipmentAffixInitialSelection": false,
+    "equipmentAffixInitialSelection": true,
     "equipmentNewItemMarker": true,
     "equipmentAffixReplacement": true,
     "equipmentAffixCoefficient": true,

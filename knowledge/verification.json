@@ -39,7 +39,7 @@
     "backpackEquipmentAffixCoefficient": true,
     "backpackEquipmentAffixReplacement": true,
     "equipmentNewItemMarker": true,
-    "equipmentAffixInitialSelection": false
+    "equipmentAffixInitialSelection": true
   },
   "scenarios": [
     "山寨與角色改名",
@@ -607,7 +607,7 @@
           "originalHashes": true,
           "nativeEffects": true,
           "lifecycle": true,
-          "selectionUi": false
+          "selectionUi": true
         },
         "coverage": {
           "planes": [
@@ -629,7 +629,22 @@
           "cases": 70,
           "combinedIdCoefficientFlagCases": 10
         },
-        "disabledReason": "Native selection UI unavailable: Computer Use kernel assets path error after reset; native IO alone does not open this gate."
+        "selectionUi": {
+          "date": "2026-10-22",
+          "gameVersion": "V1.0.10.2",
+          "build": 26094666,
+          "entry": "世界 → 万魂塔 → 地区 → 词条洗练",
+          "quality": 3,
+          "plane": 7,
+          "unwashedBothSlotsEnabled": true,
+          "nativeFirstSlotLocksOther": true,
+          "editorSelectedSlot2LocksOther": true,
+          "disabledSlotNoChange": true,
+          "nativeRewashCost": 100,
+          "saveRestart": true,
+          "originalHashes": true,
+          "evidence": "docs/research/equipment-workflow.md"
+        }
       }
     },
     "lifecycle": {

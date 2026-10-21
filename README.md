@@ -140,4 +140,4 @@ GitHub Pages 使用 `.github/workflows/pages.yml` 發布。推送 `main` 後，�
 
 ## v2.4 開發候選
 
-背包普通裝備的等級、係數與精準洗練，以及首次選槽原子交易已實作；研究與實測見[裝備操作補完](docs/research/equipment-workflow.md)。目前待本版桌面／手機與PWA畫面驗收，尚未發布；首次選槽缺原生選槽UI證據，保持停用。正式版仍以已部署v2.3為準。
+背包普通裝備的等級、係數與精準洗練，以及首次選槽原子交易已實作；研究與實測見[裝備操作補完](docs/research/equipment-workflow.md)。遊戲選槽UI、隔離存檔／重啟與桌面／390px精確匯出已通過，候選版首次選槽已開啟。目前待PWA驗收與正式部署；正式版仍以已部署v2.3為準。

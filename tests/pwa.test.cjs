@@ -197,6 +197,7 @@ test('equipment workflow independently rejects stale rules and first-selection w
   p.equipmentWorkflow.dataHash='stale';fs.writeFileSync(catalogPath,JSON.stringify(k));fs.writeFileSync(proofPath,JSON.stringify(p));assert.match(run().stderr,/裝備操作/);
   p.equipmentWorkflow.dataHash=validHash;p.equipmentWorkflow.groups.backpackEquipmentLevel.checks.restart=false;fs.writeFileSync(proofPath,JSON.stringify(p));assert.match(run().stderr,/裝備操作/);
   p.equipmentWorkflow.groups.backpackEquipmentLevel.checks.restart=true;k.verification.equipmentAffixInitialSelection=true;p.groups.equipmentAffixInitialSelection=true;
+  p.equipmentWorkflow.groups.equipmentAffixInitialSelection.checks.selectionUi=false;
   fs.writeFileSync(catalogPath,JSON.stringify(k));fs.writeFileSync(proofPath,JSON.stringify(p));assert.match(run().stderr,/equipmentAffixInitialSelection/);
  }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });

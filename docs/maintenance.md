@@ -187,4 +187,4 @@ v2.3 已以功能提交 `a912466` 通過 [Pages 正式發布驗證](research/pre
 
 `node scripts/verify-affixes.cjs --state /outside/state.json --scenario /outside/scenario.json`現在依options.plane讀取目標，z9才做穿戴公式比對。`node scripts/verify-equipment-workflow.cjs --state /outside/state.json --scenario /outside/scenario.json`驗證原生洗練、穿脫及排序並更新後續expected；再完成原版save／assert／stop／restart／load／assert後用`--compare`核對。原始狀態留repo外。
 
-本版實際已通過範圍、工具初始化阻礙及發布待辦以[研究紀錄](research/equipment-workflow.md)及SDD任務為準。DOM事件測試不代表390px或PWA互動通過；未完成本版畫面驗收前以待驗收分支交付，正式站維持既有版本。
+本版實際已通過範圍及發布待辦以[研究紀錄](research/equipment-workflow.md)及SDD任務為準。2026-10-22補齊遊戲選槽UI、桌面／390px及精確下載證據；首次選槽的負向建置測試須明確將`selectionUi`設為false，不能依賴正式證明當時尚未通過的預設值。PWA受本機回應改寫影響時保留完整性檢查，待乾淨回應驗收後才發布。
