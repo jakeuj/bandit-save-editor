@@ -93,6 +93,7 @@
   const max=advanced?info.advancedMax:Math.min(info.normalMax,info.advancedMax);
   if(value>max)throw Error(`超出${advanced?'已驗證的進階':'一般模式'}上限 ${max}。`);
   if(kind==='equipment'){
+   if([...m.changes.values()].some(c=>c.x===id&&c.z===9&&c.y>=15&&c.y<=20)&&value>info.normalMax)throw Error('已修改詞條係數的裝備，本輪不能再調為超限等級。');
    const tier=get(m,C(id,3,9));
    if(!Number.isSafeInteger(tier)||tier<1||![(tier-1)*30+value,(tier*6/9-1)*30+4*value].every(d=>Number.isFinite(10*1.05**d-1)))throw Error('裝備等階或升級公式超出可計算範圍。');
   }
@@ -117,6 +118,80 @@
  const setEquipmentLevel=(m,{itemId,level,advanced=false})=>setEditingValue(m,'equipment',itemId,level,advanced);
  const setProfessionTrainingCap=(m,{professionId,cap,advanced=false})=>setEditingValue(m,'training',professionId,cap,advanced);
  const setAdvancedTechnologyLevel=(m,{technologyId,level,advanced=false})=>setEditingValue(m,'technology',technologyId,level,advanced);
+ // Batch-two operations intentionally have no advanced mode.
+ const aptitudeNames=['力量','敏捷','智力'];
+ const decimal2=value=>typeof value==='number'&&Number.isFinite(value)&&Math.abs(value)<=Number.MAX_SAFE_INTEGER/100&&Math.abs(value*100-Math.round(value*100))<1e-8;
+ function ordinaryEquipment(m,itemId){
+  const info=editingInfo(m,'equipment',itemId),item=catalogMaps.items.get(get(m,C(itemId,1,9))),rules=KNOWLEDGE.batch2Data?.items[item.id];
+  const q=get(m,C(itemId,5,9)),tier=get(m,C(itemId,3,9));
+  if(item.kind!=='普通'||!rules||rules.setLink!==0||item.slot>4||q>6||!Number.isSafeInteger(tier)||tier<1||tier>9||tier!==rules.tier||info.current>info.normalMax)throw Error('第二批只支援原版等階、品質與等級範圍的一般裝備；套裝、寶物、內丹與超限裝備停用。');
+  // Unidentified special state is rejected rather than interpreted as ordinary equipment.
+  for(const y of [24,25,26,27])if(get(m,C(itemId,y,9))!==0)throw Error('裝備包含特殊狀態，尚未涵蓋飛升或套裝轉換。');
+  const slots=q-1;let selected=0;
+  for(let slot=1;slot<=6;slot++){
+   const id=get(m,C(itemId,8+slot,9)),coefficient=get(m,C(itemId,14+slot,9)),flag=get(m,C(itemId,27+slot,9));
+   if(![0,1].includes(flag))throw Error('洗練旗標不符。');
+   if(slot<=slots){if(!rules.affixIds.includes(id)||!decimal2(coefficient)||coefficient<10*(q-1)||coefficient>60+10*q)throw Error('既有詞條或係數不在原版範圍內。');}
+   else if(id!==0||coefficient!==0||flag!==0)throw Error('品質以外的詞條槽仍有資料。');
+   if(flag){if(selected)throw Error('未涵蓋多個已洗練槽的裝備。');selected=slot;}
+  }
+  return {...info,quality:q,tier,selected,slots,rules};
+ }
+ function affixInfo(m,itemId,slot){
+  const info=ordinaryEquipment(m,itemId);
+  if(!Number.isInteger(slot)||slot<1||slot>info.slots)throw Error('請選擇品質範圍內的既有詞條槽。');
+  if(info.selected!==slot)throw Error('只可調整已選定的洗練槽；請先回遊戲選槽洗練一次。');
+  return {...info,slot,coordinate:C(itemId,14+slot,9),current:get(m,C(itemId,14+slot,9)),attributeId:get(m,C(itemId,8+slot,9)),min:10*(info.quality-1),max:60+10*info.quality,verified:!!KNOWLEDGE.verification.equipmentAffixCoefficient};
+ }
+ function batch2Put(m,info,value,group,label){
+  const previous=m.currentGroup;m.currentGroup=group;
+  try{transaction(m,()=>put(m,info.coordinate,value,label),label);}finally{m.currentGroup=previous;}
+  return {...info,value};
+ }
+ function setEquipmentAffixCoefficient(m,{itemId,slot,coefficient,advanced=false}){
+  if(advanced!==false)throw Error('詞條係數尚未開放超限模式。');
+  const info=affixInfo(m,itemId,slot);
+  if(!info.verified)throw Error('詞條係數尚未完成隔離遊戲驗證。');
+  if(!decimal2(coefficient)||coefficient<info.min||coefficient>info.max)throw Error(`係數須為 ${info.min}–${info.max}，最多兩位小數。`);
+  return batch2Put(m,info,coefficient,`editing:equipment:${itemId}`,`${info.name}・詞條 ${slot} 係數`);
+ }
+ function pillInfo(m,characterId,aptitude,pillId){
+  if(!activeCharacter(m,characterId)||get(m,C(characterId,0,2))!==characterId)throw Error('找不到有效角色。');
+  if(!Number.isInteger(aptitude)||aptitude<1||aptitude>3)throw Error('無效的資質類型。');
+  const templateId=get(m,C(characterId,2,2));
+  if(!Number.isSafeInteger(templateId)||templateId<0)throw Error('角色範本尚未辨識。');
+  const template=templateId===0?{base:[10,11,12].map(y=>get(m,C(characterId,y,2))),talents:[1,2,3].map(y=>get(m,C(characterId,y,12))),talentLevels:[21,22,23].map(y=>get(m,C(characterId,y,12)))}:KNOWLEDGE.batch2Data?.characters[templateId];
+  if(!template||!template.base.every(v=>Number.isSafeInteger(v)&&v>0))throw Error('角色範本或基礎資質尚未辨識。');
+  if(get(m,C(characterId,50,2))!==0||Array.from({length:16},(_,i)=>get(m,C(characterId,i+1,16))).some(v=>v!==0))throw Error('目前只支援無結丹及重生階段紀錄的角色。');
+  for(let i=0;i<3;i++)if(get(m,C(characterId,10+i,2))!==template.base[i]||get(m,C(characterId,1+i,12))!==template.talents[i]||get(m,C(characterId,21+i,12))!==template.talentLevels[i])throw Error('角色基礎資質或天賦與載入範本不一致，請先回遊戲存檔。');
+  for(let slot=1;slot<=6;slot++){
+   const itemId=get(m,C(characterId,15+slot,2));if(itemId===0)continue;
+   const equipment=ordinaryEquipment(m,itemId);
+   if(get(m,C(itemId,7,9))!==characterId||catalogMaps.items.get(get(m,C(itemId,1,9))).slot!==slot||equipment.rules.mainAttributes.some(id=>id>=104&&id<=106))throw Error('穿戴裝備的資質加成尚未涵蓋。');
+  }
+  // Also catch an orphan owner which is absent from the character's slot array.
+  for(let i=1;i<m.original.size[0];i++)if(get(m,C(i,7,9))===characterId&&get(m,C(i,0,9))>0)ordinaryEquipment(m,i);
+  let base=template.base[aptitude-1]/10;
+  for(let i=0;i<3;i++){
+   const id=template.talents[i],level=template.talentLevels[i];if(id===0&&level===0)continue;
+   const talent=KNOWLEDGE.batch2Data.talents[id];
+   if(!talent||!Number.isSafeInteger(level)||level<0)throw Error('天賦資料不符。');
+   for(let k=0;k<3;k++)if(talent.attributes[k]===103+aptitude)base+=level*talent.coefficients[k]/10;
+  }
+  if(!Number.isSafeInteger(pillId)||pillId<1||pillId>=m.original.size[0])throw Error('無效的丹藥編號。');
+  const pill=KNOWLEDGE.batch2Data.pills[pillId];
+  if(!pill||pill.aptitude!==aptitude||!Number.isSafeInteger(get(m,C(pillId,6,0)))||get(m,C(pillId,6,0))<1)throw Error('請選擇已持有的對應資質丹藥作為上限依據。');
+  const cap=Math.round(100*base*1.5)/100,max=Math.floor((Math.min(cap,pill.cap)-base)*10+1e-8),coordinate=C(characterId,12+aptitude,2),current=get(m,coordinate);
+  if(!Number.isFinite(base)||base<=0||!Number.isSafeInteger(max)||max<0||!Number.isSafeInteger(current)||current<0)throw Error('現有增量或資質上限尚未涵蓋；小數原始增量保持唯讀。');
+  return {characterId,aptitude,pillId,coordinate,current,min:0,max,base,cap,pillCap:pill.cap,total:Math.round(100*(base+current/10))/100,name:aptitudeNames[aptitude-1],verified:!!KNOWLEDGE.verification.pillAptitudeBonus};
+ }
+ function setPillAptitudeBonus(m,{characterId,aptitude,pillId,bonus,advanced=false}){
+  if(advanced!==false)throw Error('丹藥增量尚未開放超限模式。');
+  const info=pillInfo(m,characterId,aptitude,pillId);
+  if(!info.verified)throw Error('丹藥增量尚未完成隔離遊戲驗證。');
+  if(!Number.isSafeInteger(bonus)||bonus<0||bonus>info.max)throw Error(`累積增量須為 0–${info.max} 的整數（每 1 等於資質 0.1 點）。`);
+  return batch2Put(m,info,bonus,`pill:${characterId}:${aptitude}`,`${get(m,C(characterId,1,2))}・${info.name}丹藥累積增量`);
+ }
  /** @returns {FieldDescriptor} */
  function resolveField(m,c){
   if(!exists(m.original,c))throw Error('座標超出這份存檔的範圍。');
@@ -131,6 +206,7 @@
   else if(z===0&&y===17&&x===1)named('招募刷新倒數（秒）',{type:'decimal'});
   else if(z===0&&[4,13].includes(y)&&catalogMaps.technologies.has(x))named(y===4?'科技等級':'科技研究狀態',{entity:catalogName('technologies',x)});
   else if(z===0&&y===5&&catalogMaps.professions.has(x))named('職業操練上限',{entity:catalogName('professions',x)});
+  else if(z===2&&y>=13&&y<=15)named(`${aptitudeNames[y-13]}丹藥累積增量`,{reason:'請由角色養成的丹藥增量具名操作修改；每 1 等於資質 0.1 點'});
   else if(z===2&&activeCharacter(m,x)){
    f.entity=get(m,C(x,1,2));
    const labels={0:'角色序號',1:'角色名稱',2:'角色範本',3:'角色等級',4:'角色經驗餘額',6:'目前職業',10:'力量資質',11:'敏捷資質',12:'智力資質',50:'重生階段',51:'性別',56:'共用池購買等級已花經驗',59:'自動轉職預設'};
@@ -141,9 +217,10 @@
   }else if([4,5].includes(z)&&activeCharacter(m,x)&&catalogMaps.professions.has(y))named(z===4?'職業等級':'職業經驗餘額',{entity:`${get(m,C(x,1,2))}・${catalogName('professions',y)}`,type:z===5?'decimal':'integer'});
   else if(z===12){named(`衍生屬性：${catalogName('attributes',y)}`,{entity:activeCharacter(m,x)?get(m,C(x,1,2)):`角色 #${x}`,type:'decimal'});}
   else if([7,9].includes(z)){
-   const labels={0:'物品實體序號',1:'物品範本',2:'物品數量／旗標',3:'物品等階',4:'物品狀態',5:'品質',6:'物品等級',7:'裝備歸屬／狀態',8:'特定主屬性',23:'原始品質',24:'物品狀態 24'};
+   const labels={0:'物品實體序號',1:'物品範本',2:'物品數量／旗標',3:'物品等階',4:'物品狀態',5:'品質',6:'物品等級',7:'裝備歸屬／狀態',8:'主屬性品質係數',23:'取得品質／套裝關聯值',24:'物品狀態 24',25:'未辨識物品狀態 25',26:'套裝關聯值 26',27:'套裝原物品資訊'};
    if(labels[y])named(labels[y],{entity:catalogName('items',get(m,C(x,1,z)))});
    else if(y>=9&&y<=14)named(`裝備詞條 #${y-8}`,{entity:catalogName('items',get(m,C(x,1,z)))});
+   else if(y>=28&&y<=33)named(`洗練槽標記 #${y-27}`);
    else if(y>=15&&y<=20)named(`裝備詞條係數 #${y-14}`,{type:'decimal',entity:catalogName('items',get(m,C(x,1,z)))});
   }else if(z===15)named(`任務記錄欄位 ${y}`,{entity:catalogName('quests',x)});
   else if([1,6,10,11,13,16,17,18,19,20,21].includes(z))named(`${plane.name}・欄位 ${y}`,{entity:`資料 #${x}`});
@@ -257,5 +334,5 @@
   if(patches.length!==m.changes.size)throw Error('部分修改座標未能定位，已停止匯出。');
   const parts=[];let previous=0;for(const p of patches){parts.push(m.text.slice(previous,p.start),p.value);previous=p.end;}parts.push(m.text.slice(previous));return parts.join('');
  }
- globalThis.SaveCore={BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,listEntities,catalogName,transaction,undo,restore,labelFor,diff,serialize};
+ globalThis.SaveCore={BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,listEntities,catalogName,transaction,undo,restore,labelFor,diff,serialize};
 })();

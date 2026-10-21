@@ -15,6 +15,7 @@ if(Object.values(knowledge.verification).some(Boolean)){
   const proof=JSON.parse(fs.readFileSync(proofPath,'utf8'));
   if(proof.eventFingerprint!==knowledge.fingerprints['data.json']||proof.runtimeFingerprint!==knowledge.fingerprints['scripts/c3runtime.js']||!Object.values(proof.checks).every(v=>v===true))throw Error('遊戲驗證紀錄與來源不相符');
   if(!proof.fingerprints||Object.keys(proof.fingerprints).length!==Object.keys(knowledge.fingerprints).length||Object.entries(knowledge.fingerprints).some(([file,hash])=>proof.fingerprints[file]!==hash))throw Error('資料表指紋與遊戲驗證紀錄不相符');
+  if(['equipmentAffixCoefficient','pillAptitudeBonus'].some(group=>knowledge.verification[group])&&(!proof.batch2||!proof.batch2.checks||!Object.values(proof.batch2.checks).every(v=>v===true)||JSON.stringify(proof.batch2.fingerprints)!==JSON.stringify(knowledge.batch2Fingerprints)||JSON.stringify(proof.batch2.limits)!==JSON.stringify(knowledge.batch2Limits)||proof.batch2.dataHash!==createHash('sha256').update(JSON.stringify(knowledge.batch2Data)).digest('hex')))throw Error('第二批來源、規則或值域缺少相符驗證');
   for(const [group,enabled]of Object.entries(knowledge.verification))if(enabled&&proof.groups[group]!==true)throw Error('驗證未涵蓋寫入群組：'+group);
   if(['equipmentLevel','professionTrainingCap','advancedTechnologyLevel'].some(group=>knowledge.verification[group]||knowledge.verification[group+'Advanced'])&&JSON.stringify(proof.editingLimits)!==JSON.stringify(knowledge.editingLimits))throw Error('進階修改範圍與遊戲驗證紀錄不相符');
 }

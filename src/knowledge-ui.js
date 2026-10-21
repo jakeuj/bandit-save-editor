@@ -16,6 +16,24 @@
   if(state.preserveValue&&old!==undefined)document.querySelector(`[data-edit-value="${kind}"]`).value=old;
   state.preserveValue=false;
  }
+ function renderAffixes(){
+  const old=$('affixItem')?.value,slot=$('affixSlot')?.value||'1';
+  const choices=C.listEntities(model,'inventory').filter(v=>v.z===9);
+  $('affixEditor').innerHTML=`<h3>既有詞條係數</h3><div class="toolbar"><select id="affixItem" aria-label="詞條裝備">${choices.map(v=>`<option value="${v.id}">#${v.id} ${esc(v.name)}</option>`).join('')}</select><select id="affixSlot" aria-label="詞條槽">${Array.from({length:5},(_,i)=>`<option value="${i+1}">詞條槽 ${i+1}</option>`).join('')}</select></div><p id="affixInfo" class="muted small-text" role="status"></p><div class="toolbar"><label>目標係數<input id="affixValue" type="number" step="0.01"></label><button id="affixApply" class="primary small">套用詞條係數</button></div><p class="muted small-text">只調已選定洗練槽的既有係數，不更換詞條、不重置洗練。尚未選槽請先回遊戲洗練一次；品質、特殊裝備與超限值保持唯讀。</p>`;
+  if(choices.some(v=>String(v.id)===old))$('affixItem').value=old;$('affixSlot').value=slot;
+  const update=()=>{try{const i=C.affixInfo(model,Number($('affixItem').value),Number($('affixSlot').value));$('affixInfo').textContent=`${C.catalogName('attributes',i.attributeId)} · 目前 ${i.current} · 範圍 ${i.min}–${i.max}${i.verified?'':' · 尚待隔離驗證'}`;$('affixValue').value=i.current;$('affixValue').min=i.min;$('affixValue').max=i.max;$('affixApply').disabled=!i.verified;}catch(e){$('affixInfo').textContent=e.message;$('affixApply').disabled=true;$('affixValue').value='';}};
+  $('affixItem').onchange=update;$('affixSlot').onchange=update;
+  $('affixApply').onclick=()=>{if(!$('affixValue').value.trim())return toast('係數不能空白。',true);perform(()=>C.setEquipmentAffixCoefficient(model,{itemId:Number($('affixItem').value),slot:Number($('affixSlot').value),coefficient:Number($('affixValue').value)}));};update();
+ }
+ function renderPills(){
+  const aptitude=$('pillAptitude')?.value||'1',old=$('pillType')?.value;
+  $('pillEditor').innerHTML=`<h3>丹藥資質累積增量</h3><div class="toolbar"><select id="pillAptitude" aria-label="丹藥資質">${['力量','敏捷','智力'].map((name,i)=>`<option value="${i+1}">${name}</option>`).join('')}</select><select id="pillType" aria-label="上限依據丹藥"></select></div><p id="pillInfo" class="muted small-text" role="status"></p><div class="toolbar"><label>累積增量（1＝資質 0.1 點）<input id="pillValue" type="number" min="0" step="1"></label><button id="pillApply" class="primary small">套用丹藥增量</button></div><p class="muted small-text">直接設定累積增量，可下降或歸零，不扣丹藥；以已持有的同類丹藥及角色上限限制。只支援無結丹紀錄且資質來源可核對的角色，重生會依原版清零。</p>`;
+  $('pillAptitude').value=aptitude;
+  const update=()=>{try{const i=C.pillInfo(model,Number($('characterSelect').value),Number($('pillAptitude').value),Number($('pillType').value));$('pillInfo').textContent=`目前累積 ${i.current}（總資質 ${i.total}） · 角色上限 ${i.cap} · 丹藥上限 ${i.pillCap} · 可填 0–${i.max}${i.verified?'':' · 尚待隔離驗證'}`;$('pillValue').value=i.current;$('pillValue').max=i.max;$('pillApply').disabled=!i.verified;}catch(e){$('pillInfo').textContent=e.message;$('pillValue').value='';$('pillApply').disabled=true;}};
+  const choices=()=>{const rows=Object.entries(K.batch2Data.pills).filter(([id,p])=>p.aptitude===Number($('pillAptitude').value)&&read(Number(id),6,0)>0);$('pillType').innerHTML=rows.map(([id])=>`<option value="${id}">${esc(C.catalogName('materials',Number(id)))}</option>`).join('');if(rows.some(([id])=>id===old))$('pillType').value=old;update();};
+  $('pillAptitude').onchange=choices;$('pillType').onchange=update;
+  $('pillApply').onclick=()=>{if(!$('pillValue').value.trim())return toast('累積增量不能空白。',true);perform(()=>C.setPillAptitudeBonus(model,{characterId:Number($('characterSelect').value),aptitude:Number($('pillAptitude').value),pillId:Number($('pillType').value),bonus:Number($('pillValue').value)}));};choices();
+ }
  function paged(kind,list,render,container){
   const size=50,max=Math.max(0,Math.ceil(list.length/size)-1);knowledgePages[kind]=Math.min(knowledgePages[kind],max);
   const page=knowledgePages[kind],start=page*size;
@@ -35,7 +53,7 @@
   $('characterSummary').innerHTML=stat('角色等級',read(x,3,2))+stat('自然經驗餘額',read(x,4,2))+stat('等級上限',(Math.floor(read(x,50,2))+1)*30)+stat('目前職業',C.catalogName('professions',read(x,6,2)))+stat('共用池已投入經驗',read(x,56,2))+stat('自動轉職預設',read(x,59,2));
   $('skillRows').innerHTML=C.SKILLS.map((name,i)=>`<tr><td>${esc(name)}</td><td>${htmlValue(read(x,31+i,2))} / ${htmlValue(read(x,22+i,2))}</td><td>${htmlValue(read(x,40+i,2))}</td><td>${htmlValue(C.experienceNeed.skill(read(x,31+i,2)))}</td></tr>`).join('');
   $('growthStatus').textContent=['names','characterExperience','professionExperience','skillExperience'].every(k=>K.verification[k])?'名稱與經驗已通過隔離驗證':'部分養成功能待遊戲驗證';
-  renderGrowth();
+  renderGrowth();renderPills();
  }
  function renderGrowth(){
   const x=Number($('characterSelect').value),kind=$('growthKind').value,old=$('growthTarget').value;
@@ -62,7 +80,7 @@
   const q=$('inventorySearch').value.trim().toLowerCase(),z=$('inventoryPlane').value;
   const rows=C.listEntities(model,'inventory').filter(r=>(!z||r.z===Number(z))&&`${r.id} ${r.name} ${r.detail}`.toLowerCase().includes(q));
   paged('inventory',rows,r=>`<tr><td class="mono">#${r.id} / ${esc(read(r.id,1,r.z))}</td><td>${esc(r.name)}</td><td>${r.z===7?'背包':'裝備庫／穿戴'}</td><td>${htmlValue(read(r.id,5,r.z))} / Lv ${htmlValue(read(r.id,6,r.z))}</td><td><button class="small" data-inspect-item="${r.id}" data-plane="${r.z}">查看欄位</button></td></tr>`,'inventoryRows');
-  renderEditing('equipment');
+  renderEditing('equipment');renderAffixes();
  }
  function renderAtlas(){
   const z=Number($('atlasPlane').value),plane=K.planes[z],q=$('atlasSearch').value.trim().toLowerCase();

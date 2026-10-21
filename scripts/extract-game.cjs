@@ -119,6 +119,16 @@ function createCatalog(game) {
       r.prerequisites = [10,11,12].map(column=>data[r.id][column][0]).filter(id=>id>0);
     }
   }
+  // Only derived rules needed by the two batch-two operations, not full source tables.
+  const table = name => JSON.parse(fs.readFileSync(path.join(game.root,name+'.json'),'utf8')).data.map(row=>row.map(c=>c[0]));
+  const sx=table('sx'),wp=table('wp'),cl=table('cl'),js=table('js'),tf=table('tf'),yx=table('yx');
+  const batch2Fingerprints=Object.fromEntries(['yx.json','tz.json'].map(file=>[file,crypto.createHash('sha256').update(fs.readFileSync(path.join(game.root,file))).digest('hex')]));
+  const batch2Data={
+    items:Object.fromEntries(catalogs.items.map(({id})=>[id,{tier:wp[id][3],setLink:wp[id][16],mainAttributes:wp[id].slice(8,11),affixIds:sx.map((r,id)=>({r,id})).filter(({r})=>r[8]===1&&(wp[id][23]==='战斗'?['战斗','通用'].includes(r[13]):wp[id][23]==='生产'?['生产','通用'].includes(r[13]):wp[id][23]==='通用'&&r[13+wp[id][9]-39]!==1)).map(({id})=>id)}])),
+    characters:Object.fromEntries(catalogs.characters.map(({id})=>[id,{base:js[id].slice(10,13),talents:js[id].slice(51,54),talentLevels:js[id].slice(54,57)}])),
+    talents:Object.fromEntries(catalogs.talents.map(({id})=>[id,{attributes:tf[id].slice(7,10),coefficients:tf[id].slice(10,13)}])),
+    pills:Object.fromEntries(catalogs.materials.filter(({id})=>cl[id][5]==='丹药'&&['力量丹','敏捷丹','智力丹'].includes(cl[id][3])).map(({id})=>[id,{aptitude:['力量丹','敏捷丹','智力丹'].indexOf(cl[id][3])+1,cap:yx[cl[id][2]][cl[id][6]],effect:Math.round(cl[id][2]**1.2*2**(cl[id][6]-1))/10}]))
+  };
   // Name conversion only; evidence identifiers and source paths remain unchanged.
   const glossaryFile = path.join(__dirname, '../knowledge/traditional-names.json');
   const glossary = fs.existsSync(glossaryFile) ? JSON.parse(fs.readFileSync(glossaryFile, 'utf8')) : {};
@@ -138,7 +148,7 @@ function createCatalog(game) {
   });
   // An index of write locations, not copies of the game's expressions or event bodies.
   const evidence = writes.map(o => ({ sid: o.sid, actionSid: o.actionSid, function: o.function, sheet: o.sheet, x: o.params[0]?.constant ?? '*', y: o.params[1]?.constant ?? '*', z: o.params[2]?.constant ?? '*', refs: o.params.map(p => p.expression ?? null) }));
-  return { glossary, catalog: { version: 1, game: 'szmnqea', gameVersion: reviewed.version, fingerprints: game.fingerprints, counts: { functions: game.functions.length, setXYZ: writes.length, arrayActions: game.operations.length,readSites:game.reads.length }, planes, catalogs, functions: game.functions, evidence, editingLimits: {equipment:{max:1000},training:{max:1000},technology:{max:1000,maxById:{33:299}}}, verification: { names: false, characterExperience: false, professionExperience: false, skillExperience: false, equipmentLevel:false,equipmentLevelAdvanced:false,professionTrainingCap:false,professionTrainingCapAdvanced:false,advancedTechnologyLevel:false,advancedTechnologyLevelAdvanced:false } } };
+  return { glossary, catalog: { version: 1, game: 'szmnqea', gameVersion: reviewed.version, fingerprints: game.fingerprints, batch2Fingerprints, batch2Data, batch2Limits:{equipmentAffixCoefficient:{plane:9,maxTier:9,maxQuality:6,selectedSlotOnly:true},pillAptitudeBonus:{maxStage:0,integerBonus:true,ownedPillRequired:true}}, counts: { functions: game.functions.length, setXYZ: writes.length, arrayActions: game.operations.length,readSites:game.reads.length }, planes, catalogs, functions: game.functions, evidence, editingLimits: {equipment:{max:1000},training:{max:1000},technology:{max:1000,maxById:{33:299}}}, verification: { equipmentAffixCoefficient:false,pillAptitudeBonus:false,names: false, characterExperience: false, professionExperience: false, skillExperience: false, equipmentLevel:false,equipmentLevelAdvanced:false,professionTrainingCap:false,professionTrainingCapAdvanced:false,advancedTechnologyLevel:false,advancedTechnologyLevelAdvanced:false } } };
 }
 
 if (require.main === module) {
@@ -168,6 +178,7 @@ if (require.main === module) {
   if (fs.existsSync(output)) {
     const old = JSON.parse(fs.readFileSync(output, 'utf8'));
     if (JSON.stringify(old.fingerprints) === JSON.stringify(catalog.fingerprints)) catalog.verification = {...catalog.verification,...old.verification};
+    if(JSON.stringify(old.batch2Fingerprints)!==JSON.stringify(catalog.batch2Fingerprints)||JSON.stringify(old.batch2Data)!==JSON.stringify(catalog.batch2Data)||JSON.stringify(old.batch2Limits)!==JSON.stringify(catalog.batch2Limits)){catalog.verification.equipmentAffixCoefficient=false;catalog.verification.pillAptitudeBonus=false;}
   }
   fs.mkdirSync(path.dirname(output), { recursive: true });
   fs.writeFileSync(output, JSON.stringify(catalog, null, 2) + '\n');

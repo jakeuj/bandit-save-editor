@@ -26,7 +26,7 @@ function ownedProcess(state){
 async function setup(){
  const source=path.resolve(opt('--source',path.join(os.homedir(),'bandit-mac-port/game'))),originalRuntime=path.resolve(opt('--runtime',path.join(os.homedir(),'bandit-mac-port/runtime/nwjs-sdk-v0.82.0-osx-arm64/nwjs.app/Contents/MacOS/nwjs')));
  const catalog=JSON.parse(fs.readFileSync(path.resolve(opt('--catalog',path.join(root,'knowledge/catalog.json'))),'utf8'));
- const fingerprints=catalog.fingerprints;
+ const fingerprints={...catalog.fingerprints,...catalog.batch2Fingerprints};
  for(const [file,hash]of Object.entries(fingerprints))if(sum(path.join(source,file))!==hash)throw Error('Test source does not match catalog fingerprint: '+file);
  const artifacts=fs.realpathSync(path.resolve(opt('--artifacts',os.tmpdir()))),relative=path.relative(root,artifacts);
  if(relative===''||(!path.isAbsolute(relative)&&relative!=='..'&&!relative.startsWith('..'+path.sep)))throw Error('Validation artifacts must stay outside the repo');
@@ -71,7 +71,7 @@ async function setup(){
  C.addExperience(model,{kind:'profession',characterId:1,id:1,amount:6500});
  C.addExperience(model,{kind:'profession',characterId:1,id:1,amount:1.5});
  C.addExperience(model,{kind:'skill',characterId:1,id:1,amount:21500});
- for(const operation of scenario?.operations||[]){if(!['setEquipmentLevel','setProfessionTrainingCap','setAdvancedTechnologyLevel'].includes(operation.method))throw Error('Unsupported scenario operation');C[operation.method](model,operation.options);}
+ for(const operation of scenario?.operations||[]){if(!['setEquipmentLevel','setProfessionTrainingCap','setAdvancedTechnologyLevel','setEquipmentAffixCoefficient','setPillAptitudeBonus'].includes(operation.method))throw Error('Unsupported scenario operation');C[operation.method](model,operation.options);}
  const modified=C.serialize(model),expected=JSON.parse(modified).data;
  for(let slot=1;slot<=3;slot++)fs.writeFileSync(path.join(game,`savedir/ea${slot}save.dat`),modified);
  fs.mkdirSync(path.join(game,'backup'),{recursive:true});

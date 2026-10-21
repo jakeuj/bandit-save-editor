@@ -144,6 +144,16 @@ v2.1 的桌面／390px、精確匯出及隔離遊戲結果見 [進階修改實�
 
 ## 第二批研究入口
 
-裝備品質、詞條與丹藥資質增量的來源、候選範圍、限制及隔離遊戲驗證矩陣集中於[第二批研究](research/advanced-editing-batch2.md)，工作狀態見[提案與任務](../sdd/advanced-editing-batch2/tasks.md)。這些群組仍唯讀，不沿用 v2.1 裝備等級的實測證明或進階值域。所用新資料表須先納入來源覆蓋，品質／詞條的整件裝備交易與復原也須另驗證。
+裝備品質、詞條與丹藥資質增量的來源、候選範圍、限制及隔離遊戲驗證矩陣集中於[第二批研究](research/advanced-editing-batch2.md)，工作狀態見[提案與任務](../sdd/advanced-editing-batch2/tasks.md)。v2.2 已開放通過獨立隔離實測的既有詞條係數及丹藥增量；品質、詞條 ID 與超限仍唯讀，不沿用 v2.1 裝備等級的證明或進階值域。所用新資料表須先納入來源覆蓋，品質／詞條的整件裝備交易與復原也須另驗證。
 
 PWA 雜湊異常時，先比較實際 HTTP 回應與提交的 Git blob。本機 AdGuard 曾改寫首頁並注入 CSP／腳本，Worker 因內容不符而拒絕快取是預期行為；不要放寬 CSP 或略過指紋比對。BOM 保留則須在瀏覽器讀檔入口驗收，除了核心序列化測試，也要逐字核對真正下載的匯出檔。
+
+## v2.2 核心與驗證入口
+
+- `affixInfo(model,itemId,slot)`／`setEquipmentAffixCoefficient(model,{itemId,slot,coefficient})`：z9、已選洗練槽，1-based槽號，最多兩位小數。只改係數；與同件裝備等級共用還原群組，已修改係數時禁止再設超限等級。
+- `pillInfo(model,characterId,aptitude,pillId)`／`setPillAptitudeBonus(model,{characterId,aptitude,pillId,bonus})`：aptitude1–3為力量／敏捷／智力，bonus為非負整數累積值，每1代表0.1點。pillId必須已持有且類型相符，作為上限依據，不扣材料。兩API的advanced只接受false。
+- 範本0的隨機角色以存檔基礎及天賦為準；有名角色才要求js範本一致。完整穿戴及無結丹引用需重新檢查；既有小數增量先維持唯讀。細節與SID集中在第二批研究，不複製至技能。
+- 生成器增加 `batch2Data`／`batch2Limits`／`batch2Fingerprints`。保留歷史13來源，第二批另涵蓋yx與tz；建置核對補充指紋、限制及資料SHA-256。擴充來源不能只更新catalog而沿用舊證明。
+- `scripts/verify-game.cjs --scenario` 現在接受兩個新增具名操作；仍只在隔離VM啟用候選旗標，啟動前與assert核對13+2來源。`node scripts/verify-batch2.cjs --state /outside/state.json` 記錄原版三項資質及115項裝備效果，重啟後加 `--compare`。原生卸穿、洗練、服藥與重生另記後續證據；裝備格取wp資料，不可假設1。
+
+重生呼叫僅驗證清除生命週期，不代替遊戲UI資格驗收；原生服藥可能產生小數增量，其後編輯停用是本版限制。來源檔、真實存檔與原始呼叫結果保持repo外。詳細已通過範圍及UI待辦見[第二批實作紀錄](research/advanced-editing-batch2.md#v22-實作與隔離驗證)。

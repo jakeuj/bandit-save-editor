@@ -31,7 +31,9 @@
     "professionTrainingCap": true,
     "professionTrainingCapAdvanced": true,
     "advancedTechnologyLevel": true,
-    "advancedTechnologyLevelAdvanced": true
+    "advancedTechnologyLevelAdvanced": true,
+    "equipmentAffixCoefficient": true,
+    "pillAptitudeBonus": true
   },
   "scenarios": [
     "山寨與角色改名",
@@ -123,5 +125,54 @@
     "additionalReviewedFingerprint": {
       "jc.json": "b5f2319b039dee5c6b185ced4a0fdf8fede0b0c0c4793449bd7956dcc0ca857e"
     }
+  },
+  "batch2": {
+    "date": "2026-10-21",
+    "gameVersion": "V1.0.10.2",
+    "steamBuildId": "26094666",
+    "fingerprints": {
+      "yx.json": "58b8eb984cf8190f52ed4e53d044079733cf82096224dd7014ec36e1da2b45bc",
+      "tz.json": "a4b008981f39abc371b5673abe4c780bef5c91229a5ae3a42d2e8fef4e780c74"
+    },
+    "limits": {
+      "equipmentAffixCoefficient": {
+        "plane": 9,
+        "maxTier": 9,
+        "maxQuality": 6,
+        "selectedSlotOnly": true
+      },
+      "pillAptitudeBonus": {
+        "maxStage": 0,
+        "integerBonus": true,
+        "ownedPillRequired": true
+      }
+    },
+    "dataHash": "7f4e01124958e7ce5b01c486c5c137e84a6cc49c0163fd30d7ec45b1da820c7a",
+    "checks": {
+      "nativeLoad": true,
+      "nativeSave": true,
+      "stopAndRestart": true,
+      "originalHashesUnchanged": true,
+      "nativeEffects": true,
+      "coreNativeAptitudeAgreement": true,
+      "nativeRewash": true,
+      "unequipReequip": true,
+      "nativePillConsumption": true,
+      "rebirthClears": true
+    },
+    "cases": [
+      "品質2–6各下界與上界，共10組；三項丹藥歸零／保守上限",
+      "有名範本與小數係數，原生卸穿、再次洗練、三種服藥及重生後存檔／重啟",
+      "九階普通裝備，品質6係數119.99與三項丹藥上限，存檔／重啟"
+    ],
+    "scope": [
+      "一般隨機角色的非零天賦與有名角色範本；無結丹紀錄",
+      "115項原生裝備屬性有限，3種資質公式與修改器相符，重啟結果一致",
+      "原生服藥產生小數增量的案例保留唯讀；不自動取整",
+      "穿戴格以wp表決定；曾因驗證腳本誤用格1而失敗，改為正確格3於新副本重驗。失敗副本不列通過案例",
+      "重生為原版函式生命週期測試，不宣稱符合玩家當下UI重生資格",
+      "代表性T1及T9、Q2–6與合法詞條；不是所有模板／槽位／角色組合或長時間遊玩",
+      "未開放超限、品質、詞條ID、套裝、寶物、內丹、未知特殊狀態及背包直接編輯"
+    ]
   }
 }
