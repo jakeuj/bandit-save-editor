@@ -184,3 +184,20 @@ test('replacement gate rejects missing or stale independent proof', () => {
   fs.writeFileSync(proofPath,JSON.stringify(p));assert.match(run().stderr,/精準洗練/);
  }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
+
+
+test('equipment workflow independently rejects stale rules and first-selection without native UI evidence',()=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'bandit-workflow-proof-'));
+ try{
+  for(const file of ['scripts','src','knowledge','assets','index.html','sw.js','manifest.webmanifest'])fs.cpSync(path.join(root,file),path.join(dir,file),{recursive:true});
+  const catalogPath=path.join(dir,'knowledge/catalog.json'),proofPath=path.join(dir,'knowledge/verification.json');
+  const k=JSON.parse(fs.readFileSync(catalogPath)),p=JSON.parse(fs.readFileSync(proofPath));
+  const run=()=>spawnSync(process.execPath,['scripts/build-editor.cjs'],{cwd:dir,encoding:'utf8'});
+  const validHash=p.equipmentWorkflow.dataHash;k.verification.backpackEquipmentLevel=true;p.groups.backpackEquipmentLevel=true;
+  p.equipmentWorkflow.dataHash='stale';fs.writeFileSync(catalogPath,JSON.stringify(k));fs.writeFileSync(proofPath,JSON.stringify(p));assert.match(run().stderr,/裝備操作/);
+  p.equipmentWorkflow.dataHash=validHash;p.equipmentWorkflow.groups.backpackEquipmentLevel.checks.restart=false;fs.writeFileSync(proofPath,JSON.stringify(p));assert.match(run().stderr,/裝備操作/);
+  p.equipmentWorkflow.groups.backpackEquipmentLevel.checks.restart=true;k.verification.equipmentAffixInitialSelection=true;p.groups.equipmentAffixInitialSelection=true;
+  p.equipmentWorkflow.groups.equipmentAffixInitialSelection.checks.selectionUi=false;
+  fs.writeFileSync(catalogPath,JSON.stringify(k));fs.writeFileSync(proofPath,JSON.stringify(p));assert.match(run().stderr,/equipmentAffixInitialSelection/);
+ }finally{fs.rmSync(dir,{recursive:true,force:true});}
+});

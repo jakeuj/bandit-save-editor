@@ -4,30 +4,35 @@
  const short=v=>{const text=fmt(v);return text.length>150?text.slice(0,150)+'…':text;};
  const sourceHtml=rows=>rows.length?rows.map(e=>`<div class="source-detail">${esc(e.function)}<br>${esc(e.sheet)} · SID ${esc(e.sid)}</div>`).join(''):'<span class="source-detail">尚未定位欄位事件</span>';
  const editingState=Object.fromEntries(['equipment','training','technology'].map(kind=>[kind,{id:null,advanced:false}]));
+ const equipmentChoices=()=>C.listEntities(model,'inventory').filter(v=>!$('inventoryPlane').value||String(v.z)===$('inventoryPlane').value);
+ const equipmentLabel=v=>`${v.z===7?'背包':read(v.id,7,9)>0?'穿戴・'+read(read(v.id,7,9),1,2):'裝備庫'} #${v.id} ${v.name}`;
  function renderEditing(kind){
   const state=editingState[kind],title={equipment:'裝備等級',training:'職業操練上限',technology:'進階科技等級'}[kind];
-  const choices=kind==='equipment'?C.listEntities(model,'inventory').filter(v=>v.z===9):K.catalogs[kind==='training'?'professions':'technologies'].filter(v=>kind!=='technology'||v.advanced);
+  const choices=kind==='equipment'?equipmentChoices().map(v=>({...v,itemId:v.id,id:`${v.z}:${v.id}`,label:equipmentLabel(v)})):K.catalogs[kind==='training'?'professions':'technologies'].filter(v=>kind!=='technology'||v.advanced);
   const old=document.querySelector(`[data-edit-value="${kind}"]`)?.value;
   if(!choices.some(v=>v.id===state.id))state.id=choices[0]?.id??null;
-  let info,error='';try{info=C.editingInfo(model,kind,state.id);}catch(e){error=e.message;}
+  const [plane,itemId]=kind==='equipment'&&state.id?state.id.split(':').map(Number):[9,state.id];
+  if(kind==='equipment'&&plane===7)state.advanced=false;
+  let info,error='';try{info=C.editingInfo(model,kind,itemId,plane);}catch(e){error=e.message;}
   const enabled=info?.verified&&(!state.advanced||info.advancedVerified),max=state.advanced?info?.advancedMax:Math.min(info?.normalMax??0,info?.advancedMax??0);
-  $(kind+'Editor').innerHTML=`<h3>${title}</h3><div class="toolbar"><select data-edit-target="${kind}" aria-label="選擇${title}目標">${choices.map(v=>`<option value="${v.id}" ${v.id===state.id?'selected':''}>#${v.id} ${esc(v.name)}</option>`).join('')}</select><label class="check"><input type="checkbox" data-edit-mode="${kind}" ${state.advanced?'checked':''}>進階模式</label></div><p class="muted small-text">${info?`目前 ${htmlValue(info.current)} · 一般上限 ${htmlValue(info.normalMax)} · 進階驗證上限 ${htmlValue(info.advancedMax)}`:esc(error)}</p><div class="toolbar"><label>目標數值<input type="number" min="${info?.min??1}" max="${max??0}" step="1" value="${info?.current||info?.min||1}" data-edit-value="${kind}" aria-label="${title}目標數值" ${info?'':'disabled'}></label><button class="small primary" data-edit-apply="${kind}" ${enabled?'':'disabled'}>套用${title}</button></div><p class="muted small-text" role="status">${esc(error||(!enabled?'此修改模式尚待隔離遊戲驗證，目前停用。':state.advanced?'已驗證範圍內可超過原版上限；不扣取得成本。':'一般模式遵守原版上限，不扣取得成本。'))}${kind==='training'?' 職業自然成長仍受原版 30 級限制。':kind==='technology'?' 目標為存檔值；遊戲科技提示的 Lv 為此值加一。':''}</p>`;
+  $(kind+'Editor').innerHTML=`<h3>${title}</h3><div class="toolbar"><select data-edit-target="${kind}" aria-label="選擇${title}目標">${choices.map(v=>`<option value="${v.id}" ${v.id===state.id?'selected':''}>${esc(v.label||'#'+v.id+' '+v.name)}</option>`).join('')}</select><label class="check"><input type="checkbox" data-edit-mode="${kind}" ${kind==='equipment'&&plane===7?'disabled':''} ${state.advanced?'checked':''}>進階模式</label></div><p class="muted small-text">${info?`目前 ${htmlValue(info.current)} · 一般上限 ${htmlValue(info.normalMax)}${kind==='equipment'&&plane===7?' · 背包僅一般模式':' · 進階驗證上限 '+htmlValue(info.advancedMax)}`:esc(error)}</p><div class="toolbar"><label>目標數值<input type="number" min="${info?.min??1}" max="${max??0}" step="1" value="${info?.current||info?.min||1}" data-edit-value="${kind}" aria-label="${title}目標數值" ${info?'':'disabled'}></label><button class="small primary" data-edit-apply="${kind}" ${enabled?'':'disabled'}>套用${title}</button></div><p class="muted small-text" role="status">${esc(error||(!enabled?'此修改模式尚待隔離遊戲驗證，目前停用。':state.advanced?'已驗證範圍內可超過原版上限；不扣取得成本。':'一般模式遵守原版上限，不扣取得成本。'))}${kind==='training'?' 職業自然成長仍受原版 30 級限制。':kind==='technology'?' 目標為存檔值；遊戲科技提示的 Lv 為此值加一。':''}</p>`;
   // Preserve an unsubmitted number while toggling modes, but reset after applying or changing target.
   if(state.preserveValue&&old!==undefined)document.querySelector(`[data-edit-value="${kind}"]`).value=old;
   state.preserveValue=false;
  }
  function renderAffixes(){
   const old=$('affixItem')?.value,slot=$('affixSlot')?.value||'1';
-  const choices=C.listEntities(model,'inventory').filter(v=>v.z===9);
-  $('affixEditor').innerHTML=`<h3>詞條係數與精準洗練</h3><div class="toolbar"><select id="affixItem" aria-label="詞條裝備">${choices.map(v=>`<option value="${v.id}">#${v.id} ${esc(v.name)}</option>`).join('')}</select><select id="affixSlot" aria-label="詞條槽">${Array.from({length:5},(_,i)=>`<option value="${i+1}">詞條槽 ${i+1}</option>`).join('')}</select></div><p id="affixInfo" class="muted small-text" role="status"></p><div class="toolbar"><label>目標係數<input id="affixValue" type="number" step="0.01"></label><button id="affixApply" class="primary small">套用詞條係數</button></div><p class="muted small-text">上方係數操作只調既有係數；下方精準洗練可替換合法詞條，兩者皆不重置選槽。尚未選槽請先回遊戲洗練一次；品質、特殊裝備與超限值保持唯讀。</p><h4>精準洗練</h4><div class="toolbar"><input id="affixSearch" type="search" aria-label="搜尋合法詞條" placeholder="搜尋此裝備的合法詞條"><select id="affixTarget" aria-label="目標詞條"></select></div><div id="affixPreview" class="small-text" role="status"></div><button id="affixReplace" class="primary small" disabled>套用詞條與係數</button><p class="muted small-text">預覽為這件裝備的屬性貢獻，包含同屬性的主屬性與其他詞條；不代表完整角色面板。保留洗練選槽，不扣魂魄。</p>`;
-  if(choices.some(v=>String(v.id)===old))$('affixItem').value=old;$('affixSlot').value=slot;
+  const choices=equipmentChoices();
+  $('affixEditor').innerHTML=`<h3>詞條係數與精準洗練</h3><div class="toolbar"><select id="affixItem" aria-label="詞條裝備">${choices.map(v=>`<option value="${v.z}:${v.id}">${esc(equipmentLabel(v))}</option>`).join('')}</select><select id="affixSlot" aria-label="詞條槽">${Array.from({length:5},(_,i)=>`<option value="${i+1}">詞條槽 ${i+1}</option>`).join('')}</select></div><p id="affixInfo" class="muted small-text" role="status"></p><div class="toolbar"><label>目標係數<input id="affixValue" type="number" step="0.01"></label><button id="affixApply" class="primary small">套用詞條係數</button></div><p class="muted small-text">上方係數操作只調既有係數；下方精準洗練可替換合法詞條，兩者皆不重置選槽。首次選槽請使用下方精準洗練並確認；品質、特殊裝備與超限值保持唯讀。</p><h4>精準洗練</h4><div class="toolbar"><input id="affixSearch" type="search" aria-label="搜尋合法詞條" placeholder="搜尋此裝備的合法詞條"><select id="affixTarget" aria-label="目標詞條"></select></div><label class="check" id="affixFirstLabel" hidden><input id="affixFirst" type="checkbox">確認首次選定此槽</label><p id="affixFirstNote" class="muted small-text"></p><div id="affixPreview" class="small-text" role="status"></div><button id="affixReplace" class="primary small" disabled>套用詞條與係數</button><p class="muted small-text">預覽為這件裝備的屬性貢獻，包含同屬性的主屬性與其他詞條；不代表完整角色面板。保留洗練選槽，不扣魂魄。</p>`;
+  if(choices.some(v=>`${v.z}:${v.id}`===old))$('affixItem').value=old;$('affixSlot').value=slot;
   let info=null;
+  const target=()=>{const [plane,itemId]=$('affixItem').value.split(':').map(Number);return {plane,itemId,slot:Number($('affixSlot').value)};};
   const replacementPreview=()=>{
    $('affixReplace').disabled=true;
    try{if(!$('affixValue').value.trim()||!$('affixTarget').value)throw Error('請選擇合法詞條並輸入係數。');
-    const p=C.previewEquipmentAffixReplacement(model,{itemId:Number($('affixItem').value),slot:Number($('affixSlot').value),attributeId:Number($('affixTarget').value),coefficient:Number($('affixValue').value)});
-    $('affixPreview').innerHTML=`<p>${esc(C.catalogName('attributes',p.before.attributeId))}（係數 ${esc(p.before.coefficient)}） → ${esc(C.catalogName('attributes',p.after.attributeId))}（係數 ${esc(p.after.coefficient)}）</p><table><thead><tr><th>裝備屬性</th><th>目前</th><th>套用後</th><th>差異</th></tr></thead><tbody>${p.effects.map(v=>`<tr><td>${esc(v.name)}</td><td>${esc(fmt(v.before))}${esc(v.unit)}</td><td>${esc(fmt(v.after))}${esc(v.unit)}</td><td>${esc(fmt(Math.round(v.delta*100)/100))} 百分點</td></tr>`).join('')}</tbody></table><p>${p.unchanged?'詞條與係數未改變。':p.effectUnchanged?'取整後效果不變。':''}${p.verified?'':' 精準洗練尚待隔離驗證。'}</p>`;
-    $('affixReplace').disabled=!p.verified||p.unchanged;
+    const p=C.previewEquipmentAffixReplacement(model,{...target(),attributeId:Number($('affixTarget').value),coefficient:Number($('affixValue').value),selectUnwashedSlot:!!info?.requiresInitialSelection});
+    $('affixPreview').innerHTML=`<p>${esc(C.catalogName('attributes',p.before.attributeId))}（係數 ${esc(p.before.coefficient)}） → ${esc(C.catalogName('attributes',p.after.attributeId))}（係數 ${esc(p.after.coefficient)}）</p><table><thead><tr><th>裝備屬性</th><th>目前</th><th>套用後</th><th>差異</th></tr></thead><tbody>${p.effects.map(v=>`<tr><td>${esc(v.name)}</td><td>${esc(fmt(v.before))}${esc(v.unit)}</td><td>${esc(fmt(v.after))}${esc(v.unit)}</td><td>${esc(fmt(Math.round(v.delta*100)/100))} 百分點</td></tr>`).join('')}</tbody></table><p>${p.selectionChange?'首次選槽：未選定 → 槽 '+p.slot+'；其他槽將維持鎖定。':''}${p.unchanged?'詞條與係數未改變。':p.effectUnchanged?'取整後效果不變。':''}${p.verified?'':' 精準洗練尚待隔離驗證。'}</p>`;
+    $('affixReplace').disabled=!p.verified||p.unchanged||info?.requiresInitialSelection&&!$('affixFirst').checked;
    }catch(e){$('affixPreview').textContent=e.message;}
   };
   const candidates=()=>{const selected=$('affixTarget').value||String(info?.attributeId||''),query=$('affixSearch').value.trim().toLowerCase();
@@ -35,12 +40,19 @@
    $('affixTarget').innerHTML='<option value="">選擇目標詞條</option>'+rows.map(v=>`<option value="${v.attributeId}" ${v.reason?'disabled':''}>${esc(v.name)}${v.reason?' · '+esc(v.reason):''}</option>`).join('');
    if(rows.some(v=>String(v.attributeId)===selected&&!v.reason))$('affixTarget').value=selected;replacementPreview();
   };
-  const update=()=>{info=null;try{const i=C.affixInfo(model,Number($('affixItem').value),Number($('affixSlot').value));$('affixInfo').textContent=`${C.catalogName('attributes',i.attributeId)} · 目前 ${i.current} · 範圍 ${i.min}–${i.max}${i.verified?'':' · 尚待隔離驗證'}`;$('affixValue').value=i.current;$('affixValue').min=i.min;$('affixValue').max=i.max;$('affixApply').disabled=!i.verified;info=C.equipmentAffixReplacementInfo(model,{itemId:Number($('affixItem').value),slot:Number($('affixSlot').value)});}catch(e){$('affixInfo').textContent=e.message;$('affixApply').disabled=true;$('affixValue').value='';}
+  const update=()=>{info=null;$('affixFirst').checked=false;$('affixFirstLabel').hidden=true;$('affixFirstNote').textContent='';
+   try{let error;const t=target();for(const slot of [...new Set([t.slot,1,2,3,4,5])]){try{info=C.equipmentAffixReplacementInfo(model,{...t,slot});break;}catch(e){error=e;}}if(!info)throw error;
+    const i=info;$('affixSlot').innerHTML=i.selectableSlots.map(s=>`<option value="${s}">詞條槽 ${s}</option>`).join('');$('affixSlot').value=String(i.slot);
+    $('affixInfo').textContent=`${C.catalogName('attributes',i.attributeId)} · 目前 ${i.current} · 範圍 ${i.min}–${i.max}${i.requiresInitialSelection?' · 尚未選槽':''}`;
+    $('affixValue').value=i.current;$('affixValue').min=i.min;$('affixValue').max=i.max;
+    $('affixApply').disabled=i.requiresInitialSelection||!C.affixInfo(model,t.itemId,i.slot,t.plane).verified;
+    $('affixFirstLabel').hidden=!i.requiresInitialSelection;$('affixFirst').disabled=!C.KNOWLEDGE.verification.equipmentAffixInitialSelection;$('affixFirstNote').textContent=i.requiresInitialSelection?(!C.KNOWLEDGE.verification.equipmentAffixInitialSelection?'首次選槽尚待原生遊戲 UI 驗證，目前停用。 ':'')+'首次套用後，遊戲只允許洗練此槽；編輯器內可整組還原。本次不扣魂魄。':'';
+   }catch(e){$('affixInfo').textContent=e.message;$('affixApply').disabled=true;if(!info)$('affixValue').value='';}
    $('affixTarget').innerHTML='';$('affixSearch').value='';candidates();
   };
-  $('affixItem').onchange=update;$('affixSlot').onchange=update;$('affixSearch').oninput=candidates;$('affixTarget').onchange=replacementPreview;$('affixValue').oninput=replacementPreview;
-  $('affixApply').onclick=()=>{if(!$('affixValue').value.trim())return toast('係數不能空白。',true);perform(()=>C.setEquipmentAffixCoefficient(model,{itemId:Number($('affixItem').value),slot:Number($('affixSlot').value),coefficient:Number($('affixValue').value)}));};
-  $('affixReplace').onclick=()=>{if(!$('affixValue').value.trim())return toast('係數不能空白。',true);perform(()=>C.setEquipmentAffix(model,{itemId:Number($('affixItem').value),slot:Number($('affixSlot').value),attributeId:Number($('affixTarget').value),coefficient:Number($('affixValue').value)}));};update();
+  $('affixItem').onchange=update;$('affixSlot').onchange=update;$('affixSearch').oninput=candidates;$('affixTarget').onchange=replacementPreview;$('affixValue').oninput=replacementPreview;$('affixFirst').onchange=replacementPreview;
+  $('affixApply').onclick=()=>{if(!$('affixValue').value.trim())return toast('係數不能空白。',true);perform(()=>C.setEquipmentAffixCoefficient(model,{...target(),coefficient:Number($('affixValue').value)}));};
+  $('affixReplace').onclick=()=>{if(!$('affixValue').value.trim())return toast('係數不能空白。',true);perform(()=>C.setEquipmentAffix(model,{...target(),attributeId:Number($('affixTarget').value),coefficient:Number($('affixValue').value),selectUnwashedSlot:!!info?.requiresInitialSelection&&$('affixFirst').checked}));};update();
  }
  function renderPills(){
   const aptitude=$('pillAptitude')?.value||'1',old=$('pillType')?.value;
@@ -138,13 +150,13 @@
  };
  document.addEventListener('change',e=>{
   const kind=e.target.dataset.editTarget||e.target.dataset.editMode;if(!kind||!model)return;
-  if(e.target.dataset.editTarget)editingState[kind].id=Number(e.target.value);
+  if(e.target.dataset.editTarget)editingState[kind].id=kind==='equipment'?e.target.value:Number(e.target.value);
   else{editingState[kind].advanced=e.target.checked;editingState[kind].preserveValue=true;}
   renderEditing(kind);
  });
  document.addEventListener('click',e=>{
   const kind=e.target.closest('[data-edit-apply]')?.dataset.editApply;if(!kind||!model)return;
   const state=editingState[kind],input=document.querySelector(`[data-edit-value="${kind}"]`);
-  try{const value=num(input),options={advanced:state.advanced};perform(()=>kind==='equipment'?C.setEquipmentLevel(model,{...options,itemId:state.id,level:value}):kind==='training'?C.setProfessionTrainingCap(model,{...options,professionId:state.id,cap:value}):C.setAdvancedTechnologyLevel(model,{...options,technologyId:state.id,level:value}));}catch(error){toast(error.message,true);}
+  try{const value=num(input),options={advanced:state.advanced};perform(()=>kind==='equipment'?C.setEquipmentLevel(model,{...options,plane:Number(state.id.split(':')[0]),itemId:Number(state.id.split(':')[1]),level:value}):kind==='training'?C.setProfessionTrainingCap(model,{...options,professionId:state.id,cap:value}):C.setAdvancedTechnologyLevel(model,{...options,technologyId:state.id,level:value}));}catch(error){toast(error.message,true);}
  });
  document.addEventListener('click',e=>{const b=e.target.closest('[data-inspect-item]');if(!b)return;atlasEntityId=Number(b.dataset.inspectItem);$('atlasPlane').value=b.dataset.plane;$('atlasSearch').value='';knowledgePages.atlas=0;showTab('atlas');});

@@ -2,6 +2,43 @@
   "version": 1,
   "game": "szmnqea",
   "gameVersion": "V1.0.10.2",
+  "equipmentWorkflowLimits": {
+    "version": 1,
+    "planes": [
+      7,
+      9
+    ],
+    "backpack": {
+      "minTier": 1,
+      "maxTier": 9,
+      "minQuality": 1,
+      "maxQuality": 6,
+      "quantity": 1,
+      "owner": 0,
+      "advanced": false
+    },
+    "newItemMarkers": [
+      0,
+      1
+    ],
+    "unknownStateColumns": [
+      25,
+      26,
+      27
+    ],
+    "firstSelection": "all-flags-zero-explicit-atomic",
+    "identity": "plane-and-current-row",
+    "sourceSids": [
+      166680919655131,
+      666416688115651,
+      644557287879738,
+      196601779910507,
+      775039415186059,
+      564254928232839,
+      959041203712077,
+      418018161514165
+    ]
+  },
   "affixReplacement": {
     "version": 1,
     "sourceSids": [
@@ -60541,6 +60578,11 @@
     }
   },
   "verification": {
+    "backpackEquipmentLevel": true,
+    "backpackEquipmentAffixCoefficient": true,
+    "backpackEquipmentAffixReplacement": true,
+    "equipmentAffixInitialSelection": true,
+    "equipmentNewItemMarker": true,
     "equipmentAffixReplacement": true,
     "equipmentAffixCoefficient": true,
     "pillAptitudeBonus": true,
