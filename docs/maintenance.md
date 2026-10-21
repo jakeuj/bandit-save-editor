@@ -177,7 +177,7 @@ v2.3 已以功能提交 `a912466` 通過 [Pages 正式發布驗證](research/pre
 
 隔離驗證啟動器固定帶 `--mute-audio`，新建及重啟皆靜音；不動玩家音量、其他遊戲或 Discord。手動啟動副本也遵守此預設，只有使用者明確要求音訊驗收時才安排有聲測試，詳見[測試音量](game-ui-testing.md#測試音量)。
 
-## v2.4 裝備操作候選
+## v2.4 裝備操作
 
 裝備具名操作的options增加`plane=9`；`editingInfo(model,kind,id,plane=9)`及`affixInfo(model,itemId,slot,plane=9)`於最後傳庫別。只接受7／9；省略保持z9相容。背包沒有進階模式，新增的普通範圍與新取得標記規則有獨立證明。
 
@@ -187,4 +187,4 @@ v2.3 已以功能提交 `a912466` 通過 [Pages 正式發布驗證](research/pre
 
 `node scripts/verify-affixes.cjs --state /outside/state.json --scenario /outside/scenario.json`現在依options.plane讀取目標，z9才做穿戴公式比對。`node scripts/verify-equipment-workflow.cjs --state /outside/state.json --scenario /outside/scenario.json`驗證原生洗練、穿脫及排序並更新後續expected；再完成原版save／assert／stop／restart／load／assert後用`--compare`核對。原始狀態留repo外。
 
-本版實際已通過範圍及發布待辦以[研究紀錄](research/equipment-workflow.md)及SDD任務為準。2026-10-22補齊遊戲選槽UI、桌面／390px及精確下載證據；首次選槽的負向建置測試須明確將`selectionUi`設為false，不能依賴正式證明當時尚未通過的預設值。PWA受本機回應改寫影響時保留完整性檢查，待乾淨回應驗收後才發布。
+本版實際已通過範圍及發布狀態以[研究紀錄](research/equipment-workflow.md)及SDD任務為準。2026-10-22補齊遊戲選槽UI、桌面／390px、精確下載及PWA離線／版本交接證據；首次選槽的負向建置測試須明確將`selectionUi`設為false，不能依賴證明當時尚未通過的預設值。PWA受內容過濾器改寫時保留完整性檢查；使用者同意的測試網址例外須記錄範圍與測後還原或保留決定，不將例外當成網站安裝必要條件。更新交接先保留舊版未匯出變更，確認新版waiting不重載，再匯出、關閉全部同源視窗並重開核對版本；離線模擬完成後還原網路。
