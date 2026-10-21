@@ -92,11 +92,15 @@ const planeNames = ['山寨與全局', '存檔識別與建築', '角色基本資
 const tableSpecs = { materials: ['cl', 1, 3], characters: ['js', 1, null], professions: ['zy', 1, 2], attributes: ['sx', 1, 2], items: ['wp', 1, 5], technologies: ['kj', 1, 2], buildings: ['jz', 1, 3], quests: ['rw', 1, 2], talents: ['tf', 1, 4], facilities: ['ss', 1, 3], relics: ['lw', 1, 3] };
 
 function createCatalog(game) {
-  if(game.fingerprints['data.json']!=='6661d77209c0e98069219965908fd4d6b9ee3dca84763c158dcd5f0a863df665') {
+  const reviewed = {
+    '6661d77209c0e98069219965908fd4d6b9ee3dca84763c158dcd5f0a863df665': { version: 'V1.0.9.1', runtimes: ['b5bf45f38e8165bbd5093702695486fe77797a27914bba8b1fdd5f46658396bc','58d634814f9ee8145ad553ffde60a6a511b5f68cf27f7ba86933d66216901998'] },
+    '32a36accc1b97e9bb3498eb3be76950e1e72b2e8f7a0cf9ce293b57aa5e0d820': { version: 'V1.0.10.2', runtimes: ['1e1643722efc032824881f03ce4d81df1135e6a8cd8e08d9fd87e56e480ac9f6'] }
+  }[game.fingerprints['data.json']];
+  if(!reviewed) {
     // Catalog coordinates and growth formulas must be reviewed when the event data changes.
     throw Error('遊戲事件指紋已變更，請先重新核對欄位及規則；未產生可編輯知識。');
   }
-  if(!['b5bf45f38e8165bbd5093702695486fe77797a27914bba8b1fdd5f46658396bc','58d634814f9ee8145ad553ffde60a6a511b5f68cf27f7ba86933d66216901998'].includes(game.fingerprints['scripts/c3runtime.js']))throw Error('JavaScript 指紋已變更，請重新核對 expression 規則');
+  if(!reviewed.runtimes.includes(game.fingerprints['scripts/c3runtime.js']))throw Error('JavaScript 指紋已變更，請重新核對 expression 規則');
   const catalogs = {};
   for (const [kind, [file, nameColumn, typeColumn]] of Object.entries(tableSpecs)) {
     const { data } = JSON.parse(fs.readFileSync(path.join(game.root, file + '.json'), 'utf8'));
@@ -127,13 +131,32 @@ function createCatalog(game) {
   });
   // An index of write locations, not copies of the game's expressions or event bodies.
   const evidence = writes.map(o => ({ sid: o.sid, actionSid: o.actionSid, function: o.function, sheet: o.sheet, x: o.params[0]?.constant ?? '*', y: o.params[1]?.constant ?? '*', z: o.params[2]?.constant ?? '*', refs: o.params.map(p => p.expression ?? null) }));
-  return { glossary, catalog: { version: 1, game: 'szmnqea', gameVersion: 'V1.0.9.1', fingerprints: game.fingerprints, counts: { functions: game.functions.length, setXYZ: writes.length, arrayActions: game.operations.length,readSites:game.reads.length }, planes, catalogs, functions: game.functions, evidence, verification: { names: false, characterExperience: false, professionExperience: false, skillExperience: false } } };
+  return { glossary, catalog: { version: 1, game: 'szmnqea', gameVersion: reviewed.version, fingerprints: game.fingerprints, counts: { functions: game.functions.length, setXYZ: writes.length, arrayActions: game.operations.length,readSites:game.reads.length }, planes, catalogs, functions: game.functions, evidence, verification: { names: false, characterExperience: false, professionExperience: false, skillExperience: false } } };
 }
 
 if (require.main === module) {
   const args = process.argv.slice(2), value = (flag, fallback) => { const i = args.indexOf(flag); return i < 0 ? fallback : args[i + 1]; };
-  if (args.includes('--help') || !value('--source')) { console.log('node scripts/extract-game.cjs --source /path/to/unpacked/game [--output knowledge/catalog.json] [--audit /outside/repo/audit.json]'); process.exit(args.includes('--help') ? 0 : 1); }
-  const game = inspectGame(path.resolve(value('--source'))), { glossary, catalog } = createCatalog(game);
+  if (args.includes('--help') || !value('--source')) { console.log('node scripts/extract-game.cjs --source /path/to/unpacked/game [--output knowledge/catalog.json] [--audit /outside/repo/audit.json]\n未知版本只做分析：加上 --audit-only --audit /outside/repo/audit.json，不產生或修改知識目錄。'); process.exit(args.includes('--help') ? 0 : 1); }
+  const auditOnly = args.includes('--audit-only'), audit = value('--audit');
+  if (auditOnly && !audit) throw Error('--audit-only 需要 --audit 指定 repo 外的分析輸出');
+  const auditTarget = audit ? path.resolve(audit) : null;
+  if (auditTarget) {
+    const relative = path.relative(path.resolve(__dirname, '..'), auditTarget);
+    if (relative === '' || (!path.isAbsolute(relative) && relative !== '..' && !relative.startsWith('..' + path.sep))) throw Error('原始分析輸出必須放在 repo 外');
+  }
+  const game = inspectGame(path.resolve(value('--source')));
+  const counts = { functions: game.functions.length, setXYZ: game.operations.filter(o => o.operation === 'SetXYZ').length, arrayActions: game.operations.length, readSites: game.reads.length };
+  const writeAudit = () => {
+    if (!auditTarget) return;
+    fs.mkdirSync(path.dirname(auditTarget), { recursive: true });
+    fs.writeFileSync(auditTarget, JSON.stringify({ fingerprints: game.fingerprints, counts, functions: game.functions, operations: game.operations, reads: game.reads }, null, 2));
+  };
+  if (auditOnly) {
+    writeAudit();
+    console.log(JSON.stringify({ auditOnly: true, ...counts }));
+    process.exit(0);
+  }
+  const { glossary, catalog } = createCatalog(game);
   const output = path.resolve(value('--output', 'knowledge/catalog.json'));
   if (fs.existsSync(output)) {
     const old = JSON.parse(fs.readFileSync(output, 'utf8'));
@@ -142,12 +165,7 @@ if (require.main === module) {
   fs.mkdirSync(path.dirname(output), { recursive: true });
   fs.writeFileSync(output, JSON.stringify(catalog, null, 2) + '\n');
   fs.writeFileSync(path.join(path.dirname(output), 'traditional-names.json'), JSON.stringify(glossary, null, 2) + '\n');
-  const audit = value('--audit');
-  if (audit) {
-    const target = path.resolve(audit), repo = path.resolve(__dirname, '..');
-    if (target === repo || target.startsWith(repo + path.sep)) throw Error('原始分析輸出必須放在 repo 外');
-    fs.writeFileSync(target, JSON.stringify({ functions: game.functions, operations: game.operations,reads:game.reads }, null, 2));
-  }
+  writeAudit();
   console.log(JSON.stringify({ ...catalog.counts, planes: catalog.planes.length, catalogRows: Object.values(catalog.catalogs).reduce((n, rows) => n + rows.length, 0) }));
 }
 module.exports = { inspectGame, createCatalog };

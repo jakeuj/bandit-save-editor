@@ -77,17 +77,27 @@ Manifest 的 `start_url` 與 `scope` 使用 `./`，省略 `id`，由瀏覽器以
 
 ## 重建知識與開放寫入
 
+遊戲更新資訊以 [Steam 最新消息](https://store.steampowered.com/news/app/4267800)為入口，核對公告日期、版本及正式／測試／相容分支，並在研究筆記保留當次公告的永久連結。頁面無法取得正文時可用 [Steam 官方新聞 API](https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=4267800&count=5&maxlength=0&feeds=steam_community_announcements)。本機安裝版本另核對 `appmanifest_4267800.acf` 的 `buildid` 及來源指紋，包內個別版本文字可能落後；公告與靜態分析不能代替隔離遊戲讀寫驗證。
+
 ```sh
 node scripts/extract-game.cjs --source /path/to/unpacked/game --audit /tmp/bandit-audit.json
 ```
 
 解析器只建立 expression factory 索引，不執行遊戲。事件／runtime 指紋不在已核對清單時停止；資料表指紋不同時，重建目錄不保留原本的新增可寫旗標。相同完整指紋重跑才保留既有旗標。繁體轉換在 macOS 使用 Foundation，其他平台重用提交的對照表。
 
+新版指紋未知時，先用純分析模式取得 repo 外的 audit：
+
+```sh
+node scripts/extract-game.cjs --source /path/to/unpacked/game --audit-only --audit /outside/repo/audit.json
+```
+
+此模式輸出 13 個來源指紋、統計及事件／讀寫索引，略過 catalog 產生器，不修改 catalog、繁中對照或驗證旗標。一般重建的指紋限制維持不變；原始 audit 的 repo 外路徑會在寫入知識前檢查。比對時以 SID 定位，expression 編號可能因其他事件增刪而移動。2026-10-21 的新版分析與 Windows 讀寫／重啟結果見 [V1.0.10.2 調查](research/v1.0.10.2-audit.md)。
+
 新增可寫功能需完成以下流程：
 
 1. 追查初始化、讀寫、計算與刪除，記錄欄位型別、值域、關聯及來源 SID；複雜或未釐清項目維持唯讀。
 2. 用合成資料測試非法型別、跨級、上限、交易回滾、完整復原及精確 token 替換。
-3. 以 `scripts/verify-game.cjs --help` 查看隔離驗證入口。此工具需要 macOS、Node.js 22+、已準備的 Mac 遊戲副本及 Mac Steam；來源須與 catalog 的全部 13 個指紋相符。若從 Windows payload 產生知識，先與 Mac 測試來源重新核對，不能直接沿用不同 runtime 的驗證紀錄。
+3. 以 `scripts/verify-game.cjs --help` 查看隔離驗證入口。此工具需要 Windows 或 macOS、Node.js 22+、解包的遊戲、同平台 NW.js runtime 及已登入的 Steam；來源須與 catalog 的全部 13 個指紋相符。Windows 傳入安裝目錄的 `game.exe`，工具會複製 runtime 至隔離遊戲目錄。用 `--catalog` 指定候選目錄、`--save-file` 指定唯讀來源存檔、`--artifacts` 指定已存在的 repo 外目錄；不能沿用不同 runtime 的驗證紀錄。
 4. 確認遊戲載入、遊戲寫檔、停止測試程序後重啟讀回及來源存檔雜湊；測試只在獨立 app／遊戲／profile 中執行，保留授權初始化，Steam 寫入導向本機鏡像與紀錄。
 5. 將去識別結果與相符指紋寫入 `verification.json`，再開啟對應群組。建置會核對全部來源指紋、檢查結果及群組覆蓋，未通過就停止。
 

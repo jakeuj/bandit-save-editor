@@ -1,17 +1,20 @@
 {
-  "date": "2026-10-20",
-  "gameVersion": "V1.0.9.1",
-  "eventFingerprint": "6661d77209c0e98069219965908fd4d6b9ee3dca84763c158dcd5f0a863df665",
-  "runtimeFingerprint": "58d634814f9ee8145ad553ffde60a6a511b5f68cf27f7ba86933d66216901998",
-  "environment": "macOS 27.0.1 / Apple M4 Max / NW.js 0.82.0 ARM64",
-  "method": "獨立 app、遊戲、profile 與存檔；由原版讀取進度函式讀檔、原版存檔函式寫出，停止程序後重新啟動並讀取遊戲寫出的檔案",
+  "date": "2026-10-21",
+  "gameVersion": "V1.0.10.2",
+  "eventFingerprint": "32a36accc1b97e9bb3498eb3be76950e1e72b2e8f7a0cf9ce293b57aa5e0d820",
+  "runtimeFingerprint": "1e1643722efc032824881f03ce4d81df1135e6a8cd8e08d9fd87e56e480ac9f6",
+  "environment": "Windows 11 Enterprise 10.0.26300 / x64 / NW.js 0.82.0 / Chromium 119.0.6045.105",
+  "method": "獨立遊戲、runtime、profile 與存檔；真實 Steam 初始化，原版讀取進度函式從備份載入、原版存檔函式寫出手動存檔，停止程序後以新 PID 重啟並讀回遊戲寫出的檔案",
   "checks": {
     "loadedIntoMainLayout": true,
     "nativeSaveWritten": true,
     "processRestartedAndReloaded": true,
     "allTenObservedCellsMatch": true,
     "originalSaveHashesUnchanged": true,
-    "steamMutationsRedirectedToLocalMirror": true
+    "steamMutationsRedirectedToLocalMirror": true,
+    "allThirteenTestedSourceHashesMatch": true,
+    "realSteamInitialization": true,
+    "restartUsesDifferentProcess": true
   },
   "groups": {
     "names": true,
@@ -29,21 +32,23 @@
   "limits": [
     "測試透過真實遊戲函式及本機檔案路徑；沒有模擬所有滑鼠選單操作",
     "載入後暫停模擬時間以避免工作經驗干擾；不是長時間遊玩測試",
-    "未驗證真實雲端上傳、成就或統計寫入"
+    "未驗證真實雲端上傳、成就或統計寫入",
+    "本輪為 Windows x64 正式版來源；不表示新版 macOS 啟動器已通過驗證"
   ],
   "fingerprints": {
-    "data.json": "6661d77209c0e98069219965908fd4d6b9ee3dca84763c158dcd5f0a863df665",
-    "scripts/c3runtime.js": "58d634814f9ee8145ad553ffde60a6a511b5f68cf27f7ba86933d66216901998",
+    "data.json": "32a36accc1b97e9bb3498eb3be76950e1e72b2e8f7a0cf9ce293b57aa5e0d820",
+    "scripts/c3runtime.js": "1e1643722efc032824881f03ce4d81df1135e6a8cd8e08d9fd87e56e480ac9f6",
     "cl.json": "c121cf702eb6a4edb184d7180ad83d41aa90efca4a1e5e21e652dd1ff24f47b7",
     "js.json": "5c360c93cd1248fe96d0373428ddae4649698574d032b333432e4b777fcc0ee4",
     "zy.json": "8dd8ccc0a6318d3e3a58bc4d9951fb57d281b812e8b3ce1ba68847eb5283c75c",
-    "sx.json": "8ec27d0f6adec862459a91bc02e20105651cbe39c2cd399ff212e21d42f8ad99",
+    "sx.json": "6a24e20ad0a70d5ad17a0310f0a9e7619dda5c4718d536a3df51d385abd748e7",
     "wp.json": "14516d34cedf209c497fca10699e179c26c43558c2a3253bc87c8b33493a82c4",
     "kj.json": "b051136f1366eb1c990004a4fa8a2d8f90339c7defbc10eb90c68c2ff36e5309",
-    "jz.json": "4f2e35465ef62b3ead01daf7feef4355f9e5115de3ff471b3d926b98d925c620",
+    "jz.json": "cf4d691dc7f6814db5ba1e0e28ac206d7a15c58ddccba55a473975461841b0bf",
     "rw.json": "705f541917d9a62cff9ef5805032fd29496fdc98b03a7f065ff3fc6fab937b4b",
     "tf.json": "c8a3005201d8f17a0899584baf7e0286b073aa84d4697807edcd44e00902fa1f",
     "ss.json": "4350cb979c4026ce0d8dc25e7807fde3d29a1d42fbd2e499673614a4f67e1bc7",
     "lw.json": "7a4f5a5bfd5967f3a74e36aa9a0c2cda132619b2908bdc39b1406da4b346bde6"
-  }
+  },
+  "steamBuildId": "26094666"
 }
