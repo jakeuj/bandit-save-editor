@@ -2,6 +2,3887 @@
   "version": 1,
   "game": "szmnqea",
   "gameVersion": "V1.0.10.2",
+  "equipmentQuality": {
+    "version": 1,
+    "items": {
+      "1": {
+        "tier": 1,
+        "poolType": "通用",
+        "mainAttributes": [
+          4,
+          40,
+          1
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "2": {
+        "tier": 1,
+        "poolType": "通用",
+        "mainAttributes": [
+          4,
+          43,
+          1
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "3": {
+        "tier": 1,
+        "poolType": "通用",
+        "mainAttributes": [
+          4,
+          46,
+          1
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "4": {
+        "tier": 1,
+        "poolType": "通用",
+        "mainAttributes": [
+          5,
+          48,
+          2
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "5": {
+        "tier": 1,
+        "poolType": "通用",
+        "mainAttributes": [
+          5,
+          44,
+          2
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "6": {
+        "tier": 1,
+        "poolType": "通用",
+        "mainAttributes": [
+          5,
+          41,
+          2
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "7": {
+        "tier": 1,
+        "poolType": "通用",
+        "mainAttributes": [
+          6,
+          47,
+          3
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "8": {
+        "tier": 1,
+        "poolType": "通用",
+        "mainAttributes": [
+          6,
+          45,
+          3
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "9": {
+        "tier": 1,
+        "poolType": "通用",
+        "mainAttributes": [
+          6,
+          42,
+          3
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "10": {
+        "tier": 1,
+        "poolType": "战斗",
+        "mainAttributes": [
+          4,
+          28,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "11": {
+        "tier": 1,
+        "poolType": "战斗",
+        "mainAttributes": [
+          5,
+          28,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "12": {
+        "tier": 1,
+        "poolType": "战斗",
+        "mainAttributes": [
+          6,
+          28,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "13": {
+        "tier": 1,
+        "poolType": "生产",
+        "mainAttributes": [
+          4,
+          72,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "14": {
+        "tier": 1,
+        "poolType": "生产",
+        "mainAttributes": [
+          5,
+          72,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "15": {
+        "tier": 1,
+        "poolType": "生产",
+        "mainAttributes": [
+          6,
+          72,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "16": {
+        "tier": 1,
+        "poolType": "战斗",
+        "mainAttributes": [
+          4,
+          12,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "17": {
+        "tier": 1,
+        "poolType": "战斗",
+        "mainAttributes": [
+          5,
+          12,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "18": {
+        "tier": 1,
+        "poolType": "战斗",
+        "mainAttributes": [
+          6,
+          12,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "19": {
+        "tier": 1,
+        "poolType": "生产",
+        "mainAttributes": [
+          4,
+          51,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "20": {
+        "tier": 1,
+        "poolType": "生产",
+        "mainAttributes": [
+          5,
+          51,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "21": {
+        "tier": 1,
+        "poolType": "生产",
+        "mainAttributes": [
+          6,
+          51,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "22": {
+        "tier": 1,
+        "poolType": "战斗",
+        "mainAttributes": [
+          4,
+          13,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "23": {
+        "tier": 1,
+        "poolType": "战斗",
+        "mainAttributes": [
+          5,
+          13,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "24": {
+        "tier": 1,
+        "poolType": "战斗",
+        "mainAttributes": [
+          6,
+          13,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "25": {
+        "tier": 1,
+        "poolType": "生产",
+        "mainAttributes": [
+          4,
+          52,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "26": {
+        "tier": 1,
+        "poolType": "生产",
+        "mainAttributes": [
+          5,
+          52,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "27": {
+        "tier": 1,
+        "poolType": "生产",
+        "mainAttributes": [
+          6,
+          52,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "76": {
+        "tier": 2,
+        "poolType": "通用",
+        "mainAttributes": [
+          4,
+          40,
+          1
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "77": {
+        "tier": 2,
+        "poolType": "通用",
+        "mainAttributes": [
+          4,
+          43,
+          1
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "78": {
+        "tier": 2,
+        "poolType": "通用",
+        "mainAttributes": [
+          4,
+          46,
+          1
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "79": {
+        "tier": 2,
+        "poolType": "通用",
+        "mainAttributes": [
+          5,
+          48,
+          2
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "80": {
+        "tier": 2,
+        "poolType": "通用",
+        "mainAttributes": [
+          5,
+          44,
+          2
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "81": {
+        "tier": 2,
+        "poolType": "通用",
+        "mainAttributes": [
+          5,
+          41,
+          2
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "82": {
+        "tier": 2,
+        "poolType": "通用",
+        "mainAttributes": [
+          6,
+          47,
+          3
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "83": {
+        "tier": 2,
+        "poolType": "通用",
+        "mainAttributes": [
+          6,
+          45,
+          3
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "84": {
+        "tier": 2,
+        "poolType": "通用",
+        "mainAttributes": [
+          6,
+          42,
+          3
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "85": {
+        "tier": 2,
+        "poolType": "战斗",
+        "mainAttributes": [
+          4,
+          28,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "86": {
+        "tier": 2,
+        "poolType": "战斗",
+        "mainAttributes": [
+          5,
+          28,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "87": {
+        "tier": 2,
+        "poolType": "战斗",
+        "mainAttributes": [
+          6,
+          28,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "88": {
+        "tier": 2,
+        "poolType": "生产",
+        "mainAttributes": [
+          4,
+          72,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "89": {
+        "tier": 2,
+        "poolType": "生产",
+        "mainAttributes": [
+          5,
+          72,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "90": {
+        "tier": 2,
+        "poolType": "生产",
+        "mainAttributes": [
+          6,
+          72,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "91": {
+        "tier": 2,
+        "poolType": "战斗",
+        "mainAttributes": [
+          4,
+          12,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "92": {
+        "tier": 2,
+        "poolType": "战斗",
+        "mainAttributes": [
+          5,
+          12,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "93": {
+        "tier": 2,
+        "poolType": "战斗",
+        "mainAttributes": [
+          6,
+          12,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "94": {
+        "tier": 2,
+        "poolType": "生产",
+        "mainAttributes": [
+          4,
+          51,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "95": {
+        "tier": 2,
+        "poolType": "生产",
+        "mainAttributes": [
+          5,
+          51,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "96": {
+        "tier": 2,
+        "poolType": "生产",
+        "mainAttributes": [
+          6,
+          51,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "97": {
+        "tier": 2,
+        "poolType": "战斗",
+        "mainAttributes": [
+          4,
+          13,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "98": {
+        "tier": 2,
+        "poolType": "战斗",
+        "mainAttributes": [
+          5,
+          13,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "99": {
+        "tier": 2,
+        "poolType": "战斗",
+        "mainAttributes": [
+          6,
+          13,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "100": {
+        "tier": 2,
+        "poolType": "生产",
+        "mainAttributes": [
+          4,
+          52,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "101": {
+        "tier": 2,
+        "poolType": "生产",
+        "mainAttributes": [
+          5,
+          52,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "102": {
+        "tier": 2,
+        "poolType": "生产",
+        "mainAttributes": [
+          6,
+          52,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "103": {
+        "tier": 3,
+        "poolType": "通用",
+        "mainAttributes": [
+          4,
+          40,
+          1
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "104": {
+        "tier": 3,
+        "poolType": "通用",
+        "mainAttributes": [
+          4,
+          43,
+          1
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "105": {
+        "tier": 3,
+        "poolType": "通用",
+        "mainAttributes": [
+          4,
+          46,
+          1
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "106": {
+        "tier": 3,
+        "poolType": "通用",
+        "mainAttributes": [
+          5,
+          48,
+          2
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "107": {
+        "tier": 3,
+        "poolType": "通用",
+        "mainAttributes": [
+          5,
+          44,
+          2
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "108": {
+        "tier": 3,
+        "poolType": "通用",
+        "mainAttributes": [
+          5,
+          41,
+          2
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "109": {
+        "tier": 3,
+        "poolType": "通用",
+        "mainAttributes": [
+          6,
+          47,
+          3
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "110": {
+        "tier": 3,
+        "poolType": "通用",
+        "mainAttributes": [
+          6,
+          45,
+          3
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "111": {
+        "tier": 3,
+        "poolType": "通用",
+        "mainAttributes": [
+          6,
+          42,
+          3
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "112": {
+        "tier": 3,
+        "poolType": "战斗",
+        "mainAttributes": [
+          4,
+          28,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "113": {
+        "tier": 3,
+        "poolType": "战斗",
+        "mainAttributes": [
+          5,
+          28,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "114": {
+        "tier": 3,
+        "poolType": "战斗",
+        "mainAttributes": [
+          6,
+          28,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "115": {
+        "tier": 3,
+        "poolType": "生产",
+        "mainAttributes": [
+          4,
+          72,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "116": {
+        "tier": 3,
+        "poolType": "生产",
+        "mainAttributes": [
+          5,
+          72,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "117": {
+        "tier": 3,
+        "poolType": "生产",
+        "mainAttributes": [
+          6,
+          72,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "118": {
+        "tier": 3,
+        "poolType": "战斗",
+        "mainAttributes": [
+          4,
+          12,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "119": {
+        "tier": 3,
+        "poolType": "战斗",
+        "mainAttributes": [
+          5,
+          12,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "120": {
+        "tier": 3,
+        "poolType": "战斗",
+        "mainAttributes": [
+          6,
+          12,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "121": {
+        "tier": 3,
+        "poolType": "生产",
+        "mainAttributes": [
+          4,
+          51,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "122": {
+        "tier": 3,
+        "poolType": "生产",
+        "mainAttributes": [
+          5,
+          51,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "123": {
+        "tier": 3,
+        "poolType": "生产",
+        "mainAttributes": [
+          6,
+          51,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "124": {
+        "tier": 3,
+        "poolType": "战斗",
+        "mainAttributes": [
+          4,
+          13,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "125": {
+        "tier": 3,
+        "poolType": "战斗",
+        "mainAttributes": [
+          5,
+          13,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "126": {
+        "tier": 3,
+        "poolType": "战斗",
+        "mainAttributes": [
+          6,
+          13,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "127": {
+        "tier": 3,
+        "poolType": "生产",
+        "mainAttributes": [
+          4,
+          52,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "128": {
+        "tier": 3,
+        "poolType": "生产",
+        "mainAttributes": [
+          5,
+          52,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "129": {
+        "tier": 3,
+        "poolType": "生产",
+        "mainAttributes": [
+          6,
+          52,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "130": {
+        "tier": 4,
+        "poolType": "通用",
+        "mainAttributes": [
+          4,
+          40,
+          1
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "131": {
+        "tier": 4,
+        "poolType": "通用",
+        "mainAttributes": [
+          4,
+          43,
+          1
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "132": {
+        "tier": 4,
+        "poolType": "通用",
+        "mainAttributes": [
+          4,
+          46,
+          1
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "133": {
+        "tier": 4,
+        "poolType": "通用",
+        "mainAttributes": [
+          5,
+          48,
+          2
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "134": {
+        "tier": 4,
+        "poolType": "通用",
+        "mainAttributes": [
+          5,
+          44,
+          2
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "135": {
+        "tier": 4,
+        "poolType": "通用",
+        "mainAttributes": [
+          5,
+          41,
+          2
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "136": {
+        "tier": 4,
+        "poolType": "通用",
+        "mainAttributes": [
+          6,
+          47,
+          3
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "137": {
+        "tier": 4,
+        "poolType": "通用",
+        "mainAttributes": [
+          6,
+          45,
+          3
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "138": {
+        "tier": 4,
+        "poolType": "通用",
+        "mainAttributes": [
+          6,
+          42,
+          3
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "139": {
+        "tier": 4,
+        "poolType": "战斗",
+        "mainAttributes": [
+          4,
+          28,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "140": {
+        "tier": 4,
+        "poolType": "战斗",
+        "mainAttributes": [
+          5,
+          28,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "141": {
+        "tier": 4,
+        "poolType": "战斗",
+        "mainAttributes": [
+          6,
+          28,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "142": {
+        "tier": 4,
+        "poolType": "生产",
+        "mainAttributes": [
+          4,
+          72,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "143": {
+        "tier": 4,
+        "poolType": "生产",
+        "mainAttributes": [
+          5,
+          72,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "144": {
+        "tier": 4,
+        "poolType": "生产",
+        "mainAttributes": [
+          6,
+          72,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "145": {
+        "tier": 4,
+        "poolType": "战斗",
+        "mainAttributes": [
+          4,
+          12,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "146": {
+        "tier": 4,
+        "poolType": "战斗",
+        "mainAttributes": [
+          5,
+          12,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "147": {
+        "tier": 4,
+        "poolType": "战斗",
+        "mainAttributes": [
+          6,
+          12,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "148": {
+        "tier": 4,
+        "poolType": "生产",
+        "mainAttributes": [
+          4,
+          51,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "149": {
+        "tier": 4,
+        "poolType": "生产",
+        "mainAttributes": [
+          5,
+          51,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "150": {
+        "tier": 4,
+        "poolType": "生产",
+        "mainAttributes": [
+          6,
+          51,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "151": {
+        "tier": 4,
+        "poolType": "战斗",
+        "mainAttributes": [
+          4,
+          13,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "152": {
+        "tier": 4,
+        "poolType": "战斗",
+        "mainAttributes": [
+          5,
+          13,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "153": {
+        "tier": 4,
+        "poolType": "战斗",
+        "mainAttributes": [
+          6,
+          13,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "154": {
+        "tier": 4,
+        "poolType": "生产",
+        "mainAttributes": [
+          4,
+          52,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "155": {
+        "tier": 4,
+        "poolType": "生产",
+        "mainAttributes": [
+          5,
+          52,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "156": {
+        "tier": 4,
+        "poolType": "生产",
+        "mainAttributes": [
+          6,
+          52,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "157": {
+        "tier": 5,
+        "poolType": "通用",
+        "mainAttributes": [
+          4,
+          40,
+          1
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "158": {
+        "tier": 5,
+        "poolType": "通用",
+        "mainAttributes": [
+          4,
+          43,
+          1
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "159": {
+        "tier": 5,
+        "poolType": "通用",
+        "mainAttributes": [
+          4,
+          46,
+          1
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "160": {
+        "tier": 5,
+        "poolType": "通用",
+        "mainAttributes": [
+          5,
+          48,
+          2
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "161": {
+        "tier": 5,
+        "poolType": "通用",
+        "mainAttributes": [
+          5,
+          44,
+          2
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "162": {
+        "tier": 5,
+        "poolType": "通用",
+        "mainAttributes": [
+          5,
+          41,
+          2
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "163": {
+        "tier": 5,
+        "poolType": "通用",
+        "mainAttributes": [
+          6,
+          47,
+          3
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "164": {
+        "tier": 5,
+        "poolType": "通用",
+        "mainAttributes": [
+          6,
+          45,
+          3
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "165": {
+        "tier": 5,
+        "poolType": "通用",
+        "mainAttributes": [
+          6,
+          42,
+          3
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "166": {
+        "tier": 5,
+        "poolType": "战斗",
+        "mainAttributes": [
+          4,
+          28,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "167": {
+        "tier": 5,
+        "poolType": "战斗",
+        "mainAttributes": [
+          5,
+          28,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "168": {
+        "tier": 5,
+        "poolType": "战斗",
+        "mainAttributes": [
+          6,
+          28,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "169": {
+        "tier": 5,
+        "poolType": "生产",
+        "mainAttributes": [
+          4,
+          72,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "170": {
+        "tier": 5,
+        "poolType": "生产",
+        "mainAttributes": [
+          5,
+          72,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "171": {
+        "tier": 5,
+        "poolType": "生产",
+        "mainAttributes": [
+          6,
+          72,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "172": {
+        "tier": 5,
+        "poolType": "战斗",
+        "mainAttributes": [
+          4,
+          12,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "173": {
+        "tier": 5,
+        "poolType": "战斗",
+        "mainAttributes": [
+          5,
+          12,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "174": {
+        "tier": 5,
+        "poolType": "战斗",
+        "mainAttributes": [
+          6,
+          12,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "175": {
+        "tier": 5,
+        "poolType": "生产",
+        "mainAttributes": [
+          4,
+          51,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "176": {
+        "tier": 5,
+        "poolType": "生产",
+        "mainAttributes": [
+          5,
+          51,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "177": {
+        "tier": 5,
+        "poolType": "生产",
+        "mainAttributes": [
+          6,
+          51,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "178": {
+        "tier": 5,
+        "poolType": "战斗",
+        "mainAttributes": [
+          4,
+          13,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "179": {
+        "tier": 5,
+        "poolType": "战斗",
+        "mainAttributes": [
+          5,
+          13,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "180": {
+        "tier": 5,
+        "poolType": "战斗",
+        "mainAttributes": [
+          6,
+          13,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "181": {
+        "tier": 5,
+        "poolType": "生产",
+        "mainAttributes": [
+          4,
+          52,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "182": {
+        "tier": 5,
+        "poolType": "生产",
+        "mainAttributes": [
+          5,
+          52,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "183": {
+        "tier": 5,
+        "poolType": "生产",
+        "mainAttributes": [
+          6,
+          52,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "184": {
+        "tier": 6,
+        "poolType": "通用",
+        "mainAttributes": [
+          4,
+          40,
+          1
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "185": {
+        "tier": 6,
+        "poolType": "通用",
+        "mainAttributes": [
+          4,
+          43,
+          1
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "186": {
+        "tier": 6,
+        "poolType": "通用",
+        "mainAttributes": [
+          4,
+          46,
+          1
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "187": {
+        "tier": 6,
+        "poolType": "通用",
+        "mainAttributes": [
+          5,
+          48,
+          2
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "188": {
+        "tier": 6,
+        "poolType": "通用",
+        "mainAttributes": [
+          5,
+          44,
+          2
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "189": {
+        "tier": 6,
+        "poolType": "通用",
+        "mainAttributes": [
+          5,
+          41,
+          2
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "190": {
+        "tier": 6,
+        "poolType": "通用",
+        "mainAttributes": [
+          6,
+          47,
+          3
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "191": {
+        "tier": 6,
+        "poolType": "通用",
+        "mainAttributes": [
+          6,
+          45,
+          3
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "192": {
+        "tier": 6,
+        "poolType": "通用",
+        "mainAttributes": [
+          6,
+          42,
+          3
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "193": {
+        "tier": 6,
+        "poolType": "战斗",
+        "mainAttributes": [
+          4,
+          28,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "194": {
+        "tier": 6,
+        "poolType": "战斗",
+        "mainAttributes": [
+          5,
+          28,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "195": {
+        "tier": 6,
+        "poolType": "战斗",
+        "mainAttributes": [
+          6,
+          28,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "196": {
+        "tier": 6,
+        "poolType": "生产",
+        "mainAttributes": [
+          4,
+          72,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "197": {
+        "tier": 6,
+        "poolType": "生产",
+        "mainAttributes": [
+          5,
+          72,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "198": {
+        "tier": 6,
+        "poolType": "生产",
+        "mainAttributes": [
+          6,
+          72,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "199": {
+        "tier": 6,
+        "poolType": "战斗",
+        "mainAttributes": [
+          4,
+          12,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "200": {
+        "tier": 6,
+        "poolType": "战斗",
+        "mainAttributes": [
+          5,
+          12,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "201": {
+        "tier": 6,
+        "poolType": "战斗",
+        "mainAttributes": [
+          6,
+          12,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "202": {
+        "tier": 6,
+        "poolType": "生产",
+        "mainAttributes": [
+          4,
+          51,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "203": {
+        "tier": 6,
+        "poolType": "生产",
+        "mainAttributes": [
+          5,
+          51,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "204": {
+        "tier": 6,
+        "poolType": "生产",
+        "mainAttributes": [
+          6,
+          51,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "205": {
+        "tier": 6,
+        "poolType": "战斗",
+        "mainAttributes": [
+          4,
+          13,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "206": {
+        "tier": 6,
+        "poolType": "战斗",
+        "mainAttributes": [
+          5,
+          13,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "207": {
+        "tier": 6,
+        "poolType": "战斗",
+        "mainAttributes": [
+          6,
+          13,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "208": {
+        "tier": 6,
+        "poolType": "生产",
+        "mainAttributes": [
+          4,
+          52,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "209": {
+        "tier": 6,
+        "poolType": "生产",
+        "mainAttributes": [
+          5,
+          52,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "210": {
+        "tier": 6,
+        "poolType": "生产",
+        "mainAttributes": [
+          6,
+          52,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "211": {
+        "tier": 7,
+        "poolType": "通用",
+        "mainAttributes": [
+          4,
+          40,
+          1
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "212": {
+        "tier": 7,
+        "poolType": "通用",
+        "mainAttributes": [
+          4,
+          43,
+          1
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "213": {
+        "tier": 7,
+        "poolType": "通用",
+        "mainAttributes": [
+          4,
+          46,
+          1
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "214": {
+        "tier": 7,
+        "poolType": "通用",
+        "mainAttributes": [
+          5,
+          48,
+          2
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "215": {
+        "tier": 7,
+        "poolType": "通用",
+        "mainAttributes": [
+          5,
+          44,
+          2
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "216": {
+        "tier": 7,
+        "poolType": "通用",
+        "mainAttributes": [
+          5,
+          41,
+          2
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "217": {
+        "tier": 7,
+        "poolType": "通用",
+        "mainAttributes": [
+          6,
+          47,
+          3
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "218": {
+        "tier": 7,
+        "poolType": "通用",
+        "mainAttributes": [
+          6,
+          45,
+          3
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "219": {
+        "tier": 7,
+        "poolType": "通用",
+        "mainAttributes": [
+          6,
+          42,
+          3
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "220": {
+        "tier": 7,
+        "poolType": "战斗",
+        "mainAttributes": [
+          4,
+          28,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "221": {
+        "tier": 7,
+        "poolType": "战斗",
+        "mainAttributes": [
+          5,
+          28,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "222": {
+        "tier": 7,
+        "poolType": "战斗",
+        "mainAttributes": [
+          6,
+          28,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "223": {
+        "tier": 7,
+        "poolType": "生产",
+        "mainAttributes": [
+          4,
+          72,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "224": {
+        "tier": 7,
+        "poolType": "生产",
+        "mainAttributes": [
+          5,
+          72,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "225": {
+        "tier": 7,
+        "poolType": "生产",
+        "mainAttributes": [
+          6,
+          72,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "226": {
+        "tier": 7,
+        "poolType": "战斗",
+        "mainAttributes": [
+          4,
+          12,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "227": {
+        "tier": 7,
+        "poolType": "战斗",
+        "mainAttributes": [
+          5,
+          12,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "228": {
+        "tier": 7,
+        "poolType": "战斗",
+        "mainAttributes": [
+          6,
+          12,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "229": {
+        "tier": 7,
+        "poolType": "生产",
+        "mainAttributes": [
+          4,
+          51,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "230": {
+        "tier": 7,
+        "poolType": "生产",
+        "mainAttributes": [
+          5,
+          51,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "231": {
+        "tier": 7,
+        "poolType": "生产",
+        "mainAttributes": [
+          6,
+          51,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "232": {
+        "tier": 7,
+        "poolType": "战斗",
+        "mainAttributes": [
+          4,
+          13,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "233": {
+        "tier": 7,
+        "poolType": "战斗",
+        "mainAttributes": [
+          5,
+          13,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "234": {
+        "tier": 7,
+        "poolType": "战斗",
+        "mainAttributes": [
+          6,
+          13,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "235": {
+        "tier": 7,
+        "poolType": "生产",
+        "mainAttributes": [
+          4,
+          52,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "236": {
+        "tier": 7,
+        "poolType": "生产",
+        "mainAttributes": [
+          5,
+          52,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "237": {
+        "tier": 7,
+        "poolType": "生产",
+        "mainAttributes": [
+          6,
+          52,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "238": {
+        "tier": 8,
+        "poolType": "通用",
+        "mainAttributes": [
+          4,
+          40,
+          1
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "239": {
+        "tier": 8,
+        "poolType": "通用",
+        "mainAttributes": [
+          4,
+          43,
+          1
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "240": {
+        "tier": 8,
+        "poolType": "通用",
+        "mainAttributes": [
+          4,
+          46,
+          1
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "241": {
+        "tier": 8,
+        "poolType": "通用",
+        "mainAttributes": [
+          5,
+          48,
+          2
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "242": {
+        "tier": 8,
+        "poolType": "通用",
+        "mainAttributes": [
+          5,
+          44,
+          2
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "243": {
+        "tier": 8,
+        "poolType": "通用",
+        "mainAttributes": [
+          5,
+          41,
+          2
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "244": {
+        "tier": 8,
+        "poolType": "通用",
+        "mainAttributes": [
+          6,
+          47,
+          3
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "245": {
+        "tier": 8,
+        "poolType": "通用",
+        "mainAttributes": [
+          6,
+          45,
+          3
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "246": {
+        "tier": 8,
+        "poolType": "通用",
+        "mainAttributes": [
+          6,
+          42,
+          3
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "247": {
+        "tier": 8,
+        "poolType": "战斗",
+        "mainAttributes": [
+          4,
+          28,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "248": {
+        "tier": 8,
+        "poolType": "战斗",
+        "mainAttributes": [
+          5,
+          28,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "249": {
+        "tier": 8,
+        "poolType": "战斗",
+        "mainAttributes": [
+          6,
+          28,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "250": {
+        "tier": 8,
+        "poolType": "生产",
+        "mainAttributes": [
+          4,
+          72,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "251": {
+        "tier": 8,
+        "poolType": "生产",
+        "mainAttributes": [
+          5,
+          72,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "252": {
+        "tier": 8,
+        "poolType": "生产",
+        "mainAttributes": [
+          6,
+          72,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "253": {
+        "tier": 8,
+        "poolType": "战斗",
+        "mainAttributes": [
+          4,
+          12,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "254": {
+        "tier": 8,
+        "poolType": "战斗",
+        "mainAttributes": [
+          5,
+          12,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "255": {
+        "tier": 8,
+        "poolType": "战斗",
+        "mainAttributes": [
+          6,
+          12,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "256": {
+        "tier": 8,
+        "poolType": "生产",
+        "mainAttributes": [
+          4,
+          51,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "257": {
+        "tier": 8,
+        "poolType": "生产",
+        "mainAttributes": [
+          5,
+          51,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "258": {
+        "tier": 8,
+        "poolType": "生产",
+        "mainAttributes": [
+          6,
+          51,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "259": {
+        "tier": 8,
+        "poolType": "战斗",
+        "mainAttributes": [
+          4,
+          13,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "260": {
+        "tier": 8,
+        "poolType": "战斗",
+        "mainAttributes": [
+          5,
+          13,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "261": {
+        "tier": 8,
+        "poolType": "战斗",
+        "mainAttributes": [
+          6,
+          13,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "262": {
+        "tier": 8,
+        "poolType": "生产",
+        "mainAttributes": [
+          4,
+          52,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "263": {
+        "tier": 8,
+        "poolType": "生产",
+        "mainAttributes": [
+          5,
+          52,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "264": {
+        "tier": 8,
+        "poolType": "生产",
+        "mainAttributes": [
+          6,
+          52,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "265": {
+        "tier": 9,
+        "poolType": "通用",
+        "mainAttributes": [
+          4,
+          40,
+          1
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "266": {
+        "tier": 9,
+        "poolType": "通用",
+        "mainAttributes": [
+          4,
+          43,
+          1
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "267": {
+        "tier": 9,
+        "poolType": "通用",
+        "mainAttributes": [
+          4,
+          46,
+          1
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "268": {
+        "tier": 9,
+        "poolType": "通用",
+        "mainAttributes": [
+          5,
+          48,
+          2
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "269": {
+        "tier": 9,
+        "poolType": "通用",
+        "mainAttributes": [
+          5,
+          44,
+          2
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "270": {
+        "tier": 9,
+        "poolType": "通用",
+        "mainAttributes": [
+          5,
+          41,
+          2
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "271": {
+        "tier": 9,
+        "poolType": "通用",
+        "mainAttributes": [
+          6,
+          47,
+          3
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "272": {
+        "tier": 9,
+        "poolType": "通用",
+        "mainAttributes": [
+          6,
+          45,
+          3
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "273": {
+        "tier": 9,
+        "poolType": "通用",
+        "mainAttributes": [
+          6,
+          42,
+          3
+        ],
+        "mainSettings": [
+          15,
+          100,
+          100
+        ]
+      },
+      "274": {
+        "tier": 9,
+        "poolType": "战斗",
+        "mainAttributes": [
+          4,
+          28,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "275": {
+        "tier": 9,
+        "poolType": "战斗",
+        "mainAttributes": [
+          5,
+          28,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "276": {
+        "tier": 9,
+        "poolType": "战斗",
+        "mainAttributes": [
+          6,
+          28,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "277": {
+        "tier": 9,
+        "poolType": "生产",
+        "mainAttributes": [
+          4,
+          72,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "278": {
+        "tier": 9,
+        "poolType": "生产",
+        "mainAttributes": [
+          5,
+          72,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "279": {
+        "tier": 9,
+        "poolType": "生产",
+        "mainAttributes": [
+          6,
+          72,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "280": {
+        "tier": 9,
+        "poolType": "战斗",
+        "mainAttributes": [
+          4,
+          12,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "281": {
+        "tier": 9,
+        "poolType": "战斗",
+        "mainAttributes": [
+          5,
+          12,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "282": {
+        "tier": 9,
+        "poolType": "战斗",
+        "mainAttributes": [
+          6,
+          12,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "283": {
+        "tier": 9,
+        "poolType": "生产",
+        "mainAttributes": [
+          4,
+          51,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "284": {
+        "tier": 9,
+        "poolType": "生产",
+        "mainAttributes": [
+          5,
+          51,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "285": {
+        "tier": 9,
+        "poolType": "生产",
+        "mainAttributes": [
+          6,
+          51,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "286": {
+        "tier": 9,
+        "poolType": "战斗",
+        "mainAttributes": [
+          4,
+          13,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "287": {
+        "tier": 9,
+        "poolType": "战斗",
+        "mainAttributes": [
+          5,
+          13,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "288": {
+        "tier": 9,
+        "poolType": "战斗",
+        "mainAttributes": [
+          6,
+          13,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "289": {
+        "tier": 9,
+        "poolType": "生产",
+        "mainAttributes": [
+          4,
+          52,
+          1
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "290": {
+        "tier": 9,
+        "poolType": "生产",
+        "mainAttributes": [
+          5,
+          52,
+          2
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      },
+      "291": {
+        "tier": 9,
+        "poolType": "生产",
+        "mainAttributes": [
+          6,
+          52,
+          3
+        ],
+        "mainSettings": [
+          10,
+          100,
+          100
+        ]
+      }
+    },
+    "attributes": {
+      "1": {
+        "kind": "aptitude",
+        "unit": "",
+        "format": "小数",
+        "expression": 5296
+      },
+      "2": {
+        "kind": "aptitude",
+        "unit": "",
+        "format": "小数",
+        "expression": 5296
+      },
+      "3": {
+        "kind": "aptitude",
+        "unit": "",
+        "format": "小数",
+        "expression": 5296
+      },
+      "4": {
+        "kind": "attack",
+        "unit": "",
+        "format": "整数",
+        "expression": 5295
+      },
+      "5": {
+        "kind": "attack",
+        "unit": "",
+        "format": "整数",
+        "expression": 5295
+      },
+      "6": {
+        "kind": "attack",
+        "unit": "",
+        "format": "整数",
+        "expression": 5295
+      },
+      "12": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5299,
+        "base": 2,
+        "tier": 0.75,
+        "level": 0.01
+      },
+      "13": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5300,
+        "base": 8,
+        "tier": 3,
+        "level": 0.4
+      },
+      "17": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "18": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "19": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "20": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "21": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "23": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "24": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "25": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "26": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "27": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "28": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "31": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "32": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "33": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "35": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "36": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "37": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "38": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "40": {
+        "kind": "work",
+        "unit": "",
+        "format": "整数",
+        "expression": 5301
+      },
+      "41": {
+        "kind": "work",
+        "unit": "",
+        "format": "整数",
+        "expression": 5301
+      },
+      "42": {
+        "kind": "work",
+        "unit": "",
+        "format": "整数",
+        "expression": 5301
+      },
+      "43": {
+        "kind": "work",
+        "unit": "",
+        "format": "整数",
+        "expression": 5301
+      },
+      "44": {
+        "kind": "work",
+        "unit": "",
+        "format": "整数",
+        "expression": 5301
+      },
+      "45": {
+        "kind": "work",
+        "unit": "",
+        "format": "整数",
+        "expression": 5301
+      },
+      "46": {
+        "kind": "work",
+        "unit": "",
+        "format": "整数",
+        "expression": 5301
+      },
+      "47": {
+        "kind": "work",
+        "unit": "",
+        "format": "整数",
+        "expression": 5301
+      },
+      "48": {
+        "kind": "work",
+        "unit": "",
+        "format": "整数",
+        "expression": 5301
+      },
+      "51": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5299,
+        "base": 2,
+        "tier": 0.75,
+        "level": 0.01
+      },
+      "52": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5300,
+        "base": 8,
+        "tier": 3,
+        "level": 0.4
+      },
+      "53": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "54": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "55": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "56": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "57": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "58": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "59": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "60": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "61": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "62": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "63": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "64": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "71": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5302,
+        "base": 2,
+        "tier": 0.75,
+        "level": 0.1
+      },
+      "72": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5302,
+        "base": 2,
+        "tier": 0.75,
+        "level": 0.1
+      },
+      "110": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "111": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      },
+      "112": {
+        "kind": "percent",
+        "unit": "%",
+        "format": "百分比",
+        "expression": 5304,
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2
+      }
+    },
+    "sourceSids": [
+      601593514747018,
+      166680919655131,
+      817916654281532,
+      360141429177377,
+      631300007252337,
+      910195347276964,
+      773239288013696,
+      287806596379587,
+      365081551176251,
+      471274501781742,
+      909366777963554,
+      364262392529690,
+      358108413690538,
+      131416746119248
+    ],
+    "limits": {
+      "planes": [
+        7,
+        9
+      ],
+      "minQuality": 1,
+      "maxQuality": 6,
+      "maxTier": 9,
+      "mainCoefficientShift": 30,
+      "affixCoefficientShift": 10,
+      "selectedSlotRemoval": "reject",
+      "extraSlots": "explicit-tail-only",
+      "allowNewDuplicates": false,
+      "advanced": false
+    }
+  },
   "equipmentWorkflowLimits": {
     "version": 1,
     "planes": [
@@ -60578,6 +64459,10 @@
     }
   },
   "verification": {
+    "backpackEquipmentQualityUpgrade": true,
+    "backpackEquipmentQualityDowngrade": true,
+    "equipmentQualityUpgrade": true,
+    "equipmentQualityDowngrade": true,
     "backpackEquipmentLevel": true,
     "backpackEquipmentAffixCoefficient": true,
     "backpackEquipmentAffixReplacement": true,

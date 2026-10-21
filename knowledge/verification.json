@@ -39,7 +39,11 @@
     "backpackEquipmentAffixCoefficient": true,
     "backpackEquipmentAffixReplacement": true,
     "equipmentNewItemMarker": true,
-    "equipmentAffixInitialSelection": true
+    "equipmentAffixInitialSelection": true,
+    "backpackEquipmentQualityUpgrade": true,
+    "backpackEquipmentQualityDowngrade": true,
+    "equipmentQualityUpgrade": true,
+    "equipmentQualityDowngrade": true
   },
   "scenarios": [
     "山寨與角色改名",
@@ -657,5 +661,130 @@
       "overlappingPlaneRows": true
     },
     "note": "464 matrix cases plus one moved-row re-edit; original files unchanged; first selection remains gated pending native UI. Raw evidence outside repo."
+  },
+  "equipmentQuality": {
+    "date": "2026-10-22",
+    "gameVersion": "V1.0.10.2",
+    "build": 26094666,
+    "fingerprints": {
+      "data.json": "32a36accc1b97e9bb3498eb3be76950e1e72b2e8f7a0cf9ce293b57aa5e0d820",
+      "scripts/c3runtime.js": "1e1643722efc032824881f03ce4d81df1135e6a8cd8e08d9fd87e56e480ac9f6",
+      "cl.json": "c121cf702eb6a4edb184d7180ad83d41aa90efca4a1e5e21e652dd1ff24f47b7",
+      "js.json": "5c360c93cd1248fe96d0373428ddae4649698574d032b333432e4b777fcc0ee4",
+      "zy.json": "8dd8ccc0a6318d3e3a58bc4d9951fb57d281b812e8b3ce1ba68847eb5283c75c",
+      "sx.json": "6a24e20ad0a70d5ad17a0310f0a9e7619dda5c4718d536a3df51d385abd748e7",
+      "wp.json": "14516d34cedf209c497fca10699e179c26c43558c2a3253bc87c8b33493a82c4",
+      "kj.json": "b051136f1366eb1c990004a4fa8a2d8f90339c7defbc10eb90c68c2ff36e5309",
+      "jz.json": "cf4d691dc7f6814db5ba1e0e28ac206d7a15c58ddccba55a473975461841b0bf",
+      "rw.json": "705f541917d9a62cff9ef5805032fd29496fdc98b03a7f065ff3fc6fab937b4b",
+      "tf.json": "c8a3005201d8f17a0899584baf7e0286b073aa84d4697807edcd44e00902fa1f",
+      "ss.json": "4350cb979c4026ce0d8dc25e7807fde3d29a1d42fbd2e499673614a4f67e1bc7",
+      "lw.json": "7a4f5a5bfd5967f3a74e36aa9a0c2cda132619b2908bdc39b1406da4b346bde6",
+      "yx.json": "58b8eb984cf8190f52ed4e53d044079733cf82096224dd7014ec36e1da2b45bc",
+      "tz.json": "a4b008981f39abc371b5673abe4c780bef5c91229a5ae3a42d2e8fef4e780c74"
+    },
+    "dataHash": "d954d023af5daab2e44773daaf4e2547e14fc4b63fc992c0255ee48ea301590a",
+    "formulaHash": "0908474e4ceb3e087b0f7bdb17376c1ad303d8953934fdab5727a881280056f9",
+    "groups": {
+      "backpackEquipmentQualityUpgrade": {
+        "checks": {
+          "load": true,
+          "save": true,
+          "restart": true,
+          "originalHashes": true,
+          "nativeEffects": true,
+          "lifecycle": true,
+          "qualityUi": true
+        },
+        "cases": 200,
+        "evidenceHash": "eeca7f3cef850c44be79b9736a76183c75b04fab2611351733d5cf9c9eee22a8",
+        "effectsHash": "f85ddf183e56db1c99ff6b057f8dfe75fe52089c70394e59415c9fa94193078d",
+        "lifecycleHash": "5d49e31e0d3ff696e432e8546326104b131b8745505164795eeef64ff49260c2",
+        "pids": [
+          47160,
+          51640,
+          51640,
+          47540
+        ]
+      },
+      "backpackEquipmentQualityDowngrade": {
+        "checks": {
+          "load": true,
+          "save": true,
+          "restart": true,
+          "originalHashes": true,
+          "nativeEffects": true,
+          "lifecycle": true,
+          "qualityUi": true
+        },
+        "cases": 200,
+        "evidenceHash": "b196b6c8fd8c4bea6cb927acc73b3f074a7645013d60439cd51efe79b50e9e7e",
+        "effectsHash": "c82976ffadf7993a742756f2c943fb317ecbea7f4aa4c7153dcbdc00c4bc3c95",
+        "lifecycleHash": "abc799c7776e46ee01628e02007d7669c2cacc6a03bb4870fda735b64f5c2f7c",
+        "pids": [
+          51132,
+          36584,
+          36584,
+          47036
+        ]
+      },
+      "equipmentQualityUpgrade": {
+        "checks": {
+          "load": true,
+          "save": true,
+          "restart": true,
+          "originalHashes": true,
+          "nativeEffects": true,
+          "lifecycle": true,
+          "qualityUi": true
+        },
+        "cases": 200,
+        "evidenceHash": "70c0a76db756926876f6ea7f05fd132807e3f0a1f69bdc63a595e78fbe30b55d",
+        "effectsHash": "b90263a8d6dfb98438a8f2c41f29f60928c2651f4d4f928adc71fed7bbf96b26",
+        "lifecycleHash": "b7f210768ebb99c37ddb313ff9957c5a7f8b5b4fb80318edeff8b2fd136ec923",
+        "pids": [
+          50952,
+          5708,
+          5708,
+          41768
+        ]
+      },
+      "equipmentQualityDowngrade": {
+        "checks": {
+          "load": true,
+          "save": true,
+          "restart": true,
+          "originalHashes": true,
+          "nativeEffects": true,
+          "lifecycle": true,
+          "qualityUi": true
+        },
+        "cases": 200,
+        "evidenceHash": "259362b4b18aaaf3f98dd596240d4d0821acf37607285aef470bdcc1fcb45b74",
+        "effectsHash": "4751d4941a5c00d9f226c71ad67a2efc4474bcbd5554ae660d35705f75677524",
+        "lifecycleHash": "b374eac57c885d02f1f38149728be560369dcd9a4b5c4424286a0f0b9ff733cd",
+        "pids": [
+          44808,
+          36336,
+          36336,
+          19256
+        ]
+      }
+    },
+    "formulaCases": 6592,
+    "formulaEvidenceHash": "8fcb57189e82d8de99e0ec8d1d014b637d35ae65e70a565e6118a9890554b52d",
+    "ui": {
+      "cases": 6,
+      "washes": 6,
+      "cost": 600,
+      "sourceHash": "c970efe0c822cf38af10cc42fa0905b9a76f8f12b4dff23d822179570564f53c",
+      "snapshotsHash": "7cec6f0bd9452a1ef2ada9a8a793c36bdf885872135097130811e16c359780f4"
+    },
+    "extra": {
+      "sameRows": true,
+      "postMoveEdit": true,
+      "sourceHash": "98ca0fc19138aa5b248b705f8c7ff785fe0d07142d102c3c94b2962a518fcb98"
+    },
+    "note": "品質四群組各200件原生效果／存檔／新PID與洗練穿脫；背包及穿戴代表UI、30品質轉換、243範本／54效果公式，原檔與來源雜湊不變。原始payload及log留repo外。"
   }
 }

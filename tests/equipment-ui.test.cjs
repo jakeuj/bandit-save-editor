@@ -26,3 +26,11 @@ test('changing plane/target and position filter never retains first-selection co
 test('missing selection UI proof keeps candidate and apply disabled even after checkbox',()=>{
  const {$,m}=setup(false);assert.match($('affixTarget').innerHTML,/首次選槽尚待原生遊戲 UI 驗證/);$('affixFirst').checked=true;$('affixFirst').onchange();assert.equal($('affixReplace').disabled,true);assert.equal(m.changes.size,0);
 });
+
+test('quality UI requires explicit new slot and clears removal confirmation on target/input changes',()=>{
+ const {ctx,$,C,m}=setup();$('qualityTarget').value='3';$('qualityTarget').onchange();assert.equal($('qualityApply').disabled,true);
+ $('qualityAffix2').value='13';$('qualityAffix2').onchange();assert.equal($('qualityApply').disabled,false);$('qualityApply').onclick();assert.equal(C.get(m,{x:1,y:5,z:7}),3);assert.equal(C.get(m,{x:1,y:10,z:7}),13);
+ $('qualityTarget').value='2';$('qualityTarget').onchange();assert.equal($('qualityRemovalLabel').hidden,false);assert.equal($('qualityApply').disabled,true);$('qualityRemoval').checked=true;$('qualityRemoval').onchange();assert.equal($('qualityApply').disabled,false);
+ $('qualityTarget').value='1';$('qualityTarget').onchange();assert.equal($('qualityRemoval').checked,false);$('qualityRemoval').checked=true;$('qualityRemoval').onchange();$('qualityApply').onclick();assert.equal(C.get(m,{x:1,y:5,z:7}),1);assert.equal(C.get(m,{x:1,y:9,z:7}),0);assert.equal(C.get(m,{x:1,y:10,z:7}),0);assert.equal(C.get(m,{x:1,y:5,z:9}),2);
+ $('inventoryPlane').value='9';$('inventoryPlane').onchange();assert.doesNotMatch($('qualityItem').innerHTML,/7:1/);
+});

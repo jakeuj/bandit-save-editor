@@ -39,7 +39,7 @@ node --test tests/*.test.cjs
 
 欄位圖鑑摘要由 `src/knowledge-ui.js` 讀取同一份內嵌知識的 `K.gameVersion`。摘要正確不代表其他標籤已同步：本次 V1.0.10.2 首次發布時曾出現摘要為新版、標籤仍為舊版，後由提交 `7adcb01` 修正。`tests/knowledge.test.cjs` 目前核對四個標記均等於內嵌的 `gameVersion`；新增或移除標示時，連同預期數量一起調整。`--check` 會重算產物，拒絕版本文字或 PWA 內容未同步的提交。
 
-更新順序為核對來源與實測紀錄、重建 catalog、執行建置及測試，再提交 catalog、驗證紀錄與產生的 HTML／`sw.js`。版本標示只是呈現知識基準，開放寫入仍受完整來源指紋及 `verification.json` 限制。側欄的編輯器版本（目前`v2.4`）與 Mac runtime 相容版本各有用途，不隨此標記改寫。
+更新順序為核對來源與實測紀錄、重建 catalog、執行建置及測試，再提交 catalog、驗證紀錄與產生的 HTML／`sw.js`。版本標示只是呈現知識基準，開放寫入仍受完整來源指紋及 `verification.json` 限制。側欄的編輯器版本（目前`v2.5`）與 Mac runtime 相容版本各有用途，不隨此標記改寫。
 
 ## PWA 維護與驗收
 
@@ -194,3 +194,23 @@ v2.3 已以功能提交 `a912466` 通過 [Pages 正式發布驗證](research/pre
 `node scripts/verify-affixes.cjs --state /outside/state.json --scenario /outside/scenario.json`現在依options.plane讀取目標，z9才做穿戴公式比對。`node scripts/verify-equipment-workflow.cjs --state /outside/state.json --scenario /outside/scenario.json`驗證原生洗練、穿脫及排序並更新後續expected；再完成原版save／assert／stop／restart／load／assert後用`--compare`核對。原始狀態留repo外。
 
 本版實際已通過範圍及發布狀態以[研究紀錄](research/equipment-workflow.md)及SDD任務為準。2026-10-22補齊遊戲選槽UI、桌面／390px、精確下載及PWA離線／版本交接證據；首次選槽的負向建置測試須明確將`selectionUi`設為false，不能依賴證明當時尚未通過的預設值。PWA受內容過濾器改寫時保留完整性檢查；使用者同意的測試網址例外須記錄範圍與測後還原或保留決定，不將例外當成網站安裝必要條件。更新交接先保留舊版未匯出變更，確認新版waiting不重載，再匯出、關閉全部同源視窗並重開核對版本；離線模擬完成後還原網路。
+
+## v2.5 品質升降維護
+
+`equipmentQualityInfo(model,{itemId,plane=9})`回傳完整普通裝備檢查、目前結構、六個目標的阻擋原因與驗證狀態。`previewEquipmentQualityChange(model,{itemId,plane=9,quality,addedAffixes=[]})`唯讀回傳欄位、增刪槽及54項單件效果。新增槽為`{slot,attributeId,coefficient}`；目標升品須完整連續尾槽。`setEquipmentQuality`接受相同參數及`confirmRemovedAffixes=false,advanced=false`，重跑所有檢查，降品須明確確認，與其他裝備操作共用`editing:equipment:庫別:列號`原子還原群組。自訂座標維持唯讀。
+
+`scripts/equipment-quality-data.cjs`由原版資料建立243範本、主屬性設定、單位、公式與規則，與舊batch2資料分開。四個庫別／方向群組各需自己的load、save、restart、originalHashes、nativeEffects、lifecycle、qualityUi。建置核對完整15來源及`SHA256(JSON.stringify({quality:catalog.equipmentQuality,items:catalog.batch2Data.items,workflow:catalog.equipmentWorkflowLimits}))`，另核對核心`qualityAttributeEffect`函式原文（CRLF轉LF）的公式SHA-256。來源／規則／公式變動使證明失效，不複製v2.4旗標。
+
+以下產生repo外合成候選，不接觸玩家原檔：
+
+```sh
+node scripts/prepare-quality-cases.cjs --output /existing/external/directory
+node scripts/verify-game.cjs --setup --source /unpacked/game --runtime /installed/game.exe --save-file /original.dat --artifacts /external/directory --scenario /external/quality-7-Upgrade.json
+node scripts/verify-game.cjs --state /external/state.json --load --mode 云存档
+node scripts/verify-quality.cjs --state /external/state.json --scenario /external/quality-7-Upgrade.json
+node scripts/verify-quality.cjs --state /external/state.json --scenario /external/quality-7-Upgrade.json --formulas
+```
+
+各庫／方向分開建立隔離副本，先完成原版save／assert／stop／restart／load（mode存档）／assert，再用`verify-quality --compare`比對。`verify-quality-lifecycle.cjs --state ... --scenario ...`執行原生洗練、精確成本、穿脫搬移／排序並建立經獨立核對的後續expected；再次完成原版IO與新PID，最後加`--compare`讀回。大型觀察陣列可使用`verify-game --quiet`保留PASS與錯誤而不輸出全陣列。原生`装备库取出`第三參數從0開始，否則漏搬y0。
+
+公式測試涵蓋243範本及38候選，不把「可計算」當作「已原生比對」。完整6,592組、800件品質寫入、後續行為及代表UI證據見[品質研究](research/equipment-quality.md)，工具原始產物留repo外。UI操作後先核對只有允許的洗練變更與y24提示副作用，才採納後續IO基準。桌面、390px、兩入口下載及PWA離線／等待交接另驗收，直接file://維持獨立狀態。
