@@ -141,3 +141,9 @@ v2.1 可使用 repo 外 `--scenario` JSON：`baseline` 為 `[x,y,z,value]` 陣�
 v2.1 的桌面／390px、精確匯出及隔離遊戲結果見 [進階修改實測](research/advanced-editing.md#2026-10-21-windows-隔離實測)。本輪 `file://` 被工具政策阻擋，直接開檔驗收保持待辦；不可引用舊版資源測試當作三項新功能已實測。
 
 2026-10-21 v2.1 已於提交 `d98db49` 發布，正式 v2.1／V1.0.10.2、資產 Git blob 比對、PWA waiting→關閉重開與斷網編輯／精確匯出皆通過，詳細見 [正式發布紀錄](research/advanced-editing.md#v21-正式發布驗證)。JavaScript 與 Manifest 以 `.gitattributes` 固定 LF；提交前可用 Git blob 隔離副本檢查，避免 Windows 行尾改變已釘選的 PWA 雜湊。
+
+## 第二批研究入口
+
+裝備品質、詞條與丹藥資質增量的來源、候選範圍、限制及隔離遊戲驗證矩陣集中於[第二批研究](research/advanced-editing-batch2.md)，工作狀態見[提案與任務](../sdd/advanced-editing-batch2/tasks.md)。這些群組仍唯讀，不沿用 v2.1 裝備等級的實測證明或進階值域。所用新資料表須先納入來源覆蓋，品質／詞條的整件裝備交易與復原也須另驗證。
+
+PWA 雜湊異常時，先比較實際 HTTP 回應與提交的 Git blob。本機 AdGuard 曾改寫首頁並注入 CSP／腳本，Worker 因內容不符而拒絕快取是預期行為；不要放寬 CSP 或略過指紋比對。BOM 保留則須在瀏覽器讀檔入口驗收，除了核心序列化測試，也要逐字核對真正下載的匯出檔。

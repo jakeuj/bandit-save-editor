@@ -97,6 +97,7 @@ node scripts/build-editor.cjs
 
 | 需求 | 文件 |
 | --- | --- |
+| 第二批品質、詞條、丹藥增量（研究階段） | [可行範圍與驗證計畫](docs/research/advanced-editing-batch2.md) |
 | v2.1 候選、公式、來源 SID 與實測 | [進階修改研究](docs/research/advanced-editing.md) |
 | Windows 本機補丁的獨立研究範圍 | [補丁提案](sdd/runtime-patch/proposal.md) |
 | 核心 API、來源維護、知識更新、驗證與發布 | [維護指引](docs/maintenance.md) |
