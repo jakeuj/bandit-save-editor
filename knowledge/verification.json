@@ -34,7 +34,12 @@
     "advancedTechnologyLevelAdvanced": true,
     "equipmentAffixCoefficient": true,
     "pillAptitudeBonus": true,
-    "equipmentAffixReplacement": true
+    "equipmentAffixReplacement": true,
+    "backpackEquipmentLevel": true,
+    "backpackEquipmentAffixCoefficient": true,
+    "backpackEquipmentAffixReplacement": true,
+    "equipmentNewItemMarker": true,
+    "equipmentAffixInitialSelection": false
   },
   "scenarios": [
     "山寨與角色改名",
@@ -316,5 +321,326 @@
       ],
       "note": "Five source-matched isolated load/save/stop/new-PID restart matrices; 38 native stat comparisons per item, plus native equipment move, wash and re-edit persistence. Raw evidence outside repo; see precise-affix-editing research."
     }
+  },
+  "equipmentWorkflow": {
+    "date": "2026-10-22",
+    "platform": "win32",
+    "gameVersion": "V1.0.10.2",
+    "fingerprints": {
+      "data.json": "32a36accc1b97e9bb3498eb3be76950e1e72b2e8f7a0cf9ce293b57aa5e0d820",
+      "scripts/c3runtime.js": "1e1643722efc032824881f03ce4d81df1135e6a8cd8e08d9fd87e56e480ac9f6",
+      "cl.json": "c121cf702eb6a4edb184d7180ad83d41aa90efca4a1e5e21e652dd1ff24f47b7",
+      "js.json": "5c360c93cd1248fe96d0373428ddae4649698574d032b333432e4b777fcc0ee4",
+      "zy.json": "8dd8ccc0a6318d3e3a58bc4d9951fb57d281b812e8b3ce1ba68847eb5283c75c",
+      "sx.json": "6a24e20ad0a70d5ad17a0310f0a9e7619dda5c4718d536a3df51d385abd748e7",
+      "wp.json": "14516d34cedf209c497fca10699e179c26c43558c2a3253bc87c8b33493a82c4",
+      "kj.json": "b051136f1366eb1c990004a4fa8a2d8f90339c7defbc10eb90c68c2ff36e5309",
+      "jz.json": "cf4d691dc7f6814db5ba1e0e28ac206d7a15c58ddccba55a473975461841b0bf",
+      "rw.json": "705f541917d9a62cff9ef5805032fd29496fdc98b03a7f065ff3fc6fab937b4b",
+      "tf.json": "c8a3005201d8f17a0899584baf7e0286b073aa84d4697807edcd44e00902fa1f",
+      "ss.json": "4350cb979c4026ce0d8dc25e7807fde3d29a1d42fbd2e499673614a4f67e1bc7",
+      "lw.json": "7a4f5a5bfd5967f3a74e36aa9a0c2cda132619b2908bdc39b1406da4b346bde6",
+      "yx.json": "58b8eb984cf8190f52ed4e53d044079733cf82096224dd7014ec36e1da2b45bc",
+      "tz.json": "a4b008981f39abc371b5673abe4c780bef5c91229a5ae3a42d2e8fef4e780c74"
+    },
+    "limits": {
+      "version": 1,
+      "planes": [
+        7,
+        9
+      ],
+      "backpack": {
+        "minTier": 1,
+        "maxTier": 9,
+        "minQuality": 1,
+        "maxQuality": 6,
+        "quantity": 1,
+        "owner": 0,
+        "advanced": false
+      },
+      "newItemMarkers": [
+        0,
+        1
+      ],
+      "unknownStateColumns": [
+        25,
+        26,
+        27
+      ],
+      "firstSelection": "all-flags-zero-explicit-atomic",
+      "identity": "plane-and-current-row",
+      "sourceSids": [
+        166680919655131,
+        666416688115651,
+        644557287879738,
+        196601779910507,
+        775039415186059,
+        564254928232839,
+        959041203712077,
+        418018161514165
+      ]
+    },
+    "dataHash": "5e2efb2c1c57ce6fe726c0b41b10c7d9227551e877e82bb688c0247458a949eb",
+    "groups": {
+      "backpackEquipmentLevel": {
+        "checks": {
+          "load": true,
+          "save": true,
+          "restart": true,
+          "originalHashes": true,
+          "nativeEffects": true,
+          "lifecycle": true
+        },
+        "coverage": {
+          "qualities": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "tiers": [
+            1,
+            9
+          ],
+          "cases": 12
+        }
+      },
+      "backpackEquipmentAffixCoefficient": {
+        "checks": {
+          "load": true,
+          "save": true,
+          "restart": true,
+          "originalHashes": true,
+          "nativeEffects": true,
+          "lifecycle": true
+        },
+        "coverage": {
+          "qualities": [
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "newItemMarkers": [
+            0,
+            1
+          ],
+          "attributeIds": [
+            12,
+            13,
+            17,
+            18,
+            19,
+            20,
+            21,
+            23,
+            24,
+            25,
+            26,
+            27,
+            31,
+            32,
+            33,
+            35,
+            36,
+            37,
+            38,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            71,
+            72,
+            110,
+            111,
+            112
+          ],
+          "cases": 380
+        }
+      },
+      "backpackEquipmentAffixReplacement": {
+        "checks": {
+          "load": true,
+          "save": true,
+          "restart": true,
+          "originalHashes": true,
+          "nativeEffects": true,
+          "lifecycle": true
+        },
+        "coverage": {
+          "qualities": [
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "newItemMarkers": [
+            0,
+            1
+          ],
+          "attributeIds": [
+            12,
+            13,
+            17,
+            18,
+            19,
+            20,
+            21,
+            23,
+            24,
+            25,
+            26,
+            27,
+            31,
+            32,
+            33,
+            35,
+            36,
+            37,
+            38,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            71,
+            72,
+            110,
+            111,
+            112
+          ],
+          "cases": 380
+        }
+      },
+      "equipmentNewItemMarker": {
+        "checks": {
+          "load": true,
+          "save": true,
+          "restart": true,
+          "originalHashes": true,
+          "nativeEffects": true,
+          "lifecycle": true
+        },
+        "coverage": {
+          "qualities": [
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "newItemMarkers": [
+            0,
+            1
+          ],
+          "attributeIds": [
+            12,
+            13,
+            17,
+            18,
+            19,
+            20,
+            21,
+            23,
+            24,
+            25,
+            26,
+            27,
+            31,
+            32,
+            33,
+            35,
+            36,
+            37,
+            38,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            71,
+            72,
+            110,
+            111,
+            112
+          ],
+          "cases": 380
+        }
+      },
+      "equipmentAffixInitialSelection": {
+        "checks": {
+          "load": true,
+          "save": true,
+          "restart": true,
+          "originalHashes": true,
+          "nativeEffects": true,
+          "lifecycle": true,
+          "selectionUi": false
+        },
+        "coverage": {
+          "planes": [
+            7,
+            9
+          ],
+          "qualities": [
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "allValidSlots": true,
+          "newItemMarkers": [
+            0,
+            1
+          ],
+          "cases": 70,
+          "combinedIdCoefficientFlagCases": 10
+        },
+        "disabledReason": "Native selection UI unavailable: Computer Use kernel assets path error after reset; native IO alone does not open this gate."
+      }
+    },
+    "lifecycle": {
+      "nativeWashes": 96,
+      "soulPerWash": 100,
+      "equipUnequip": true,
+      "displaySortPreservesRows": true,
+      "newPidRestart": true,
+      "movedRowReedit": true,
+      "overlappingPlaneRows": true
+    },
+    "note": "464 matrix cases plus one moved-row re-edit; original files unchanged; first selection remains gated pending native UI. Raw evidence outside repo."
   }
 }
