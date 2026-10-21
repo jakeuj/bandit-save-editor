@@ -8,7 +8,7 @@ const root=path.resolve(__dirname,'..');
 const sum=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 function launch(state){
  const log=fs.openSync(path.join(state.dir,'game.log'),'a');
- const child=spawn(state.runtime,[state.game,'--user-data-dir='+path.join(state.dir,'profile'),'--remote-debugging-port='+state.port,'--remote-debugging-address=127.0.0.1','--enable-logging=stderr'],{cwd:state.game,detached:true,windowsHide:true,stdio:['ignore',log,log]});
+ const child=spawn(state.runtime,[state.game,'--mute-audio','--user-data-dir='+path.join(state.dir,'profile'),'--remote-debugging-port='+state.port,'--remote-debugging-address=127.0.0.1','--enable-logging=stderr'],{cwd:state.game,detached:true,windowsHide:true,stdio:['ignore',log,log]});
  child.unref();fs.closeSync(log);return child.pid;
 }
 function ownedProcess(state){
@@ -110,7 +110,7 @@ async function waitMain(state,mainOnly=true){
  throw Error('Main layout did not become ready'+(last?': '+last.message:''));
 }
 async function run(){
- if(args.includes('--help')){console.log('Node 22+, Windows/macOS: verify-game.cjs --setup --source UNPACKED_GAME --runtime NWJS [--save-file ORIGINAL.dat] [--catalog CANDIDATE.json] [--artifacts OUTSIDE_REPO] [--scenario SCENARIO.json]\n--state /outside/repo/state.json --probe | --load [--mode 存档|备份|云存档] | --save | --assert | --stop | --restart\nStop the disposable process before --restart. Wait for the title/main layout before --load/--assert.');return;}
+ if(args.includes('--help')){console.log('Node 22+, Windows/macOS: verify-game.cjs --setup --source UNPACKED_GAME --runtime NWJS [--save-file ORIGINAL.dat] [--catalog CANDIDATE.json] [--artifacts OUTSIDE_REPO] [--scenario SCENARIO.json]\n--state /outside/repo/state.json --probe | --load [--mode 存档|备份|云存档] | --save | --assert | --stop | --restart\nIsolated launches and restarts are muted (--mute-audio). Stop the disposable process before --restart. Wait for the title/main layout before --load/--assert.');return;}
  if(args.includes('--setup'))return setup();
  const state=JSON.parse(fs.readFileSync(opt('--state'),'utf8'));
  if(args.includes('--probe'))await probe(state);
