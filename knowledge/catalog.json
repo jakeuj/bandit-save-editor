@@ -3967,283 +3967,469 @@
         "id": 1,
         "name": "流民",
         "category": "流民",
-        "tier": 1
+        "tier": 1,
+        "family": 1,
+        "prerequisites": []
       },
       {
         "id": 2,
         "name": "嘍囉",
         "category": "嘍囉",
-        "tier": 2
+        "tier": 2,
+        "family": 1,
+        "prerequisites": [
+          1
+        ]
       },
       {
         "id": 3,
         "name": "村民",
         "category": "村民",
-        "tier": 2
+        "tier": 2,
+        "family": 1,
+        "prerequisites": [
+          1
+        ]
       },
       {
         "id": 4,
         "name": "土匪",
         "category": "土匪",
-        "tier": 3
+        "tier": 3,
+        "family": 1,
+        "prerequisites": [
+          2
+        ]
       },
       {
         "id": 5,
         "name": "盜賊",
         "category": "盜賊",
-        "tier": 3
+        "tier": 3,
+        "family": 2,
+        "prerequisites": [
+          2
+        ]
       },
       {
         "id": 6,
         "name": "書生",
         "category": "書生",
-        "tier": 3
+        "tier": 3,
+        "family": 3,
+        "prerequisites": [
+          3
+        ]
       },
       {
         "id": 7,
         "name": "勞工",
         "category": "勞工",
-        "tier": 3
+        "tier": 3,
+        "family": 4,
+        "prerequisites": [
+          3
+        ]
       },
       {
         "id": 8,
         "name": "強盜",
         "category": "強盜",
-        "tier": 4
+        "tier": 4,
+        "family": 1,
+        "prerequisites": [
+          4
+        ]
       },
       {
         "id": 9,
         "name": "屠夫",
         "category": "屠夫",
-        "tier": 4
+        "tier": 4,
+        "family": 1,
+        "prerequisites": [
+          4
+        ]
       },
       {
         "id": 10,
         "name": "弓手",
         "category": "弓手",
-        "tier": 4
+        "tier": 4,
+        "family": 2,
+        "prerequisites": [
+          5
+        ]
       },
       {
         "id": 11,
         "name": "飛賊",
         "category": "飛賊",
-        "tier": 4
+        "tier": 4,
+        "family": 2,
+        "prerequisites": [
+          5
+        ]
       },
       {
         "id": 12,
         "name": "師爺",
         "category": "師爺",
-        "tier": 4
+        "tier": 4,
+        "family": 3,
+        "prerequisites": [
+          6
+        ]
       },
       {
         "id": 13,
         "name": "方士",
         "category": "方士",
-        "tier": 4
+        "tier": 4,
+        "family": 3,
+        "prerequisites": [
+          6
+        ]
       },
       {
         "id": 14,
         "name": "工匠",
         "category": "工匠",
-        "tier": 4
+        "tier": 4,
+        "family": 4,
+        "prerequisites": [
+          7
+        ]
       },
       {
         "id": 15,
         "name": "佃戶",
         "category": "佃戶",
-        "tier": 4
+        "tier": 4,
+        "family": 4,
+        "prerequisites": [
+          7
+        ]
       },
       {
         "id": 16,
         "name": "刑刀客",
         "category": "力量系3",
-        "tier": 5
+        "tier": 5,
+        "family": 1,
+        "prerequisites": [
+          8
+        ]
       },
       {
         "id": 17,
         "name": "旋拳霸",
         "category": "力量系2",
-        "tier": 5
+        "tier": 5,
+        "family": 1,
+        "prerequisites": [
+          8
+        ]
       },
       {
         "id": 18,
         "name": "橫斧將",
         "category": "力量系1",
-        "tier": 5
+        "tier": 5,
+        "family": 1,
+        "prerequisites": [
+          9
+        ]
       },
       {
         "id": 19,
         "name": "狂斧徒",
         "category": "力量系4",
-        "tier": 5
+        "tier": 5,
+        "family": 1,
+        "prerequisites": [
+          9
+        ]
       },
       {
         "id": 20,
         "name": "齊弓手",
         "category": "敏捷系1",
-        "tier": 5
+        "tier": 5,
+        "family": 2,
+        "prerequisites": [
+          10
+        ]
       },
       {
         "id": 21,
         "name": "貫弩手",
         "category": "敏捷系2",
-        "tier": 5
+        "tier": 5,
+        "family": 2,
+        "prerequisites": [
+          10
+        ]
       },
       {
         "id": 22,
         "name": "影刃客",
         "category": "敏捷系3",
-        "tier": 5
+        "tier": 5,
+        "family": 2,
+        "prerequisites": [
+          11
+        ]
       },
       {
         "id": 23,
         "name": "彈影盜",
         "category": "敏捷系4",
-        "tier": 5
+        "tier": 5,
+        "family": 2,
+        "prerequisites": [
+          11
+        ]
       },
       {
         "id": 24,
         "name": "鬼謀士",
         "category": "智力系1",
-        "tier": 5
+        "tier": 5,
+        "family": 3,
+        "prerequisites": [
+          12
+        ]
       },
       {
         "id": 25,
         "name": "毒陣師",
         "category": "智力系2",
-        "tier": 5
+        "tier": 5,
+        "family": 3,
+        "prerequisites": [
+          12
+        ]
       },
       {
         "id": 26,
         "name": "炎丹師",
         "category": "智力系3",
-        "tier": 5
+        "tier": 5,
+        "family": 3,
+        "prerequisites": [
+          13
+        ]
       },
       {
         "id": 27,
         "name": "寒咒師",
         "category": "智力系4",
-        "tier": 5
+        "tier": 5,
+        "family": 3,
+        "prerequisites": [
+          13
+        ]
       },
       {
         "id": 28,
         "name": "鐵鍛師",
         "category": "生產系1",
-        "tier": 5
+        "tier": 5,
+        "family": 4,
+        "prerequisites": [
+          14
+        ]
       },
       {
         "id": 29,
         "name": "機工匠",
         "category": "生產系2",
-        "tier": 5
+        "tier": 5,
+        "family": 4,
+        "prerequisites": [
+          14
+        ]
       },
       {
         "id": 30,
         "name": "靈藥農",
         "category": "生產系3",
-        "tier": 5
+        "tier": 5,
+        "family": 4,
+        "prerequisites": [
+          15
+        ]
       },
       {
         "id": 31,
         "name": "碎岩師",
         "category": "生產系4",
-        "tier": 5
+        "tier": 5,
+        "family": 4,
+        "prerequisites": [
+          15
+        ]
       },
       {
         "id": 32,
         "name": "斷獄刀魁",
         "category": "力量系7",
-        "tier": 6
+        "tier": 6,
+        "family": 1,
+        "prerequisites": [
+          16
+        ]
       },
       {
         "id": 33,
         "name": "撼天拳皇",
         "category": "力量系6",
-        "tier": 6
+        "tier": 6,
+        "family": 1,
+        "prerequisites": [
+          17
+        ]
       },
       {
         "id": 34,
         "name": "破軍斧王",
         "category": "力量系5",
-        "tier": 6
+        "tier": 6,
+        "family": 1,
+        "prerequisites": [
+          18
+        ]
       },
       {
         "id": 35,
         "name": "血魔斧煞",
         "category": "力量系8",
-        "tier": 6
+        "tier": 6,
+        "family": 1,
+        "prerequisites": [
+          19
+        ]
       },
       {
         "id": 36,
         "name": "連珠弓神",
         "category": "敏捷系5",
-        "tier": 6
+        "tier": 6,
+        "family": 2,
+        "prerequisites": [
+          20
+        ]
       },
       {
         "id": 37,
         "name": "穿雲弩靈",
         "category": "敏捷系6",
-        "tier": 6
+        "tier": 6,
+        "family": 2,
+        "prerequisites": [
+          21
+        ]
       },
       {
         "id": 38,
         "name": "絕影刃神",
         "category": "敏捷系7",
-        "tier": 6
+        "tier": 6,
+        "family": 2,
+        "prerequisites": [
+          22
+        ]
       },
       {
         "id": 39,
         "name": "裂彈影魔",
         "category": "敏捷系8",
-        "tier": 6
+        "tier": 6,
+        "family": 2,
+        "prerequisites": [
+          23
+        ]
       },
       {
         "id": 40,
         "name": "妖謀軍師",
         "category": "智力系5",
-        "tier": 6
+        "tier": 6,
+        "family": 3,
+        "prerequisites": [
+          24
+        ]
       },
       {
         "id": 41,
         "name": "蠱毒宗師",
         "category": "智力系6",
-        "tier": 6
+        "tier": 6,
+        "family": 3,
+        "prerequisites": [
+          25
+        ]
       },
       {
         "id": 42,
         "name": "爆炎丹尊",
         "category": "智力系7",
-        "tier": 6
+        "tier": 6,
+        "family": 3,
+        "prerequisites": [
+          26
+        ]
       },
       {
         "id": 43,
         "name": "霜天咒神",
         "category": "智力系8",
-        "tier": 6
+        "tier": 6,
+        "family": 3,
+        "prerequisites": [
+          27
+        ]
       },
       {
         "id": 44,
         "name": "百鍊鍛宗",
         "category": "生產系5",
-        "tier": 6
+        "tier": 6,
+        "family": 4,
+        "prerequisites": [
+          28
+        ]
       },
       {
         "id": 45,
         "name": "天工大師",
         "category": "生產系6",
-        "tier": 6
+        "tier": 6,
+        "family": 4,
+        "prerequisites": [
+          29
+        ]
       },
       {
         "id": 46,
         "name": "靈藥仙師",
         "category": "生產系7",
-        "tier": 6
+        "tier": 6,
+        "family": 4,
+        "prerequisites": [
+          30
+        ]
       },
       {
         "id": 47,
         "name": "碎岩礦霸",
         "category": "生產系8",
-        "tier": 6
+        "tier": 6,
+        "family": 4,
+        "prerequisites": [
+          31
+        ]
       }
     ],
     "attributes": [

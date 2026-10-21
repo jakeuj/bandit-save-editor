@@ -102,7 +102,11 @@ function createCatalog(game) {
     const { data } = JSON.parse(fs.readFileSync(path.join(game.root, file + '.json'), 'utf8'));
     catalogs[kind] = data.map((r, id) => ({ id, name: r[nameColumn]?.[0], category: typeColumn === null ? '' : r[typeColumn]?.[0] })).filter(r => r.id && typeof r.name === 'string' && r.name.trim());
     if (kind === 'materials') for (const r of catalogs[kind]) r.tier = data[r.id][2][0];
-    if (kind === 'professions') for (const r of catalogs[kind]) r.tier = data[r.id][3][0];
+    if (kind === 'professions') for (const r of catalogs[kind]) {
+      r.tier = data[r.id][3][0];
+      r.family = data[r.id][4][0];
+      r.prerequisites = [10,11,12].map(column=>data[r.id][column][0]).filter(id=>id>0);
+    }
   }
   // Name conversion only; evidence identifiers and source paths remain unchanged.
   const glossaryFile = path.join(__dirname, '../knowledge/traditional-names.json');

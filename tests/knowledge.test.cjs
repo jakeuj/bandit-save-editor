@@ -18,6 +18,27 @@ test('catalog includes 22 planes, 724 functions, 843 write sites and localized n
  assert.equal(K.catalogs.professions.find(v=>v.id===2).name,'嘍囉');
  assert.equal(C.SKILLS.length,9);assert.equal(C.SKILLS[7],'研究');
 });
+test('profession graph covers all six tiers without cycles, missing parents or disconnected branches',()=>{
+ const K=core().KNOWLEDGE,rows=K.catalogs.professions,byId=new Map(rows.map(r=>[r.id,r]));
+ assert.equal(rows.length,47);assert.deepEqual(Array.from(rows.filter(r=>!r.prerequisites.length),r=>r.id),[1]);
+ assert.deepEqual(Array.from({length:6},(_,i)=>rows.filter(r=>r.tier===i+1).length),[1,2,4,8,16,16]);
+ for(const r of rows){
+  assert.ok([1,2,3,4].includes(r.family));
+  const seen=new Set();let p=r;
+  while(p.prerequisites.length){
+   assert.ok(!seen.has(p.id));seen.add(p.id);assert.equal(p.prerequisites.length,1);
+   const parent=byId.get(p.prerequisites[0]);assert.ok(parent);assert.equal(parent.tier,p.tier-1);p=parent;
+  }
+  assert.equal(p.id,1);
+ }
+ for(const [id,parent] of [[3,1],[10,5],[17,8],[28,14],[32,16],[47,31]])assert.equal(byId.get(id).prerequisites[0],parent);
+ const guide=K.professionGuide;
+ assert.ok(K.functions.some(f=>f.sid===guide.rules.conditionSid));assert.ok(K.functions.some(f=>f.sid===guide.rules.levelSid));
+ assert.equal(guide.rules.initialRequiredLevel,5);assert.equal(guide.rules.otherRequiredLevel,10);
+ assert.equal(Object.keys(guide.workSkills).length,31);
+ for(const [id,skills] of Object.entries(guide.workSkills)){assert.ok(byId.get(Number(id)).tier<=5);for(const k of skills)assert.ok(k>=1&&k<=9);}
+ assert.equal(guide.workSkills[17].length,0);assert.equal(guide.workSkills[32],undefined);
+});
 test('typed rename preserves raw source, escapes strings, validates UTF-16 length, and rolls back',()=>{
  const C=core(),raw=fixture(),m=C.parse(raw);
  C.transaction(m,()=>{C.setField(m,{x:1,y:1,z:0},'新寨');C.setField(m,{x:1,y:1,z:2},'甲"\\乙');},'改名');

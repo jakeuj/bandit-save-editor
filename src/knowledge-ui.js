@@ -10,7 +10,7 @@
   $(kind+'PageInfo').textContent=list.length?`${start+1}–${Math.min(start+size,list.length)} / ${htmlValue(list.length)} 筆`:'0 筆';
   $(kind+'Prev').disabled=page===0;$(kind+'Next').disabled=page===max;
  }
- function renderKnowledgeTab(name){if(name==='atlas')renderAtlas();if(!model)return;if(name==='characters')renderCharacters();if(name==='settlement')renderSettlement();if(name==='inventory')renderInventory();}
+ function renderKnowledgeTab(name){if(name==='professions')renderProfessions();if(name==='atlas')renderAtlas();if(!model)return;if(name==='characters')renderCharacters();if(name==='settlement')renderSettlement();if(name==='inventory')renderInventory();}
  function renderCharacters(){
   const q=$('characterSearch').value.trim().toLowerCase(),old=$('characterSelect').value;
   const rows=C.listEntities(model,'characters').filter(r=>`${r.id} ${r.name}`.toLowerCase().includes(q));
@@ -70,7 +70,7 @@
  }
  function renderCatalog(){
   const kind=$('catalogKind').value,q=$('catalogSearch').value.trim().toLowerCase();
-  paged('catalog',K.catalogs[kind].filter(r=>`${r.id} ${r.name} ${r.category}`.toLowerCase().includes(q)),r=>`<div class="catalog-item"><span class="muted mono">#${r.id}</span> ${esc(r.name)}<div class="muted small-text">${esc(r.category)}</div></div>`,'catalogRows');
+  paged('catalog',K.catalogs[kind].filter(r=>`${r.id} ${r.name} ${r.category}`.toLowerCase().includes(q)),r=>`<div class="catalog-item"><span class="muted mono">#${r.id}</span> ${kind==='professions'?`<button class="small ghost" data-profession-link="${r.id}">${esc(r.name)} · 查看轉職</button>`:esc(r.name)}<div class="muted small-text">${esc(r.category)}</div></div>`,'catalogRows');
  }
  const categories={materials:'材料',characters:'角色範本',professions:'職業',attributes:'屬性',items:'物品',technologies:'科技',buildings:'建築',quests:'任務',talents:'天賦',facilities:'設施',relics:'靈物'};
  $('atlasPlane').innerHTML=K.planes.map(p=>`<option value="${p.z}">${p.z} · ${esc(p.name)}</option>`).join('');$('atlasPlane').value='2';

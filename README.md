@@ -9,12 +9,14 @@
 - 修改銅錢、共用經驗、魂魄、科技點與操練點。
 - 編輯山寨／角色名稱，依遊戲公式增加角色、已習得職業及九項技藝經驗，逐級結算並保留上限與關聯。
 - 檢視角色成長、科技與操練狀態、背包／裝備庫及 22 層欄位圖鑑；尚未核實或關聯複雜的欄位維持唯讀。
+- 職業圖鑑提供 47 個繁中職業、六階 16 條完整轉職路線，可搜尋、篩選系別及對照角色的前置等級與解鎖狀態；未載入存檔也可查閱。
 - 內嵌 1,762 筆必要名稱、724 個事件函式與 843 處存檔寫入索引，支援來源 SID 查詢。
 - 搜尋、篩選與批次修改遊戲材料資料表中的 220 筆材料。
 - 比對兩份原始存檔，顯示不同欄位、座標與差額，並匯出 CSV。
 - 使用自訂座標加入常用欄位，支援欄位設定匯入與匯出。
 - 檢視變更、還原、復原一步，或還原全部修改。同一角色、同一類經驗的累計變更一起還原，保留等級／餘額關聯；「復原一步」則回到前一次操作。
 - 下載原檔備份與修改副本；只替換指定值的 token，保留其他原始 JSON 文字。
+- 安裝為獨立視窗 App，完成首次快取後可離線開啟編輯器。
 
 ## 使用方式
 
@@ -25,6 +27,14 @@
 5. 重新開啟遊戲，載入對應存檔確認。
 
 也可從網站下載單一 HTML，之後使用 Edge 或 Chrome 離線開啟。離線檔的圖示可以省略，修改功能不依賴外部檔案。
+
+## 安裝 App 與離線使用
+
+1. 首次連線開啟網站，等畫面顯示「可離線使用」。
+2. Chrome／Edge 在瀏覽器允許安裝時會顯示「安裝山寨帳房」，也可使用瀏覽器的安裝選單。iPhone／iPad Safari 使用分享選單「加入主畫面」；支援的 Mac Safari 使用「檔案 → 加入 Dock」。
+3. 之後可由桌面、Dock 或主畫面啟動，離線選檔、修改、比對及匯出。存檔不會上傳，也不會加入網站快取。
+
+新版會先在背景準備，等所有帳房視窗（包含瀏覽器分頁）關閉後更新，編輯途中不會強制重新載入。**關閉不會保留未匯出的修改，請先匯出。** 瀏覽器或使用者清除快取後，需要重新連線準備。Mac 指南、準備工具、GitHub 等外部連結，以及下載單檔 HTML 仍需網路。
 
 ## 已核對的資料欄位
 
@@ -61,7 +71,9 @@ node scripts/build-editor.cjs --check
 node --test tests/*.test.cjs
 ```
 
-`src/core.js`、`src/ui.js`、`src/knowledge-ui.js` 與 `knowledge/catalog.json` 會內嵌至 HTML。測試使用合成資料，包含實際的 2501 × 60 × 22 尺寸、字串轉義、小數、跨級、上限、原文保留與整組復原。
+`src/core.js`、`src/ui.js`、`src/knowledge-ui.js`、`src/profession-ui.js`、`src/pwa.js`、`knowledge/catalog.json` 與 `knowledge/profession-guide.json` 會內嵌至 HTML。建置也依 HTML、必要資產及 Worker 來源的 SHA-256 產生 `sw.js`；修改圖示、Manifest 或首頁後同樣需重建。測試使用合成資料，包含實際的 2501 × 60 × 22 尺寸、字串轉義、小數、跨級、上限、原文保留與整組復原，以及 PWA 快取範圍、失敗回復和版本同步。
+
+PWA 開發需以 HTTP localhost 或 HTTPS 提供完整目錄，例如在 repo 執行 `python3 -m http.server 8000`，開啟 `http://localhost:8000/`。`file://` 只使用單檔編輯功能，不註冊 Service Worker。
 
 若要重新分析自己安裝的遊戲：
 
@@ -82,11 +94,11 @@ node scripts/build-editor.cjs
 | CrossOver 問題、原生 runtime 與 Steam 調查 | [Mac 執行研究](docs/research/macos-runtime-investigation.md) |
 | 尚待驗收項目 | [SDD 任務](sdd/save-knowledge/tasks.md) |
 
-離線相依性檢查及線上 HTML 下載已通過；直接開啟本機 HTML 的完整 UI 流程仍待 Chrome／Edge 人工確認，步驟見維護指引。真實 Cloud 上傳、成就、DLC 獎勵及長時間遊玩亦維持待驗證。
+2026-10-21 以隔離 Chrome 155 驗證 PWA 安裝、獨立視窗、離線啟動、桌面／390px 編輯與精確匯出、直接開啟下載 HTML，以及多視窗更新等待。完整實測範圍與其他瀏覽器待驗項目見維護指引；直接開檔的名稱／三類經驗及設定完整流程仍待確認。真實 Cloud 上傳、成就、DLC 獎勵及長時間遊玩亦維持待驗證。
 
 ## GitHub Pages
 
-GitHub Pages 使用 `.github/workflows/pages.yml` 發布。推送 `main` 後，流程會先驗證核心讀寫功能，再將 `index.html`、`mac.html`、`sitemap.xml`、`.nojekyll`、`assets/` 與 `launcher/prepare-macos.py` 打包部署；也可從 Actions 手動執行。網站不需要 Jekyll 或其他建置工具。
+GitHub Pages 使用 `.github/workflows/pages.yml` 發布。推送 `main` 後，流程會先驗證核心讀寫功能及 PWA 來源同步，再將 `index.html`、`mac.html`、`manifest.webmanifest`、`sw.js`、`sitemap.xml`、`.nojekyll`、`assets/` 與 `launcher/prepare-macos.py` 打包部署；也可從 Actions 手動執行。網站不需要 Jekyll 或其他建置工具。
 
 網站入口為 `index.html`。搜尋與分享資訊設定在 HTML `<head>`，可編輯的分享圖片來源為 `assets/social-card.svg`，對外提供 `assets/share-card-v2.png`。
 
