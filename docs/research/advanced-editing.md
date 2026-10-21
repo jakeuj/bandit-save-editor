@@ -150,3 +150,13 @@ UI 另以桌面、390px 及真正 `file://` 離線 HTML 完成預覽、還原、
 逐字比較發現 `File.text()` 會消去 UTF-8 BOM，已改用保留 BOM 的 `TextDecoder` 讀取存檔及比對檔。修正後手機匯出逐字等於三處指定 token 替換結果，BOM、CRLF、額外大型整數 literal `987654321098765432109876543210` 均保留。此案例為合成資料。
 
 直接開啟 `file://` 的 UI 驗收被瀏覽器工具 URL 政策拒絕（僅允許 HTTP／HTTPS），因此本輪維持待人工確認，沒有繞過政策。單檔相依性測試不作為直接開檔證明。本機 HTTP 回應另被 AdGuard 插入 CSP／腳本，導致首頁與 Worker 預期 SHA-256 不同；Worker 正確拒絕快取混合內容。正式 HTTPS 發布與 PWA 更新交接另以實際結果記錄。
+
+## v2.1 正式發布驗證
+
+功能提交為 `d98db495110beff15e1b5a5599f6b8804d11d674`，[Pages run 39607900455](https://github.com/jakeuj/bandit-save-editor/actions/runs/39607900455) 的 build／deploy 成功。2026-10-21 實際 GET [正式網站](https://bandit.jakeuj.com/) 的 `index.html`、`sw.js`、Manifest、Mac 指南、sitemap、robots、分享 PNG、favicon 與四個 App 圖示，全部 HTTP 200、MIME 正確，回應 bytes 與該提交 Git blob 相同。四處遊戲知識標示及圖鑑摘要均為 V1.0.10.2，側欄為編輯器 v2.1；canonical 保持正式網域。
+
+發布前保留 v2.0 的空白測試分頁。發布後重新載入仍維持舊版，顯示「可離線使用 · 新版已備妥，關閉所有帳房視窗後更新」；關閉最後一個同站測試分頁後重開，顯示 v2.1 及「可離線使用」。沒有清除快取或強制跳過 waiting。正式版號畫面留在 repo 外。
+
+再以分頁網路模擬斷網（確認 `navigator.onLine=false`）重新載入正式首頁，PWA 可開啟。以同份完整尺寸合成存檔完成裝備5→9、村民 cap0→9、科技31值1→3，預覽、個別還原、復原一步、下載及離線重新載入皆通過。匯出逐字等於三處 token 替換，保留 BOM／CRLF／大型整數，重新載入裝備顯示9。沒有主控台錯誤；測試後已恢復分頁連線。這是正式 HTTPS 的 PWA 離線結果，真正直接開啟下載 HTML 的 `file://` 流程仍受工具政策阻擋。
+
+發布前另從 Git 暫存區的原始 blob 建立隔離副本核對建置，修正 Windows 自動換行造成的 PWA 指紋差異；`.gitattributes` 現在固定 JavaScript 與 Manifest 為 LF。完整33項測試、建置同步及 Git diff 檢查通過。後續文件／測試補充提交沿用相同網站產物，部署仍核對該次 head SHA。

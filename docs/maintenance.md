@@ -139,3 +139,5 @@ v2.1 可使用 repo 外 `--scenario` JSON：`baseline` 為 `[x,y,z,value]` 陣�
 
 
 v2.1 的桌面／390px、精確匯出及隔離遊戲結果見 [進階修改實測](research/advanced-editing.md#2026-10-21-windows-隔離實測)。本輪 `file://` 被工具政策阻擋，直接開檔驗收保持待辦；不可引用舊版資源測試當作三項新功能已實測。
+
+2026-10-21 v2.1 已於提交 `d98db49` 發布，正式 v2.1／V1.0.10.2、資產 Git blob 比對、PWA waiting→關閉重開與斷網編輯／精確匯出皆通過，詳細見 [正式發布紀錄](research/advanced-editing.md#v21-正式發布驗證)。JavaScript 與 Manifest 以 `.gitattributes` 固定 LF；提交前可用 Git blob 隔離副本檢查，避免 Windows 行尾改變已釘選的 PWA 雜湊。

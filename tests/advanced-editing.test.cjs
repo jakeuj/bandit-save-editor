@@ -66,6 +66,7 @@ test('training caps account for every character and ongoing training without cha
  C.setProfessionTrainingCap(model,{professionId:1,cap:15});
  assert.throws(()=>C.setProfessionTrainingCap(model,{professionId:1,cap:16}),/上限/);
  C.setProfessionTrainingCap(model,{professionId:1,cap:31,advanced:true});
+ C.setProfessionTrainingCap(model,{professionId:1,cap:12});assert.equal(C.get(model,{x:1,y:5,z:0}),12);
  model.original.data[1][15][0]=1;assert.throws(()=>C.setProfessionTrainingCap(model,{professionId:1,cap:30,advanced:true}),/正在操練/);
  assert.equal(C.get(model,{x:1,y:15,z:0}),1);
 });
@@ -74,6 +75,7 @@ test('technology distinguishes actual academy level, valid advanced IDs and rese
  C.setAdvancedTechnologyLevel(model,{technologyId:31,level:119});
  assert.throws(()=>C.setAdvancedTechnologyLevel(model,{technologyId:31,level:120}),/上限/);
  C.setAdvancedTechnologyLevel(model,{technologyId:31,level:300,advanced:true});
+ C.setAdvancedTechnologyLevel(model,{technologyId:31,level:1});assert.equal(C.get(model,{x:31,y:4,z:0}),1);
  for(const technologyId of [1,29,30,45])assert.throws(()=>C.setAdvancedTechnologyLevel(model,{technologyId,level:1}),/進階科技/);
  model.original.data[31][13][0]=1;assert.throws(()=>C.setAdvancedTechnologyLevel(model,{technologyId:31,level:2}),/正在研究/);
 });
