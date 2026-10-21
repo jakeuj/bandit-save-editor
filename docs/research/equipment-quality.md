@@ -58,4 +58,8 @@ y23另由套裝合成835824606167319寫入靈物關聯，圖示／tips與套裝�
 
 ## 正式發布
 
-候選功能與獨立證明已完成；提交、Pages對應SHA、正式v2.5／V1.0.10.2及正式PWA交接結果於發布後補記。
+功能提交`dc1901156e5afa704d0ce4e09b55ba6248cda33f`經[PR #2](https://github.com/jakeuj/bandit-save-editor/pull/2)合併至`0d909c9259fb94474875d27cdfd3215809be5ec5`，[Pages run 39653102495](https://github.com/jakeuj/bandit-save-editor/actions/runs/39653102495)的build／deploy成功。72項測試、建置同步、Git index原始bytes檢查通過；正式HTML、SW、manifest皆200且與該SHA的Git blob逐byte一致。
+
+Edge由既有正式v2.4顯示新版waiting，關閉後重新開啟自然交接至v2.5；正式圖鑑標籤與摘要均為V1.0.10.2、847處寫入。斷網重載及圖鑑操作成功，網路模擬已還原。正式截圖`production-v25.png`留repo外。Edge擴充未開放file URL存取，沒有調整權限；品質選檔／精確匯出／重讀採前述相同建置的本機IAB證據。
+
+IAB正式站的舊版在關閉分頁及離開頁面後仍保留waiting，沒有強制skipWaiting、清快取或修改SW；此工具／環境差異另留待追查，不記為IAB正式交接通過。Edge的關閉重開與正式資產證據獨立成立。本機IAB的v2.4→v2.5交接已通過。技能入口同步於`.agents`提交`4a84492`並推送；原先graphify及其他工作修改保留。

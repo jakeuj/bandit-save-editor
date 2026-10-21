@@ -214,3 +214,5 @@ node scripts/verify-quality.cjs --state /external/state.json --scenario /externa
 各庫／方向分開建立隔離副本，先完成原版save／assert／stop／restart／load（mode存档）／assert，再用`verify-quality --compare`比對。`verify-quality-lifecycle.cjs --state ... --scenario ...`執行原生洗練、精確成本、穿脫搬移／排序並建立經獨立核對的後續expected；再次完成原版IO與新PID，最後加`--compare`讀回。大型觀察陣列可使用`verify-game --quiet`保留PASS與錯誤而不輸出全陣列。原生`装备库取出`第三參數從0開始，否則漏搬y0。
 
 公式測試涵蓋243範本及38候選，不把「可計算」當作「已原生比對」。完整6,592組、800件品質寫入、後續行為及代表UI證據見[品質研究](research/equipment-quality.md)，工具原始產物留repo外。UI操作後先核對只有允許的洗練變更與y24提示副作用，才採納後續IO基準。桌面、390px、兩入口下載及PWA離線／等待交接另驗收，直接file://維持獨立狀態。
+
+正式v2.5已經PR #2合併及相符SHA Pages部署、Git blob資產比對與Edge版本／離線驗證。IAB遇到關閉後仍waiting時，先核對所有已知同源分頁與快取雜湊，保留實際差異；本次改用既有v2.4的Edge正常關閉重開完成交接，沒有清快取或強制啟用。不同瀏覽器的結果分別記錄，避免把一個環境成功寫成全部成功。Edge選檔若欠缺擴充檔案權限，保留限制，不為例行驗收變更權限；可用相符建置的已授權測試環境完成檔案流程，正式畫面仍獨立核對。
