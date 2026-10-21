@@ -103,6 +103,7 @@ node scripts/build-editor.cjs
 | v2.1 候選、公式、來源 SID 與實測 | [進階修改研究](docs/research/advanced-editing.md) |
 | Windows 本機補丁的獨立研究範圍 | [補丁提案](sdd/runtime-patch/proposal.md) |
 | 核心 API、來源維護、知識更新、驗證與發布 | [維護指引](docs/maintenance.md) |
+| 程式與研究文件的關係、圖譜查詢與更新 | [Repo 知識圖譜](docs/research/repository-graph.md) |
 | 欄位座標、成長公式、事件來源及實測範圍 | [存檔知識調查](docs/research/save-knowledge.md) |
 | Mac 準備、三類存檔位置與啟動方式 | [啟動器說明](launcher/README.md) |
 | CrossOver 問題、原生 runtime 與 Steam 調查 | [Mac 執行研究](docs/research/macos-runtime-investigation.md) |

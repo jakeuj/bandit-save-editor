@@ -2,6 +2,7 @@
 
 使用繁體中文。此 repo 包含山寨帳房靜態存檔修改器與《塔防山賊模擬器》的實驗性 macOS ARM64 啟動器。
 
+- 查詢架構與跨檔關係時，若有 `graphify-out/graph.json` 先查圖譜並核對目前來源；圖譜建立、更新與完整性限制見 `docs/research/repository-graph.md`。
 - 維護存檔讀寫時，先讀 `README.md`、`src/core.js` 與 `docs/research/save-knowledge.md`。`src/` 與 `knowledge/catalog.json` 是來源，執行 `node scripts/build-editor.cjs` 同步 `index.html` 的內嵌程式；單檔 HTML 供線上及離線使用。驗證：`node --test tests/*.test.cjs`、`node scripts/build-editor.cjs --check`。
 - 更新核心 API、知識重建流程、驗證或發布說明時，讀 `docs/maintenance.md`；公式與實測證據維護在研究筆記，避免在技能複製完整規則。文件區分離線相依性檢查與直接開檔 UI 實測，依實際結果更新 `sdd/save-knowledge/tasks.md`。
 - 實際遊戲 UI／computer use 測試時，先讀 `docs/game-ui-testing.md` 的「快速開始」及目標操作路徑；沿用完成標記與隔離測試資料，座標依當次畫面重新辨識。工具 API 以當次可用的 computer-use 技能為準。

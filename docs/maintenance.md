@@ -27,6 +27,12 @@ node --test tests/*.test.cjs
 
 第一個命令更新內嵌程式與 `sw.js`，保留 HTML 結構與樣式。修改來源後一併提交產生的 `index.html` 及 `sw.js`；只修改產生區塊會在下次建置時被覆蓋。使用者下載的單一 HTML 已內嵌執行程式與知識，不需 Node.js 或遊戲資料表。
 
+## Repo 知識圖譜
+
+查詢架構、程式與研究文件的跨檔關係時，先用本機既有的 `graphify-out/graph.json` 找到入口，再依來源位置核對目前程式及文件。來源異動後依需要增量更新；新增或修改文件、圖片也需語意萃取。建圖方式、Windows 注意事項與完整性診斷集中於 [Repo 知識圖譜](research/repository-graph.md)。
+
+`graphify-out/` 是可重建的本機導覽產物，已由 Git 忽略，也不在 Pages 發布白名單內。遊戲公式與寫入驗證仍以研究筆記、catalog 及 verification 為依據；圖譜的連線、社群或摘要不會開放可寫群組。
+
 ## 知識版本標示同步
 
 遊戲知識版本以 `knowledge/catalog.json` 的 `gameVersion` 為唯一來源。`index.html` 的職業圖鑑標籤、職業資料來源說明、欄位圖鑑標籤與使用說明，共四處使用 `<span data-knowledge-version>…</span>`。`scripts/build-editor.cjs` 在建置時將版本做 HTML 跳脫後填入這些標記，再產生內嵌程式與 PWA 資產指紋；初始 HTML 與離線下載因此保有相同版本文字。新增遊戲知識版本標示時沿用此標記，避免另寫版本常數。
