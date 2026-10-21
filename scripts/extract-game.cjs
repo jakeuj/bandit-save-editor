@@ -129,6 +129,14 @@ function createCatalog(game) {
     talents:Object.fromEntries(catalogs.talents.map(({id})=>[id,{attributes:tf[id].slice(7,10),coefficients:tf[id].slice(10,13)}])),
     pills:Object.fromEntries(catalogs.materials.filter(({id})=>cl[id][5]==='丹药'&&['力量丹','敏捷丹','智力丹'].includes(cl[id][3])).map(({id})=>[id,{aptitude:['力量丹','敏捷丹','智力丹'].indexOf(cl[id][3])+1,cap:yx[cl[id][2]][cl[id][6]],effect:Math.round(cl[id][2]**1.2*2**(cl[id][6]-1))/10}]))
   };
+  // Reviewed percent-stat branches in 装备主属性; separate from v2.2 proof data.
+  const affixReplacement={version:1,sourceSids:[557896778643212,773239288013696,712721902672178,131416746119248,573912943040867],
+    attributes:Object.fromEntries(sx.map((r,id)=>({r,id})).filter(({r})=>r[8]===1).map(({r,id})=>{
+      if(r[4]!=='百分比')throw Error('詞條單位已變更，需重新核對');
+      const formula=[12,51].includes(id)?[2,.75,.01,5299]:[13,52].includes(id)?[8,3,.4,5300]:[71,72].includes(id)?[2,.75,.1,5302]:[4,1.5,.2,5304];
+      return [id,{unit:'%',base:formula[0],tier:formula[1],level:formula[2],expression:formula[3]}];
+    }))};
+  const affixReplacementLimits={plane:9,maxTier:9,maxQuality:6,selectedSlotOnly:true,allowNewDuplicates:false,originSlot:'positive-in-bounds-not-row-identity',mainQualityCoefficient:'integer-original-range-when-overlapping',attributeIds:Object.keys(affixReplacement.attributes).map(Number)};
   // Name conversion only; evidence identifiers and source paths remain unchanged.
   const glossaryFile = path.join(__dirname, '../knowledge/traditional-names.json');
   const glossary = fs.existsSync(glossaryFile) ? JSON.parse(fs.readFileSync(glossaryFile, 'utf8')) : {};
@@ -148,7 +156,7 @@ function createCatalog(game) {
   });
   // An index of write locations, not copies of the game's expressions or event bodies.
   const evidence = writes.map(o => ({ sid: o.sid, actionSid: o.actionSid, function: o.function, sheet: o.sheet, x: o.params[0]?.constant ?? '*', y: o.params[1]?.constant ?? '*', z: o.params[2]?.constant ?? '*', refs: o.params.map(p => p.expression ?? null) }));
-  return { glossary, catalog: { version: 1, game: 'szmnqea', gameVersion: reviewed.version, fingerprints: game.fingerprints, batch2Fingerprints, batch2Data, batch2Limits:{equipmentAffixCoefficient:{plane:9,maxTier:9,maxQuality:6,selectedSlotOnly:true},pillAptitudeBonus:{maxStage:0,integerBonus:true,ownedPillRequired:true}}, counts: { functions: game.functions.length, setXYZ: writes.length, arrayActions: game.operations.length,readSites:game.reads.length }, planes, catalogs, functions: game.functions, evidence, editingLimits: {equipment:{max:1000},training:{max:1000},technology:{max:1000,maxById:{33:299}}}, verification: { equipmentAffixCoefficient:false,pillAptitudeBonus:false,names: false, characterExperience: false, professionExperience: false, skillExperience: false, equipmentLevel:false,equipmentLevelAdvanced:false,professionTrainingCap:false,professionTrainingCapAdvanced:false,advancedTechnologyLevel:false,advancedTechnologyLevelAdvanced:false } } };
+  return { glossary, catalog: { version: 1, game: 'szmnqea', gameVersion: reviewed.version, affixReplacement, affixReplacementLimits, fingerprints: game.fingerprints, batch2Fingerprints, batch2Data, batch2Limits:{equipmentAffixCoefficient:{plane:9,maxTier:9,maxQuality:6,selectedSlotOnly:true},pillAptitudeBonus:{maxStage:0,integerBonus:true,ownedPillRequired:true}}, counts: { functions: game.functions.length, setXYZ: writes.length, arrayActions: game.operations.length,readSites:game.reads.length }, planes, catalogs, functions: game.functions, evidence, editingLimits: {equipment:{max:1000},training:{max:1000},technology:{max:1000,maxById:{33:299}}}, verification: { equipmentAffixReplacement:false,equipmentAffixCoefficient:false,pillAptitudeBonus:false,names: false, characterExperience: false, professionExperience: false, skillExperience: false, equipmentLevel:false,equipmentLevelAdvanced:false,professionTrainingCap:false,professionTrainingCapAdvanced:false,advancedTechnologyLevel:false,advancedTechnologyLevelAdvanced:false } } };
 }
 
 if (require.main === module) {
@@ -178,6 +186,7 @@ if (require.main === module) {
   if (fs.existsSync(output)) {
     const old = JSON.parse(fs.readFileSync(output, 'utf8'));
     if (JSON.stringify(old.fingerprints) === JSON.stringify(catalog.fingerprints)) catalog.verification = {...catalog.verification,...old.verification};
+    if(JSON.stringify(old.affixReplacement)!==JSON.stringify(catalog.affixReplacement)||JSON.stringify(old.affixReplacementLimits)!==JSON.stringify(catalog.affixReplacementLimits)||JSON.stringify(old.batch2Fingerprints)!==JSON.stringify(catalog.batch2Fingerprints))catalog.verification.equipmentAffixReplacement=false;
     if(JSON.stringify(old.batch2Fingerprints)!==JSON.stringify(catalog.batch2Fingerprints)||JSON.stringify(old.batch2Data)!==JSON.stringify(catalog.batch2Data)||JSON.stringify(old.batch2Limits)!==JSON.stringify(catalog.batch2Limits)){catalog.verification.equipmentAffixCoefficient=false;catalog.verification.pillAptitudeBonus=false;}
   }
   fs.mkdirSync(path.dirname(output), { recursive: true });

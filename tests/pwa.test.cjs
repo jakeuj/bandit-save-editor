@@ -170,3 +170,17 @@ test('build check catches stale releases; changes to icons, HTML and worker code
     }
   } finally { fs.rmSync(dir, {recursive: true, force: true}); }
 });
+
+test('replacement gate rejects missing or stale independent proof', () => {
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'bandit-affix-proof-'));
+ try{
+  for(const file of ['scripts','src','knowledge','assets','index.html','sw.js','manifest.webmanifest'])fs.cpSync(path.join(root,file),path.join(dir,file),{recursive:true});
+  const catalogPath=path.join(dir,'knowledge/catalog.json'),proofPath=path.join(dir,'knowledge/verification.json');
+  const k=JSON.parse(fs.readFileSync(catalogPath)),p=JSON.parse(fs.readFileSync(proofPath));k.verification.equipmentAffixReplacement=true;p.groups.equipmentAffixReplacement=true;
+  fs.writeFileSync(catalogPath,JSON.stringify(k));delete p.affixReplacement;fs.writeFileSync(proofPath,JSON.stringify(p));
+  const run=()=>spawnSync(process.execPath,['scripts/build-editor.cjs'],{cwd:dir,encoding:'utf8'});
+  assert.match(run().stderr,/精準洗練/);
+  p.affixReplacement={checks:{nativeEffects:true,load:true,save:true,restart:true,originalHashes:true,equipmentCycle:true,nativeWash:true},fingerprints:{...k.fingerprints,...k.batch2Fingerprints},limits:k.affixReplacementLimits,dataHash:'wrong'};
+  fs.writeFileSync(proofPath,JSON.stringify(p));assert.match(run().stderr,/精準洗練/);
+ }finally{fs.rmSync(dir,{recursive:true,force:true});}
+});

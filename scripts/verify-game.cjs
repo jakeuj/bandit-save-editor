@@ -71,7 +71,7 @@ async function setup(){
  C.addExperience(model,{kind:'profession',characterId:1,id:1,amount:6500});
  C.addExperience(model,{kind:'profession',characterId:1,id:1,amount:1.5});
  C.addExperience(model,{kind:'skill',characterId:1,id:1,amount:21500});
- for(const operation of scenario?.operations||[]){if(!['setEquipmentLevel','setProfessionTrainingCap','setAdvancedTechnologyLevel','setEquipmentAffixCoefficient','setPillAptitudeBonus'].includes(operation.method))throw Error('Unsupported scenario operation');C[operation.method](model,operation.options);}
+ for(const operation of scenario?.operations||[]){if(!['setEquipmentLevel','setProfessionTrainingCap','setAdvancedTechnologyLevel','setEquipmentAffixCoefficient','setPillAptitudeBonus','setEquipmentAffix'].includes(operation.method))throw Error('Unsupported scenario operation');C[operation.method](model,operation.options);}
  const modified=C.serialize(model),expected=JSON.parse(modified).data;
  for(let slot=1;slot<=3;slot++)fs.writeFileSync(path.join(game,`savedir/ea${slot}save.dat`),modified);
  fs.mkdirSync(path.join(game,'backup'),{recursive:true});

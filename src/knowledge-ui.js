@@ -19,11 +19,28 @@
  function renderAffixes(){
   const old=$('affixItem')?.value,slot=$('affixSlot')?.value||'1';
   const choices=C.listEntities(model,'inventory').filter(v=>v.z===9);
-  $('affixEditor').innerHTML=`<h3>既有詞條係數</h3><div class="toolbar"><select id="affixItem" aria-label="詞條裝備">${choices.map(v=>`<option value="${v.id}">#${v.id} ${esc(v.name)}</option>`).join('')}</select><select id="affixSlot" aria-label="詞條槽">${Array.from({length:5},(_,i)=>`<option value="${i+1}">詞條槽 ${i+1}</option>`).join('')}</select></div><p id="affixInfo" class="muted small-text" role="status"></p><div class="toolbar"><label>目標係數<input id="affixValue" type="number" step="0.01"></label><button id="affixApply" class="primary small">套用詞條係數</button></div><p class="muted small-text">只調已選定洗練槽的既有係數，不更換詞條、不重置洗練。尚未選槽請先回遊戲洗練一次；品質、特殊裝備與超限值保持唯讀。</p>`;
+  $('affixEditor').innerHTML=`<h3>詞條係數與精準洗練</h3><div class="toolbar"><select id="affixItem" aria-label="詞條裝備">${choices.map(v=>`<option value="${v.id}">#${v.id} ${esc(v.name)}</option>`).join('')}</select><select id="affixSlot" aria-label="詞條槽">${Array.from({length:5},(_,i)=>`<option value="${i+1}">詞條槽 ${i+1}</option>`).join('')}</select></div><p id="affixInfo" class="muted small-text" role="status"></p><div class="toolbar"><label>目標係數<input id="affixValue" type="number" step="0.01"></label><button id="affixApply" class="primary small">套用詞條係數</button></div><p class="muted small-text">上方係數操作只調既有係數；下方精準洗練可替換合法詞條，兩者皆不重置選槽。尚未選槽請先回遊戲洗練一次；品質、特殊裝備與超限值保持唯讀。</p><h4>精準洗練</h4><div class="toolbar"><input id="affixSearch" type="search" aria-label="搜尋合法詞條" placeholder="搜尋此裝備的合法詞條"><select id="affixTarget" aria-label="目標詞條"></select></div><div id="affixPreview" class="small-text" role="status"></div><button id="affixReplace" class="primary small" disabled>套用詞條與係數</button><p class="muted small-text">預覽為這件裝備的屬性貢獻，包含同屬性的主屬性與其他詞條；不代表完整角色面板。保留洗練選槽，不扣魂魄。</p>`;
   if(choices.some(v=>String(v.id)===old))$('affixItem').value=old;$('affixSlot').value=slot;
-  const update=()=>{try{const i=C.affixInfo(model,Number($('affixItem').value),Number($('affixSlot').value));$('affixInfo').textContent=`${C.catalogName('attributes',i.attributeId)} · 目前 ${i.current} · 範圍 ${i.min}–${i.max}${i.verified?'':' · 尚待隔離驗證'}`;$('affixValue').value=i.current;$('affixValue').min=i.min;$('affixValue').max=i.max;$('affixApply').disabled=!i.verified;}catch(e){$('affixInfo').textContent=e.message;$('affixApply').disabled=true;$('affixValue').value='';}};
-  $('affixItem').onchange=update;$('affixSlot').onchange=update;
-  $('affixApply').onclick=()=>{if(!$('affixValue').value.trim())return toast('係數不能空白。',true);perform(()=>C.setEquipmentAffixCoefficient(model,{itemId:Number($('affixItem').value),slot:Number($('affixSlot').value),coefficient:Number($('affixValue').value)}));};update();
+  let info=null;
+  const replacementPreview=()=>{
+   $('affixReplace').disabled=true;
+   try{if(!$('affixValue').value.trim()||!$('affixTarget').value)throw Error('請選擇合法詞條並輸入係數。');
+    const p=C.previewEquipmentAffixReplacement(model,{itemId:Number($('affixItem').value),slot:Number($('affixSlot').value),attributeId:Number($('affixTarget').value),coefficient:Number($('affixValue').value)});
+    $('affixPreview').innerHTML=`<p>${esc(C.catalogName('attributes',p.before.attributeId))}（係數 ${esc(p.before.coefficient)}） → ${esc(C.catalogName('attributes',p.after.attributeId))}（係數 ${esc(p.after.coefficient)}）</p><table><thead><tr><th>裝備屬性</th><th>目前</th><th>套用後</th><th>差異</th></tr></thead><tbody>${p.effects.map(v=>`<tr><td>${esc(v.name)}</td><td>${esc(fmt(v.before))}${esc(v.unit)}</td><td>${esc(fmt(v.after))}${esc(v.unit)}</td><td>${esc(fmt(Math.round(v.delta*100)/100))} 百分點</td></tr>`).join('')}</tbody></table><p>${p.unchanged?'詞條與係數未改變。':p.effectUnchanged?'取整後效果不變。':''}${p.verified?'':' 精準洗練尚待隔離驗證。'}</p>`;
+    $('affixReplace').disabled=!p.verified||p.unchanged;
+   }catch(e){$('affixPreview').textContent=e.message;}
+  };
+  const candidates=()=>{const selected=$('affixTarget').value||String(info?.attributeId||''),query=$('affixSearch').value.trim().toLowerCase();
+   const rows=(info?.candidates||[]).filter(v=>v.name.toLowerCase().includes(query)||String(v.attributeId)===query);
+   $('affixTarget').innerHTML='<option value="">選擇目標詞條</option>'+rows.map(v=>`<option value="${v.attributeId}" ${v.reason?'disabled':''}>${esc(v.name)}${v.reason?' · '+esc(v.reason):''}</option>`).join('');
+   if(rows.some(v=>String(v.attributeId)===selected&&!v.reason))$('affixTarget').value=selected;replacementPreview();
+  };
+  const update=()=>{info=null;try{const i=C.affixInfo(model,Number($('affixItem').value),Number($('affixSlot').value));$('affixInfo').textContent=`${C.catalogName('attributes',i.attributeId)} · 目前 ${i.current} · 範圍 ${i.min}–${i.max}${i.verified?'':' · 尚待隔離驗證'}`;$('affixValue').value=i.current;$('affixValue').min=i.min;$('affixValue').max=i.max;$('affixApply').disabled=!i.verified;info=C.equipmentAffixReplacementInfo(model,{itemId:Number($('affixItem').value),slot:Number($('affixSlot').value)});}catch(e){$('affixInfo').textContent=e.message;$('affixApply').disabled=true;$('affixValue').value='';}
+   $('affixTarget').innerHTML='';$('affixSearch').value='';candidates();
+  };
+  $('affixItem').onchange=update;$('affixSlot').onchange=update;$('affixSearch').oninput=candidates;$('affixTarget').onchange=replacementPreview;$('affixValue').oninput=replacementPreview;
+  $('affixApply').onclick=()=>{if(!$('affixValue').value.trim())return toast('係數不能空白。',true);perform(()=>C.setEquipmentAffixCoefficient(model,{itemId:Number($('affixItem').value),slot:Number($('affixSlot').value),coefficient:Number($('affixValue').value)}));};
+  $('affixReplace').onclick=()=>{if(!$('affixValue').value.trim())return toast('係數不能空白。',true);perform(()=>C.setEquipmentAffix(model,{itemId:Number($('affixItem').value),slot:Number($('affixSlot').value),attributeId:Number($('affixTarget').value),coefficient:Number($('affixValue').value)}));};update();
  }
  function renderPills(){
   const aptitude=$('pillAptitude')?.value||'1',old=$('pillType')?.value;

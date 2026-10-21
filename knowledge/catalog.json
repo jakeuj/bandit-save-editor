@@ -2,6 +2,333 @@
   "version": 1,
   "game": "szmnqea",
   "gameVersion": "V1.0.10.2",
+  "affixReplacement": {
+    "version": 1,
+    "sourceSids": [
+      557896778643212,
+      773239288013696,
+      712721902672178,
+      131416746119248,
+      573912943040867
+    ],
+    "attributes": {
+      "12": {
+        "unit": "%",
+        "base": 2,
+        "tier": 0.75,
+        "level": 0.01,
+        "expression": 5299
+      },
+      "13": {
+        "unit": "%",
+        "base": 8,
+        "tier": 3,
+        "level": 0.4,
+        "expression": 5300
+      },
+      "17": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "18": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "19": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "20": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "21": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "23": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "24": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "25": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "26": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "27": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "31": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "32": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "33": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "35": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "36": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "37": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "38": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "51": {
+        "unit": "%",
+        "base": 2,
+        "tier": 0.75,
+        "level": 0.01,
+        "expression": 5299
+      },
+      "52": {
+        "unit": "%",
+        "base": 8,
+        "tier": 3,
+        "level": 0.4,
+        "expression": 5300
+      },
+      "53": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "54": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "55": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "56": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "57": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "58": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "59": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "60": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "61": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "62": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "63": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "64": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "71": {
+        "unit": "%",
+        "base": 2,
+        "tier": 0.75,
+        "level": 0.1,
+        "expression": 5302
+      },
+      "72": {
+        "unit": "%",
+        "base": 2,
+        "tier": 0.75,
+        "level": 0.1,
+        "expression": 5302
+      },
+      "110": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "111": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      },
+      "112": {
+        "unit": "%",
+        "base": 4,
+        "tier": 1.5,
+        "level": 0.2,
+        "expression": 5304
+      }
+    }
+  },
+  "affixReplacementLimits": {
+    "plane": 9,
+    "maxTier": 9,
+    "maxQuality": 6,
+    "selectedSlotOnly": true,
+    "allowNewDuplicates": false,
+    "originSlot": "positive-in-bounds-not-row-identity",
+    "mainQualityCoefficient": "integer-original-range-when-overlapping",
+    "attributeIds": [
+      12,
+      13,
+      17,
+      18,
+      19,
+      20,
+      21,
+      23,
+      24,
+      25,
+      26,
+      27,
+      31,
+      32,
+      33,
+      35,
+      36,
+      37,
+      38,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      71,
+      72,
+      110,
+      111,
+      112
+    ]
+  },
   "fingerprints": {
     "data.json": "32a36accc1b97e9bb3498eb3be76950e1e72b2e8f7a0cf9ce293b57aa5e0d820",
     "scripts/c3runtime.js": "1e1643722efc032824881f03ce4d81df1135e6a8cd8e08d9fd87e56e480ac9f6",
@@ -60214,6 +60541,7 @@
     }
   },
   "verification": {
+    "equipmentAffixReplacement": true,
     "equipmentAffixCoefficient": true,
     "pillAptitudeBonus": true,
     "names": true,

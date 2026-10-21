@@ -144,7 +144,7 @@ v2.1 的桌面／390px、精確匯出及隔離遊戲結果見 [進階修改實�
 
 ## 第二批研究入口
 
-裝備品質、詞條與丹藥資質增量的來源、候選範圍、限制及隔離遊戲驗證矩陣集中於[第二批研究](research/advanced-editing-batch2.md)，工作狀態見[提案與任務](../sdd/advanced-editing-batch2/tasks.md)。v2.2 已開放通過獨立隔離實測的既有詞條係數及丹藥增量；品質、詞條 ID 與超限仍唯讀，不沿用 v2.1 裝備等級的證明或進階值域。所用新資料表須先納入來源覆蓋，品質／詞條的整件裝備交易與復原也須另驗證。
+裝備品質、詞條與丹藥資質增量的來源、候選範圍、限制及隔離遊戲驗證矩陣集中於[第二批研究](research/advanced-editing-batch2.md)，工作狀態見[提案與任務](../sdd/advanced-editing-batch2/tasks.md)。v2.2 已開放通過獨立隔離實測的既有詞條係數及丹藥增量；v2.2 的品質、詞條 ID 與超限維持唯讀；v2.3 的詞條替換另依獨立證明開放，不沿用 v2.1 裝備等級的證明或進階值域。所用新資料表須先納入來源覆蓋，品質／詞條的整件裝備交易與復原也須另驗證。
 
 PWA 雜湊異常時，先比較實際 HTTP 回應與提交的 Git blob。本機 AdGuard 曾改寫首頁並注入 CSP／腳本，Worker 因內容不符而拒絕快取是預期行為；不要放寬 CSP 或略過指紋比對。BOM 保留則須在瀏覽器讀檔入口驗收，除了核心序列化測試，也要逐字核對真正下載的匯出檔。
 
@@ -157,3 +157,14 @@ PWA 雜湊異常時，先比較實際 HTTP 回應與提交的 Git blob。本機 
 - `scripts/verify-game.cjs --scenario` 現在接受兩個新增具名操作；仍只在隔離VM啟用候選旗標，啟動前與assert核對13+2來源。`node scripts/verify-batch2.cjs --state /outside/state.json` 記錄原版三項資質及115項裝備效果，重啟後加 `--compare`。原生卸穿、洗練、服藥與重生另記後續證據；裝備格取wp資料，不可假設1。
 
 重生呼叫僅驗證清除生命週期，不代替遊戲UI資格驗收；原生服藥可能產生小數增量，其後編輯停用是本版限制。來源檔、真實存檔與原始呼叫結果保持repo外。詳細已通過範圍及UI待辦見[第二批實作紀錄](research/advanced-editing-batch2.md#v22-實作與隔離驗證)。
+
+## v2.3 精準洗練維護
+
+- `equipmentAffixReplacementInfo(model,{itemId,slot})` 回傳範本合法池、目前值、限制、逐候選可用狀態及停用原因。
+- `previewEquipmentAffixReplacement(model,{itemId,slot,attributeId,coefficient})` 唯讀驗證並預覽單件效果，含主屬性與其他槽對同一 ID 的貢獻；不推算角色面板。
+- `setEquipmentAffix(model,{itemId,slot,attributeId,coefficient,advanced=false})` 重跑完整檢查，原子修改 ID 與係數。與等級及既有係數共用整件還原群組；拒絕超限、新重複、非唯一選槽及不一致穿戴。自訂座標仍不可改這些欄位。
+- `affixReplacement` 儲存公式來源 SID、參數及單位；`affixReplacementLimits` 儲存範圍。`equipmentAffixReplacement` 是獨立驗證群組，建置核對 13+2 來源、限制及 `SHA256(JSON.stringify({rules:catalog.affixReplacement,items:catalog.batch2Data.items}))`。不得沿用係數群組的證明。
+- z9 y0 是初始背包列號，原生搬移保留它，可與目前列號不同、也可能重複。有效性檢查使用正值且在陣列界內，加上範本、品質、選槽與穿戴雙向指標；不要回復錯誤的 y0 等於當前列限制，也不可自動重編 y0。
+- `scripts/verify-game.cjs --scenario` 接受 `setEquipmentAffix`。`node scripts/verify-affixes.cjs --state /outside/state.json --scenario /outside/scenario.json` 比對原生單件效果及隔離角色裝備效果；重啟後使用 `--compare`。`node scripts/verify-affix-lifecycle.cjs --state /outside/state.json --scenario /outside/scenario.json` 驗證卸穿與同槽洗練，更新隔離 state 的後續預期，再完成原版存檔／停止／新程序讀回。只對 repo 外副本操作。
+
+副詞條在原生公式內強制 L=0，主屬性保留等級；各槽分別取整再加總。主屬性重疊時 y8 須為原版區間安全整數。詳細公式、SID、380 組原生比對與後續 76 次洗練以[研究記錄](research/precise-affix-editing.md)為準。不得以原生函式回傳值宣稱角色 UI 即時快取也已驗收。

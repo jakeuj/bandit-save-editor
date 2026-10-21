@@ -65,7 +65,8 @@
   let coordinate,normalMax,min=1,name;
   if(kind==='equipment'){
    const item=catalogMaps.items.get(get(m,C(id,1,9))),quality=get(m,C(id,5,9)),owner=get(m,C(id,7,9));
-   if(get(m,C(id,0,9))!==id||!item||item.category!=='裝備'||['宝物','内丹'].includes(item.kind)||!Number.isInteger(item.slot)||item.slot<1||item.slot>6)throw Error('只支援裝備庫內的有效一般裝備，不包含寶物及內丹。');
+   const originSlot=get(m,C(id,0,9));
+   if(!Number.isSafeInteger(originSlot)||originSlot<1||originSlot>=m.original.size[0]||!item||item.category!=='裝備'||['宝物','内丹'].includes(item.kind)||!Number.isInteger(item.slot)||item.slot<1||item.slot>6)throw Error('只支援裝備庫內的有效一般裝備，不包含寶物及內丹。');
    if(!Number.isSafeInteger(quality)||quality<1||!Number.isSafeInteger(owner)||owner<0)throw Error('裝備品質或歸屬資料不符。');
    let references=0;
    for(let x=1;x<m.original.size[0];x++)if(activeCharacter(m,x))for(let slot=1;slot<=6;slot++)if(get(m,C(x,15+slot,2))===id){references++;if(owner!==x||slot!==item.slot)throw Error('裝備穿戴雙向指標不一致。');}
@@ -93,7 +94,7 @@
   const max=advanced?info.advancedMax:Math.min(info.normalMax,info.advancedMax);
   if(value>max)throw Error(`超出${advanced?'已驗證的進階':'一般模式'}上限 ${max}。`);
   if(kind==='equipment'){
-   if([...m.changes.values()].some(c=>c.x===id&&c.z===9&&c.y>=15&&c.y<=20)&&value>info.normalMax)throw Error('已修改詞條係數的裝備，本輪不能再調為超限等級。');
+   if([...m.changes.values()].some(c=>c.x===id&&c.z===9&&c.y>=9&&c.y<=20)&&value>info.normalMax)throw Error('已修改詞條係數或 ID 的裝備，本輪不能再調為超限等級。');
    const tier=get(m,C(id,3,9));
    if(!Number.isSafeInteger(tier)||tier<1||![(tier-1)*30+value,(tier*6/9-1)*30+4*value].every(d=>Number.isFinite(10*1.05**d-1)))throw Error('裝備等階或升級公式超出可計算範圍。');
   }
@@ -154,6 +155,61 @@
   if(!info.verified)throw Error('詞條係數尚未完成隔離遊戲驗證。');
   if(!decimal2(coefficient)||coefficient<info.min||coefficient>info.max)throw Error(`係數須為 ${info.min}–${info.max}，最多兩位小數。`);
   return batch2Put(m,info,coefficient,`editing:equipment:${itemId}`,`${info.name}・詞條 ${slot} 係數`);
+ }
+ // Each slot is rounded by the game before addition. Secondary affixes force L=0.
+ function affixEffect(attributeId,tier,level,coefficient){
+  const r=KNOWLEDGE.affixReplacement?.attributes[attributeId];
+  if(!r)throw Error('此詞條尚未核對效果公式。');
+  const value=Math.floor(((r.base+r.tier*tier+r.level*level)*(coefficient/100))*100)/100;
+  if(!Number.isFinite(value))throw Error('裝備效果超出可計算範圍。');
+  return value;
+ }
+ function equipmentAffixReplacementInfo(m,{itemId,slot}){
+  const info=affixInfo(m,itemId,slot),enabled=!!KNOWLEDGE.verification.equipmentAffixReplacement;
+  const otherIds=Array.from({length:info.slots},(_,i)=>i+1).filter(i=>i!==slot).map(i=>get(m,C(itemId,8+i,9)));
+  const candidates=info.rules.affixIds.map(attributeId=>{
+   const formula=KNOWLEDGE.affixReplacement?.attributes[attributeId];
+   const duplicate=attributeId!==info.attributeId&&otherIds.includes(attributeId);
+   const supported=!!formula&&KNOWLEDGE.affixReplacementLimits?.attributeIds.includes(attributeId);
+   return {attributeId,name:catalogName('attributes',attributeId),unit:formula?.unit||'',supported,verified:enabled&&supported&&!duplicate,reason:duplicate?'不能新增與其他槽重複的詞條':!supported?'此詞條尚未核對效果公式':!enabled?'精準洗練尚待隔離驗證':''};
+  });
+  return {...info,verified:enabled,candidates};
+ }
+ function equipmentAffixEffect(m,info,attributeId,replacement){
+  let total=0;
+  for(const id of info.rules.mainAttributes)if(id===attributeId){
+   const q=get(m,C(info.id,8,9));
+   if(!Number.isSafeInteger(q)||q<80+(info.quality-1)*30||q>80+info.quality*30)throw Error('主屬性品質係數不在已核對範圍，無法預覽重疊屬性。');
+   total+=affixEffect(attributeId,info.tier,info.currentLevel,q);
+  }
+  for(let slot=1;slot<=info.slots;slot++){
+   const id=replacement?.slot===slot?replacement.attributeId:get(m,C(info.id,8+slot,9));
+   const value=replacement?.slot===slot?replacement.coefficient:get(m,C(info.id,14+slot,9));
+   if(id===attributeId)total+=affixEffect(id,info.tier,0,value);
+  }
+  return total;
+ }
+ function previewEquipmentAffixReplacement(m,{itemId,slot,attributeId,coefficient}){
+  const info=equipmentAffixReplacementInfo(m,{itemId,slot});
+  const candidate=info.candidates.find(v=>v.attributeId===attributeId);
+  if(!Number.isSafeInteger(attributeId)||!candidate)throw Error('目標詞條不在此裝備的原版合法池。');
+  if(!candidate.supported||candidate.reason.startsWith('不能'))throw Error(candidate.reason);
+  if(!decimal2(coefficient)||coefficient<info.min||coefficient>info.max)throw Error(`係數須為 ${info.min}–${info.max}，最多兩位小數。`);
+  // affixInfo.current is the coefficient; level remains a separate dependency.
+  const calc={...info,id:itemId,currentLevel:get(m,C(itemId,6,9))};
+  const effects=[...new Set([info.attributeId,attributeId])].map(id=>{
+   const before=equipmentAffixEffect(m,calc,id),after=equipmentAffixEffect(m,calc,id,{slot,attributeId,coefficient});
+   return {attributeId:id,name:catalogName('attributes',id),unit:KNOWLEDGE.affixReplacement.attributes[id].unit,before,after,delta:after-before};
+  });
+  return {itemId,slot,before:{attributeId:info.attributeId,coefficient:info.current},after:{attributeId,coefficient},effects,unchanged:info.attributeId===attributeId&&info.current===coefficient,effectUnchanged:effects.every(v=>v.before===v.after),verified:candidate.verified};
+ }
+ function setEquipmentAffix(m,{itemId,slot,attributeId,coefficient,advanced=false}){
+  if(advanced!==false)throw Error('精準洗練尚未開放超限模式。');
+  const preview=previewEquipmentAffixReplacement(m,{itemId,slot,attributeId,coefficient});
+  if(!preview.verified)throw Error('精準洗練尚未完成隔離遊戲驗證。');
+  const previous=m.currentGroup;m.currentGroup=`editing:equipment:${itemId}`;
+  try{transaction(m,()=>{put(m,C(itemId,8+slot,9),attributeId,`裝備 #${itemId}・詞條 ${slot}・${catalogName('attributes',preview.before.attributeId)} → ${catalogName('attributes',attributeId)}`);put(m,C(itemId,14+slot,9),coefficient,`裝備 #${itemId}・詞條 ${slot}・係數`);},'精準洗練');}finally{m.currentGroup=previous;}
+  return preview;
  }
  function pillInfo(m,characterId,aptitude,pillId){
   if(!activeCharacter(m,characterId)||get(m,C(characterId,0,2))!==characterId)throw Error('找不到有效角色。');
@@ -217,7 +273,7 @@
   }else if([4,5].includes(z)&&activeCharacter(m,x)&&catalogMaps.professions.has(y))named(z===4?'職業等級':'職業經驗餘額',{entity:`${get(m,C(x,1,2))}・${catalogName('professions',y)}`,type:z===5?'decimal':'integer'});
   else if(z===12){named(`衍生屬性：${catalogName('attributes',y)}`,{entity:activeCharacter(m,x)?get(m,C(x,1,2)):`角色 #${x}`,type:'decimal'});}
   else if([7,9].includes(z)){
-   const labels={0:'物品實體序號',1:'物品範本',2:'物品數量／旗標',3:'物品等階',4:'物品狀態',5:'品質',6:'物品等級',7:'裝備歸屬／狀態',8:'主屬性品質係數',23:'取得品質／套裝關聯值',24:'物品狀態 24',25:'未辨識物品狀態 25',26:'套裝關聯值 26',27:'套裝原物品資訊'};
+   const labels={0:'初始背包列號',1:'物品範本',2:'物品數量／旗標',3:'物品等階',4:'物品狀態',5:'品質',6:'物品等級',7:'裝備歸屬／狀態',8:'主屬性品質係數',23:'取得品質／套裝關聯值',24:'物品狀態 24',25:'未辨識物品狀態 25',26:'套裝關聯值 26',27:'套裝原物品資訊'};
    if(labels[y])named(labels[y],{entity:catalogName('items',get(m,C(x,1,z)))});
    else if(y>=9&&y<=14)named(`裝備詞條 #${y-8}`,{entity:catalogName('items',get(m,C(x,1,z)))});
    else if(y>=28&&y<=33)named(`洗練槽標記 #${y-27}`);
@@ -334,5 +390,5 @@
   if(patches.length!==m.changes.size)throw Error('部分修改座標未能定位，已停止匯出。');
   const parts=[];let previous=0;for(const p of patches){parts.push(m.text.slice(previous,p.start),p.value);previous=p.end;}parts.push(m.text.slice(previous));return parts.join('');
  }
- globalThis.SaveCore={BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,listEntities,catalogName,transaction,undo,restore,labelFor,diff,serialize};
+ globalThis.SaveCore={BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,listEntities,catalogName,transaction,undo,restore,labelFor,diff,serialize};
 })();
