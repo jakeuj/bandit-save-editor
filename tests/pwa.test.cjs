@@ -201,3 +201,17 @@ test('equipment workflow independently rejects stale rules and first-selection w
   fs.writeFileSync(catalogPath,JSON.stringify(k));fs.writeFileSync(proofPath,JSON.stringify(p));assert.match(run().stderr,/equipmentAffixInitialSelection/);
  }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
+
+test('quality directions require their own lifecycle UI and formula-bound proof',()=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'bandit-quality-proof-'));
+ try{
+  for(const file of ['scripts','src','knowledge','assets','index.html','sw.js','manifest.webmanifest'])fs.cpSync(path.join(root,file),path.join(dir,file),{recursive:true});
+  const catalogPath=path.join(dir,'knowledge/catalog.json'),proofPath=path.join(dir,'knowledge/verification.json'),k=JSON.parse(fs.readFileSync(catalogPath)),p=JSON.parse(fs.readFileSync(proofPath));
+  const groups=['backpackEquipmentQualityUpgrade','backpackEquipmentQualityDowngrade','equipmentQualityUpgrade','equipmentQualityDowngrade'],hash=require('node:crypto').createHash('sha256').update(JSON.stringify({quality:k.equipmentQuality,items:k.batch2Data.items,workflow:k.equipmentWorkflowLimits})).digest('hex');
+  const formula=fs.readFileSync(path.join(dir,'src/core.js'),'utf8').match(/ function qualityAttributeEffect\([\s\S]*?(?= function previewEquipmentQualityChange)/)[0].replace(/\r\n/g,'\n');
+  p.equipmentQuality={fingerprints:{...k.fingerprints,...k.batch2Fingerprints},dataHash:hash,formulaHash:require('node:crypto').createHash('sha256').update(formula).digest('hex'),groups:{}};
+  const run=()=>{fs.writeFileSync(catalogPath,JSON.stringify(k));fs.writeFileSync(proofPath,JSON.stringify(p));return spawnSync(process.execPath,['scripts/build-editor.cjs'],{cwd:dir,encoding:'utf8'});};
+  for(const group of groups){groups.forEach(g=>k.verification[g]=g===group);p.groups[group]=true;delete p.equipmentQuality.groups[group];assert.match(run().stderr,/品質升降/);const checks=Object.fromEntries(['load','save','restart','originalHashes','nativeEffects','lifecycle','qualityUi'].map(c=>[c,true]));p.equipmentQuality.groups[group]={checks};assert.equal(run().status,0);checks.qualityUi=false;assert.match(run().stderr,/品質升降/);checks.qualityUi=true;p.equipmentQuality.dataHash='stale';assert.match(run().stderr,/品質升降/);p.equipmentQuality.dataHash=hash;}
+  p.equipmentQuality.formulaHash='stale';assert.match(run().stderr,/品質升降公式/);
+ }finally{fs.rmSync(dir,{recursive:true,force:true});}
+});

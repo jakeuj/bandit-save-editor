@@ -71,7 +71,7 @@ async function setup(){
  C.addExperience(model,{kind:'profession',characterId:1,id:1,amount:6500});
  C.addExperience(model,{kind:'profession',characterId:1,id:1,amount:1.5});
  C.addExperience(model,{kind:'skill',characterId:1,id:1,amount:21500});
- for(const operation of scenario?.operations||[]){if(!['setEquipmentLevel','setProfessionTrainingCap','setAdvancedTechnologyLevel','setEquipmentAffixCoefficient','setPillAptitudeBonus','setEquipmentAffix'].includes(operation.method))throw Error('Unsupported scenario operation');C[operation.method](model,operation.options);}
+ for(const operation of scenario?.operations||[]){if(!['setEquipmentLevel','setProfessionTrainingCap','setAdvancedTechnologyLevel','setEquipmentAffixCoefficient','setPillAptitudeBonus','setEquipmentAffix','setEquipmentQuality'].includes(operation.method))throw Error('Unsupported scenario operation');C[operation.method](model,operation.options);}
  const modified=C.serialize(model),expected=JSON.parse(modified).data;
  for(let slot=1;slot<=3;slot++)fs.writeFileSync(path.join(game,`savedir/ea${slot}save.dat`),modified);
  fs.mkdirSync(path.join(game,'backup'),{recursive:true});
@@ -100,7 +100,7 @@ async function connect(state){const b=await(await fetch(`http://127.0.0.1:${stat
 async function evaluate(state,expression){const {cdp,sessionId}=await connect(state);try{const r=await cdp.send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true},sessionId);if(r.exceptionDetails)throw Error(JSON.stringify(r.exceptionDetails));return r.result.value;}finally{cdp.close();}}
 async function probe(state){
  const result=await evaluate(state,`(()=>{const r=self.__banditValidationRuntime,a=r.GetObjectClassByName('save').GetInstances()[0].GetSdkInstance();if(r.GetMainRunningLayout().GetName()==='主界面')r.SetTimeScale(0);return {layout:r.GetMainRunningLayout().GetName(),values:${JSON.stringify(state.cells)}.map(([x,y,z])=>a.At(x,y,z))};})()`);
- console.log(JSON.stringify(result));return result;
+ if(!args.includes('--quiet'))console.log(JSON.stringify(result));return result;
 }
 async function waitMain(state,mainOnly=true){
  const deadline=Date.now()+30000;let last;
