@@ -27,6 +27,14 @@ node --test tests/*.test.cjs
 
 第一個命令更新內嵌程式與 `sw.js`，保留 HTML 結構與樣式。修改來源後一併提交產生的 `index.html` 及 `sw.js`；只修改產生區塊會在下次建置時被覆蓋。使用者下載的單一 HTML 已內嵌執行程式與知識，不需 Node.js 或遊戲資料表。
 
+## 知識版本標示同步
+
+遊戲知識版本以 `knowledge/catalog.json` 的 `gameVersion` 為唯一來源。`index.html` 的職業圖鑑標籤、職業資料來源說明、欄位圖鑑標籤與使用說明，共四處使用 `<span data-knowledge-version>…</span>`。`scripts/build-editor.cjs` 在建置時將版本做 HTML 跳脫後填入這些標記，再產生內嵌程式與 PWA 資產指紋；初始 HTML 與離線下載因此保有相同版本文字。新增遊戲知識版本標示時沿用此標記，避免另寫版本常數。
+
+欄位圖鑑摘要由 `src/knowledge-ui.js` 讀取同一份內嵌知識的 `K.gameVersion`。摘要正確不代表其他標籤已同步：本次 V1.0.10.2 首次發布時曾出現摘要為新版、標籤仍為舊版，後由提交 `7adcb01` 修正。`tests/knowledge.test.cjs` 目前核對四個標記均等於內嵌的 `gameVersion`；新增或移除標示時，連同預期數量一起調整。`--check` 會重算產物，拒絕版本文字或 PWA 內容未同步的提交。
+
+更新順序為核對來源與實測紀錄、重建 catalog、執行建置及測試，再提交 catalog、驗證紀錄與產生的 HTML／`sw.js`。版本標示只是呈現知識基準，開放寫入仍受完整來源指紋及 `verification.json` 限制。側欄的編輯器版本 `v2.0` 與 Mac runtime 相容版本各有用途，不隨此標記改寫。
+
 ## PWA 維護與驗收
 
 Manifest 的 `start_url` 與 `scope` 使用 `./`，省略 `id`，由瀏覽器以完整 `start_url` 作為識別。`id` 的相對路徑以 origin 解析，不能用 `id: "./"` 表示專案子路徑。CSP 的 `manifest-src`／`worker-src` 僅開放同源，頁面維持 `connect-src 'none'`。
@@ -116,3 +124,7 @@ node scripts/extract-game.cjs --source /path/to/unpacked/game --audit-only --aud
 ## 提交與發布
 
 推送 `main` 會執行 Pages workflow，先檢查來源同步及核心測試，再以白名單打包靜態檔案。確認對應提交的部署成功，核對正式首頁、離線下載內容及修改過的公開資產。網站異動另驗證桌面／手機流程、主控台錯誤、canonical、分享資訊與 sitemap；文件變更以連結、指令及描述與實作一致性為主。
+
+正式驗收以本次提交的 SHA 找到相同 `headSha` 的 run，確認 build／deploy 都成功；HTTP 內容以 `git show SHA:PATH` 的原始 bytes 比對，避免 Windows checkout 行尾轉換造成誤判。接著用瀏覽器開啟正式欄位圖鑑，同時確認版本標籤與索引摘要。若 PWA 顯示「新版已備妥」，先匯出尚未保存的修改，再關閉所有同站帳房分頁與 App 視窗後重開；重新整理可能仍由舊 Worker 提供內容。保留可看見版本的截圖於 repo 外，HTTP 成功與瀏覽器結果分別記錄。
+
+2026-10-21 的 V1.0.10.2 正式發布已驗證至提交 `7adcb01f9f0ddef749c1474850877df79ad78dd9`；對應部署、資產比對、畫面結果及驗收範圍集中於 [V1.0.10.2 正式發布紀錄](research/v1.0.10.2-audit.md#正式發布驗證)。後續版本以自己的提交重做核對。
