@@ -168,3 +168,5 @@ PWA 雜湊異常時，先比較實際 HTTP 回應與提交的 Git blob。本機 
 - `scripts/verify-game.cjs --scenario` 接受 `setEquipmentAffix`。`node scripts/verify-affixes.cjs --state /outside/state.json --scenario /outside/scenario.json` 比對原生單件效果及隔離角色裝備效果；重啟後使用 `--compare`。`node scripts/verify-affix-lifecycle.cjs --state /outside/state.json --scenario /outside/scenario.json` 驗證卸穿與同槽洗練，更新隔離 state 的後續預期，再完成原版存檔／停止／新程序讀回。只對 repo 外副本操作。
 
 副詞條在原生公式內強制 L=0，主屬性保留等級；各槽分別取整再加總。主屬性重疊時 y8 須為原版區間安全整數。詳細公式、SID、380 組原生比對與後續 76 次洗練以[研究記錄](research/precise-affix-editing.md)為準。不得以原生函式回傳值宣稱角色 UI 即時快取也已驗收。
+
+v2.3 已以功能提交 `a912466` 通過 [Pages 正式發布驗證](research/precise-affix-editing.md#v23-正式發布驗證)：50 項測試、Git index bytes 建置檢查、正式資產比對及 PWA 關閉重開／斷網兩入口匯出／讀回。直接 file:// 新功能保持待人工驗收；後續版本仍須核對自己的完整 SHA。
