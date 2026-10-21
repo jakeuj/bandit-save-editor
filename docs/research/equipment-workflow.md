@@ -71,4 +71,15 @@ IAB的確認框曾阻塞dialog API及後續命令；改以原生Windows工具辨
 
 將瀏覽器設為離線後重載，確認navigator.onLine=false且Worker控制頁面，v2.4正常可用。讀取本機合成檔、預覽並確認背包第1件槽2的首次三欄交易（普攻傷害、50.03），實際下載並重新選檔：只提供槽2、值及效果2.75%正確、相同值顯示無變更。下載檔與先前線上同操作逐字一致，SHA-256為`d317e81b0f4b9b0759dd71cbd7dfe3a34a6d6b47c7fb97921429712f7b271ab5`，BOM／CRLF／大型整數原文保留。交接及離線截圖留repo外。
 
-正式合併後仍須核對相符SHA的Pages部署與正式v2.4／V1.0.10.2、實際站點PWA交接。直接file://仍依工具政策維持待人工，不能以PWA結果替代。
+直接file://仍依工具政策維持待人工，不能以PWA結果替代。
+
+## v2.4 正式發布驗證
+
+2026-10-22（台灣時間）[PR #1](https://github.com/jakeuj/bandit-save-editor/pull/1)已合併，發布提交為`aec00a8bf800ef34583bd969d3c852c040ce4c43`，[Pages run 39642878678](https://github.com/jakeuj/bandit-save-editor/actions/runs/39642878678)的build／deploy均成功。CI重新執行64項測試與建置同步通過。
+
+- [正式站](https://bandit.jakeuj.com/)首頁、index.html、Worker、Manifest、5個PWA圖示、Mac指南、sitemap、robots、分享圖及準備工具，共14個網址皆HTTP 200且bytes與上述提交Git blob相同；Pages CNAME、HTTPS與repo網站連結一致。
+- 原正式v2.3分頁確實觀察到「可離線使用 · 新版已備妥，關閉所有帳房視窗後更新」，active仍activated、新版waiting為installed。關閉該站所有測試分頁後重新開啟，側欄顯示v2.4 · 2026.10.22，PWA為「可離線使用」。未清快取、未強制啟用Worker。
+- 正式站斷網重載仍受Worker控制；合成檔完成背包槽2首次三欄交易、預覽視窗匯出及重新讀取。讀回只允許槽2、普攻傷害係數50.03／效果2.75%，下載SHA-256同上列`d317e81b…`，與本機及線上預期逐字相符。驗收後網路已還原。
+- 正式欄位圖鑑標籤及摘要均顯示V1.0.10.2；瀏覽器未記錄error／warn。正式版本、更新等待、桌面／390px與遊戲UI截圖均保留repo外，沒有提交真實存檔或遊戲payload。
+
+本次PWA證據為IAB瀏覽器Worker離線與關閉重開交接，不宣稱另完成Windows獨立安裝視窗或其他瀏覽器全套驗收。直接file://新功能仍待人工。
