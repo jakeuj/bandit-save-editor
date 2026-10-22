@@ -153,6 +153,21 @@ node scripts/verify-migration.cjs --package STEAM_GAME_DIR --artifacts EXTERNAL_
 
 公告連結可加 `--announcement URL` 寫入分析報告；預設終端只印選跑摘要及報告位置，需逐步 log 才加 `--verbose`。純知識更新本機用 `npm run verify:knowledge`，受影響功能另補相關 Node，完整 `verify:release` 留給 Pages CI；驗證框架或編輯器程式本身變更仍在本機完整跑一次。
 
+### Windows 隔離遷移操作
+
+使用相符的 15 來源、安裝所附 runtime 與固定基準存檔，沿用上方 `--package`／`--runtime`／`--save-file` 指令；所有 artifacts 放 repo 外。Windows 建議加 `--keep-copies`，避免通過副本在清理階段因檔案鎖 `EPERM` 失敗，保留診斷直到自己的程序完全退出；不要清理玩家安裝或存檔。中斷續跑仍須符合下方的輸入與證據綁定。
+
+`verify-game.cjs` 的 CDP 探索請求使用 `Connection: close`：NW.js 停止並以新 PID 重啟後，避免同一 Node 程序重用舊 HTTP socket，造成 checkpoint 重啟後連線中斷。這是驗證器的連線收尾，不需修改遊戲或系統網路設定。
+
+本機瀏覽器過濾器若對隨機 loopback 埠注入腳本，會影響 PWA 驗證；可沿用已有例外埠執行下列 PowerShell 指令（8942 是當次本機例外，其他環境使用自己的既有例外或預設隨機埠）：
+
+```powershell
+$env:BANDIT_BROWSER_PORT='8942'
+npm run verify:release
+```
+
+不調整全機過濾器，也不放寬 PWA 測試。故障背景與實測界線見[V1.0.11.2 紀錄](research/v1.0.11.2-audit.md#windows-隔離驗證)。
+
 ### 相依與證據
 
 `migration-analysis.cjs` 宣告各家族的存讀、公式、生命週期、必要資料表與寫入區域。語意摘要解析 expression、物件與 bound-reference 編號、變數 SID／初值及被呼叫函式；保留常數、條件、寫入位置和未知項目。只排除已辨識的顯示操作與職業文案欄，並將已核對的套裝合成動態庫別限制在裝備範圍。未宣告、缺失或不支援的原生相依資訊不能當作未變。

@@ -72,9 +72,11 @@
    if(plane===7){
     const rules=KNOWLEDGE.batch2Data?.items[item.id],tier=get(m,C(id,3,plane));
     if(get(m,C(id,2,plane))!==1||owner!==0)throw Error('背包普通裝備須數量為 1 且歸屬為 0。');
-    if(item.kind!=='普通'||item.slot>4||!rules||rules.setLink!==0||quality>6||!Number.isSafeInteger(tier)||tier<1||tier>9||tier!==rules.tier)throw Error('背包只支援原版等階、品質的一般裝備。');
+    if(item.kind!=='普通'||item.slot>4||!rules||rules.setLink!==0||quality>6||!Number.isSafeInteger(tier)||tier<1||tier>9||tier!==rules.tier)throw Error('背包只支援原版等階、品質的一般裝備，不包含套裝。');
     if(![0,1].includes(get(m,C(id,24,plane)))||[25,26,27].some(y=>get(m,C(id,y,plane))!==0))throw Error('裝備包含尚未涵蓋的特殊狀態。');
    }else{
+    const rules=KNOWLEDGE.batch2Data?.items[item.id];
+    if(item.kind!=='普通'||!rules||rules.setLink!==0)throw Error('只支援一般裝備，套裝等級尚未隔離驗證。');
     let references=0;
     for(let x=1;x<m.original.size[0];x++)if(activeCharacter(m,x))for(let slot=1;slot<=6;slot++)if(get(m,C(x,15+slot,2))===id){references++;if(owner!==x||slot!==item.slot)throw Error('裝備穿戴雙向指標不一致。');}
     if(owner>0&&(!activeCharacter(m,owner)||references!==1)||owner===0&&references!==0)throw Error('裝備穿戴雙向指標不一致。');

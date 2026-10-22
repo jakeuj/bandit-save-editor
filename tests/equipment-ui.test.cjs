@@ -34,3 +34,16 @@ test('quality UI requires explicit new slot and clears removal confirmation on t
  $('qualityTarget').value='1';$('qualityTarget').onchange();assert.equal($('qualityRemoval').checked,false);$('qualityRemoval').checked=true;$('qualityRemoval').onchange();$('qualityApply').onclick();assert.equal(C.get(m,{x:1,y:5,z:7}),1);assert.equal(C.get(m,{x:1,y:9,z:7}),0);assert.equal(C.get(m,{x:1,y:10,z:7}),0);assert.equal(C.get(m,{x:1,y:5,z:9}),2);
  $('inventoryPlane').value='9';$('inventoryPlane').onchange();assert.doesNotMatch($('qualityItem').innerHTML,/7:1/);
 });
+
+test('selecting a stored set shows its readonly reason and disables level editing',()=>{
+ const {ctx,$,m,listeners}=setup();m.original.data[1][1][9]=28;
+ const change=value=>listeners.change.forEach(fn=>fn({target:{dataset:{editTarget:'equipment'},value}}));
+ change('9:1');
+ assert.match($('equipmentEditor').innerHTML,/套裝等級尚未隔離驗證/);
+ assert.match($('equipmentEditor').innerHTML,/data-edit-value="equipment"[^>]*disabled/);
+ assert.match($('equipmentEditor').innerHTML,/data-edit-apply="equipment"[^>]*disabled/);
+ assert.equal(m.changes.size,0);
+ change('7:1');
+ assert.doesNotMatch($('equipmentEditor').innerHTML,/data-edit-apply="equipment"[^>]*disabled/);
+ assert.equal(m.changes.size,0);
+});

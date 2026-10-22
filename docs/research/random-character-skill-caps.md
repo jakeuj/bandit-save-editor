@@ -1,6 +1,6 @@
 # 一般隨機角色九項技藝上限
 
-2026-10-22 A 階段完成時，功能未開放、玩家版號為 v2.7；A只有靜態來源、Node合成與既有瀏覽器回歸。[B階段](../../sdd/random-character-skill-caps-b/proposal.md)接續介面、獨立原生證明與發布，最新驗收狀態見[B任務](../../sdd/random-character-skill-caps-b/tasks.md)。原始安裝15來源對應 catalog V1.0.10.2／manifest build26094666。
+2026-10-22 A 階段完成時，功能未開放、玩家版號為 v2.7；A只有靜態來源、Node合成與既有瀏覽器回歸。[B階段](../../sdd/random-character-skill-caps-b/proposal.md)接續介面、獨立原生證明與發布，最新驗收狀態見[B任務](../../sdd/random-character-skill-caps-b/tasks.md)。首次完整 108＋2 證明的歷史來源為 V1.0.10.2／build26094666；目前 catalog 已對齊 V1.0.11.2／build26126719，完成 Windows 代表矩陣 2＋2 與 24 群組遷移，保留首次完整證明，見[新版紀錄](v1.0.11.2-audit.md)。
 
 詳細公式、事件 SID、生命週期追查及 B 階段矩陣見 [proposal](../../sdd/random-character-skill-caps/proposal.md)；當次驗收見 [tasks](../../sdd/random-character-skill-caps/tasks.md)。原始遊戲來源與分析暫存均留 repo 外。
 

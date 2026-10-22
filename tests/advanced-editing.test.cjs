@@ -95,3 +95,27 @@ test('invalid numbers, tested boundaries and failed composite operations leave n
  assert.throws(()=>C.transaction(model,()=>{C.setEquipmentLevel(model,{itemId:1,level:9});C.setAdvancedTechnologyLevel(model,{technologyId:29,level:1});}));
  assert.equal(C.serialize(model),text);assert.equal(model.history.length,0);
 });
+
+test('both equipment planes reject sets and special kinds without changing the save',()=>{
+ const {C,model,text}=setup(),a=model.original.data;
+ assert.notEqual(C.KNOWLEDGE.batch2Data.items[28].setLink,0);
+ for(const plane of [7,9]){
+  for(const [y,value]of [[0,1],[2,1],[3,1],[5,1],[6,5]])a[1][y][plane]=value;
+  for(const item of [C.KNOWLEDGE.catalogs.items.find(v=>v.id===28),...['宝物','内丹'].map(kind=>C.KNOWLEDGE.catalogs.items.find(v=>v.kind===kind))]){
+   a[1][1][plane]=item.id;
+   const reason=item.id===28?/套裝/:/寶物及內丹/;
+   assert.throws(()=>C.editingInfo(model,'equipment',1,plane),reason);
+   for(const advanced of [false,true])assert.throws(()=>C.setEquipmentLevel(model,{itemId:1,plane,level:6,advanced}),reason);
+   assert.equal(model.changes.size,0);assert.equal(model.history.length,0);assert.equal(C.serialize(model),text);
+  }
+  a[1][1][plane]=1;
+  assert.equal(C.editingInfo(model,'equipment',1,plane).normalMax,10);
+  C.setEquipmentLevel(model,{itemId:1,plane,level:10});
+  assert.equal(C.get(model,{x:1,y:6,z:plane}),10);C.undo(model);
+ }
+ // The data-table guard also rejects a set link on an otherwise ordinary item.
+ C.KNOWLEDGE.batch2Data.items[1].setLink=1;
+ assert.throws(()=>C.editingInfo(model,'equipment',1,9),/套裝/);
+ assert.throws(()=>C.setEquipmentLevel(model,{itemId:1,level:6}),/套裝/);
+ assert.equal(model.changes.size,0);
+});
