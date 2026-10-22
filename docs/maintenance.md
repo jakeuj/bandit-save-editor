@@ -8,6 +8,7 @@
 | 版本標示、提交與發布 | [release](maintenance/release.md) |
 | Wiki 內容、側邊欄與 Git 推送 | [Wiki 維護](maintenance/release.md#wiki-維護) |
 | Project 卡片、狀態與清單異常 | [Project 維護](maintenance/projects.md) |
+| Discussions 公告發布與更新 | [Discussions 維護](maintenance/discussions.md) |
 | PWA 與離線驗收 | [pwa](maintenance/pwa.md) |
 | 版本遷移與本機開發快取 | [migration](maintenance/migration.md) |
 | 普通裝備、詞條與丹藥維護 | [equipment](maintenance/equipment.md) |
