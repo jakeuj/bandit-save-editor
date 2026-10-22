@@ -9,4 +9,4 @@
 - 保留所有未修改原始字元與大型整數 literal；已知唯讀欄位套用統一規則，經驗聯動必須整組可復原。新增寫入需符合 `knowledge/verification.json` 的來源指紋與隔離遊戲實測，才開啟 catalog 閘門。
 - 處理 Mac 啟動、存檔路徑或 CrossOver 時，先讀 `launcher/README.md` 與 `docs/research/macos-runtime-investigation.md`；沿用 repo 的準備工具，在隔離副本驗證，分開記錄 Steam 清單、實際讀寫與重啟續玩結果。
 - 真實存檔、遊戲 payload、runtime、原始 log 與 crash dump 放 repo 外；repo 只維護程式、合成測試及去識別的研究筆記。
-- 自建技能正本為 `~/.agents/skills/bandit-save-editor/SKILL.md`。環境有此技能時讀取它；其他環境以上述 repo 文件為入口。可重用的專案知識同步技能與 repo 文件，詳細證據以 repo 為準。
+- 專案技能正本為 `.agents/skills/bandit-save-editor/SKILL.md`（Codex 直接掃描）；`.claude/skills/bandit-save-editor` 是給 Claude Code 的相對 symlink，不另存副本。可重用的專案知識同步技能與 repo 文件，詳細證據以 repo 為準；技能隨 repo 公開，不寫入機器路徑、真實存檔位置或私人資料。

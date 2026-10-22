@@ -1,0 +1,4 @@
+interface:
+  display_name: "山寨帳房 Repo 維護"
+  short_description: "維護山寨帳房存檔知識、成長編輯、Mac 啟動器與 Pages 發布"
+  default_prompt: "使用 $bandit-save-editor，依 repo 最新文件維護存檔修改器或 Mac 啟動器，完成所需修改並區分各階段驗證結果。"
