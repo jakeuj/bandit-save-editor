@@ -14,11 +14,42 @@
 
 發布新版修改器時，同步更新側欄的「修改器 vX.Y · 日期」與 `index.html` 的「更新紀錄」對話框：在最上方加一筆，寫發布日期、對應遊戲版本，以及玩家看得懂的新增功能與限制。側欄版本文字與「更新紀錄」按鈕都會開啟這個對話框；`tests/changelog.test.cjs` 會核對第一筆與側欄版本、日期一致。手機版隱藏側欄底部，v2.6在主內容上方提供使用說明／更新紀錄入口，未載入存檔也能開啟；頁尾保留復原一步。
 
-日常推送只做 `node scripts/build-editor.cjs --check`、提交及推送，不重跑全套 Node／瀏覽器／遊戲測試。完整驗收 `npm run verify:release` 僅在使用者要求或具體故障需要時執行；新增功能已核准的首次證明與驗收要求不受日常快速流程免除。手動 Pages workflow 的 `full_verify` 預設關閉。若工作樹混有其他任務，僅提交本次授權範圍，並對待提交快照檢查同步，保留其餘工作。
+日常推送只做下方「待提交快照檢查」、提交及推送，不重跑全套 Node／瀏覽器／遊戲測試。完整驗收 `npm run verify:release` 僅在使用者要求或具體故障需要時執行；新增功能已核准的首次證明與驗收要求不受日常快速流程免除。手動 Pages workflow 的 `full_verify` 預設關閉。若工作樹混有其他任務，僅提交本次授權範圍，並對待提交快照檢查同步，保留其餘工作。
 
 推送 `main` 會自動觸發 Pages workflow，只檢查來源同步並以白名單打包發布；完整驗收按需另行執行。純技能、文件或忽略規則更新，以連結、指令及描述與實作一致性為主，推送成功即結束，只回報提交連結，不查詢或等待自動觸發的部署。只有影響網站產物、發布設定，或使用者明確要求時，才追蹤對應 SHA 的部署結果並回報部署連結；明確要求確認線上版本時，才額外 GET 首頁。多頁資產、桌面／手機流程、主控台錯誤、canonical、分享資訊與 sitemap 依變更及驗收要求選跑。
 
 需要追蹤部署時，以本次提交的 SHA 找到相同 `headSha` 的 run，確認 build／deploy 都成功。以下 HTTP、DOM 及 PWA 正式驗收僅在使用者要求或相關故障需要時執行：HTTP 內容以 `git show SHA:PATH` 的原始 bytes 比對，避免 Windows checkout 行尾轉換造成誤判。需要正式DOM證據時，以獨立headless context開啟正式欄位圖鑑，同時確認版本標籤與索引摘要；例行PWA交接由暫存建置測試，使用者特定快取問題才採以下人工流程。若 PWA 顯示「新版已備妥」，先匯出尚未保存的修改，再關閉所有同站帳房分頁與 App 視窗後重開；重新整理可能仍由舊 Worker 提供內容。保留可看見版本的截圖於 repo 外，HTTP 成功與瀏覽器結果分別記錄。
+
+## 待提交快照檢查
+
+提交前先將本次授權檔案加入暫存區，再依下方流程驗證暫存區的 Git bytes。工作目錄的 `--check` 可用於開發，但不能代替此發布檢查。
+
+PowerShell 在 repo 根目錄執行（先完成範圍核對及 `git add`）：
+
+```powershell
+@'
+import io, subprocess, tempfile, zipfile
+snapshot = subprocess.check_output(['git', 'write-tree'], text=True).strip()
+with tempfile.TemporaryDirectory(prefix='bandit-index-check-') as folder:
+    archive = subprocess.check_output(['git', 'archive', '--format=zip', snapshot])
+    with zipfile.ZipFile(io.BytesIO(archive)) as bundle:
+        bundle.extractall(folder)
+    subprocess.run(['node', 'scripts/build-editor.cjs', '--check'], cwd=folder, check=True)
+assert snapshot == subprocess.check_output(['git', 'write-tree'], text=True).strip(), 'Index changed; check again'
+print('Verified tree: ' + snapshot)
+'@ | python
+```
+
+成功且暫存區 tree 未改變才提交；提交後確認 `git rev-parse 'HEAD^{tree}'` 等於已驗證 tree，再推送。若重新 stage，須重做快照檢查。
+
+換行差異的處理：
+
+- 編輯文字時保留 `.gitattributes` 指定的 LF；Python 寫入可用 `newline='\n'`。屬性只約束 Git 轉換，不能防止編輯工具先將工作檔寫成 CRLF。
+- builder 依實際 bytes 計算 PWA 指紋。工作目錄若含 CRLF，建置與本機 `--check` 可能都通過，但 `git add` 轉為 LF 後雜湊就失效。`git diff --check` 也不驗證產物雜湊。
+- 快照檢查失敗時先停止提交／推送。在隔離快照執行 builder，檢視產物差異，只取回本次所需的 `index.html`／`sw.js`；保留工作目錄中其他未暫存修改，勿整份覆蓋。重新 stage 後再次檢查；不手填雜湊、不略過 CI 或 Service Worker 完整性檢查。
+- 這是 agent 發布流程；目前 workflow 只在推送後執行 `--check`，尚無本機自動 hook。更新技能不能視為已新增自動攔截。
+
+2026-10-23 品質下拉修正曾在 `36f2cb3` 因換行轉換導致 Pages 的 `sw.js` 同步檢查失敗；`d1d1c11` 依 Git blob 重建後部署成功。此案例說明檢查應在提交前固定快照，而非等 CI 失敗才查行尾。
 
 ## Wiki 維護
 

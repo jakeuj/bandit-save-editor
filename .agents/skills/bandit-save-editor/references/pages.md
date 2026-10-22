@@ -50,7 +50,7 @@ node scripts/build-editor.cjs --check
 
 遊戲知識版本標記、修改器版號與建置同步依 repo `docs/maintenance/release.md`「知識版本標示同步」。修改標記時一併核對來源與測試，不在技能維護另一份標記數量或版本常數。
 
-若 `--check` 失敗，先辨別來源不同步與 checkout 行尾差異。`.gitattributes` 已固定 JavaScript 與 Manifest 為 LF；確認屬性生效，必要時從提交的 Git blob 建立隔離副本執行檢查。PWA 指紋須對應真正發布的 bytes，不能只讓 Windows 工作目錄的建置通過。
+提交前一律依[待提交快照檢查](../../../../docs/maintenance/release.md#待提交快照檢查)驗證暫存區 Git bytes，包含 Windows 換行轉換及失敗修復流程；開發工作目錄的建置成功不代表發布產物雜湊相符。
 
 本機 HTTP 曾被 AdGuard 插入 CSP／腳本，造成回應與 Worker 預期 SHA-256 不同。先比對實際回應與 Git blob，定位代理／擴充套件改寫；保留 Worker 拒絕錯版快取的行為，不以放寬 CSP 或略過雜湊核對排除症狀。若需測試網址例外，先取得使用者授權，記錄範圍及測後還原或保留的決定；例外不屬於網站必要設定。瀏覽器離線模擬完成後還原網路。
 
