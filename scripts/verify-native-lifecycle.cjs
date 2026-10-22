@@ -5,7 +5,7 @@
 const fs = require('node:fs'), path = require('node:path'), assert = require('node:assert/strict');
 const {evaluate, waitMain} = require('./verify-game.cjs');
 const args = process.argv.slice(2), opt = k => args[args.indexOf(k) + 1];
-const prefix = `const r=self.__banditValidationRuntime,a=r.GetObjectClassByName('save').GetInstances()[0].GetSdkInstance();const call=(name,...args)=>{const f=r.GetEventSheetManager().GetFunctionBlockByName(name),b=f.GetEventBlock();return b.RunAsExpressionFunctionCall(b.GetSolModifiersIncludingParents(),f.IsCopyPicked(),f.GetReturnType(),f.GetDefaultReturnValue(),...args);};const record=(id,z)=>Array.from({length:50},(_,y)=>a.At(id,y,z));const global=name=>{const v=r.GetEventSheetManager().GetEventVariableByName(name);if(!v)throw Error('Missing global '+name);return v;};`;
+const prefix = `const r=self.__banditValidationRuntime,a=r.GetObjectClassByName('save').GetInstances()[0].GetSdkInstance();const call=(name,...args)=>{const f=r.GetEventSheetManager().GetFunctionBlockByName(name),b=f.GetEventBlock();return b.RunAsExpressionFunctionCall(b.GetSolModifiersIncludingParents(),f.IsCopyPicked(),f.GetReturnType(),f.GetDefaultReturnValue(),...args);};const record=(id,z)=>Array.from({length:50},(_,y)=>a.At(id,y,z));const global=name=>{const v=r.GetEventSheetManager().GetAllGlobalVariables().find(v=>v.GetName()===name);if(!v)throw Error('Missing global '+name);return v;};`;
 const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 // Select a map facility of the given template inside a building, the way the facility page selects its tile.
@@ -22,10 +22,11 @@ async function followup(state, s) {
   for (let y = 0; y < 50; y++) if (y !== 7) assert.equal(worn.record[y], before[y], 'Equip cycle field ' + y);
   assert.equal(worn.record[7], 1);
 
-  // Natural experience levels the current profession one step per call up to its training cap, then transfer.
-  const career = await evaluate(state, `(()=>{${prefix}const from=a.At(1,6,2),cap=a.At(${profession},5,0);let calls=0;while(a.At(1,from,4)<5&&calls<200){call('获得职业经验',1,100000,'工作',from,0,0);calls++;}
+  // Natural experience ignores the amount argument: each call grants about ten work intervals, levelling at most one
+  // step up to the training cap. Stop when nothing changes so a stalled formula fails instead of spinning.
+  const career = await evaluate(state, `(()=>{${prefix}const from=a.At(1,6,2),cap=a.At(${profession},5,0);let calls=0,idle=0;while(a.At(1,from,4)<5&&calls<5000&&idle<50){const progress=a.At(1,from,4)*1e9+a.At(1,from,5);call('获得职业经验',1,0,'工作',from,0,0);calls++;idle=a.At(1,from,4)*1e9+a.At(1,from,5)===progress?idle+1:0;}
     const prerequisite=a.At(1,from,4),eligible=call('转职条件判断',1,${profession},0,0);if(eligible!==1)throw Error('Transfer not eligible at prerequisite level '+prerequisite);
-    call('转职',1,${profession},true);const job=a.At(1,6,2),before=[a.At(1,${profession},4),a.At(1,${profession},5)];call('获得职业经验',1,100000,'工作',${profession},0,0);
+    call('转职',1,${profession},true);const job=a.At(1,6,2),before=[a.At(1,${profession},4),a.At(1,${profession},5)];call('获得职业经验',1,0,'工作',${profession},0,0);
     return {from,calls,prerequisite,job,before,after:[a.At(1,${profession},4),a.At(1,${profession},5)],capBefore:cap,capAfter:a.At(${profession},5,0)};})()`);
   assert.equal(career.job, profession, 'Transfer did not change the current profession');
   assert.ok(career.after[0] > career.before[0] || career.after[1] > career.before[1], 'No natural experience after transfer');
