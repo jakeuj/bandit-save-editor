@@ -77943,5 +77943,2641 @@
       "metadata": "native-conversion-witness-required",
       "moveColumns": 50
     }
+  },
+  "treasureLevel": {
+    "version": 1,
+    "policy": "level-only",
+    "phase": "A-static-no-native-proof",
+    "sourceSids": [
+      601593514747018,
+      605413626718369,
+      290240793057956,
+      713681756866045,
+      940995553206160,
+      924571110308816,
+      501272375624196,
+      791657421740250,
+      959041203712077,
+      654692930556623,
+      418018161514165,
+      754298301929487,
+      311899301569964,
+      714979671293604,
+      163385542232476,
+      981828147671074,
+      761577193118513,
+      565108901731936,
+      131416746119248,
+      773239288013696
+    ],
+    "sourceDigest": "d538a7f4e8ca258d1b5583797806d9f9f125b9898f5e5be78fff3b5fbf6fdcd2",
+    "items": {
+      "556": {
+        "name": "铜护符",
+        "tier": 1,
+        "slot": 6,
+        "mainAttributes": [
+          17,
+          0,
+          0
+        ],
+        "mainSettings": [
+          100,
+          0,
+          0
+        ]
+      },
+      "557": {
+        "name": "兽牙坠",
+        "tier": 1,
+        "slot": 6,
+        "mainAttributes": [
+          12,
+          0,
+          0
+        ],
+        "mainSettings": [
+          100,
+          0,
+          0
+        ]
+      },
+      "558": {
+        "name": "兽骨链",
+        "tier": 1,
+        "slot": 6,
+        "mainAttributes": [
+          13,
+          0,
+          0
+        ],
+        "mainSettings": [
+          100,
+          0,
+          0
+        ]
+      },
+      "559": {
+        "name": "速攻靴",
+        "tier": 1,
+        "slot": 6,
+        "mainAttributes": [
+          29,
+          0,
+          0
+        ],
+        "mainSettings": [
+          100,
+          0,
+          0
+        ]
+      },
+      "560": {
+        "name": "锋刃石",
+        "tier": 1,
+        "slot": 6,
+        "mainAttributes": [
+          28,
+          0,
+          0
+        ],
+        "mainSettings": [
+          100,
+          0,
+          0
+        ]
+      },
+      "561": {
+        "name": "远射标",
+        "tier": 1,
+        "slot": 6,
+        "mainAttributes": [
+          30,
+          0,
+          0
+        ],
+        "mainSettings": [
+          100,
+          0,
+          0
+        ]
+      },
+      "562": {
+        "name": "技玉",
+        "tier": 1,
+        "slot": 6,
+        "mainAttributes": [
+          10,
+          0,
+          0
+        ],
+        "mainSettings": [
+          100,
+          0,
+          0
+        ]
+      },
+      "563": {
+        "name": "技能符",
+        "tier": 1,
+        "slot": 6,
+        "mainAttributes": [
+          18,
+          0,
+          0
+        ],
+        "mainSettings": [
+          100,
+          0,
+          0
+        ]
+      },
+      "564": {
+        "name": "雷纹石",
+        "tier": 1,
+        "slot": 6,
+        "mainAttributes": [
+          23,
+          0,
+          0
+        ],
+        "mainSettings": [
+          100,
+          0,
+          0
+        ]
+      },
+      "565": {
+        "name": "水纹石",
+        "tier": 1,
+        "slot": 6,
+        "mainAttributes": [
+          24,
+          0,
+          0
+        ],
+        "mainSettings": [
+          100,
+          0,
+          0
+        ]
+      },
+      "566": {
+        "name": "火纹石",
+        "tier": 1,
+        "slot": 6,
+        "mainAttributes": [
+          25,
+          0,
+          0
+        ],
+        "mainSettings": [
+          100,
+          0,
+          0
+        ]
+      },
+      "567": {
+        "name": "木纹石",
+        "tier": 1,
+        "slot": 6,
+        "mainAttributes": [
+          26,
+          0,
+          0
+        ],
+        "mainSettings": [
+          100,
+          0,
+          0
+        ]
+      },
+      "568": {
+        "name": "土纹石",
+        "tier": 1,
+        "slot": 6,
+        "mainAttributes": [
+          27,
+          0,
+          0
+        ],
+        "mainSettings": [
+          100,
+          0,
+          0
+        ]
+      },
+      "569": {
+        "name": "采集镰",
+        "tier": 1,
+        "slot": 6,
+        "mainAttributes": [
+          53,
+          0,
+          0
+        ],
+        "mainSettings": [
+          100,
+          0,
+          0
+        ]
+      },
+      "570": {
+        "name": "工匠锤",
+        "tier": 1,
+        "slot": 6,
+        "mainAttributes": [
+          54,
+          0,
+          0
+        ],
+        "mainSettings": [
+          100,
+          0,
+          0
+        ]
+      },
+      "571": {
+        "name": "营造尺",
+        "tier": 1,
+        "slot": 6,
+        "mainAttributes": [
+          55,
+          0,
+          0
+        ],
+        "mainSettings": [
+          100,
+          0,
+          0
+        ]
+      },
+      "572": {
+        "name": "精工戒",
+        "tier": 1,
+        "slot": 6,
+        "mainAttributes": [
+          51,
+          0,
+          0
+        ],
+        "mainSettings": [
+          100,
+          0,
+          0
+        ]
+      },
+      "573": {
+        "name": "经验符",
+        "tier": 1,
+        "slot": 6,
+        "mainAttributes": [
+          36,
+          0,
+          0
+        ],
+        "mainSettings": [
+          100,
+          0,
+          0
+        ]
+      },
+      "574": {
+        "name": "学徒笔记",
+        "tier": 1,
+        "slot": 6,
+        "mainAttributes": [
+          37,
+          0,
+          0
+        ],
+        "mainSettings": [
+          100,
+          0,
+          0
+        ]
+      },
+      "575": {
+        "name": "内丹草",
+        "tier": 1,
+        "slot": 6,
+        "mainAttributes": [
+          15,
+          0,
+          0
+        ],
+        "mainSettings": [
+          100,
+          0,
+          0
+        ]
+      },
+      "576": {
+        "name": "钱袋",
+        "tier": 1,
+        "slot": 6,
+        "mainAttributes": [
+          35,
+          0,
+          0
+        ],
+        "mainSettings": [
+          100,
+          0,
+          0
+        ]
+      },
+      "577": {
+        "name": "裂伤爪",
+        "tier": 2,
+        "slot": 6,
+        "mainAttributes": [
+          19,
+          28,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "578": {
+        "name": "穿心箭",
+        "tier": 2,
+        "slot": 6,
+        "mainAttributes": [
+          17,
+          20,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "579": {
+        "name": "聚灵珠",
+        "tier": 2,
+        "slot": 6,
+        "mainAttributes": [
+          21,
+          18,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "580": {
+        "name": "暴击玉",
+        "tier": 2,
+        "slot": 6,
+        "mainAttributes": [
+          12,
+          13,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "581": {
+        "name": "疾风令",
+        "tier": 2,
+        "slot": 6,
+        "mainAttributes": [
+          29,
+          17,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "582": {
+        "name": "锋锐符",
+        "tier": 2,
+        "slot": 6,
+        "mainAttributes": [
+          28,
+          17,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "583": {
+        "name": "远射手札",
+        "tier": 2,
+        "slot": 6,
+        "mainAttributes": [
+          30,
+          20,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "584": {
+        "name": "灵韵珠",
+        "tier": 2,
+        "slot": 6,
+        "mainAttributes": [
+          21,
+          10,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "585": {
+        "name": "锐金符",
+        "tier": 2,
+        "slot": 6,
+        "mainAttributes": [
+          23,
+          13,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "586": {
+        "name": "玄冰令",
+        "tier": 2,
+        "slot": 6,
+        "mainAttributes": [
+          24,
+          18,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "587": {
+        "name": "炎爆符",
+        "tier": 2,
+        "slot": 6,
+        "mainAttributes": [
+          25,
+          12,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "588": {
+        "name": "荆棘珠",
+        "tier": 2,
+        "slot": 6,
+        "mainAttributes": [
+          26,
+          17,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "589": {
+        "name": "岩崩坠",
+        "tier": 2,
+        "slot": 6,
+        "mainAttributes": [
+          27,
+          28,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "590": {
+        "name": "采镰",
+        "tier": 2,
+        "slot": 6,
+        "mainAttributes": [
+          53,
+          51,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "591": {
+        "name": "百炼锤",
+        "tier": 2,
+        "slot": 6,
+        "mainAttributes": [
+          54,
+          51,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "592": {
+        "name": "营造令",
+        "tier": 2,
+        "slot": 6,
+        "mainAttributes": [
+          55,
+          51,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "593": {
+        "name": "伐木师手札",
+        "tier": 2,
+        "slot": 6,
+        "mainAttributes": [
+          53,
+          37,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "594": {
+        "name": "名匠锥",
+        "tier": 2,
+        "slot": 6,
+        "mainAttributes": [
+          54,
+          38,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "595": {
+        "name": "兴业尺",
+        "tier": 2,
+        "slot": 6,
+        "mainAttributes": [
+          55,
+          36,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "596": {
+        "name": "修行手册",
+        "tier": 2,
+        "slot": 6,
+        "mainAttributes": [
+          36,
+          38,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "597": {
+        "name": "匠师札",
+        "tier": 2,
+        "slot": 6,
+        "mainAttributes": [
+          37,
+          38,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "598": {
+        "name": "掠财令",
+        "tier": 2,
+        "slot": 6,
+        "mainAttributes": [
+          35,
+          31,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "599": {
+        "name": "内丹经",
+        "tier": 2,
+        "slot": 6,
+        "mainAttributes": [
+          36,
+          28,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "600": {
+        "name": "悟道玉",
+        "tier": 2,
+        "slot": 6,
+        "mainAttributes": [
+          112,
+          15,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "601": {
+        "name": "练气符",
+        "tier": 2,
+        "slot": 6,
+        "mainAttributes": [
+          36,
+          12,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "602": {
+        "name": "狂战令",
+        "tier": 3,
+        "slot": 6,
+        "mainAttributes": [
+          19,
+          12,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "603": {
+        "name": "迅影牌",
+        "tier": 3,
+        "slot": 6,
+        "mainAttributes": [
+          20,
+          29,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "604": {
+        "name": "玄法杖",
+        "tier": 3,
+        "slot": 6,
+        "mainAttributes": [
+          21,
+          13,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "605": {
+        "name": "万爆符",
+        "tier": 3,
+        "slot": 6,
+        "mainAttributes": [
+          12,
+          13,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "606": {
+        "name": "速攻旗",
+        "tier": 3,
+        "slot": 6,
+        "mainAttributes": [
+          29,
+          17,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "607": {
+        "name": "破阵旗",
+        "tier": 3,
+        "slot": 6,
+        "mainAttributes": [
+          33,
+          32,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "608": {
+        "name": "清场钟",
+        "tier": 3,
+        "slot": 6,
+        "mainAttributes": [
+          31,
+          17,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "609": {
+        "name": "千机符",
+        "tier": 3,
+        "slot": 6,
+        "mainAttributes": [
+          10,
+          18,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "610": {
+        "name": "射手令",
+        "tier": 3,
+        "slot": 6,
+        "mainAttributes": [
+          30,
+          20,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "611": {
+        "name": "强攻符",
+        "tier": 3,
+        "slot": 6,
+        "mainAttributes": [
+          28,
+          71,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "612": {
+        "name": "雷霆破甲令",
+        "tier": 3,
+        "slot": 6,
+        "mainAttributes": [
+          23,
+          13,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "613": {
+        "name": "寒冰破阵符",
+        "tier": 3,
+        "slot": 6,
+        "mainAttributes": [
+          24,
+          18,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "614": {
+        "name": "焚天烈焰令",
+        "tier": 3,
+        "slot": 6,
+        "mainAttributes": [
+          25,
+          12,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "615": {
+        "name": "万木春生珠",
+        "tier": 3,
+        "slot": 6,
+        "mainAttributes": [
+          26,
+          29,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "616": {
+        "name": "厚土载物印",
+        "tier": 3,
+        "slot": 6,
+        "mainAttributes": [
+          27,
+          71,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "617": {
+        "name": "山鬼斧",
+        "tier": 3,
+        "slot": 6,
+        "mainAttributes": [
+          81,
+          56,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "618": {
+        "name": "破岩锄",
+        "tier": 3,
+        "slot": 6,
+        "mainAttributes": [
+          82,
+          57,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "619": {
+        "name": "百草铲",
+        "tier": 3,
+        "slot": 6,
+        "mainAttributes": [
+          83,
+          58,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "620": {
+        "name": "锻星锤",
+        "tier": 3,
+        "slot": 6,
+        "mainAttributes": [
+          84,
+          59,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "621": {
+        "name": "天工针",
+        "tier": 3,
+        "slot": 6,
+        "mainAttributes": [
+          85,
+          60,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "622": {
+        "name": "青乌炉",
+        "tier": 3,
+        "slot": 6,
+        "mainAttributes": [
+          86,
+          61,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "623": {
+        "name": "量天尺",
+        "tier": 3,
+        "slot": 6,
+        "mainAttributes": [
+          87,
+          62,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "624": {
+        "name": "天机盘",
+        "tier": 3,
+        "slot": 6,
+        "mainAttributes": [
+          88,
+          63,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "625": {
+        "name": "点将令",
+        "tier": 3,
+        "slot": 6,
+        "mainAttributes": [
+          89,
+          64,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "626": {
+        "name": "修行玉",
+        "tier": 3,
+        "slot": 6,
+        "mainAttributes": [
+          36,
+          38,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "627": {
+        "name": "传功卷",
+        "tier": 3,
+        "slot": 6,
+        "mainAttributes": [
+          37,
+          19,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "628": {
+        "name": "聚财符",
+        "tier": 3,
+        "slot": 6,
+        "mainAttributes": [
+          35,
+          36,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "629": {
+        "name": "全才录",
+        "tier": 3,
+        "slot": 6,
+        "mainAttributes": [
+          36,
+          37,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "630": {
+        "name": "秘宝图",
+        "tier": 3,
+        "slot": 6,
+        "mainAttributes": [
+          35,
+          53,
+          0
+        ],
+        "mainSettings": [
+          100,
+          100,
+          0
+        ]
+      },
+      "631": {
+        "name": "破军战神令",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          19,
+          12,
+          13
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "632": {
+        "name": "追风逐影牌",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          20,
+          29,
+          17
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "633": {
+        "name": "三清仙师杖",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          21,
+          18,
+          13
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "634": {
+        "name": "天爆地裂符",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          12,
+          13,
+          71
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "635": {
+        "name": "疾风迅雷旗",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          29,
+          17,
+          71
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "636": {
+        "name": "千机万变符",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          10,
+          18,
+          13
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "637": {
+        "name": "屠神灭魔令",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          33,
+          32,
+          71
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "638": {
+        "name": "撼地战神锤",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          19,
+          18,
+          71
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "639": {
+        "name": "军师谋策扇",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          10,
+          18,
+          71
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "640": {
+        "name": "雷霆剑气符",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          99,
+          13,
+          71
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "641": {
+        "name": "玄水寒冰令",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          100,
+          18,
+          12
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "642": {
+        "name": "离火焚天印",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          101,
+          13,
+          12
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "643": {
+        "name": "乙木长生珠",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          102,
+          29,
+          17
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "644": {
+        "name": "戊土厚土钟",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          103,
+          71,
+          28
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "645": {
+        "name": "战魂牌",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          12,
+          13,
+          36
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "646": {
+        "name": "征伐令",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          28,
+          71,
+          38
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "647": {
+        "name": "炼体丹经",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          17,
+          29,
+          111
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "648": {
+        "name": "斩龙斧",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          81,
+          56,
+          90
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "649": {
+        "name": "裂地锄",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          82,
+          57,
+          91
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "650": {
+        "name": "万物犁",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          83,
+          58,
+          92
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "651": {
+        "name": "补天锤",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          84,
+          59,
+          93
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "652": {
+        "name": "七窍针",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          85,
+          60,
+          94
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "653": {
+        "name": "九转炉",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          86,
+          61,
+          95
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "654": {
+        "name": "神工尺",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          87,
+          62,
+          96
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "655": {
+        "name": "河洛盘",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          88,
+          63,
+          97
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "656": {
+        "name": "虎符令",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          89,
+          64,
+          98
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "657": {
+        "name": "掠财战令",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          35,
+          31,
+          17
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "658": {
+        "name": "赏金猎人章",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          35,
+          33,
+          71
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "659": {
+        "name": "九转金丹",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          36,
+          38,
+          71
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "660": {
+        "name": "传道卷",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          37,
+          38,
+          12
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "661": {
+        "name": "大道丹书",
+        "tier": 4,
+        "slot": 6,
+        "mainAttributes": [
+          36,
+          37,
+          18
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "662": {
+        "name": "霸王神力印",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          77,
+          19,
+          13
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "663": {
+        "name": "影舞天袭钟",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          78,
+          20,
+          29
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "664": {
+        "name": "紫霄神雷符",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          79,
+          21,
+          18
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "665": {
+        "name": "穿云贯日弓",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          30,
+          20,
+          17
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "666": {
+        "name": "裂地撼天锤",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          19,
+          18,
+          71
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "667": {
+        "name": "火神爆炎令",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          101,
+          13,
+          71
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "668": {
+        "name": "玄冰冻神令",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          100,
+          18,
+          71
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "669": {
+        "name": "卧龙军师扇",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          10,
+          18,
+          71
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "670": {
+        "name": "一击必杀符",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          12,
+          13,
+          71
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "671": {
+        "name": "屠魔大圣令",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          33,
+          32,
+          71
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "672": {
+        "name": "雷霆斩仙符",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          99,
+          13,
+          71
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "673": {
+        "name": "玄水冰封令",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          100,
+          18,
+          13
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "674": {
+        "name": "离火焚世印",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          101,
+          13,
+          71
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "675": {
+        "name": "乙木万剑诀",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          102,
+          29,
+          17
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "676": {
+        "name": "戊土镇岳钟",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          103,
+          71,
+          28
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "677": {
+        "name": "战圣印",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          28,
+          71,
+          38
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "678": {
+        "name": "破阵悟道旗",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          12,
+          13,
+          111
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "679": {
+        "name": "文武佩",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          36,
+          28,
+          71
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "680": {
+        "name": "百工圣祖令",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          80,
+          51,
+          52
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "681": {
+        "name": "开山斧",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          81,
+          56,
+          90
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "682": {
+        "name": "移山锄",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          82,
+          57,
+          91
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "683": {
+        "name": "青帝铲",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          83,
+          58,
+          92
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "684": {
+        "name": "熔仙锤",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          84,
+          59,
+          93
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "685": {
+        "name": "织女梭",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          85,
+          60,
+          94
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "686": {
+        "name": "丹鼎炉",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          86,
+          61,
+          95
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "687": {
+        "name": "鲁班尺",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          87,
+          62,
+          96
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "688": {
+        "name": "八卦盘",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          88,
+          63,
+          97
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "689": {
+        "name": "太公令",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          89,
+          64,
+          98
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "690": {
+        "name": "夺宝战旗",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          35,
+          17,
+          29
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "691": {
+        "name": "战神赏金令",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          35,
+          33,
+          71
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "692": {
+        "name": "混沌道果",
+        "tier": 5,
+        "slot": 6,
+        "mainAttributes": [
+          36,
+          38,
+          33
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "693": {
+        "name": "盘古开天斧",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          77,
+          71,
+          13
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "694": {
+        "name": "黄泉引渡刺",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          78,
+          12,
+          13
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "695": {
+        "name": "鸿钧造化杖",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          79,
+          71,
+          18
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "696": {
+        "name": "后羿射日弓",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          30,
+          20,
+          17
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "697": {
+        "name": "共工触山锤",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          19,
+          18,
+          71
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "698": {
+        "name": "炎帝焚天令",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          101,
+          13,
+          71
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "699": {
+        "name": "冰夷封河令",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          100,
+          18,
+          71
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "700": {
+        "name": "太乙雷神符",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          99,
+          13,
+          71
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "701": {
+        "name": "水伯天吴令",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          100,
+          18,
+          71
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "702": {
+        "name": "祝融神火印",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          101,
+          13,
+          12
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "703": {
+        "name": "句芒青帝珠",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          102,
+          29,
+          71
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "704": {
+        "name": "后土黄灵钟",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          103,
+          71,
+          28
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "705": {
+        "name": "诛仙四剑",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          12,
+          13,
+          71
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "706": {
+        "name": "东皇太一钟",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          71,
+          33,
+          112
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "707": {
+        "name": "姜尚封神榜",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          10,
+          18,
+          71
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "708": {
+        "name": "刑天战魂印",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          12,
+          13,
+          36
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "709": {
+        "name": "玉虚道法卷",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          18,
+          71,
+          110
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "710": {
+        "name": "斗战胜佛令",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          28,
+          13,
+          38
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "711": {
+        "name": "文曲星官笔",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          36,
+          18,
+          71
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "712": {
+        "name": "有巢神工令",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          80,
+          52,
+          54
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "713": {
+        "name": "太上八卦炉",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          84,
+          93,
+          54
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "714": {
+        "name": "娲皇造物鼎",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          86,
+          95,
+          52
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "715": {
+        "name": "玄女兵法",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          89,
+          98,
+          55
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "716": {
+        "name": "巨灵神斧",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          81,
+          56,
+          90
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "717": {
+        "name": "愚公移山锄",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          82,
+          57,
+          91
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "718": {
+        "name": "神农百草犁",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          83,
+          58,
+          92
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "719": {
+        "name": "天工开物卷",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          85,
+          60,
+          94
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "720": {
+        "name": "鲁班营造尺",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          87,
+          62,
+          96
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "721": {
+        "name": "伏羲八卦盘",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          88,
+          63,
+          97
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "722": {
+        "name": "聚宝仙盆",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          35,
+          71,
+          17
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "723": {
+        "name": "财神金蛟剪",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          35,
+          33,
+          13
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "724": {
+        "name": "混沌道胎",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          36,
+          38,
+          15
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      },
+      "725": {
+        "name": "创世神印",
+        "tier": 6,
+        "slot": 6,
+        "mainAttributes": [
+          28,
+          71,
+          38
+        ],
+        "mainSettings": [
+          100,
+          100,
+          100
+        ]
+      }
+    },
+    "qualities": {
+      "min": 1,
+      "max": 6,
+      "capBase": 10,
+      "capStep": 5
+    },
+    "cost": {
+      "currency": "souls",
+      "base": 10,
+      "growth": 1.05,
+      "tierStep": 30,
+      "levelStep": 4,
+      "offset": -1,
+      "rounding": "round"
+    },
+    "decompose": {
+      "currency": "souls",
+      "byTier": {
+        "1": 20,
+        "2": 200,
+        "3": 1000,
+        "4": 10000,
+        "5": 50000,
+        "6": 500000
+      },
+      "ignores": [
+        "level",
+        "quality",
+        "coefficient",
+        "investment"
+      ]
+    },
+    "limits": {
+      "planes": [
+        7,
+        9
+      ],
+      "slot": 6,
+      "minTier": 1,
+      "maxTier": 6,
+      "quantity": 1,
+      "backpackOwner": 0,
+      "equipPointer": {
+        "y": 21,
+        "z": 2
+      },
+      "moveColumns": 50,
+      "columns": {
+        "level": 6,
+        "owner": 7,
+        "locked": 22
+      },
+      "experience": false,
+      "advanced": false,
+      "metadata": "native-conversion-witness-required"
+    }
   }
 }
