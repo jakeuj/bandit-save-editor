@@ -9,6 +9,8 @@ const mime = {'.html': 'text/html; charset=utf-8', '.js': 'text/javascript; char
   '.webmanifest': 'application/manifest+json', '.svg': 'image/svg+xml', '.png': 'image/png'};
 
 async function createSite() {
+  const port = Number(process.env.BANDIT_BROWSER_PORT || 0);
+  if (!Number.isInteger(port) || port < 0 || port > 65535) throw Error('Invalid BANDIT_BROWSER_PORT');
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'bandit-site-'));
   const files = ['index.html', 'sw.js', 'manifest.webmanifest', ...(await fs.readdir(path.join(root, 'assets'))).map(f => 'assets/' + f)];
   await fs.mkdir(path.join(dir, 'assets'));
@@ -23,7 +25,7 @@ async function createSite() {
       res.end(req.method === 'HEAD' ? undefined : bytes);
     } catch { res.writeHead(500); res.end(); }
   });
-  await new Promise((resolve, reject) => { server.once('error', reject); server.listen(0, '127.0.0.1', resolve); });
+  await new Promise((resolve, reject) => { server.once('error', reject); server.listen(port, '127.0.0.1', resolve); });
   return {
     dir, url: `http://127.0.0.1:${server.address().port}/`,
     async upgrade() {

@@ -1,10 +1,26 @@
 {
-  "date": "2026-10-21",
-  "gameVersion": "V1.0.10.2",
-  "eventFingerprint": "32a36accc1b97e9bb3498eb3be76950e1e72b2e8f7a0cf9ce293b57aa5e0d820",
-  "runtimeFingerprint": "1e1643722efc032824881f03ce4d81df1135e6a8cd8e08d9fd87e56e480ac9f6",
-  "environment": "Windows 11 Enterprise 10.0.26300 / x64 / NW.js 0.82.0 / Chromium 119.0.6045.105",
-  "method": "獨立遊戲、runtime、profile 與存檔；真實 Steam 初始化，原版讀取進度函式從備份載入、原版存檔函式寫出手動存檔，停止程序後以新 PID 重啟並讀回遊戲寫出的檔案",
+  "date": "2026-10-22",
+  "gameVersion": "V1.0.11.2",
+  "steamBuildId": "26126719",
+  "eventFingerprint": "aac06ce18a840ae221d7683fba21182b0dcf4bb7ae1caf3431199264a1c5f62e",
+  "runtimeFingerprint": "3e0febeb8342138ed47d9e8499e3646f4e8ddc2ce89a9faa0bebbad9ba83280e",
+  "fingerprints": {
+    "data.json": "aac06ce18a840ae221d7683fba21182b0dcf4bb7ae1caf3431199264a1c5f62e",
+    "scripts/c3runtime.js": "3e0febeb8342138ed47d9e8499e3646f4e8ddc2ce89a9faa0bebbad9ba83280e",
+    "cl.json": "c121cf702eb6a4edb184d7180ad83d41aa90efca4a1e5e21e652dd1ff24f47b7",
+    "js.json": "5c360c93cd1248fe96d0373428ddae4649698574d032b333432e4b777fcc0ee4",
+    "zy.json": "97d59a029aefbfbba315c9cec7b83a168571def79282eec2be9edbfeb3759188",
+    "sx.json": "6a24e20ad0a70d5ad17a0310f0a9e7619dda5c4718d536a3df51d385abd748e7",
+    "wp.json": "14516d34cedf209c497fca10699e179c26c43558c2a3253bc87c8b33493a82c4",
+    "kj.json": "b051136f1366eb1c990004a4fa8a2d8f90339c7defbc10eb90c68c2ff36e5309",
+    "jz.json": "cf4d691dc7f6814db5ba1e0e28ac206d7a15c58ddccba55a473975461841b0bf",
+    "rw.json": "705f541917d9a62cff9ef5805032fd29496fdc98b03a7f065ff3fc6fab937b4b",
+    "tf.json": "c8a3005201d8f17a0899584baf7e0286b073aa84d4697807edcd44e00902fa1f",
+    "ss.json": "4350cb979c4026ce0d8dc25e7807fde3d29a1d42fbd2e499673614a4f67e1bc7",
+    "lw.json": "7a4f5a5bfd5967f3a74e36aa9a0c2cda132619b2908bdc39b1406da4b346bde6"
+  },
+  "environment": "win32-x64；獨立遊戲、runtime、profile 與存檔；真實 Steam 初始化",
+  "method": "verify-migration.cjs 代表子集：每個副本以原版函式載入、原生存檔、停止後新 PID 重啟讀回，並執行原生效果與後續操作",
   "checks": {
     "loadedIntoMainLayout": true,
     "nativeSaveWritten": true,
@@ -22,6 +38,20 @@
     "subsequentResearchAndTrainingStartStop": true
   },
   "groups": {
+    "randomCharacterSkillCaps": true,
+    "randomCharacterBaseAptitudes": true,
+    "backpackEquipmentQualityUpgrade": true,
+    "backpackEquipmentQualityDowngrade": true,
+    "equipmentQualityUpgrade": true,
+    "equipmentQualityDowngrade": true,
+    "backpackEquipmentLevel": true,
+    "backpackEquipmentAffixCoefficient": true,
+    "backpackEquipmentAffixReplacement": true,
+    "equipmentAffixInitialSelection": true,
+    "equipmentNewItemMarker": true,
+    "equipmentAffixReplacement": true,
+    "equipmentAffixCoefficient": true,
+    "pillAptitudeBonus": true,
     "names": true,
     "characterExperience": true,
     "professionExperience": true,
@@ -31,52 +61,30 @@
     "professionTrainingCap": true,
     "professionTrainingCapAdvanced": true,
     "advancedTechnologyLevel": true,
-    "advancedTechnologyLevelAdvanced": true,
-    "equipmentAffixCoefficient": true,
-    "pillAptitudeBonus": true,
-    "equipmentAffixReplacement": true,
-    "backpackEquipmentLevel": true,
-    "backpackEquipmentAffixCoefficient": true,
-    "backpackEquipmentAffixReplacement": true,
-    "equipmentNewItemMarker": true,
-    "equipmentAffixInitialSelection": true,
-    "backpackEquipmentQualityUpgrade": true,
-    "backpackEquipmentQualityDowngrade": true,
-    "equipmentQualityUpgrade": true,
-    "equipmentQualityDowngrade": true,
-    "randomCharacterBaseAptitudes": true,
-    "randomCharacterSkillCaps": true
+    "advancedTechnologyLevelAdvanced": true
   },
   "scenarios": [
-    "山寨與角色改名",
-    "角色由 1 級跨至 3 級，餘額 500",
-    "已習得職業由 1 級跨至 3 級，保留一位小數餘額 1.5",
-    "伐木技藝由 1 級跨至 3 級，餘額 500",
-    "共用經驗與共用池投入／退款基數不因直接經驗增加而改動"
+    "growth",
+    "advanced-normal",
+    "advanced-overcap",
+    "advanced-followup",
+    "batch2",
+    "affix-replacement",
+    "equipment-workflow",
+    "quality-7-Upgrade",
+    "quality-7-Downgrade",
+    "quality-9-Upgrade",
+    "quality-9-Downgrade",
+    "random-skill-caps-representative",
+    "random-skill-caps-lifecycle",
+    "random-growth-lifecycle",
+    "random-growth-matrix"
   ],
   "limits": [
-    "測試透過真實遊戲函式及本機檔案路徑；沒有模擬所有滑鼠選單操作",
-    "載入後暫停模擬時間以避免工作經驗干擾；不是長時間遊玩測試",
+    "代表子集，不是原版本的完整矩陣；各副本與操作數見各區段 copies",
     "未驗證真實雲端上傳、成就或統計寫入",
-    "本輪為 Windows x64 正式版來源；不表示新版 macOS 啟動器已通過驗證",
-    "v2.1 超限只開放實測範圍 1–1000，科技 33 上限 299；不宣稱所有安全整數均可玩。"
+    "UI 證據依事件摘要native／native"
   ],
-  "fingerprints": {
-    "data.json": "32a36accc1b97e9bb3498eb3be76950e1e72b2e8f7a0cf9ce293b57aa5e0d820",
-    "scripts/c3runtime.js": "1e1643722efc032824881f03ce4d81df1135e6a8cd8e08d9fd87e56e480ac9f6",
-    "cl.json": "c121cf702eb6a4edb184d7180ad83d41aa90efca4a1e5e21e652dd1ff24f47b7",
-    "js.json": "5c360c93cd1248fe96d0373428ddae4649698574d032b333432e4b777fcc0ee4",
-    "zy.json": "8dd8ccc0a6318d3e3a58bc4d9951fb57d281b812e8b3ce1ba68847eb5283c75c",
-    "sx.json": "6a24e20ad0a70d5ad17a0310f0a9e7619dda5c4718d536a3df51d385abd748e7",
-    "wp.json": "14516d34cedf209c497fca10699e179c26c43558c2a3253bc87c8b33493a82c4",
-    "kj.json": "b051136f1366eb1c990004a4fa8a2d8f90339c7defbc10eb90c68c2ff36e5309",
-    "jz.json": "cf4d691dc7f6814db5ba1e0e28ac206d7a15c58ddccba55a473975461841b0bf",
-    "rw.json": "705f541917d9a62cff9ef5805032fd29496fdc98b03a7f065ff3fc6fab937b4b",
-    "tf.json": "c8a3005201d8f17a0899584baf7e0286b073aa84d4697807edcd44e00902fa1f",
-    "ss.json": "4350cb979c4026ce0d8dc25e7807fde3d29a1d42fbd2e499673614a4f67e1bc7",
-    "lw.json": "7a4f5a5bfd5967f3a74e36aa9a0c2cda132619b2908bdc39b1406da4b346bde6"
-  },
-  "steamBuildId": "26094666",
   "editingLimits": {
     "equipment": {
       "max": 1000
@@ -91,57 +99,32 @@
       }
     }
   },
+  "migration": {
+    "runner": "verify-migration.cjs",
+    "previousGameVersion": "V1.0.10.2",
+    "completed": true
+  },
   "advancedEditing": {
-    "date": "2026-10-21",
-    "sourceFiles": 13,
-    "cases": [
+    "date": "2026-10-22",
+    "coverage": "representative",
+    "copies": [
       {
-        "name": "downgrade-and-unlock",
-        "equipmentLevel": 3,
-        "trainingCap": 10,
-        "technologyLevels": 1,
-        "nativeSaveAndRestart": true
+        "name": "advanced-normal",
+        "operations": 16
       },
       {
-        "name": "normal-upper",
-        "equipmentLevel": 10,
-        "trainingCap": 15,
-        "technologyLevels": 119,
-        "nativeSaveAndRestart": true
+        "name": "advanced-overcap",
+        "operations": 16
       },
       {
-        "name": "over-cap",
-        "equipmentLevel": 11,
-        "trainingCap": 16,
-        "technologyLevels": 120,
-        "nativeSaveAndRestart": true
-      },
-      {
-        "name": "advanced-boundary",
-        "equipmentLevel": 1000,
-        "trainingCap": 1000,
-        "technologyLevels": 1000,
-        "technology33Exception": 299,
-        "nativeSaveAndRestart": true
-      },
-      {
-        "name": "subsequent-actions",
-        "equipmentLevel": 3,
-        "trainingCap": 10,
-        "technologyLevels": 1,
-        "nativeSaveAndRestart": true
+        "name": "advanced-followup",
+        "operations": 3
       }
-    ],
-    "effects": "115 項原版裝備屬性計算及 70 項科技加成皆有限，重啟後完全一致",
-    "scope": "一般裝備一組穿戴實體；14 個有效進階科技；代表職業解鎖、轉職、自然經驗與操練；研究啟動／停止。不是所有裝備、角色組合或長時間遊玩測試。",
-    "additionalReviewedFingerprint": {
-      "jc.json": "b5f2319b039dee5c6b185ced4a0fdf8fede0b0c0c4793449bd7956dcc0ca857e"
-    }
+    ]
   },
   "batch2": {
-    "date": "2026-10-21",
-    "gameVersion": "V1.0.10.2",
-    "steamBuildId": "26094666",
+    "date": "2026-10-22",
+    "gameVersion": "V1.0.11.2",
     "fingerprints": {
       "yx.json": "58b8eb984cf8190f52ed4e53d044079733cf82096224dd7014ec36e1da2b45bc",
       "tz.json": "a4b008981f39abc371b5673abe4c780bef5c91229a5ae3a42d2e8fef4e780c74"
@@ -172,30 +155,23 @@
       "nativePillConsumption": true,
       "rebirthClears": true
     },
-    "cases": [
-      "品質2–6各下界與上界，共10組；三項丹藥歸零／保守上限",
-      "有名範本與小數係數，原生卸穿、再次洗練、三種服藥及重生後存檔／重啟",
-      "九階普通裝備，品質6係數119.99與三項丹藥上限，存檔／重啟"
-    ],
-    "scope": [
-      "一般隨機角色的非零天賦與有名角色範本；無結丹紀錄",
-      "115項原生裝備屬性有限，3種資質公式與修改器相符，重啟結果一致",
-      "原生服藥產生小數增量的案例保留唯讀；不自動取整",
-      "穿戴格以wp表決定；曾因驗證腳本誤用格1而失敗，改為正確格3於新副本重驗。失敗副本不列通過案例",
-      "重生為原版函式生命週期測試，不宣稱符合玩家當下UI重生資格",
-      "代表性T1及T9、Q2–6與合法詞條；不是所有模板／槽位／角色組合或長時間遊玩",
-      "未開放超限、品質、詞條ID、套裝、寶物、內丹、未知特殊狀態及背包直接編輯"
+    "coverage": "representative",
+    "copies": [
+      {
+        "name": "batch2",
+        "operations": 11
+      }
     ]
   },
   "affixReplacement": {
-    "date": "2026-10-21",
-    "gameVersion": "V1.0.10.2",
+    "date": "2026-10-22",
+    "gameVersion": "V1.0.11.2",
     "fingerprints": {
-      "data.json": "32a36accc1b97e9bb3498eb3be76950e1e72b2e8f7a0cf9ce293b57aa5e0d820",
-      "scripts/c3runtime.js": "1e1643722efc032824881f03ce4d81df1135e6a8cd8e08d9fd87e56e480ac9f6",
+      "data.json": "aac06ce18a840ae221d7683fba21182b0dcf4bb7ae1caf3431199264a1c5f62e",
+      "scripts/c3runtime.js": "3e0febeb8342138ed47d9e8499e3646f4e8ddc2ce89a9faa0bebbad9ba83280e",
       "cl.json": "c121cf702eb6a4edb184d7180ad83d41aa90efca4a1e5e21e652dd1ff24f47b7",
       "js.json": "5c360c93cd1248fe96d0373428ddae4649698574d032b333432e4b777fcc0ee4",
-      "zy.json": "8dd8ccc0a6318d3e3a58bc4d9951fb57d281b812e8b3ce1ba68847eb5283c75c",
+      "zy.json": "97d59a029aefbfbba315c9cec7b83a168571def79282eec2be9edbfeb3759188",
       "sx.json": "6a24e20ad0a70d5ad17a0310f0a9e7619dda5c4718d536a3df51d385abd748e7",
       "wp.json": "14516d34cedf209c497fca10699e179c26c43558c2a3253bc87c8b33493a82c4",
       "kj.json": "b051136f1366eb1c990004a4fa8a2d8f90339c7defbc10eb90c68c2ff36e5309",
@@ -256,7 +232,7 @@
         112
       ]
     },
-    "dataHash": "1aadedbe9ad3766d0e8820535855666319f0adf114e971f7b912323205678749",
+    "dataHash": "922a8c5cb0d721c22fc06366d709f2a85a55ff0a55867d0dcbc015a9e9e8323d",
     "checks": {
       "nativeEffects": true,
       "load": true,
@@ -266,78 +242,24 @@
       "equipmentCycle": true,
       "nativeWash": true
     },
-    "cases": {
-      "quality": [
-        2,
-        3,
-        4,
-        5,
-        6
-      ],
-      "tiers": [
-        1,
-        9
-      ],
-      "replacements": 380,
-      "attributes": [
-        12,
-        13,
-        17,
-        18,
-        19,
-        20,
-        21,
-        23,
-        24,
-        25,
-        26,
-        27,
-        31,
-        32,
-        33,
-        35,
-        36,
-        37,
-        38,
-        51,
-        52,
-        53,
-        54,
-        55,
-        56,
-        57,
-        58,
-        59,
-        60,
-        61,
-        62,
-        63,
-        64,
-        71,
-        72,
-        110,
-        111,
-        112
-      ],
-      "subsequentWashes": 76,
-      "originSlotMoveAndReedit": true,
-      "coefficientDecimals": [
-        50.01,
-        50.02
-      ],
-      "note": "Five source-matched isolated load/save/stop/new-PID restart matrices; 38 native stat comparisons per item, plus native equipment move, wash and re-edit persistence. Raw evidence outside repo; see precise-affix-editing research."
-    }
+    "coverage": "representative",
+    "copies": [
+      {
+        "name": "affix-replacement",
+        "operations": 12
+      }
+    ]
   },
   "equipmentWorkflow": {
     "date": "2026-10-22",
-    "platform": "win32",
-    "gameVersion": "V1.0.10.2",
+    "platform": "win32-x64",
+    "gameVersion": "V1.0.11.2",
     "fingerprints": {
-      "data.json": "32a36accc1b97e9bb3498eb3be76950e1e72b2e8f7a0cf9ce293b57aa5e0d820",
-      "scripts/c3runtime.js": "1e1643722efc032824881f03ce4d81df1135e6a8cd8e08d9fd87e56e480ac9f6",
+      "data.json": "aac06ce18a840ae221d7683fba21182b0dcf4bb7ae1caf3431199264a1c5f62e",
+      "scripts/c3runtime.js": "3e0febeb8342138ed47d9e8499e3646f4e8ddc2ce89a9faa0bebbad9ba83280e",
       "cl.json": "c121cf702eb6a4edb184d7180ad83d41aa90efca4a1e5e21e652dd1ff24f47b7",
       "js.json": "5c360c93cd1248fe96d0373428ddae4649698574d032b333432e4b777fcc0ee4",
-      "zy.json": "8dd8ccc0a6318d3e3a58bc4d9951fb57d281b812e8b3ce1ba68847eb5283c75c",
+      "zy.json": "97d59a029aefbfbba315c9cec7b83a168571def79282eec2be9edbfeb3759188",
       "sx.json": "6a24e20ad0a70d5ad17a0310f0a9e7619dda5c4718d536a3df51d385abd748e7",
       "wp.json": "14516d34cedf209c497fca10699e179c26c43558c2a3253bc87c8b33493a82c4",
       "kj.json": "b051136f1366eb1c990004a4fa8a2d8f90339c7defbc10eb90c68c2ff36e5309",
@@ -386,7 +308,7 @@
         418018161514165
       ]
     },
-    "dataHash": "5e2efb2c1c57ce6fe726c0b41b10c7d9227551e877e82bb688c0247458a949eb",
+    "dataHash": "77568986d25320f6cd863de970d6c47450d9d87a34de1ccf10e3a02ba3271858",
     "groups": {
       "backpackEquipmentLevel": {
         "checks": {
@@ -396,21 +318,6 @@
           "originalHashes": true,
           "nativeEffects": true,
           "lifecycle": true
-        },
-        "coverage": {
-          "qualities": [
-            1,
-            2,
-            3,
-            4,
-            5,
-            6
-          ],
-          "tiers": [
-            1,
-            9
-          ],
-          "cases": 12
         }
       },
       "backpackEquipmentAffixCoefficient": {
@@ -421,60 +328,6 @@
           "originalHashes": true,
           "nativeEffects": true,
           "lifecycle": true
-        },
-        "coverage": {
-          "qualities": [
-            2,
-            3,
-            4,
-            5,
-            6
-          ],
-          "newItemMarkers": [
-            0,
-            1
-          ],
-          "attributeIds": [
-            12,
-            13,
-            17,
-            18,
-            19,
-            20,
-            21,
-            23,
-            24,
-            25,
-            26,
-            27,
-            31,
-            32,
-            33,
-            35,
-            36,
-            37,
-            38,
-            51,
-            52,
-            53,
-            54,
-            55,
-            56,
-            57,
-            58,
-            59,
-            60,
-            61,
-            62,
-            63,
-            64,
-            71,
-            72,
-            110,
-            111,
-            112
-          ],
-          "cases": 380
         }
       },
       "backpackEquipmentAffixReplacement": {
@@ -485,124 +338,6 @@
           "originalHashes": true,
           "nativeEffects": true,
           "lifecycle": true
-        },
-        "coverage": {
-          "qualities": [
-            2,
-            3,
-            4,
-            5,
-            6
-          ],
-          "newItemMarkers": [
-            0,
-            1
-          ],
-          "attributeIds": [
-            12,
-            13,
-            17,
-            18,
-            19,
-            20,
-            21,
-            23,
-            24,
-            25,
-            26,
-            27,
-            31,
-            32,
-            33,
-            35,
-            36,
-            37,
-            38,
-            51,
-            52,
-            53,
-            54,
-            55,
-            56,
-            57,
-            58,
-            59,
-            60,
-            61,
-            62,
-            63,
-            64,
-            71,
-            72,
-            110,
-            111,
-            112
-          ],
-          "cases": 380
-        }
-      },
-      "equipmentNewItemMarker": {
-        "checks": {
-          "load": true,
-          "save": true,
-          "restart": true,
-          "originalHashes": true,
-          "nativeEffects": true,
-          "lifecycle": true
-        },
-        "coverage": {
-          "qualities": [
-            2,
-            3,
-            4,
-            5,
-            6
-          ],
-          "newItemMarkers": [
-            0,
-            1
-          ],
-          "attributeIds": [
-            12,
-            13,
-            17,
-            18,
-            19,
-            20,
-            21,
-            23,
-            24,
-            25,
-            26,
-            27,
-            31,
-            32,
-            33,
-            35,
-            36,
-            37,
-            38,
-            51,
-            52,
-            53,
-            54,
-            55,
-            56,
-            57,
-            58,
-            59,
-            60,
-            61,
-            62,
-            63,
-            64,
-            71,
-            72,
-            110,
-            111,
-            112
-          ],
-          "cases": 380
         }
       },
       "equipmentAffixInitialSelection": {
@@ -615,308 +350,48 @@
           "lifecycle": true,
           "selectionUi": true
         },
-        "coverage": {
-          "planes": [
-            7,
-            9
-          ],
-          "qualities": [
-            2,
-            3,
-            4,
-            5,
-            6
-          ],
-          "allValidSlots": true,
-          "newItemMarkers": [
-            0,
-            1
-          ],
-          "cases": 70,
-          "combinedIdCoefficientFlagCases": 10
-        },
-        "selectionUi": {
-          "date": "2026-10-22",
-          "gameVersion": "V1.0.10.2",
-          "build": 26094666,
-          "entry": "世界 → 万魂塔 → 地区 → 词条洗练",
-          "quality": 3,
-          "plane": 7,
-          "unwashedBothSlotsEnabled": true,
-          "nativeFirstSlotLocksOther": true,
-          "editorSelectedSlot2LocksOther": true,
-          "disabledSlotNoChange": true,
-          "nativeRewashCost": 100,
-          "saveRestart": true,
-          "originalHashes": true,
-          "evidence": "docs/research/equipment-workflow.md"
-        },
         "uiEvidence": {
           "source": "native",
-          "gameVersion": "V1.0.10.2",
+          "gameVersion": "V1.0.11.2",
           "eventSids": [
             780562691790658,
             619743323262026
           ],
-          "eventDigest": "0f790e3d8f9de3a1c536400264139f9c9d12c5d29d07d63431b62ea84623ac1f"
+          "eventDigest": "4d84fc09ac4bca2c56cadbecd77aa785051f9be4a42e0d0980a6dcd3c192fa55",
+          "cases": 2,
+          "washes": 2,
+          "evidenceHash": "95d784773d15823f34aec0342d9c06565e8802c6a1d98b8609f282b3df11fec1"
+        }
+      },
+      "equipmentNewItemMarker": {
+        "checks": {
+          "load": true,
+          "save": true,
+          "restart": true,
+          "originalHashes": true,
+          "nativeEffects": true,
+          "lifecycle": true
         }
       }
     },
-    "lifecycle": {
-      "nativeWashes": 96,
-      "soulPerWash": 100,
-      "equipUnequip": true,
-      "displaySortPreservesRows": true,
-      "newPidRestart": true,
-      "movedRowReedit": true,
-      "overlappingPlaneRows": true
-    },
-    "note": "464 matrix cases plus one moved-row re-edit; original files unchanged; first selection remains gated pending native UI. Raw evidence outside repo."
-  },
-  "equipmentQuality": {
-    "date": "2026-10-22",
-    "gameVersion": "V1.0.10.2",
-    "build": 26094666,
-    "fingerprints": {
-      "data.json": "32a36accc1b97e9bb3498eb3be76950e1e72b2e8f7a0cf9ce293b57aa5e0d820",
-      "scripts/c3runtime.js": "1e1643722efc032824881f03ce4d81df1135e6a8cd8e08d9fd87e56e480ac9f6",
-      "cl.json": "c121cf702eb6a4edb184d7180ad83d41aa90efca4a1e5e21e652dd1ff24f47b7",
-      "js.json": "5c360c93cd1248fe96d0373428ddae4649698574d032b333432e4b777fcc0ee4",
-      "zy.json": "8dd8ccc0a6318d3e3a58bc4d9951fb57d281b812e8b3ce1ba68847eb5283c75c",
-      "sx.json": "6a24e20ad0a70d5ad17a0310f0a9e7619dda5c4718d536a3df51d385abd748e7",
-      "wp.json": "14516d34cedf209c497fca10699e179c26c43558c2a3253bc87c8b33493a82c4",
-      "kj.json": "b051136f1366eb1c990004a4fa8a2d8f90339c7defbc10eb90c68c2ff36e5309",
-      "jz.json": "cf4d691dc7f6814db5ba1e0e28ac206d7a15c58ddccba55a473975461841b0bf",
-      "rw.json": "705f541917d9a62cff9ef5805032fd29496fdc98b03a7f065ff3fc6fab937b4b",
-      "tf.json": "c8a3005201d8f17a0899584baf7e0286b073aa84d4697807edcd44e00902fa1f",
-      "ss.json": "4350cb979c4026ce0d8dc25e7807fde3d29a1d42fbd2e499673614a4f67e1bc7",
-      "lw.json": "7a4f5a5bfd5967f3a74e36aa9a0c2cda132619b2908bdc39b1406da4b346bde6",
-      "yx.json": "58b8eb984cf8190f52ed4e53d044079733cf82096224dd7014ec36e1da2b45bc",
-      "tz.json": "a4b008981f39abc371b5673abe4c780bef5c91229a5ae3a42d2e8fef4e780c74"
-    },
-    "dataHash": "d954d023af5daab2e44773daaf4e2547e14fc4b63fc992c0255ee48ea301590a",
-    "formulaHash": "0908474e4ceb3e087b0f7bdb17376c1ad303d8953934fdab5727a881280056f9",
-    "groups": {
-      "backpackEquipmentQualityUpgrade": {
-        "checks": {
-          "load": true,
-          "save": true,
-          "restart": true,
-          "originalHashes": true,
-          "nativeEffects": true,
-          "lifecycle": true,
-          "qualityUi": true
-        },
-        "cases": 200,
-        "evidenceHash": "eeca7f3cef850c44be79b9736a76183c75b04fab2611351733d5cf9c9eee22a8",
-        "effectsHash": "f85ddf183e56db1c99ff6b057f8dfe75fe52089c70394e59415c9fa94193078d",
-        "lifecycleHash": "5d49e31e0d3ff696e432e8546326104b131b8745505164795eeef64ff49260c2",
-        "pids": [
-          47160,
-          51640,
-          51640,
-          47540
-        ],
-        "uiEvidence": {
-          "source": "native",
-          "gameVersion": "V1.0.10.2",
-          "eventSids": [
-            680719446639986,
-            538305116886112,
-            589712995086958,
-            910195347276964,
-            713681756866045,
-            780562691790658,
-            619743323262026
-          ],
-          "eventDigest": "a2b56478d96ae3ecd0623117479f5d465aa0f84f9cf1ead5b5528a0f975d2707"
-        }
-      },
-      "backpackEquipmentQualityDowngrade": {
-        "checks": {
-          "load": true,
-          "save": true,
-          "restart": true,
-          "originalHashes": true,
-          "nativeEffects": true,
-          "lifecycle": true,
-          "qualityUi": true
-        },
-        "cases": 200,
-        "evidenceHash": "b196b6c8fd8c4bea6cb927acc73b3f074a7645013d60439cd51efe79b50e9e7e",
-        "effectsHash": "c82976ffadf7993a742756f2c943fb317ecbea7f4aa4c7153dcbdc00c4bc3c95",
-        "lifecycleHash": "abc799c7776e46ee01628e02007d7669c2cacc6a03bb4870fda735b64f5c2f7c",
-        "pids": [
-          51132,
-          36584,
-          36584,
-          47036
-        ],
-        "uiEvidence": {
-          "source": "native",
-          "gameVersion": "V1.0.10.2",
-          "eventSids": [
-            680719446639986,
-            538305116886112,
-            589712995086958,
-            910195347276964,
-            713681756866045,
-            780562691790658,
-            619743323262026
-          ],
-          "eventDigest": "a2b56478d96ae3ecd0623117479f5d465aa0f84f9cf1ead5b5528a0f975d2707"
-        }
-      },
-      "equipmentQualityUpgrade": {
-        "checks": {
-          "load": true,
-          "save": true,
-          "restart": true,
-          "originalHashes": true,
-          "nativeEffects": true,
-          "lifecycle": true,
-          "qualityUi": true
-        },
-        "cases": 200,
-        "evidenceHash": "70c0a76db756926876f6ea7f05fd132807e3f0a1f69bdc63a595e78fbe30b55d",
-        "effectsHash": "b90263a8d6dfb98438a8f2c41f29f60928c2651f4d4f928adc71fed7bbf96b26",
-        "lifecycleHash": "b7f210768ebb99c37ddb313ff9957c5a7f8b5b4fb80318edeff8b2fd136ec923",
-        "pids": [
-          50952,
-          5708,
-          5708,
-          41768
-        ],
-        "uiEvidence": {
-          "source": "native",
-          "gameVersion": "V1.0.10.2",
-          "eventSids": [
-            680719446639986,
-            538305116886112,
-            589712995086958,
-            910195347276964,
-            713681756866045,
-            780562691790658,
-            619743323262026
-          ],
-          "eventDigest": "a2b56478d96ae3ecd0623117479f5d465aa0f84f9cf1ead5b5528a0f975d2707"
-        }
-      },
-      "equipmentQualityDowngrade": {
-        "checks": {
-          "load": true,
-          "save": true,
-          "restart": true,
-          "originalHashes": true,
-          "nativeEffects": true,
-          "lifecycle": true,
-          "qualityUi": true
-        },
-        "cases": 200,
-        "evidenceHash": "259362b4b18aaaf3f98dd596240d4d0821acf37607285aef470bdcc1fcb45b74",
-        "effectsHash": "4751d4941a5c00d9f226c71ad67a2efc4474bcbd5554ae660d35705f75677524",
-        "lifecycleHash": "b374eac57c885d02f1f38149728be560369dcd9a4b5c4424286a0f0b9ff733cd",
-        "pids": [
-          44808,
-          36336,
-          36336,
-          19256
-        ],
-        "uiEvidence": {
-          "source": "native",
-          "gameVersion": "V1.0.10.2",
-          "eventSids": [
-            680719446639986,
-            538305116886112,
-            589712995086958,
-            910195347276964,
-            713681756866045,
-            780562691790658,
-            619743323262026
-          ],
-          "eventDigest": "a2b56478d96ae3ecd0623117479f5d465aa0f84f9cf1ead5b5528a0f975d2707"
-        }
-      }
-    },
-    "formulaCases": 6592,
-    "formulaEvidenceHash": "8fcb57189e82d8de99e0ec8d1d014b637d35ae65e70a565e6118a9890554b52d",
-    "ui": {
-      "cases": 6,
-      "washes": 6,
-      "cost": 600,
-      "sourceHash": "c970efe0c822cf38af10cc42fa0905b9a76f8f12b4dff23d822179570564f53c",
-      "snapshotsHash": "7cec6f0bd9452a1ef2ada9a8a793c36bdf885872135097130811e16c359780f4"
-    },
-    "extra": {
-      "sameRows": true,
-      "postMoveEdit": true,
-      "sourceHash": "98ca0fc19138aa5b248b705f8c7ff785fe0d07142d102c3c94b2962a518fcb98"
-    },
-    "note": "品質四群組各200件原生效果／存檔／新PID與洗練穿脫；背包及穿戴代表UI、30品質轉換、243範本／54效果公式，原檔與來源雜湊不變。原始payload及log留repo外。"
-  },
-  "randomCharacterGrowth": {
-    "date": "2026-10-22",
-    "gameVersion": "V1.0.10.2",
-    "platform": "darwin-arm64",
-    "fingerprints": {
-      "data.json": "32a36accc1b97e9bb3498eb3be76950e1e72b2e8f7a0cf9ce293b57aa5e0d820",
-      "scripts/c3runtime.js": "1e1643722efc032824881f03ce4d81df1135e6a8cd8e08d9fd87e56e480ac9f6",
-      "cl.json": "c121cf702eb6a4edb184d7180ad83d41aa90efca4a1e5e21e652dd1ff24f47b7",
-      "js.json": "5c360c93cd1248fe96d0373428ddae4649698574d032b333432e4b777fcc0ee4",
-      "zy.json": "8dd8ccc0a6318d3e3a58bc4d9951fb57d281b812e8b3ce1ba68847eb5283c75c",
-      "sx.json": "6a24e20ad0a70d5ad17a0310f0a9e7619dda5c4718d536a3df51d385abd748e7",
-      "wp.json": "14516d34cedf209c497fca10699e179c26c43558c2a3253bc87c8b33493a82c4",
-      "kj.json": "b051136f1366eb1c990004a4fa8a2d8f90339c7defbc10eb90c68c2ff36e5309",
-      "jz.json": "cf4d691dc7f6814db5ba1e0e28ac206d7a15c58ddccba55a473975461841b0bf",
-      "rw.json": "705f541917d9a62cff9ef5805032fd29496fdc98b03a7f065ff3fc6fab937b4b",
-      "tf.json": "c8a3005201d8f17a0899584baf7e0286b073aa84d4697807edcd44e00902fa1f",
-      "ss.json": "4350cb979c4026ce0d8dc25e7807fde3d29a1d42fbd2e499673614a4f67e1bc7",
-      "lw.json": "7a4f5a5bfd5967f3a74e36aa9a0c2cda132619b2908bdc39b1406da4b346bde6",
-      "yx.json": "58b8eb984cf8190f52ed4e53d044079733cf82096224dd7014ec36e1da2b45bc",
-      "tz.json": "a4b008981f39abc371b5673abe4c780bef5c91229a5ae3a42d2e8fef4e780c74"
-    },
-    "dataHash": "c467130061847387c6ae4c5511c1359d45e8635bffdd9adbd9b0f2074dceb781",
-    "formulaHash": "9ab1600a30f8b0505422f12160b1b6d2c23356226d825d20433e84459b2b1ff1",
-    "coverage": "initial-matrix",
+    "coverage": "representative",
     "copies": [
       {
-        "name": "random-growth-matrix",
-        "operations": 24
-      },
-      {
-        "name": "random-growth-lifecycle",
-        "operations": 2
+        "name": "equipment-workflow",
+        "operations": 8
       }
-    ],
-    "groups": {
-      "randomCharacterBaseAptitudes": {
-        "checks": {
-          "load": true,
-          "save": true,
-          "restart": true,
-          "originalHashes": true,
-          "nativeEffects": true,
-          "numericUpdate": true,
-          "nativePills": true,
-          "nativeTransfer": true,
-          "nativePrison": true,
-          "nativeRebirth": true,
-          "nativeDismiss": true,
-          "stageRoundtrips": true
-        }
-      }
-    }
+    ]
   },
   "randomCharacterSkillCaps": {
     "date": "2026-10-22",
-    "platform": "darwin-arm64",
-    "gameVersion": "V1.0.10.2",
+    "platform": "win32-x64",
+    "gameVersion": "V1.0.11.2",
     "fingerprints": {
-      "data.json": "32a36accc1b97e9bb3498eb3be76950e1e72b2e8f7a0cf9ce293b57aa5e0d820",
-      "scripts/c3runtime.js": "1e1643722efc032824881f03ce4d81df1135e6a8cd8e08d9fd87e56e480ac9f6",
+      "data.json": "aac06ce18a840ae221d7683fba21182b0dcf4bb7ae1caf3431199264a1c5f62e",
+      "scripts/c3runtime.js": "3e0febeb8342138ed47d9e8499e3646f4e8ddc2ce89a9faa0bebbad9ba83280e",
       "cl.json": "c121cf702eb6a4edb184d7180ad83d41aa90efca4a1e5e21e652dd1ff24f47b7",
       "js.json": "5c360c93cd1248fe96d0373428ddae4649698574d032b333432e4b777fcc0ee4",
-      "zy.json": "8dd8ccc0a6318d3e3a58bc4d9951fb57d281b812e8b3ce1ba68847eb5283c75c",
+      "zy.json": "97d59a029aefbfbba315c9cec7b83a168571def79282eec2be9edbfeb3759188",
       "sx.json": "6a24e20ad0a70d5ad17a0310f0a9e7619dda5c4718d536a3df51d385abd748e7",
       "wp.json": "14516d34cedf209c497fca10699e179c26c43558c2a3253bc87c8b33493a82c4",
       "kj.json": "b051136f1366eb1c990004a4fa8a2d8f90339c7defbc10eb90c68c2ff36e5309",
@@ -928,13 +403,13 @@
       "yx.json": "58b8eb984cf8190f52ed4e53d044079733cf82096224dd7014ec36e1da2b45bc",
       "tz.json": "a4b008981f39abc371b5673abe4c780bef5c91229a5ae3a42d2e8fef4e780c74"
     },
-    "dataHash": "d60b2d38a7e1174db75d7c37187240183f31be2523a185e291c9a8c5b7b5e18e",
+    "dataHash": "19e3275ac145966065ea4bcc88cdc48b7c1763b14a5e57bfd3725946cd2168f8",
     "formulaHash": "26d02971b7f595b294ba007029eb1100506b2c319ea69901787ca802ff516a9c",
-    "coverage": "initial-matrix",
+    "coverage": "representative",
     "copies": [
       {
-        "name": "random-skill-caps-matrix",
-        "operations": 108
+        "name": "random-skill-caps-representative",
+        "operations": 2
       },
       {
         "name": "random-skill-caps-lifecycle",
@@ -943,11 +418,11 @@
     ],
     "validation": {
       "version": 1,
-      "runner": "verify-skill-caps-suite.cjs",
-      "matrixCases": 108,
+      "runner": "verify-migration.cjs",
+      "matrixCases": 2,
       "lifecycleCases": 2,
-      "manifestHash": "614d3ee0d8c8ba217efa4a705b41709499d4772b2679aa571c52b3e0bc47e2c3",
-      "evidenceHash": "aaaf07075acf2ea337059f896b4d4efbf80dc663f912c8bb0640017b6b09fe0a"
+      "manifestHash": "92597c232e57c2ca14f7fe68f4835877a909cba2007310963e4e3b6bcdd37f8f",
+      "evidenceHash": "a0fdd984c408943c95481e602c161101622967b337ee7ba8d88ced1a029ac125"
     },
     "initialVerification": {
       "coverage": "initial-matrix",
@@ -999,5 +474,215 @@
         }
       }
     }
+  },
+  "randomCharacterGrowth": {
+    "date": "2026-10-22",
+    "gameVersion": "V1.0.11.2",
+    "platform": "win32-x64",
+    "fingerprints": {
+      "data.json": "aac06ce18a840ae221d7683fba21182b0dcf4bb7ae1caf3431199264a1c5f62e",
+      "scripts/c3runtime.js": "3e0febeb8342138ed47d9e8499e3646f4e8ddc2ce89a9faa0bebbad9ba83280e",
+      "cl.json": "c121cf702eb6a4edb184d7180ad83d41aa90efca4a1e5e21e652dd1ff24f47b7",
+      "js.json": "5c360c93cd1248fe96d0373428ddae4649698574d032b333432e4b777fcc0ee4",
+      "zy.json": "97d59a029aefbfbba315c9cec7b83a168571def79282eec2be9edbfeb3759188",
+      "sx.json": "6a24e20ad0a70d5ad17a0310f0a9e7619dda5c4718d536a3df51d385abd748e7",
+      "wp.json": "14516d34cedf209c497fca10699e179c26c43558c2a3253bc87c8b33493a82c4",
+      "kj.json": "b051136f1366eb1c990004a4fa8a2d8f90339c7defbc10eb90c68c2ff36e5309",
+      "jz.json": "cf4d691dc7f6814db5ba1e0e28ac206d7a15c58ddccba55a473975461841b0bf",
+      "rw.json": "705f541917d9a62cff9ef5805032fd29496fdc98b03a7f065ff3fc6fab937b4b",
+      "tf.json": "c8a3005201d8f17a0899584baf7e0286b073aa84d4697807edcd44e00902fa1f",
+      "ss.json": "4350cb979c4026ce0d8dc25e7807fde3d29a1d42fbd2e499673614a4f67e1bc7",
+      "lw.json": "7a4f5a5bfd5967f3a74e36aa9a0c2cda132619b2908bdc39b1406da4b346bde6",
+      "yx.json": "58b8eb984cf8190f52ed4e53d044079733cf82096224dd7014ec36e1da2b45bc",
+      "tz.json": "a4b008981f39abc371b5673abe4c780bef5c91229a5ae3a42d2e8fef4e780c74"
+    },
+    "dataHash": "c467130061847387c6ae4c5511c1359d45e8635bffdd9adbd9b0f2074dceb781",
+    "formulaHash": "9ab1600a30f8b0505422f12160b1b6d2c23356226d825d20433e84459b2b1ff1",
+    "coverage": "representative",
+    "copies": [
+      {
+        "name": "random-growth-lifecycle",
+        "operations": 2
+      },
+      {
+        "name": "random-growth-matrix",
+        "operations": 8
+      }
+    ],
+    "groups": {
+      "randomCharacterBaseAptitudes": {
+        "checks": {
+          "load": true,
+          "save": true,
+          "restart": true,
+          "originalHashes": true,
+          "nativeEffects": true,
+          "numericUpdate": true,
+          "nativePills": true,
+          "nativeTransfer": true,
+          "nativePrison": true,
+          "nativeRebirth": true,
+          "nativeDismiss": true,
+          "stageRoundtrips": true
+        }
+      }
+    }
+  },
+  "equipmentQuality": {
+    "date": "2026-10-22",
+    "gameVersion": "V1.0.11.2",
+    "fingerprints": {
+      "data.json": "aac06ce18a840ae221d7683fba21182b0dcf4bb7ae1caf3431199264a1c5f62e",
+      "scripts/c3runtime.js": "3e0febeb8342138ed47d9e8499e3646f4e8ddc2ce89a9faa0bebbad9ba83280e",
+      "cl.json": "c121cf702eb6a4edb184d7180ad83d41aa90efca4a1e5e21e652dd1ff24f47b7",
+      "js.json": "5c360c93cd1248fe96d0373428ddae4649698574d032b333432e4b777fcc0ee4",
+      "zy.json": "97d59a029aefbfbba315c9cec7b83a168571def79282eec2be9edbfeb3759188",
+      "sx.json": "6a24e20ad0a70d5ad17a0310f0a9e7619dda5c4718d536a3df51d385abd748e7",
+      "wp.json": "14516d34cedf209c497fca10699e179c26c43558c2a3253bc87c8b33493a82c4",
+      "kj.json": "b051136f1366eb1c990004a4fa8a2d8f90339c7defbc10eb90c68c2ff36e5309",
+      "jz.json": "cf4d691dc7f6814db5ba1e0e28ac206d7a15c58ddccba55a473975461841b0bf",
+      "rw.json": "705f541917d9a62cff9ef5805032fd29496fdc98b03a7f065ff3fc6fab937b4b",
+      "tf.json": "c8a3005201d8f17a0899584baf7e0286b073aa84d4697807edcd44e00902fa1f",
+      "ss.json": "4350cb979c4026ce0d8dc25e7807fde3d29a1d42fbd2e499673614a4f67e1bc7",
+      "lw.json": "7a4f5a5bfd5967f3a74e36aa9a0c2cda132619b2908bdc39b1406da4b346bde6",
+      "yx.json": "58b8eb984cf8190f52ed4e53d044079733cf82096224dd7014ec36e1da2b45bc",
+      "tz.json": "a4b008981f39abc371b5673abe4c780bef5c91229a5ae3a42d2e8fef4e780c74"
+    },
+    "dataHash": "8ae2349989ec78ec8148ea476d5d96612d9454deadd2ac32a45d6bb96e097ec5",
+    "formulaHash": "0908474e4ceb3e087b0f7bdb17376c1ad303d8953934fdab5727a881280056f9",
+    "formulaCases": 6592,
+    "groups": {
+      "backpackEquipmentQualityUpgrade": {
+        "checks": {
+          "load": true,
+          "save": true,
+          "restart": true,
+          "originalHashes": true,
+          "nativeEffects": true,
+          "lifecycle": true,
+          "qualityUi": true
+        },
+        "uiEvidence": {
+          "source": "native",
+          "gameVersion": "V1.0.11.2",
+          "eventSids": [
+            680719446639986,
+            538305116886112,
+            589712995086958,
+            910195347276964,
+            713681756866045,
+            780562691790658,
+            619743323262026
+          ],
+          "eventDigest": "0eeaf8f61b7d0f1c3e2124728d1e80a15a5a2281811cf3ac574b85e584ac9aed",
+          "cases": 6,
+          "washes": 6,
+          "evidenceHash": "95d784773d15823f34aec0342d9c06565e8802c6a1d98b8609f282b3df11fec1"
+        }
+      },
+      "backpackEquipmentQualityDowngrade": {
+        "checks": {
+          "load": true,
+          "save": true,
+          "restart": true,
+          "originalHashes": true,
+          "nativeEffects": true,
+          "lifecycle": true,
+          "qualityUi": true
+        },
+        "uiEvidence": {
+          "source": "native",
+          "gameVersion": "V1.0.11.2",
+          "eventSids": [
+            680719446639986,
+            538305116886112,
+            589712995086958,
+            910195347276964,
+            713681756866045,
+            780562691790658,
+            619743323262026
+          ],
+          "eventDigest": "0eeaf8f61b7d0f1c3e2124728d1e80a15a5a2281811cf3ac574b85e584ac9aed",
+          "cases": 6,
+          "washes": 6,
+          "evidenceHash": "95d784773d15823f34aec0342d9c06565e8802c6a1d98b8609f282b3df11fec1"
+        }
+      },
+      "equipmentQualityUpgrade": {
+        "checks": {
+          "load": true,
+          "save": true,
+          "restart": true,
+          "originalHashes": true,
+          "nativeEffects": true,
+          "lifecycle": true,
+          "qualityUi": true
+        },
+        "uiEvidence": {
+          "source": "native",
+          "gameVersion": "V1.0.11.2",
+          "eventSids": [
+            680719446639986,
+            538305116886112,
+            589712995086958,
+            910195347276964,
+            713681756866045,
+            780562691790658,
+            619743323262026
+          ],
+          "eventDigest": "0eeaf8f61b7d0f1c3e2124728d1e80a15a5a2281811cf3ac574b85e584ac9aed",
+          "cases": 6,
+          "washes": 6,
+          "evidenceHash": "95d784773d15823f34aec0342d9c06565e8802c6a1d98b8609f282b3df11fec1"
+        }
+      },
+      "equipmentQualityDowngrade": {
+        "checks": {
+          "load": true,
+          "save": true,
+          "restart": true,
+          "originalHashes": true,
+          "nativeEffects": true,
+          "lifecycle": true,
+          "qualityUi": true
+        },
+        "uiEvidence": {
+          "source": "native",
+          "gameVersion": "V1.0.11.2",
+          "eventSids": [
+            680719446639986,
+            538305116886112,
+            589712995086958,
+            910195347276964,
+            713681756866045,
+            780562691790658,
+            619743323262026
+          ],
+          "eventDigest": "0eeaf8f61b7d0f1c3e2124728d1e80a15a5a2281811cf3ac574b85e584ac9aed",
+          "cases": 6,
+          "washes": 6,
+          "evidenceHash": "95d784773d15823f34aec0342d9c06565e8802c6a1d98b8609f282b3df11fec1"
+        }
+      }
+    },
+    "coverage": "representative",
+    "copies": [
+      {
+        "name": "quality-7-Upgrade",
+        "operations": 9
+      },
+      {
+        "name": "quality-7-Downgrade",
+        "operations": 13
+      },
+      {
+        "name": "quality-9-Upgrade",
+        "operations": 9
+      },
+      {
+        "name": "quality-9-Downgrade",
+        "operations": 13
+      }
+    ]
   }
 }

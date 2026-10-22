@@ -39,7 +39,7 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 
 實際安裝版本另以 `appmanifest_4267800.acf` 的 `buildid` 與 `package.nw` 來源指紋確認；包內個別版本字串可能落後。未知來源先依 [save-format.md 的純分析流程](references/save-format.md#重建知識)取得 audit，再以 SID 查核規則。
 
-V1.0.10.2 的靜態比對與 Windows 隔離載入／存檔／重啟結果見 repo 的 `docs/research/v1.0.10.2-audit.md`；公開知識與隔離實測版本以 catalog／verification 為準。公告與靜態分析各自記錄，只有完成相符來源的遊戲讀寫及重啟驗證後才更新實測標示；Windows 結果不代表新版 Mac 啟動器已相容。
+新版 V1.0.11.2 的來源差異、Windows 遷移與必要 UI 補測見 repo 的 `docs/research/v1.0.11.2-audit.md`；前版歷史見 `docs/research/v1.0.10.2-audit.md`，實際開放版本以 catalog／verification 為準。公告與靜態分析各自記錄，只有完成相符來源的遊戲讀寫及重啟驗證後才更新實測標示；Windows 結果不代表新版 Mac 啟動器已相容。
 
 ## 編輯來源
 

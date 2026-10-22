@@ -40,6 +40,8 @@ Linux CI另加`--with-deps`安裝系統函式庫。Playwright版本由package與
 
 執行器使用OS暫存目錄下的`bandit-browser-*`儲存摘要及Playwright結果，站點副本使用`bandit-site-*`。正常結束關閉自己建立的瀏覽器、伺服器及副本；全部成功會刪除結果目錄。失敗保留summary.json、trace、錯誤DOM摘要及可取得的截圖，並印出路徑；`--visual`也保留成功截圖。強制終止程序可能留下暫存資料，只清理確認屬於本次執行的目錄。使用者瀏覽器設定、分頁、Downloads與真實存檔不參與。
 
+預設由OS選擇隨機loopback埠；需要沿用使用者既有的本機內容過濾器例外時，可在該次測試程序設定`BANDIT_BROWSER_PORT`，埠被占用就直接失敗，不連接既有服務。2026-10-22新版對齊時，隨機埠被AdGuard注入腳本，四個PWA案例因資產完整性檢查失敗；沿用文件記錄的8942例外後四案通過。PowerShell可用`$env:BANDIT_BROWSER_PORT='8942'; npm run verify:release`；只設定測試程序環境，不修改使用者過濾器、瀏覽器設定或PWA雜湊規則。
+
 平時只讀通過數／耗時與失敗摘要；失敗時才開對應trace或截圖。需要查看trace可用`npx playwright show-trace /temporary/path/trace.zip`，這是明確的除錯操作，不是預設驗收。CI失敗會保留瀏覽器診斷artifact七天，Pages仍只發布原有靜態白名單。
 
 ## 發布與紀錄

@@ -264,13 +264,13 @@ test('write-back opens proven groups on a new build, compares on the proven buil
       checks: Object.fromEntries(Object.keys(catalog.verification).map(group => [group, Object.fromEntries(R.requiredChecks(group).map(check => [check, overrides[group + ':' + check] ?? check !== 'qualityUi']))]))
     });
     const same = snapshot();
-    const compared = M.writeBack({dir, catalog, proof, results: {...results('V1.0.10.2'), ui: {}}});
+    const compared = M.writeBack({dir, catalog, proof, results: {...results(catalog.gameVersion), ui: {}}});
     assert.equal(compared.action, 'compared');
     assert.equal(compared.consistent, false, 'quality UI pending must differ from the native proof');
     assert.deepEqual(compared.comparison.filter(c => c.existing !== c.migrated).map(c => c.group).sort(), [...R.sections.equipmentQuality.groups,...(!catalog.verification.randomCharacterBaseAptitudes?['randomCharacterBaseAptitudes']:[])].sort());
     assert.deepEqual(snapshot(), same);
     const reordered = {...catalog, fingerprints: Object.fromEntries(Object.entries(catalog.fingerprints).reverse()), batch2Fingerprints: Object.fromEntries(Object.entries(catalog.batch2Fingerprints).reverse())};
-    assert.equal(M.writeBack({dir, catalog: reordered, proof, results: {...results('V1.0.10.2'), ui: {}}, exec: () => { throw Error('same fingerprint must not build after key reordering'); }}).action, 'compared');
+    assert.equal(M.writeBack({dir, catalog: reordered, proof, results: {...results(catalog.gameVersion), ui: {}}, exec: () => { throw Error('same fingerprint must not build after key reordering'); }}).action, 'compared');
     assert.deepEqual(snapshot(), same, 'key order alone must never replace a complete proof with representative coverage');
 
     const next = {...catalog, gameVersion: 'V9.9.9', fingerprints: {...catalog.fingerprints, 'cl.json': 'c'.repeat(64)}, verification: Object.fromEntries(Object.keys(catalog.verification).map(g => [g, false]))};

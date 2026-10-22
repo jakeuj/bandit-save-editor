@@ -137,11 +137,11 @@ v2.1 可使用 repo 外 `--scenario` JSON：`baseline` 為 `[x,y,z,value]` 陣�
 node scripts/verify-migration.cjs --source PREPARED_COPY/game --runtime PREPARED_COPY/runtime/nwjs-sdk-v0.82.0-osx-arm64/nwjs.app/Contents/MacOS/nwjs --save-file PREPARED_COPY/game/savedir/ea1save.dat --artifacts /outside/repo/artifacts --package STEAM_LIBRARY/steamapps/common/塔防山贼模拟器
 ```
 
-生成器依基準存檔建立 11 個副本：成長、v2.1 一般上界／超限／後續操作、v2.2、v2.3 替換、v2.4 背包與選槽，以及品質四個庫別方向。每個副本依序執行原版載入、原生效果、原生存檔、新 PID 重啟讀回；標記的副本再跑後續原生操作並做第二輪讀寫重啟，品質副本另跑 6,592 組公式比對。基準存檔需有已放置的書院與校場、閒置的草席與木桩，以及第二名角色；尚未完成初建的等級 0 建築只在拋棄式副本設為等級 1。後續副本把第二名角色設為流民 4 級、差 1 點升級，原生自然經驗呼叫一次必須升到 5 級，再轉職為村民；`获得职业经验` 忽略「獲得量」參數，每次只給約十個工作間隔的經驗，不要用大量迴圈補足。
+生成器目前依基準存檔建立 15 個副本：成長、v2.1 一般上界／超限／後續操作、v2.2、v2.3 替換、v2.4 背包與選槽、品質四個庫別方向，以及一般隨機角色基礎資質與技藝上限各兩個代表／生命週期副本。每個副本依序執行原版載入、原生效果、原生存檔、新 PID 重啟讀回；標記的副本再跑後續原生操作並做第二輪讀寫重啟，品質副本另跑 6,592 組公式比對。基準存檔需有已放置的書院與校場、閒置的草席與木桩，以及第二名角色；尚未完成初建的等級 0 建築只在拋棄式副本設為等級 1。後續副本把第二名角色設為流民 4 級、差 1 點升級，原生自然經驗呼叫一次必須升到 5 級，再轉職為村民；`获得职业经验` 忽略「獲得量」參數，每次只給約十個工作間隔的經驗，不要用大量迴圈補足。
 
 結果寫在 repo 外的 `results.json`，寫回規則如下：
 
-- 全部副本完成、22 群組的原生 checks 都成立，且指紋與現有證明不同時，自動寫入 `knowledge/verification.json` 與 catalog 閘門，重建 HTML 並執行 `--check`。建置失敗會還原 catalog、證明、HTML 與 `sw.js`。不會自動提交或推送。
+- 全部副本完成、24 群組的原生 checks 都成立，且指紋與現有證明不同時，自動寫入 `knowledge/verification.json` 與 catalog 閘門，重建 HTML 並執行 `--check`。建置失敗會還原 catalog、證明、HTML 與 `sw.js`。不會自動提交或推送。
 - 指紋與現有證明相同時只輸出比較報告，不以代表子集覆寫原本的完整矩陣證明。
 - 任一步失敗或原生 checks 未全過時不寫入；報告列出失敗的副本、步驟與錯誤。
 
@@ -308,4 +308,4 @@ Mac沿用已核對的準備副本，`--package`指向原始安裝目錄。未帶
 
 新UI有Node事件與HTTP桌面／390px、file、PWA三種環境案例。閘門關閉時headless成功只代表預覽與停用；正式開放後須重新跑成功套用、交錯經驗、27欄還原／復原及實際下載重載。詳細流程及輸出在[測試指引](testing.md)。
 
-2026-10-22 B已完成108＋2完整隔離矩陣及13階段，正式合併為第24群組；來源仍為V1.0.10.2／build26094666，V1.0.11.2公告不代表已驗證。既有23群組紀錄完整保留，核心未更動；詳細實測與發布分層結果見[研究紀錄](research/random-character-skill-caps.md)及[B任務](../sdd/random-character-skill-caps-b/tasks.md)。
+2026-10-22 B首次完成108＋2完整隔離矩陣及13階段，正式合併為第24群組；該次來源為V1.0.10.2／build26094666。既有23群組紀錄完整保留，核心未更動；詳細實測與發布分層結果見[研究紀錄](research/random-character-skill-caps.md)及[B任務](../sdd/random-character-skill-caps-b/tasks.md)。其後更新至V1.0.11.2／build26126719，已完成15個Windows隔離副本、24群組代表遷移與必要UI補測，並保留首次完整矩陣證明；新版差異、測試工具收尾修正與發布範圍見[新版調查](research/v1.0.11.2-audit.md)。Windows遇到通過副本清理的檔案鎖時，可沿用`--keep-copies`保留診斷，等自己的程序完全退出後再清理repo外副本。

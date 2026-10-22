@@ -12,9 +12,9 @@ function fixture(nx=221){
  for(let k=1;k<=9;k++){put(1,30+k,2,1);put(1,21+k,2,50);}
  return '\ufeff'+JSON.stringify({c2array:true,size:[nx,60,22],data}).replace('{','{"unrelated":987654321098765432109876543210,\n');
 }
-test('catalog includes 22 planes, 724 functions, 847 write sites and localized names',()=>{
+test('catalog includes 22 planes, 725 functions, 850 write sites and localized names',()=>{
  const C=core(),K=C.KNOWLEDGE;
- assert.equal(K.planes.length,22);assert.equal(K.functions.length,724);assert.equal(K.evidence.length,847);
+ assert.equal(K.planes.length,22);assert.equal(K.functions.length,725);assert.equal(K.evidence.length,850);
  assert.equal(K.catalogs.attributes.find(v=>v.id===72).name,'最終增產');
  const versionLabels=[...source.matchAll(/<span data-knowledge-version>(.*?)<\/span>/g)];
  assert.equal(versionLabels.length,6);
@@ -115,6 +115,6 @@ test('offline HTML embeds every executable dependency and requires no network AP
  const scripts=[...source.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)].map(m=>m[1]).join('\n');
  assert.doesNotMatch(scripts,/\b(?:fetch|XMLHttpRequest|WebSocket|importScripts)\s*\(/);
  assert.match(source,/connect-src 'none'/);
- assert.equal(CURRENT_HTML_CORE().KNOWLEDGE.gameVersion,'V1.0.10.2');
+ assert.equal(CURRENT_HTML_CORE().KNOWLEDGE.gameVersion,'V1.0.11.2');
  function CURRENT_HTML_CORE(){const ctx={};vm.runInNewContext(source.match(/<script id="save-core">([\s\S]*?)<\/script>/)[1],ctx);return ctx.SaveCore;}
 });

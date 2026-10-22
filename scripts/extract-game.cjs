@@ -117,7 +117,8 @@ const tableSpecs = { materials: ['cl', 1, 3], characters: ['js', 1, null], profe
 function createCatalog(game) {
   const reviewed = {
     '6661d77209c0e98069219965908fd4d6b9ee3dca84763c158dcd5f0a863df665': { version: 'V1.0.9.1', runtimes: ['b5bf45f38e8165bbd5093702695486fe77797a27914bba8b1fdd5f46658396bc','58d634814f9ee8145ad553ffde60a6a511b5f68cf27f7ba86933d66216901998'] },
-    '32a36accc1b97e9bb3498eb3be76950e1e72b2e8f7a0cf9ce293b57aa5e0d820': { version: 'V1.0.10.2', runtimes: ['1e1643722efc032824881f03ce4d81df1135e6a8cd8e08d9fd87e56e480ac9f6'] }
+    '32a36accc1b97e9bb3498eb3be76950e1e72b2e8f7a0cf9ce293b57aa5e0d820': { version: 'V1.0.10.2', runtimes: ['1e1643722efc032824881f03ce4d81df1135e6a8cd8e08d9fd87e56e480ac9f6'] },
+    'aac06ce18a840ae221d7683fba21182b0dcf4bb7ae1caf3431199264a1c5f62e': { version: 'V1.0.11.2', expressionOffset: 11, runtimes: ['3e0febeb8342138ed47d9e8499e3646f4e8ddc2ce89a9faa0bebbad9ba83280e'] }
   }[game.fingerprints['data.json']];
   if(!reviewed) {
     // Catalog coordinates and growth formulas must be reviewed when the event data changes.
@@ -161,6 +162,8 @@ function createCatalog(game) {
     }))};
   const affixReplacementLimits={plane:9,maxTier:9,maxQuality:6,selectedSlotOnly:true,allowNewDuplicates:false,originSlot:'positive-in-bounds-not-row-identity',mainQualityCoefficient:'integer-original-range-when-overlapping',attributeIds:Object.keys(affixReplacement.attributes).map(Number)};
   const equipmentQuality=require('./equipment-quality-data.cjs')(catalogs,wp,sx,affixReplacement);
+  // Reviewed equipment formula factories moved together in V1.0.11.2; keep source references on this build.
+  if(reviewed.expressionOffset)for(const rules of [affixReplacement,equipmentQuality])for(const attribute of Object.values(rules.attributes))attribute.expression+=reviewed.expressionOffset;
   const equipmentWorkflowLimits={version:1,planes:[7,9],backpack:{minTier:1,maxTier:9,minQuality:1,maxQuality:6,quantity:1,owner:0,advanced:false},newItemMarkers:[0,1],unknownStateColumns:[25,26,27],firstSelection:'all-flags-zero-explicit-atomic',identity:'plane-and-current-row',sourceSids:[166680919655131,666416688115651,644557287879738,196601779910507,775039415186059,564254928232839,959041203712077,418018161514165]};
   // Name conversion only; evidence identifiers and source paths remain unchanged.
   const glossaryFile = path.join(__dirname, '../knowledge/traditional-names.json');

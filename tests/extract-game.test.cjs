@@ -14,7 +14,9 @@ test('reviewed event versions cannot be paired with another version runtime', ()
   const newEvents = '32a36accc1b97e9bb3498eb3be76950e1e72b2e8f7a0cf9ce293b57aa5e0d820';
   const oldRuntime = '58d634814f9ee8145ad553ffde60a6a511b5f68cf27f7ba86933d66216901998';
   const newRuntime = '1e1643722efc032824881f03ce4d81df1135e6a8cd8e08d9fd87e56e480ac9f6';
-  for (const [events, runtime] of [[oldEvents, newRuntime], [newEvents, oldRuntime]]) {
+  const latestEvents = 'aac06ce18a840ae221d7683fba21182b0dcf4bb7ae1caf3431199264a1c5f62e';
+  const latestRuntime = '3e0febeb8342138ed47d9e8499e3646f4e8ddc2ce89a9faa0bebbad9ba83280e';
+  for (const [events, runtime] of [[oldEvents, newRuntime], [newEvents, oldRuntime], [latestEvents, newRuntime], [newEvents, latestRuntime]]) {
     assert.throws(() => createCatalog({ fingerprints: { 'data.json': events, 'scripts/c3runtime.js': runtime } }), /JavaScript 指紋已變更/);
   }
 });

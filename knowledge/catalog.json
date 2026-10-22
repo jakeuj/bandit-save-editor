@@ -1,7 +1,918 @@
 {
   "version": 1,
   "game": "szmnqea",
-  "gameVersion": "V1.0.10.2",
+  "gameVersion": "V1.0.11.2",
+  "randomCharacterGrowth": {
+    "version": 1,
+    "totals": [
+      [
+        90,
+        120
+      ],
+      [
+        120,
+        150
+      ],
+      [
+        150,
+        180
+      ],
+      [
+        180,
+        210
+      ],
+      [
+        210,
+        240
+      ],
+      [
+        240,
+        300
+      ]
+    ],
+    "weights": [
+      [
+        [
+          70,
+          90
+        ],
+        [
+          50,
+          70
+        ],
+        [
+          50,
+          70
+        ]
+      ],
+      [
+        [
+          50,
+          70
+        ],
+        [
+          70,
+          90
+        ],
+        [
+          50,
+          70
+        ]
+      ],
+      [
+        [
+          50,
+          70
+        ],
+        [
+          50,
+          70
+        ],
+        [
+          70,
+          90
+        ]
+      ],
+      [
+        [
+          50,
+          80
+        ],
+        [
+          50,
+          80
+        ],
+        [
+          50,
+          80
+        ]
+      ]
+    ],
+    "upperWeightExclusive": true,
+    "scale": 10,
+    "policy": "same-quality-any-native-orientation",
+    "sourceSids": [
+      353435574752032,
+      879483110980295,
+      945993007174840,
+      450284555421069,
+      489035254017381,
+      953598826873759,
+      144692352947544,
+      226111227717877,
+      594381087796989,
+      407776400732220,
+      716009552600469,
+      501010543923483,
+      876351181502276,
+      110565347746026,
+      358500068340403,
+      778369382997146
+    ]
+  },
+  "randomCharacterSkillCaps": {
+    "version": 1,
+    "policy": "fixed-aptitudes-and-talents",
+    "ranges": [
+      {
+        "base": [
+          4,
+          14
+        ],
+        "primary": [
+          18,
+          38
+        ],
+        "secondary": [
+          9,
+          27
+        ]
+      },
+      {
+        "base": [
+          7,
+          17
+        ],
+        "primary": [
+          28,
+          48
+        ],
+        "secondary": [
+          17,
+          35
+        ]
+      },
+      {
+        "base": [
+          10,
+          20
+        ],
+        "primary": [
+          38,
+          58
+        ],
+        "secondary": [
+          25,
+          43
+        ]
+      },
+      {
+        "base": [
+          13,
+          23
+        ],
+        "primary": [
+          48,
+          68
+        ],
+        "secondary": [
+          33,
+          51
+        ]
+      },
+      {
+        "base": [
+          16,
+          26
+        ],
+        "primary": [
+          58,
+          78
+        ],
+        "secondary": [
+          41,
+          59
+        ]
+      },
+      {
+        "base": [
+          19,
+          29
+        ],
+        "primary": [
+          68,
+          88
+        ],
+        "secondary": [
+          49,
+          67
+        ]
+      }
+    ],
+    "totals": [
+      [
+        90,
+        120
+      ],
+      [
+        120,
+        150
+      ],
+      [
+        150,
+        180
+      ],
+      [
+        180,
+        210
+      ],
+      [
+        210,
+        240
+      ],
+      [
+        240,
+        300
+      ]
+    ],
+    "weights": [
+      [
+        [
+          70,
+          90
+        ],
+        [
+          50,
+          70
+        ],
+        [
+          50,
+          70
+        ]
+      ],
+      [
+        [
+          50,
+          70
+        ],
+        [
+          70,
+          90
+        ],
+        [
+          50,
+          70
+        ]
+      ],
+      [
+        [
+          50,
+          70
+        ],
+        [
+          50,
+          70
+        ],
+        [
+          70,
+          90
+        ]
+      ],
+      [
+        [
+          50,
+          80
+        ],
+        [
+          50,
+          80
+        ],
+        [
+          50,
+          80
+        ]
+      ]
+    ],
+    "upperWeightExclusive": true,
+    "orientations": [
+      "力量",
+      "敏捷",
+      "智力",
+      "生产"
+    ],
+    "talentLevels": [
+      [
+        1,
+        2
+      ],
+      [
+        1,
+        2,
+        3
+      ],
+      [
+        2,
+        3,
+        4
+      ],
+      [
+        3,
+        4,
+        5
+      ],
+      [
+        4,
+        5
+      ],
+      [
+        5
+      ]
+    ],
+    "talents": {
+      "1": {
+        "category": "通用",
+        "orientation": "力量",
+        "excludedPrimary": []
+      },
+      "2": {
+        "category": "通用",
+        "orientation": "敏捷",
+        "excludedPrimary": []
+      },
+      "3": {
+        "category": "通用",
+        "orientation": "智力",
+        "excludedPrimary": []
+      },
+      "4": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "5": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "6": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "7": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "8": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "9": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "10": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "11": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "12": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "13": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "14": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "15": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "16": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "17": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "18": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "19": {
+        "category": "战斗",
+        "orientation": "力量",
+        "excludedPrimary": []
+      },
+      "20": {
+        "category": "战斗",
+        "orientation": "敏捷",
+        "excludedPrimary": []
+      },
+      "21": {
+        "category": "战斗",
+        "orientation": "智力",
+        "excludedPrimary": []
+      },
+      "22": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "23": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "24": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "25": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          7,
+          8,
+          9
+        ]
+      },
+      "26": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "27": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "28": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "29": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "30": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "31": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          4,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "32": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          8,
+          9
+        ]
+      },
+      "33": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          9
+        ]
+      },
+      "34": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          9
+        ]
+      },
+      "35": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      "36": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "37": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "38": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "39": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "40": {
+        "category": "通用",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "41": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "42": {
+        "category": "通用",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "43": {
+        "category": "通用",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "44": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "45": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "46": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "47": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "48": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "49": {
+        "category": "战斗",
+        "orientation": "力量",
+        "excludedPrimary": []
+      },
+      "50": {
+        "category": "战斗",
+        "orientation": "敏捷",
+        "excludedPrimary": []
+      },
+      "51": {
+        "category": "战斗",
+        "orientation": "智力",
+        "excludedPrimary": []
+      },
+      "52": {
+        "category": "战斗",
+        "orientation": "力量",
+        "excludedPrimary": []
+      },
+      "53": {
+        "category": "战斗",
+        "orientation": "敏捷",
+        "excludedPrimary": []
+      },
+      "54": {
+        "category": "战斗",
+        "orientation": "智力",
+        "excludedPrimary": []
+      },
+      "55": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "56": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "57": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "58": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "59": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "60": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "61": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          4,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "62": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          8,
+          9
+        ]
+      },
+      "63": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          9
+        ]
+      },
+      "64": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          9
+        ]
+      },
+      "65": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      "66": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "67": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          7,
+          8,
+          9
+        ]
+      },
+      "68": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "69": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "70": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "71": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "72": {
+        "category": "通用",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "73": {
+        "category": "通用",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "74": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "75": {
+        "category": "通用",
+        "orientation": "通用",
+        "excludedPrimary": []
+      }
+    },
+    "sourceSids": [
+      390673545485827,
+      907064845535449,
+      890068128550912,
+      360229107749216,
+      858555530911324,
+      884525457994003,
+      940056460112238,
+      180031394399295,
+      748584357810010,
+      176292127127652
+    ],
+    "sourceDigest": "752f9932ac9f233524c7af09a8e91e3c88f09a555090bdcb2692f43e72c42cc3"
+  },
   "equipmentQuality": {
     "version": 1,
     "items": {
@@ -3413,43 +4324,43 @@
         "kind": "aptitude",
         "unit": "",
         "format": "小数",
-        "expression": 5296
+        "expression": 5307
       },
       "2": {
         "kind": "aptitude",
         "unit": "",
         "format": "小数",
-        "expression": 5296
+        "expression": 5307
       },
       "3": {
         "kind": "aptitude",
         "unit": "",
         "format": "小数",
-        "expression": 5296
+        "expression": 5307
       },
       "4": {
         "kind": "attack",
         "unit": "",
         "format": "整数",
-        "expression": 5295
+        "expression": 5306
       },
       "5": {
         "kind": "attack",
         "unit": "",
         "format": "整数",
-        "expression": 5295
+        "expression": 5306
       },
       "6": {
         "kind": "attack",
         "unit": "",
         "format": "整数",
-        "expression": 5295
+        "expression": 5306
       },
       "12": {
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5299,
+        "expression": 5310,
         "base": 2,
         "tier": 0.75,
         "level": 0.01
@@ -3458,7 +4369,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5300,
+        "expression": 5311,
         "base": 8,
         "tier": 3,
         "level": 0.4
@@ -3467,7 +4378,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3476,7 +4387,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3485,7 +4396,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3494,7 +4405,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3503,7 +4414,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3512,7 +4423,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3521,7 +4432,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3530,7 +4441,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3539,7 +4450,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3548,7 +4459,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3557,7 +4468,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3566,7 +4477,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3575,7 +4486,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3584,7 +4495,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3593,7 +4504,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3602,7 +4513,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3611,7 +4522,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3620,7 +4531,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3629,61 +4540,61 @@
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5301
+        "expression": 5312
       },
       "41": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5301
+        "expression": 5312
       },
       "42": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5301
+        "expression": 5312
       },
       "43": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5301
+        "expression": 5312
       },
       "44": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5301
+        "expression": 5312
       },
       "45": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5301
+        "expression": 5312
       },
       "46": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5301
+        "expression": 5312
       },
       "47": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5301
+        "expression": 5312
       },
       "48": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5301
+        "expression": 5312
       },
       "51": {
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5299,
+        "expression": 5310,
         "base": 2,
         "tier": 0.75,
         "level": 0.01
@@ -3692,7 +4603,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5300,
+        "expression": 5311,
         "base": 8,
         "tier": 3,
         "level": 0.4
@@ -3701,7 +4612,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3710,7 +4621,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3719,7 +4630,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3728,7 +4639,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3737,7 +4648,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3746,7 +4657,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3755,7 +4666,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3764,7 +4675,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3773,7 +4684,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3782,7 +4693,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3791,7 +4702,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3800,7 +4711,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3809,7 +4720,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5302,
+        "expression": 5313,
         "base": 2,
         "tier": 0.75,
         "level": 0.1
@@ -3818,7 +4729,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5302,
+        "expression": 5313,
         "base": 2,
         "tier": 0.75,
         "level": 0.1
@@ -3827,7 +4738,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3836,7 +4747,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3845,7 +4756,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5304,
+        "expression": 5315,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -3935,266 +4846,266 @@
         "base": 2,
         "tier": 0.75,
         "level": 0.01,
-        "expression": 5299
+        "expression": 5310
       },
       "13": {
         "unit": "%",
         "base": 8,
         "tier": 3,
         "level": 0.4,
-        "expression": 5300
+        "expression": 5311
       },
       "17": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "18": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "19": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "20": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "21": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "23": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "24": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "25": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "26": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "27": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "31": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "32": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "33": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "35": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "36": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "37": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "38": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "51": {
         "unit": "%",
         "base": 2,
         "tier": 0.75,
         "level": 0.01,
-        "expression": 5299
+        "expression": 5310
       },
       "52": {
         "unit": "%",
         "base": 8,
         "tier": 3,
         "level": 0.4,
-        "expression": 5300
+        "expression": 5311
       },
       "53": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "54": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "55": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "56": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "57": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "58": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "59": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "60": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "61": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "62": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "63": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "64": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "71": {
         "unit": "%",
         "base": 2,
         "tier": 0.75,
         "level": 0.1,
-        "expression": 5302
+        "expression": 5313
       },
       "72": {
         "unit": "%",
         "base": 2,
         "tier": 0.75,
         "level": 0.1,
-        "expression": 5302
+        "expression": 5313
       },
       "110": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "111": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       },
       "112": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5304
+        "expression": 5315
       }
     }
   },
@@ -4248,11 +5159,11 @@
     ]
   },
   "fingerprints": {
-    "data.json": "32a36accc1b97e9bb3498eb3be76950e1e72b2e8f7a0cf9ce293b57aa5e0d820",
-    "scripts/c3runtime.js": "1e1643722efc032824881f03ce4d81df1135e6a8cd8e08d9fd87e56e480ac9f6",
+    "data.json": "aac06ce18a840ae221d7683fba21182b0dcf4bb7ae1caf3431199264a1c5f62e",
+    "scripts/c3runtime.js": "3e0febeb8342138ed47d9e8499e3646f4e8ddc2ce89a9faa0bebbad9ba83280e",
     "cl.json": "c121cf702eb6a4edb184d7180ad83d41aa90efca4a1e5e21e652dd1ff24f47b7",
     "js.json": "5c360c93cd1248fe96d0373428ddae4649698574d032b333432e4b777fcc0ee4",
-    "zy.json": "8dd8ccc0a6318d3e3a58bc4d9951fb57d281b812e8b3ce1ba68847eb5283c75c",
+    "zy.json": "97d59a029aefbfbba315c9cec7b83a168571def79282eec2be9edbfeb3759188",
     "sx.json": "6a24e20ad0a70d5ad17a0310f0a9e7619dda5c4718d536a3df51d385abd748e7",
     "wp.json": "14516d34cedf209c497fca10699e179c26c43558c2a3253bc87c8b33493a82c4",
     "kj.json": "b051136f1366eb1c990004a4fa8a2d8f90339c7defbc10eb90c68c2ff36e5309",
@@ -35677,17 +36588,17 @@
     }
   },
   "counts": {
-    "functions": 724,
-    "setXYZ": 847,
-    "arrayActions": 860,
-    "readSites": 2822
+    "functions": 725,
+    "setXYZ": 850,
+    "arrayActions": 863,
+    "readSites": 2825
   },
   "planes": [
     {
       "z": 0,
       "name": "山寨與全局",
       "status": "程式證據",
-      "writes": 262,
+      "writes": 265,
       "reads": 577,
       "sources": [
         {
@@ -36263,7 +37174,7 @@
       "name": "角色基本資料",
       "status": "程式證據",
       "writes": 138,
-      "reads": 596,
+      "reads": 597,
       "sources": [
         {
           "function": "初始化／事件",
@@ -36703,8 +37614,8 @@
       "z": 7,
       "name": "背包物品",
       "status": "程式證據",
-      "writes": 62,
-      "reads": 97,
+      "writes": 57,
+      "reads": 88,
       "sources": [
         {
           "function": "获得物品",
@@ -36735,11 +37646,6 @@
           "function": "初始化／事件",
           "sheet": "主事件",
           "sid": 951985176122627
-        },
-        {
-          "function": "套装合成",
-          "sheet": "主事件",
-          "sid": 835824606167319
         }
       ],
       "columns": [
@@ -36767,9 +37673,7 @@
         21,
         22,
         23,
-        24,
-        26,
-        27
+        24
       ]
     },
     {
@@ -36786,7 +37690,7 @@
       "name": "裝備庫與穿戴",
       "status": "程式證據",
       "writes": 9,
-      "reads": 135,
+      "reads": 138,
       "sources": [
         {
           "function": "穿戴装备",
@@ -51632,6 +52536,11 @@
       "sid": 517294117946061
     },
     {
+      "name": "打开新游上市2",
+      "sheet": "开始界面",
+      "sid": 536654917495513
+    },
+    {
       "name": "刷新新游上市",
       "sheet": "开始界面",
       "sid": 497501830978351
@@ -52220,21 +53129,6 @@
     },
     {
       "sid": 875429265663964,
-      "actionSid": 925416930697219,
-      "function": "初始化／事件",
-      "sheet": "主事件",
-      "x": "*",
-      "y": 35,
-      "z": 0,
-      "refs": [
-        15,
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "sid": 875429265663964,
       "actionSid": 870740904799555,
       "function": "初始化／事件",
       "sheet": "主事件",
@@ -52410,7 +53304,7 @@
         12,
         15,
         null,
-        67
+        72
       ]
     },
     {
@@ -52425,7 +53319,7 @@
         null,
         null,
         null,
-        71
+        76
       ]
     },
     {
@@ -52590,7 +53484,7 @@
         null,
         null,
         null,
-        180
+        185
       ]
     },
     {
@@ -52605,7 +53499,7 @@
         null,
         null,
         null,
-        180
+        185
       ]
     },
     {
@@ -52659,6 +53553,36 @@
       "function": "初始化／事件",
       "sheet": "主事件",
       "x": 24,
+      "y": 1,
+      "z": 0,
+      "refs": [
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 805316169705486,
+      "actionSid": 563479485209751,
+      "function": "初始化／事件",
+      "sheet": "主事件",
+      "x": 35,
+      "y": 1,
+      "z": 0,
+      "refs": [
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 219384207612113,
+      "actionSid": 128126040091656,
+      "function": "初始化／事件",
+      "sheet": "主事件",
+      "x": 35,
       "y": 1,
       "z": 0,
       "refs": [
@@ -52830,7 +53754,7 @@
         null,
         null,
         null,
-        250
+        259
       ]
     },
     {
@@ -52860,7 +53784,7 @@
         null,
         null,
         null,
-        477
+        486
       ]
     },
     {
@@ -52935,7 +53859,7 @@
         12,
         null,
         null,
-        540
+        549
       ]
     },
     {
@@ -52950,7 +53874,7 @@
         12,
         null,
         null,
-        541
+        550
       ]
     },
     {
@@ -52965,7 +53889,7 @@
         12,
         null,
         null,
-        542
+        551
       ]
     },
     {
@@ -52980,7 +53904,7 @@
         12,
         null,
         null,
-        543
+        552
       ]
     },
     {
@@ -52995,7 +53919,7 @@
         12,
         null,
         null,
-        544
+        553
       ]
     },
     {
@@ -53010,7 +53934,7 @@
         12,
         null,
         null,
-        545
+        554
       ]
     },
     {
@@ -53025,7 +53949,7 @@
         12,
         null,
         null,
-        546
+        555
       ]
     },
     {
@@ -53040,7 +53964,7 @@
         12,
         null,
         null,
-        547
+        556
       ]
     },
     {
@@ -53055,7 +53979,7 @@
         12,
         null,
         null,
-        548
+        557
       ]
     },
     {
@@ -53070,7 +53994,7 @@
         12,
         null,
         null,
-        549
+        558
       ]
     },
     {
@@ -53085,7 +54009,7 @@
         12,
         null,
         null,
-        550
+        559
       ]
     },
     {
@@ -53100,7 +54024,7 @@
         12,
         null,
         null,
-        551
+        560
       ]
     },
     {
@@ -53115,7 +54039,7 @@
         12,
         null,
         null,
-        552
+        561
       ]
     },
     {
@@ -53130,7 +54054,7 @@
         12,
         null,
         null,
-        553
+        562
       ]
     },
     {
@@ -53145,7 +54069,7 @@
         12,
         null,
         null,
-        554
+        563
       ]
     },
     {
@@ -53160,7 +54084,7 @@
         12,
         null,
         null,
-        555
+        564
       ]
     },
     {
@@ -53175,7 +54099,7 @@
         12,
         null,
         null,
-        556
+        565
       ]
     },
     {
@@ -53190,7 +54114,7 @@
         12,
         null,
         null,
-        557
+        566
       ]
     },
     {
@@ -53203,9 +54127,9 @@
       "z": 2,
       "refs": [
         12,
-        558,
+        567,
         null,
-        559
+        568
       ]
     },
     {
@@ -53220,7 +54144,7 @@
         null,
         null,
         null,
-        1184
+        1196
       ]
     },
     {
@@ -53235,7 +54159,7 @@
         null,
         null,
         null,
-        1185
+        1197
       ]
     },
     {
@@ -53442,8 +54366,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1445,
-        993,
+        1456,
+        1005,
         null,
         null
       ]
@@ -53457,8 +54381,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1446,
-        993,
+        1457,
+        1005,
         null,
         null
       ]
@@ -53472,8 +54396,8 @@
       "y": "*",
       "z": 10,
       "refs": [
+        1017,
         1005,
-        993,
         null,
         null
       ]
@@ -53487,8 +54411,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1445,
-        993,
+        1456,
+        1005,
         null,
         null
       ]
@@ -53502,8 +54426,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1446,
-        993,
+        1457,
+        1005,
         null,
         null
       ]
@@ -53517,8 +54441,8 @@
       "y": "*",
       "z": 10,
       "refs": [
+        1017,
         1005,
-        993,
         null,
         null
       ]
@@ -53532,10 +54456,10 @@
       "y": 16,
       "z": 0,
       "refs": [
-        62,
+        67,
         null,
         null,
-        62
+        67
       ]
     },
     {
@@ -53670,7 +54594,7 @@
         12,
         null,
         null,
-        1493
+        1504
       ]
     },
     {
@@ -53682,8 +54606,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1445,
-        993,
+        1456,
+        1005,
         null,
         15
       ]
@@ -53697,10 +54621,10 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1446,
-        993,
+        1457,
+        1005,
         null,
-        1500
+        1511
       ]
     },
     {
@@ -53712,10 +54636,10 @@
       "y": "*",
       "z": 10,
       "refs": [
+        1017,
         1005,
-        993,
         null,
-        1500
+        1511
       ]
     },
     {
@@ -53727,8 +54651,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        993,
-        993,
+        1005,
+        1005,
         null,
         15
       ]
@@ -53760,7 +54684,7 @@
         15,
         null,
         null,
-        967
+        979
       ]
     },
     {
@@ -53865,7 +54789,7 @@
         15,
         null,
         null,
-        1638
+        1649
       ]
     },
     {
@@ -53880,7 +54804,7 @@
         15,
         null,
         null,
-        967
+        979
       ]
     },
     {
@@ -54222,8 +55146,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1698,
-        993,
+        1709,
+        1005,
         null,
         12
       ]
@@ -54237,8 +55161,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1698,
-        993,
+        1709,
+        1005,
         null,
         null
       ]
@@ -54537,7 +55461,7 @@
       "y": 13,
       "z": 0,
       "refs": [
-        1051,
+        1063,
         null,
         null,
         null
@@ -54597,7 +55521,7 @@
       "y": 15,
       "z": 0,
       "refs": [
-        1051,
+        1063,
         null,
         null,
         null
@@ -54642,10 +55566,10 @@
       "y": 3,
       "z": 21,
       "refs": [
-        62,
+        67,
         null,
         null,
-        62
+        67
       ]
     },
     {
@@ -54657,7 +55581,7 @@
       "y": 4,
       "z": 21,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -54672,7 +55596,7 @@
       "y": 7,
       "z": 21,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -54687,7 +55611,7 @@
       "y": 8,
       "z": 21,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -54702,7 +55626,7 @@
       "y": 9,
       "z": 21,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -54717,10 +55641,10 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1767,
-        1768,
+        1778,
+        1779,
         null,
-        1769
+        1780
       ]
     },
     {
@@ -54732,8 +55656,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1767,
-        1768,
+        1778,
+        1779,
         null,
         null
       ]
@@ -54900,7 +55824,7 @@
         null,
         null,
         null,
-        1801
+        1812
       ]
     },
     {
@@ -55065,7 +55989,7 @@
         null,
         null,
         null,
-        1829
+        1840
       ]
     },
     {
@@ -55080,7 +56004,7 @@
         null,
         null,
         null,
-        1829
+        1840
       ]
     },
     {
@@ -55095,7 +56019,7 @@
         15,
         null,
         null,
-        62
+        67
       ]
     },
     {
@@ -55110,7 +56034,7 @@
         15,
         null,
         null,
-        62
+        67
       ]
     },
     {
@@ -55122,7 +56046,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        1938,
+        1949,
         null,
         null,
         null
@@ -55137,7 +56061,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        1938,
+        1949,
         null,
         null,
         null
@@ -55377,7 +56301,7 @@
       "y": 1,
       "z": 2,
       "refs": [
-        62,
+        67,
         null,
         null,
         12
@@ -55392,7 +56316,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        1938,
+        1949,
         null,
         null,
         null
@@ -55545,7 +56469,7 @@
         15,
         null,
         null,
-        2255
+        2265
       ]
     },
     {
@@ -55560,7 +56484,7 @@
         15,
         null,
         null,
-        2256
+        2266
       ]
     },
     {
@@ -55575,7 +56499,7 @@
         15,
         null,
         null,
-        2257
+        2267
       ]
     },
     {
@@ -55695,7 +56619,7 @@
         15,
         null,
         null,
-        2274
+        2284
       ]
     },
     {
@@ -55710,7 +56634,7 @@
         15,
         null,
         null,
-        2274
+        2284
       ]
     },
     {
@@ -55725,7 +56649,7 @@
         15,
         null,
         null,
-        2274
+        2284
       ]
     },
     {
@@ -55740,7 +56664,7 @@
         15,
         null,
         null,
-        2277
+        2287
       ]
     },
     {
@@ -55755,7 +56679,7 @@
         15,
         null,
         null,
-        2277
+        2287
       ]
     },
     {
@@ -55770,7 +56694,7 @@
         15,
         null,
         null,
-        2277
+        2287
       ]
     },
     {
@@ -55785,7 +56709,7 @@
         15,
         null,
         null,
-        2277
+        2287
       ]
     },
     {
@@ -55800,7 +56724,7 @@
         15,
         null,
         null,
-        2277
+        2287
       ]
     },
     {
@@ -55815,7 +56739,7 @@
         15,
         null,
         null,
-        2277
+        2287
       ]
     },
     {
@@ -55830,7 +56754,7 @@
         15,
         null,
         null,
-        2277
+        2287
       ]
     },
     {
@@ -55845,7 +56769,7 @@
         15,
         null,
         null,
-        2277
+        2287
       ]
     },
     {
@@ -55860,7 +56784,7 @@
         15,
         null,
         null,
-        2277
+        2287
       ]
     },
     {
@@ -55873,9 +56797,9 @@
       "z": 3,
       "refs": [
         15,
-        2278,
+        2288,
         null,
-        2279
+        2289
       ]
     },
     {
@@ -55888,9 +56812,9 @@
       "z": 3,
       "refs": [
         15,
-        2278,
+        2288,
         null,
-        2280
+        2290
       ]
     },
     {
@@ -55905,7 +56829,7 @@
         15,
         null,
         null,
-        2281
+        2291
       ]
     },
     {
@@ -55920,7 +56844,7 @@
         15,
         null,
         null,
-        2282
+        2292
       ]
     },
     {
@@ -55935,7 +56859,7 @@
         15,
         null,
         null,
-        2283
+        2293
       ]
     },
     {
@@ -55950,7 +56874,7 @@
         15,
         null,
         null,
-        2285
+        2295
       ]
     },
     {
@@ -55965,7 +56889,7 @@
         15,
         null,
         null,
-        2286
+        2296
       ]
     },
     {
@@ -55980,7 +56904,7 @@
         15,
         null,
         null,
-        2287
+        2297
       ]
     },
     {
@@ -55995,7 +56919,7 @@
         15,
         null,
         null,
-        2288
+        2298
       ]
     },
     {
@@ -56010,7 +56934,7 @@
         15,
         null,
         null,
-        2289
+        2299
       ]
     },
     {
@@ -56025,7 +56949,7 @@
         15,
         null,
         null,
-        2291
+        2301
       ]
     },
     {
@@ -56173,9 +57097,9 @@
       "z": 3,
       "refs": [
         15,
-        2294,
+        2304,
         null,
-        139
+        144
       ]
     },
     {
@@ -56280,7 +57204,7 @@
         15,
         null,
         null,
-        2298
+        2308
       ]
     },
     {
@@ -56295,7 +57219,7 @@
         15,
         null,
         null,
-        2299
+        2309
       ]
     },
     {
@@ -56310,7 +57234,7 @@
         15,
         null,
         null,
-        2300
+        2310
       ]
     },
     {
@@ -56325,7 +57249,7 @@
         15,
         null,
         null,
-        2301
+        2311
       ]
     },
     {
@@ -56340,7 +57264,7 @@
         15,
         null,
         null,
-        2302
+        2312
       ]
     },
     {
@@ -56355,7 +57279,7 @@
         15,
         null,
         null,
-        2303
+        2313
       ]
     },
     {
@@ -56370,7 +57294,7 @@
         15,
         null,
         null,
-        2304
+        2314
       ]
     },
     {
@@ -56385,7 +57309,7 @@
         15,
         null,
         null,
-        2305
+        2315
       ]
     },
     {
@@ -56400,7 +57324,7 @@
         15,
         null,
         null,
-        2306
+        2316
       ]
     },
     {
@@ -56415,7 +57339,7 @@
         15,
         null,
         null,
-        2307
+        2317
       ]
     },
     {
@@ -56535,7 +57459,7 @@
         15,
         null,
         null,
-        2309
+        2319
       ]
     },
     {
@@ -56550,7 +57474,7 @@
         15,
         null,
         null,
-        2310
+        2320
       ]
     },
     {
@@ -56565,7 +57489,7 @@
         15,
         null,
         null,
-        2312
+        2322
       ]
     },
     {
@@ -56580,7 +57504,7 @@
         15,
         null,
         null,
-        2313
+        2323
       ]
     },
     {
@@ -56595,7 +57519,7 @@
         15,
         null,
         null,
-        2316
+        2326
       ]
     },
     {
@@ -56700,7 +57624,7 @@
         15,
         15,
         null,
-        2321
+        2331
       ]
     },
     {
@@ -56730,7 +57654,7 @@
         12,
         15,
         null,
-        2399
+        2409
       ]
     },
     {
@@ -56743,9 +57667,9 @@
       "z": 12,
       "refs": [
         12,
-        1177,
+        1189,
         null,
-        2400
+        2410
       ]
     },
     {
@@ -56758,9 +57682,9 @@
       "z": 12,
       "refs": [
         12,
-        2401,
+        2411,
         null,
-        2402
+        2412
       ]
     },
     {
@@ -56835,7 +57759,7 @@
         12,
         null,
         null,
-        2315
+        2325
       ]
     },
     {
@@ -56848,7 +57772,7 @@
       "z": 4,
       "refs": [
         12,
-        2403,
+        2413,
         null,
         null
       ]
@@ -56862,7 +57786,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        2405,
+        2415,
         null,
         null,
         null
@@ -56895,7 +57819,7 @@
         12,
         15,
         null,
-        2399
+        2409
       ]
     },
     {
@@ -56908,9 +57832,9 @@
       "z": 12,
       "refs": [
         12,
-        1177,
+        1189,
         null,
-        2400
+        2410
       ]
     },
     {
@@ -56923,9 +57847,9 @@
       "z": 12,
       "refs": [
         12,
-        2401,
+        2411,
         null,
-        2402
+        2412
       ]
     },
     {
@@ -57000,7 +57924,7 @@
         12,
         null,
         null,
-        2315
+        2325
       ]
     },
     {
@@ -57013,7 +57937,7 @@
       "z": 4,
       "refs": [
         12,
-        2403,
+        2413,
         null,
         null
       ]
@@ -57027,7 +57951,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        2405,
+        2415,
         null,
         null,
         null
@@ -57060,7 +57984,7 @@
         12,
         15,
         null,
-        2399
+        2409
       ]
     },
     {
@@ -57073,9 +57997,9 @@
       "z": 12,
       "refs": [
         12,
-        1177,
+        1189,
         null,
-        2400
+        2410
       ]
     },
     {
@@ -57088,9 +58012,9 @@
       "z": 12,
       "refs": [
         12,
-        2401,
+        2411,
         null,
-        2402
+        2412
       ]
     },
     {
@@ -57165,7 +58089,7 @@
         12,
         null,
         null,
-        2315
+        2325
       ]
     },
     {
@@ -57178,7 +58102,7 @@
       "z": 4,
       "refs": [
         12,
-        2403,
+        2413,
         null,
         null
       ]
@@ -57210,7 +58134,7 @@
         12,
         15,
         null,
-        2399
+        2409
       ]
     },
     {
@@ -57223,9 +58147,9 @@
       "z": 12,
       "refs": [
         12,
-        1177,
+        1189,
         null,
-        2400
+        2410
       ]
     },
     {
@@ -57238,9 +58162,9 @@
       "z": 12,
       "refs": [
         12,
-        2401,
+        2411,
         null,
-        2402
+        2412
       ]
     },
     {
@@ -57315,7 +58239,7 @@
         12,
         null,
         null,
-        2315
+        2325
       ]
     },
     {
@@ -57328,7 +58252,7 @@
       "z": 4,
       "refs": [
         12,
-        2403,
+        2413,
         null,
         null
       ]
@@ -57357,7 +58281,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        2405,
+        2415,
         null,
         null,
         null
@@ -57390,7 +58314,7 @@
         12,
         15,
         null,
-        2399
+        2409
       ]
     },
     {
@@ -57403,9 +58327,9 @@
       "z": 12,
       "refs": [
         12,
-        1177,
+        1189,
         null,
-        2400
+        2410
       ]
     },
     {
@@ -57418,9 +58342,9 @@
       "z": 12,
       "refs": [
         12,
-        2401,
+        2411,
         null,
-        2402
+        2412
       ]
     },
     {
@@ -57495,7 +58419,7 @@
         12,
         null,
         null,
-        2315
+        2325
       ]
     },
     {
@@ -57508,7 +58432,7 @@
       "z": 4,
       "refs": [
         12,
-        2403,
+        2413,
         null,
         null
       ]
@@ -57537,7 +58461,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        2405,
+        2415,
         null,
         null,
         null
@@ -57570,7 +58494,7 @@
         12,
         15,
         null,
-        2321
+        2331
       ]
     },
     {
@@ -57583,9 +58507,9 @@
       "z": 12,
       "refs": [
         12,
-        1177,
+        1189,
         null,
-        2409
+        2419
       ]
     },
     {
@@ -57598,9 +58522,9 @@
       "z": 12,
       "refs": [
         12,
-        2401,
+        2411,
         null,
-        2410
+        2420
       ]
     },
     {
@@ -57675,7 +58599,7 @@
         12,
         null,
         null,
-        2411
+        2421
       ]
     },
     {
@@ -57688,7 +58612,7 @@
       "z": 4,
       "refs": [
         12,
-        2403,
+        2413,
         null,
         null
       ]
@@ -57735,7 +58659,7 @@
         null,
         null,
         null,
-        2471
+        2481
       ]
     },
     {
@@ -57765,7 +58689,7 @@
         null,
         null,
         null,
-        71
+        76
       ]
     },
     {
@@ -57780,7 +58704,7 @@
         15,
         null,
         null,
-        2481
+        2491
       ]
     },
     {
@@ -57810,7 +58734,7 @@
         null,
         null,
         null,
-        71
+        76
       ]
     },
     {
@@ -57825,7 +58749,7 @@
         null,
         null,
         null,
-        71
+        76
       ]
     },
     {
@@ -57837,7 +58761,7 @@
       "y": 0,
       "z": 3,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -57852,10 +58776,10 @@
       "y": 0,
       "z": 3,
       "refs": [
-        62,
+        67,
         null,
         null,
-        62
+        67
       ]
     },
     {
@@ -57912,7 +58836,7 @@
       "y": 3,
       "z": 21,
       "refs": [
-        1657,
+        1668,
         null,
         null,
         15
@@ -57942,7 +58866,7 @@
       "y": 3,
       "z": 21,
       "refs": [
-        1657,
+        1668,
         null,
         null,
         15
@@ -57972,7 +58896,7 @@
       "y": 3,
       "z": 21,
       "refs": [
-        1657,
+        1668,
         null,
         null,
         15
@@ -58168,9 +59092,9 @@
       "z": 7,
       "refs": [
         12,
-        2822,
+        2834,
         null,
-        347
+        356
       ]
     },
     {
@@ -58183,9 +59107,9 @@
       "z": 7,
       "refs": [
         12,
-        2823,
+        2835,
         null,
-        2824
+        2836
       ]
     },
     {
@@ -58275,7 +59199,7 @@
         12,
         null,
         null,
-        2833
+        44
       ]
     },
     {
@@ -58290,7 +59214,7 @@
         12,
         null,
         null,
-        2834
+        2845
       ]
     },
     {
@@ -58320,7 +59244,7 @@
         12,
         null,
         null,
-        2835
+        2846
       ]
     },
     {
@@ -58363,9 +59287,9 @@
       "z": 7,
       "refs": [
         12,
-        2822,
+        2834,
         null,
-        347
+        356
       ]
     },
     {
@@ -58378,9 +59302,9 @@
       "z": 7,
       "refs": [
         12,
-        2823,
+        2835,
         null,
-        2824
+        2836
       ]
     },
     {
@@ -58815,7 +59739,7 @@
         12,
         null,
         null,
-        234
+        244
       ]
     },
     {
@@ -58845,7 +59769,7 @@
         12,
         null,
         null,
-        2844
+        2855
       ]
     },
     {
@@ -58860,7 +59784,7 @@
         12,
         null,
         null,
-        2844
+        2855
       ]
     },
     {
@@ -58875,7 +59799,7 @@
         12,
         null,
         null,
-        2844
+        2855
       ]
     },
     {
@@ -58890,7 +59814,7 @@
         12,
         null,
         null,
-        2844
+        2855
       ]
     },
     {
@@ -58905,7 +59829,7 @@
         12,
         null,
         null,
-        2844
+        2855
       ]
     },
     {
@@ -58920,7 +59844,7 @@
         12,
         null,
         null,
-        2845
+        2856
       ]
     },
     {
@@ -58948,7 +59872,7 @@
       "z": 2,
       "refs": [
         15,
-        791,
+        801,
         null,
         15
       ]
@@ -58978,7 +59902,7 @@
       "z": 2,
       "refs": [
         15,
-        791,
+        801,
         null,
         15
       ]
@@ -59008,7 +59932,7 @@
       "z": 2,
       "refs": [
         15,
-        791,
+        801,
         null,
         null
       ]
@@ -59040,7 +59964,7 @@
         12,
         15,
         null,
-        2864
+        2874
       ]
     },
     {
@@ -59070,7 +59994,7 @@
         12,
         15,
         null,
-        2865
+        2875
       ]
     },
     {
@@ -59130,7 +60054,7 @@
         15,
         null,
         null,
-        3006
+        3015
       ]
     },
     {
@@ -59145,7 +60069,7 @@
         15,
         null,
         null,
-        3006
+        3015
       ]
     },
     {
@@ -59160,7 +60084,7 @@
         null,
         null,
         null,
-        3011
+        3020
       ]
     },
     {
@@ -59175,7 +60099,7 @@
         15,
         null,
         null,
-        3006
+        3015
       ]
     },
     {
@@ -59190,7 +60114,7 @@
         null,
         null,
         null,
-        3012
+        3021
       ]
     },
     {
@@ -59205,7 +60129,7 @@
         15,
         null,
         null,
-        3006
+        3015
       ]
     },
     {
@@ -59250,7 +60174,7 @@
         null,
         null,
         null,
-        62
+        67
       ]
     },
     {
@@ -59265,7 +60189,7 @@
         null,
         null,
         null,
-        62
+        67
       ]
     },
     {
@@ -59280,7 +60204,7 @@
         null,
         null,
         null,
-        62
+        67
       ]
     },
     {
@@ -59295,7 +60219,7 @@
         null,
         null,
         null,
-        62
+        67
       ]
     },
     {
@@ -59310,7 +60234,7 @@
         null,
         null,
         null,
-        62
+        67
       ]
     },
     {
@@ -59325,7 +60249,7 @@
         null,
         null,
         null,
-        62
+        67
       ]
     },
     {
@@ -59340,7 +60264,7 @@
         null,
         null,
         null,
-        62
+        67
       ]
     },
     {
@@ -59352,7 +60276,7 @@
       "y": 22,
       "z": 7,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -59367,7 +60291,7 @@
       "y": 22,
       "z": 7,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -59382,7 +60306,7 @@
       "y": 11,
       "z": 18,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -59397,7 +60321,7 @@
       "y": 11,
       "z": 18,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -59412,7 +60336,7 @@
       "y": 8,
       "z": 0,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -59427,7 +60351,7 @@
       "y": 8,
       "z": 0,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -59457,10 +60381,10 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3194,
+        3204,
         15,
         null,
-        139
+        144
       ]
     },
     {
@@ -59472,10 +60396,10 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3195,
+        3205,
         15,
         null,
-        139
+        144
       ]
     },
     {
@@ -59487,10 +60411,10 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3196,
+        3206,
         15,
         null,
-        3197
+        3207
       ]
     },
     {
@@ -59502,7 +60426,7 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3194,
+        3204,
         15,
         null,
         null
@@ -59517,7 +60441,7 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3195,
+        3205,
         15,
         null,
         null
@@ -59532,7 +60456,7 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3196,
+        3206,
         15,
         null,
         null
@@ -59562,7 +60486,7 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3213,
+        3223,
         15,
         null,
         null
@@ -59577,7 +60501,7 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3214,
+        3224,
         15,
         null,
         null
@@ -59595,7 +60519,37 @@
         null,
         null,
         null,
-        3270
+        3280
+      ]
+    },
+    {
+      "sid": 826212523841319,
+      "actionSid": 354970524175377,
+      "function": "初始化／事件",
+      "sheet": "主事件",
+      "x": 36,
+      "y": 1,
+      "z": 0,
+      "refs": [
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 581286548970111,
+      "actionSid": 696609235326546,
+      "function": "初始化／事件",
+      "sheet": "主事件",
+      "x": 36,
+      "y": 1,
+      "z": 0,
+      "refs": [
+        null,
+        null,
+        null,
+        null
       ]
     },
     {
@@ -59610,7 +60564,7 @@
         null,
         null,
         null,
-        3281
+        3291
       ]
     },
     {
@@ -59622,7 +60576,7 @@
       "y": 36,
       "z": 0,
       "refs": [
-        2024,
+        2035,
         null,
         null,
         null
@@ -59667,7 +60621,7 @@
       "y": 52,
       "z": 2,
       "refs": [
-        3335,
+        3345,
         null,
         null,
         null
@@ -59700,7 +60654,7 @@
         12,
         15,
         null,
-        2321
+        2331
       ]
     },
     {
@@ -59713,9 +60667,9 @@
       "z": 12,
       "refs": [
         12,
-        1177,
+        1189,
         null,
-        2409
+        2419
       ]
     },
     {
@@ -59728,9 +60682,9 @@
       "z": 12,
       "refs": [
         12,
-        2401,
+        2411,
         null,
-        2410
+        2420
       ]
     },
     {
@@ -59805,7 +60759,7 @@
         12,
         null,
         null,
-        2411
+        2421
       ]
     },
     {
@@ -59818,7 +60772,7 @@
       "z": 4,
       "refs": [
         12,
-        2403,
+        2413,
         null,
         null
       ]
@@ -59850,7 +60804,7 @@
         12,
         15,
         null,
-        2321
+        2331
       ]
     },
     {
@@ -59863,9 +60817,9 @@
       "z": 12,
       "refs": [
         12,
-        1177,
+        1189,
         null,
-        2409
+        2419
       ]
     },
     {
@@ -59878,9 +60832,9 @@
       "z": 12,
       "refs": [
         12,
-        2401,
+        2411,
         null,
-        2410
+        2420
       ]
     },
     {
@@ -59955,7 +60909,7 @@
         12,
         null,
         null,
-        2411
+        2421
       ]
     },
     {
@@ -59968,7 +60922,7 @@
       "z": 4,
       "refs": [
         12,
-        2403,
+        2413,
         null,
         null
       ]
@@ -60000,7 +60954,7 @@
         12,
         15,
         null,
-        2321
+        2331
       ]
     },
     {
@@ -60013,9 +60967,9 @@
       "z": 12,
       "refs": [
         12,
-        1177,
+        1189,
         null,
-        2409
+        2419
       ]
     },
     {
@@ -60028,9 +60982,9 @@
       "z": 12,
       "refs": [
         12,
-        2401,
+        2411,
         null,
-        2410
+        2420
       ]
     },
     {
@@ -60060,7 +61014,7 @@
         12,
         null,
         null,
-        1797
+        1808
       ]
     },
     {
@@ -60135,7 +61089,7 @@
         12,
         null,
         null,
-        2411
+        2421
       ]
     },
     {
@@ -60148,7 +61102,7 @@
       "z": 4,
       "refs": [
         12,
-        2403,
+        2413,
         null,
         null
       ]
@@ -60177,7 +61131,7 @@
       "y": 31,
       "z": 0,
       "refs": [
-        240,
+        250,
         null,
         null,
         null
@@ -60192,7 +61146,7 @@
       "y": 31,
       "z": 0,
       "refs": [
-        240,
+        250,
         null,
         null,
         null
@@ -60207,7 +61161,7 @@
       "y": 31,
       "z": 0,
       "refs": [
-        240,
+        250,
         null,
         null,
         null
@@ -60222,7 +61176,7 @@
       "y": 31,
       "z": 0,
       "refs": [
-        240,
+        250,
         null,
         null,
         null
@@ -60237,7 +61191,7 @@
       "y": 32,
       "z": 0,
       "refs": [
-        240,
+        250,
         null,
         null,
         null
@@ -60252,7 +61206,7 @@
       "y": 32,
       "z": 0,
       "refs": [
-        240,
+        250,
         null,
         null,
         null
@@ -60267,7 +61221,7 @@
       "y": 32,
       "z": 0,
       "refs": [
-        240,
+        250,
         null,
         null,
         null
@@ -60282,7 +61236,7 @@
       "y": 32,
       "z": 0,
       "refs": [
-        240,
+        250,
         null,
         null,
         null
@@ -60297,7 +61251,7 @@
       "y": 33,
       "z": 0,
       "refs": [
-        240,
+        250,
         null,
         null,
         null
@@ -60312,7 +61266,7 @@
       "y": 33,
       "z": 0,
       "refs": [
-        240,
+        250,
         null,
         null,
         null
@@ -60327,7 +61281,7 @@
       "y": 33,
       "z": 0,
       "refs": [
-        240,
+        250,
         null,
         null,
         null
@@ -60342,7 +61296,7 @@
       "y": 33,
       "z": 0,
       "refs": [
-        240,
+        250,
         null,
         null,
         null
@@ -60357,7 +61311,7 @@
       "y": 31,
       "z": 0,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -60372,7 +61326,7 @@
       "y": 31,
       "z": 0,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -60387,7 +61341,7 @@
       "y": 32,
       "z": 0,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -60402,7 +61356,7 @@
       "y": 32,
       "z": 0,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -60417,7 +61371,7 @@
       "y": 33,
       "z": 0,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -60432,7 +61386,7 @@
       "y": 33,
       "z": 0,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -60447,7 +61401,7 @@
       "y": 3,
       "z": 21,
       "refs": [
-        1657,
+        1668,
         null,
         null,
         15
@@ -60735,7 +61689,7 @@
         12,
         null,
         null,
-        240
+        250
       ]
     },
     {
@@ -60810,7 +61764,7 @@
         12,
         null,
         null,
-        3523
+        3533
       ]
     },
     {
@@ -60822,7 +61776,7 @@
       "y": 30,
       "z": 0,
       "refs": [
-        240,
+        250,
         null,
         null,
         null
@@ -60837,7 +61791,7 @@
       "y": 30,
       "z": 0,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -60852,7 +61806,7 @@
       "y": 30,
       "z": 0,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -60860,77 +61814,77 @@
     },
     {
       "sid": 835824606167319,
-      "actionSid": 383482110096857,
+      "actionSid": 422958001798803,
       "function": "套装合成",
       "sheet": "主事件",
       "x": "*",
       "y": 27,
-      "z": 7,
+      "z": "*",
       "refs": [
         15,
         null,
-        null,
-        3048
+        15,
+        2753
       ]
     },
     {
       "sid": 835824606167319,
-      "actionSid": 526883003994970,
+      "actionSid": 762738084788528,
       "function": "套装合成",
       "sheet": "主事件",
       "x": "*",
       "y": 1,
-      "z": 7,
+      "z": "*",
       "refs": [
         15,
         null,
-        null,
+        15,
         15
       ]
     },
     {
       "sid": 835824606167319,
-      "actionSid": 462798118021337,
+      "actionSid": 135316480438183,
       "function": "套装合成",
       "sheet": "主事件",
       "x": "*",
       "y": 24,
-      "z": 7,
+      "z": "*",
       "refs": [
         15,
         null,
-        null,
+        15,
         null
       ]
     },
     {
       "sid": 835824606167319,
-      "actionSid": 393224308183378,
+      "actionSid": 822529900638178,
       "function": "套装合成",
       "sheet": "主事件",
       "x": "*",
       "y": 23,
-      "z": 7,
+      "z": "*",
       "refs": [
         15,
         null,
-        null,
-        3563
+        15,
+        3569
       ]
     },
     {
       "sid": 835824606167319,
-      "actionSid": 271168155586553,
+      "actionSid": 272257940422136,
       "function": "套装合成",
       "sheet": "主事件",
       "x": "*",
       "y": 26,
-      "z": 7,
+      "z": "*",
       "refs": [
         15,
         null,
-        null,
-        3564
+        15,
+        3570
       ]
     },
     {
@@ -60942,7 +61896,7 @@
       "y": 34,
       "z": 0,
       "refs": [
-        240,
+        250,
         null,
         null,
         null
@@ -60972,7 +61926,7 @@
       "y": 20,
       "z": 0,
       "refs": [
-        790,
+        800,
         null,
         null,
         null
@@ -61002,7 +61956,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        1938,
+        1949,
         null,
         null,
         null
@@ -61032,7 +61986,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        1938,
+        1949,
         null,
         null,
         null
@@ -61047,7 +62001,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -61077,7 +62031,7 @@
       "y": 20,
       "z": 0,
       "refs": [
-        790,
+        800,
         null,
         null,
         null
@@ -61110,7 +62064,7 @@
         15,
         null,
         null,
-        3794
+        3803
       ]
     },
     {
@@ -61138,7 +62092,7 @@
       "z": 0,
       "refs": [
         15,
-        1993,
+        2004,
         null,
         15
       ]
@@ -61197,8 +62151,8 @@
       "y": "*",
       "z": 0,
       "refs": [
-        3804,
-        3808,
+        3813,
+        3817,
         null,
         null
       ]
@@ -61350,7 +62304,7 @@
         12,
         15,
         null,
-        3872
+        3881
       ]
     },
     {
@@ -61380,7 +62334,7 @@
         12,
         15,
         null,
-        3873
+        3882
       ]
     },
     {
@@ -61425,7 +62379,7 @@
         15,
         null,
         null,
-        4032
+        4041
       ]
     },
     {
@@ -61440,7 +62394,7 @@
         15,
         null,
         null,
-        4033
+        4042
       ]
     },
     {
@@ -61453,7 +62407,7 @@
       "z": 16,
       "refs": [
         15,
-        4034,
+        4043,
         null,
         15
       ]
@@ -61468,7 +62422,7 @@
       "z": 16,
       "refs": [
         15,
-        4035,
+        4044,
         null,
         15
       ]
@@ -61545,7 +62499,7 @@
         15,
         null,
         null,
-        4038
+        4047
       ]
     },
     {
@@ -61560,7 +62514,7 @@
         15,
         null,
         null,
-        4038
+        4047
       ]
     },
     {
@@ -61575,7 +62529,7 @@
         15,
         null,
         null,
-        4038
+        4047
       ]
     },
     {
@@ -61590,7 +62544,7 @@
         12,
         15,
         null,
-        2865
+        2875
       ]
     },
     {
@@ -61665,7 +62619,7 @@
         15,
         null,
         null,
-        4253
+        4264
       ]
     },
     {
@@ -61722,10 +62676,10 @@
       "y": "*",
       "z": 10,
       "refs": [
-        4282,
+        4293,
         15,
         null,
-        4286
+        4297
       ]
     },
     {
@@ -61752,10 +62706,10 @@
       "y": 7,
       "z": 1,
       "refs": [
-        62,
+        67,
         null,
         null,
-        62
+        67
       ]
     },
     {
@@ -61767,7 +62721,7 @@
       "y": 7,
       "z": 1,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -61815,7 +62769,7 @@
         15,
         15,
         null,
-        4306
+        4317
       ]
     },
     {
@@ -61857,10 +62811,10 @@
       "y": "*",
       "z": 6,
       "refs": [
-        345,
+        354,
         12,
         null,
-        4309
+        4320
       ]
     },
     {
@@ -61872,10 +62826,10 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1564,
+        1575,
         12,
         null,
-        4310
+        4321
       ]
     },
     {
@@ -61905,7 +62859,7 @@
         12,
         null,
         null,
-        4309
+        4320
       ]
     },
     {
@@ -61920,7 +62874,7 @@
         12,
         null,
         null,
-        1575
+        1586
       ]
     },
     {
@@ -61935,7 +62889,7 @@
         12,
         null,
         null,
-        1575
+        1586
       ]
     },
     {
@@ -61950,7 +62904,7 @@
         12,
         null,
         null,
-        4312
+        4323
       ]
     },
     {
@@ -62098,9 +63052,9 @@
       "z": 20,
       "refs": [
         12,
-        1953,
+        1964,
         null,
-        698
+        707
       ]
     },
     {
@@ -62113,9 +63067,9 @@
       "z": 20,
       "refs": [
         12,
-        1952,
+        1963,
         null,
-        699
+        708
       ]
     },
     {
@@ -62295,7 +63249,7 @@
         null,
         null,
         null,
-        139
+        144
       ]
     },
     {
@@ -62310,7 +63264,7 @@
         null,
         null,
         null,
-        4406
+        4417
       ]
     },
     {
@@ -62325,7 +63279,7 @@
         null,
         null,
         null,
-        4412
+        4423
       ]
     },
     {
@@ -62340,7 +63294,7 @@
         null,
         null,
         null,
-        4413
+        4424
       ]
     },
     {
@@ -62355,7 +63309,7 @@
         null,
         null,
         null,
-        4412
+        4423
       ]
     },
     {
@@ -62370,7 +63324,7 @@
         null,
         null,
         null,
-        4413
+        4424
       ]
     },
     {
@@ -62415,7 +63369,7 @@
         15,
         15,
         null,
-        4306
+        4317
       ]
     },
     {
@@ -62487,7 +63441,7 @@
       "y": 5,
       "z": 21,
       "refs": [
-        1657,
+        1668,
         null,
         null,
         null
@@ -62502,7 +63456,7 @@
       "y": 5,
       "z": 21,
       "refs": [
-        1657,
+        1668,
         null,
         null,
         null
@@ -62550,7 +63504,7 @@
         15,
         null,
         null,
-        4508
+        4519
       ]
     },
     {
@@ -62565,7 +63519,7 @@
         null,
         null,
         null,
-        4509
+        4520
       ]
     },
     {
@@ -62580,7 +63534,7 @@
         15,
         null,
         null,
-        4510
+        4521
       ]
     },
     {
@@ -62595,7 +63549,7 @@
         15,
         null,
         null,
-        4508
+        4519
       ]
     },
     {
@@ -62610,7 +63564,7 @@
         null,
         null,
         null,
-        4509
+        4520
       ]
     },
     {
@@ -62625,7 +63579,7 @@
         15,
         null,
         null,
-        4510
+        4521
       ]
     },
     {
@@ -62655,7 +63609,7 @@
         15,
         null,
         null,
-        4534
+        4545
       ]
     },
     {
@@ -62700,7 +63654,7 @@
         15,
         null,
         null,
-        4536
+        4547
       ]
     },
     {
@@ -62715,7 +63669,7 @@
         15,
         null,
         null,
-        4537
+        4548
       ]
     },
     {
@@ -62742,7 +63696,7 @@
       "y": 35,
       "z": 0,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -62757,7 +63711,7 @@
       "y": 35,
       "z": 0,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -62773,9 +63727,9 @@
       "z": 0,
       "refs": [
         15,
-        4574,
+        4585,
         null,
-        4575
+        4586
       ]
     },
     {
@@ -62790,7 +63744,7 @@
         null,
         null,
         null,
-        4577
+        4588
       ]
     },
     {
@@ -62803,9 +63757,9 @@
       "z": 0,
       "refs": [
         15,
-        4574,
+        4585,
         null,
-        4575
+        4586
       ]
     },
     {
@@ -62820,7 +63774,7 @@
         15,
         null,
         null,
-        4584
+        4595
       ]
     },
     {
@@ -62850,7 +63804,7 @@
         15,
         null,
         null,
-        4537
+        4548
       ]
     },
     {
@@ -62865,7 +63819,7 @@
         15,
         null,
         null,
-        4587
+        4598
       ]
     },
     {
@@ -62895,7 +63849,7 @@
         15,
         null,
         null,
-        4590
+        4601
       ]
     },
     {
@@ -62910,7 +63864,7 @@
         15,
         null,
         null,
-        1300
+        1311
       ]
     },
     {
@@ -63015,7 +63969,7 @@
         15,
         null,
         null,
-        4536
+        4547
       ]
     },
     {
@@ -63030,7 +63984,7 @@
         15,
         null,
         null,
-        4537
+        4548
       ]
     },
     {
@@ -63090,7 +64044,7 @@
         null,
         null,
         null,
-        4693
+        4704
       ]
     },
     {
@@ -63105,7 +64059,7 @@
         null,
         null,
         null,
-        4694
+        4705
       ]
     },
     {
@@ -63120,7 +64074,7 @@
         null,
         null,
         null,
-        4705
+        4716
       ]
     },
     {
@@ -63135,7 +64089,7 @@
         null,
         null,
         null,
-        62
+        67
       ]
     },
     {
@@ -63148,9 +64102,9 @@
       "z": "*",
       "refs": [
         15,
-        2822,
+        2834,
         15,
-        4855
+        4866
       ]
     },
     {
@@ -63163,9 +64117,9 @@
       "z": "*",
       "refs": [
         15,
-        4856,
+        4867,
         15,
-        4857
+        4868
       ]
     },
     {
@@ -63178,7 +64132,7 @@
       "z": "*",
       "refs": [
         15,
-        2892,
+        2902,
         15,
         null
       ]
@@ -63195,7 +64149,7 @@
         null,
         null,
         null,
-        4919
+        4930
       ]
     },
     {
@@ -63210,7 +64164,7 @@
         15,
         null,
         null,
-        4993
+        5004
       ]
     },
     {
@@ -63225,7 +64179,7 @@
         15,
         null,
         null,
-        5090
+        5101
       ]
     },
     {
@@ -63240,7 +64194,7 @@
         15,
         null,
         null,
-        5093
+        5104
       ]
     },
     {
@@ -63255,7 +64209,7 @@
         15,
         null,
         null,
-        4510
+        4521
       ]
     },
     {
@@ -63270,7 +64224,7 @@
         15,
         null,
         null,
-        228
+        238
       ]
     },
     {
@@ -63300,7 +64254,7 @@
         15,
         15,
         null,
-        5100
+        5111
       ]
     },
     {
@@ -63315,7 +64269,7 @@
         15,
         15,
         null,
-        5102
+        5113
       ]
     },
     {
@@ -63330,7 +64284,7 @@
         15,
         15,
         null,
-        5103
+        5114
       ]
     },
     {
@@ -63345,7 +64299,7 @@
         15,
         15,
         null,
-        4201
+        4212
       ]
     },
     {
@@ -63402,10 +64356,10 @@
       "y": "*",
       "z": 6,
       "refs": [
-        5115,
-        1768,
+        5126,
+        1779,
         null,
-        5116
+        5127
       ]
     },
     {
@@ -63420,7 +64374,7 @@
         15,
         null,
         null,
-        5117
+        5128
       ]
     },
     {
@@ -63480,7 +64434,7 @@
         15,
         null,
         null,
-        5120
+        5131
       ]
     },
     {
@@ -63495,7 +64449,7 @@
         15,
         null,
         null,
-        5123
+        5134
       ]
     },
     {
@@ -63570,7 +64524,7 @@
         15,
         null,
         null,
-        5126
+        5137
       ]
     },
     {
@@ -63585,7 +64539,7 @@
         15,
         null,
         null,
-        5128
+        5139
       ]
     },
     {
@@ -63660,7 +64614,7 @@
         15,
         null,
         null,
-        5132
+        5143
       ]
     },
     {
@@ -63675,7 +64629,7 @@
         15,
         null,
         null,
-        5135
+        5146
       ]
     },
     {
@@ -63735,7 +64689,7 @@
         15,
         null,
         null,
-        5134
+        5145
       ]
     },
     {
@@ -63750,7 +64704,7 @@
         15,
         null,
         null,
-        5132
+        5143
       ]
     },
     {
@@ -63765,7 +64719,7 @@
         15,
         null,
         null,
-        5135
+        5146
       ]
     },
     {
@@ -63822,10 +64776,10 @@
       "y": 4,
       "z": 1,
       "refs": [
-        62,
+        67,
         null,
         null,
-        5152
+        5163
       ]
     },
     {
@@ -63837,7 +64791,7 @@
       "y": 4,
       "z": 1,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -63855,7 +64809,7 @@
         null,
         null,
         null,
-        5154
+        5165
       ]
     },
     {
@@ -63870,7 +64824,7 @@
         15,
         null,
         null,
-        5156
+        5167
       ]
     },
     {
@@ -63900,7 +64854,7 @@
         null,
         null,
         null,
-        5160
+        5171
       ]
     },
     {
@@ -63915,7 +64869,7 @@
         null,
         null,
         null,
-        5164
+        5175
       ]
     },
     {
@@ -63930,7 +64884,7 @@
         null,
         null,
         null,
-        5167
+        5178
       ]
     },
     {
@@ -63945,7 +64899,7 @@
         15,
         null,
         null,
-        5173
+        5184
       ]
     },
     {
@@ -63960,7 +64914,7 @@
         15,
         null,
         null,
-        5175
+        5186
       ]
     },
     {
@@ -63975,7 +64929,7 @@
         15,
         null,
         null,
-        5176
+        5187
       ]
     },
     {
@@ -64003,9 +64957,9 @@
       "z": 2,
       "refs": [
         15,
-        1993,
+        2004,
         null,
-        5197
+        5208
       ]
     },
     {
@@ -64018,9 +64972,9 @@
       "z": 2,
       "refs": [
         15,
-        1993,
+        2004,
         null,
-        5199
+        5210
       ]
     },
     {
@@ -64033,9 +64987,9 @@
       "z": 2,
       "refs": [
         15,
-        558,
+        567,
         null,
-        5200
+        5211
       ]
     },
     {
@@ -64048,7 +65002,7 @@
       "z": 2,
       "refs": [
         15,
-        1993,
+        2004,
         null,
         null
       ]
@@ -64062,10 +65016,10 @@
       "y": 7,
       "z": 21,
       "refs": [
-        62,
+        67,
         null,
         null,
-        62
+        67
       ]
     },
     {
@@ -64077,10 +65031,10 @@
       "y": 9,
       "z": 21,
       "refs": [
-        62,
+        67,
         null,
         null,
-        5203
+        5214
       ]
     },
     {
@@ -64092,7 +65046,7 @@
       "y": 8,
       "z": 21,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -64107,10 +65061,10 @@
       "y": 4,
       "z": 21,
       "refs": [
-        62,
+        67,
         null,
         null,
-        5207
+        5218
       ]
     },
     {
@@ -64365,7 +65319,7 @@
         15,
         null,
         null,
-        5234
+        5245
       ]
     },
     {
@@ -64380,7 +65334,7 @@
         null,
         null,
         null,
-        5238
+        5249
       ]
     },
     {
@@ -64395,7 +65349,7 @@
         null,
         null,
         null,
-        5240
+        5251
       ]
     },
     {
@@ -64410,7 +65364,7 @@
         null,
         null,
         null,
-        5242
+        5253
       ]
     },
     {
@@ -64425,7 +65379,7 @@
         null,
         null,
         null,
-        5244
+        5255
       ]
     },
     {
@@ -64440,7 +65394,7 @@
         15,
         null,
         null,
-        5246
+        5257
       ]
     }
   ],
@@ -64459,6 +65413,8 @@
     }
   },
   "verification": {
+    "randomCharacterSkillCaps": true,
+    "randomCharacterBaseAptitudes": true,
     "backpackEquipmentQualityUpgrade": true,
     "backpackEquipmentQualityDowngrade": true,
     "equipmentQualityUpgrade": true,
@@ -64480,919 +65436,6 @@
     "professionTrainingCap": true,
     "professionTrainingCapAdvanced": true,
     "advancedTechnologyLevel": true,
-    "advancedTechnologyLevelAdvanced": true,
-    "randomCharacterBaseAptitudes": true,
-    "randomCharacterSkillCaps": true
-  },
-  "randomCharacterGrowth": {
-    "version": 1,
-    "totals": [
-      [
-        90,
-        120
-      ],
-      [
-        120,
-        150
-      ],
-      [
-        150,
-        180
-      ],
-      [
-        180,
-        210
-      ],
-      [
-        210,
-        240
-      ],
-      [
-        240,
-        300
-      ]
-    ],
-    "weights": [
-      [
-        [
-          70,
-          90
-        ],
-        [
-          50,
-          70
-        ],
-        [
-          50,
-          70
-        ]
-      ],
-      [
-        [
-          50,
-          70
-        ],
-        [
-          70,
-          90
-        ],
-        [
-          50,
-          70
-        ]
-      ],
-      [
-        [
-          50,
-          70
-        ],
-        [
-          50,
-          70
-        ],
-        [
-          70,
-          90
-        ]
-      ],
-      [
-        [
-          50,
-          80
-        ],
-        [
-          50,
-          80
-        ],
-        [
-          50,
-          80
-        ]
-      ]
-    ],
-    "upperWeightExclusive": true,
-    "scale": 10,
-    "policy": "same-quality-any-native-orientation",
-    "sourceSids": [
-      353435574752032,
-      879483110980295,
-      945993007174840,
-      450284555421069,
-      489035254017381,
-      953598826873759,
-      144692352947544,
-      226111227717877,
-      594381087796989,
-      407776400732220,
-      716009552600469,
-      501010543923483,
-      876351181502276,
-      110565347746026,
-      358500068340403,
-      778369382997146
-    ]
-  },
-  "randomCharacterSkillCaps": {
-    "version": 1,
-    "policy": "fixed-aptitudes-and-talents",
-    "ranges": [
-      {
-        "base": [
-          4,
-          14
-        ],
-        "primary": [
-          18,
-          38
-        ],
-        "secondary": [
-          9,
-          27
-        ]
-      },
-      {
-        "base": [
-          7,
-          17
-        ],
-        "primary": [
-          28,
-          48
-        ],
-        "secondary": [
-          17,
-          35
-        ]
-      },
-      {
-        "base": [
-          10,
-          20
-        ],
-        "primary": [
-          38,
-          58
-        ],
-        "secondary": [
-          25,
-          43
-        ]
-      },
-      {
-        "base": [
-          13,
-          23
-        ],
-        "primary": [
-          48,
-          68
-        ],
-        "secondary": [
-          33,
-          51
-        ]
-      },
-      {
-        "base": [
-          16,
-          26
-        ],
-        "primary": [
-          58,
-          78
-        ],
-        "secondary": [
-          41,
-          59
-        ]
-      },
-      {
-        "base": [
-          19,
-          29
-        ],
-        "primary": [
-          68,
-          88
-        ],
-        "secondary": [
-          49,
-          67
-        ]
-      }
-    ],
-    "totals": [
-      [
-        90,
-        120
-      ],
-      [
-        120,
-        150
-      ],
-      [
-        150,
-        180
-      ],
-      [
-        180,
-        210
-      ],
-      [
-        210,
-        240
-      ],
-      [
-        240,
-        300
-      ]
-    ],
-    "weights": [
-      [
-        [
-          70,
-          90
-        ],
-        [
-          50,
-          70
-        ],
-        [
-          50,
-          70
-        ]
-      ],
-      [
-        [
-          50,
-          70
-        ],
-        [
-          70,
-          90
-        ],
-        [
-          50,
-          70
-        ]
-      ],
-      [
-        [
-          50,
-          70
-        ],
-        [
-          50,
-          70
-        ],
-        [
-          70,
-          90
-        ]
-      ],
-      [
-        [
-          50,
-          80
-        ],
-        [
-          50,
-          80
-        ],
-        [
-          50,
-          80
-        ]
-      ]
-    ],
-    "upperWeightExclusive": true,
-    "orientations": [
-      "力量",
-      "敏捷",
-      "智力",
-      "生产"
-    ],
-    "talentLevels": [
-      [
-        1,
-        2
-      ],
-      [
-        1,
-        2,
-        3
-      ],
-      [
-        2,
-        3,
-        4
-      ],
-      [
-        3,
-        4,
-        5
-      ],
-      [
-        4,
-        5
-      ],
-      [
-        5
-      ]
-    ],
-    "talents": {
-      "1": {
-        "category": "通用",
-        "orientation": "力量",
-        "excludedPrimary": []
-      },
-      "2": {
-        "category": "通用",
-        "orientation": "敏捷",
-        "excludedPrimary": []
-      },
-      "3": {
-        "category": "通用",
-        "orientation": "智力",
-        "excludedPrimary": []
-      },
-      "4": {
-        "category": "战斗",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "5": {
-        "category": "战斗",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "6": {
-        "category": "战斗",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "7": {
-        "category": "战斗",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "8": {
-        "category": "战斗",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "9": {
-        "category": "战斗",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "10": {
-        "category": "战斗",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "11": {
-        "category": "战斗",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "12": {
-        "category": "战斗",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "13": {
-        "category": "战斗",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "14": {
-        "category": "战斗",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "15": {
-        "category": "战斗",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "16": {
-        "category": "战斗",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "17": {
-        "category": "战斗",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "18": {
-        "category": "战斗",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "19": {
-        "category": "战斗",
-        "orientation": "力量",
-        "excludedPrimary": []
-      },
-      "20": {
-        "category": "战斗",
-        "orientation": "敏捷",
-        "excludedPrimary": []
-      },
-      "21": {
-        "category": "战斗",
-        "orientation": "智力",
-        "excludedPrimary": []
-      },
-      "22": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "23": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "24": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": [
-          4,
-          5,
-          6,
-          7,
-          8,
-          9
-        ]
-      },
-      "25": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": [
-          1,
-          2,
-          3,
-          7,
-          8,
-          9
-        ]
-      },
-      "26": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6
-        ]
-      },
-      "27": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": [
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9
-        ]
-      },
-      "28": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": [
-          1,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9
-        ]
-      },
-      "29": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": [
-          1,
-          2,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9
-        ]
-      },
-      "30": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": [
-          1,
-          2,
-          3,
-          5,
-          6,
-          7,
-          8,
-          9
-        ]
-      },
-      "31": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": [
-          1,
-          2,
-          3,
-          4,
-          6,
-          7,
-          8,
-          9
-        ]
-      },
-      "32": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          7,
-          8,
-          9
-        ]
-      },
-      "33": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          8,
-          9
-        ]
-      },
-      "34": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          9
-        ]
-      },
-      "35": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8
-        ]
-      },
-      "36": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "37": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "38": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "39": {
-        "category": "战斗",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "40": {
-        "category": "通用",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "41": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "42": {
-        "category": "通用",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "43": {
-        "category": "通用",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "44": {
-        "category": "战斗",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "45": {
-        "category": "战斗",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "46": {
-        "category": "战斗",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "47": {
-        "category": "战斗",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "48": {
-        "category": "战斗",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "49": {
-        "category": "战斗",
-        "orientation": "力量",
-        "excludedPrimary": []
-      },
-      "50": {
-        "category": "战斗",
-        "orientation": "敏捷",
-        "excludedPrimary": []
-      },
-      "51": {
-        "category": "战斗",
-        "orientation": "智力",
-        "excludedPrimary": []
-      },
-      "52": {
-        "category": "战斗",
-        "orientation": "力量",
-        "excludedPrimary": []
-      },
-      "53": {
-        "category": "战斗",
-        "orientation": "敏捷",
-        "excludedPrimary": []
-      },
-      "54": {
-        "category": "战斗",
-        "orientation": "智力",
-        "excludedPrimary": []
-      },
-      "55": {
-        "category": "战斗",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "56": {
-        "category": "战斗",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "57": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": [
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9
-        ]
-      },
-      "58": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": [
-          1,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9
-        ]
-      },
-      "59": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": [
-          1,
-          2,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9
-        ]
-      },
-      "60": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": [
-          1,
-          2,
-          3,
-          5,
-          6,
-          7,
-          8,
-          9
-        ]
-      },
-      "61": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": [
-          1,
-          2,
-          3,
-          4,
-          6,
-          7,
-          8,
-          9
-        ]
-      },
-      "62": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          7,
-          8,
-          9
-        ]
-      },
-      "63": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          8,
-          9
-        ]
-      },
-      "64": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          9
-        ]
-      },
-      "65": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8
-        ]
-      },
-      "66": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": [
-          4,
-          5,
-          6,
-          7,
-          8,
-          9
-        ]
-      },
-      "67": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": [
-          1,
-          2,
-          3,
-          7,
-          8,
-          9
-        ]
-      },
-      "68": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6
-        ]
-      },
-      "69": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "70": {
-        "category": "战斗",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "71": {
-        "category": "生产",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "72": {
-        "category": "通用",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "73": {
-        "category": "通用",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "74": {
-        "category": "战斗",
-        "orientation": "通用",
-        "excludedPrimary": []
-      },
-      "75": {
-        "category": "通用",
-        "orientation": "通用",
-        "excludedPrimary": []
-      }
-    },
-    "sourceSids": [
-      390673545485827,
-      907064845535449,
-      890068128550912,
-      360229107749216,
-      858555530911324,
-      884525457994003,
-      940056460112238,
-      180031394399295,
-      748584357810010,
-      176292127127652
-    ],
-    "sourceDigest": "1754eb477c345e31ef8251bc2f405b6299e0b780355bff57fbc526fa312e52d0"
+    "advancedTechnologyLevelAdvanced": true
   }
 }
