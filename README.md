@@ -6,7 +6,7 @@
 
 [Wiki 首頁](https://github.com/jakeuj/bandit-save-editor/wiki) · [操作教學](https://github.com/jakeuj/bandit-save-editor/wiki/操作教學) · [常見問題](https://github.com/jakeuj/bandit-save-editor/wiki/常見問題)
 
-[Discussions 討論區](https://github.com/jakeuj/bandit-save-editor/discussions) · [山寨帳房介紹與使用入口公告](https://github.com/jakeuj/bandit-save-editor/discussions/3)
+[Discussions 討論區](https://github.com/jakeuj/bandit-save-editor/discussions) · [山寨帳房介紹與使用入口公告](https://github.com/jakeuj/bandit-save-editor/discussions/3) · [Issues 問題回報](https://github.com/jakeuj/bandit-save-editor/issues)
 
 ## 專案進度
 
