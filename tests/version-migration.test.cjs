@@ -182,3 +182,48 @@ test('every suite oracle and lifecycle script exists and marked copies run each 
   assert.match(generator, /lifecycle: mode === 'followup'/);
   assert.match(generator, /extra\.followup = \{equipment: \{id: 3, slot: t\.slot\}, profession: 3, technology: 31, drillGround, academy\}/);
 });
+
+test('migration runner replays each copy in order, stops on failure and derives proven checks',async()=>{
+  const os = require('node:os'), M = require('../scripts/verify-migration.cjs'), R = require('../scripts/verification-requirements.cjs'), S = require('../scripts/verification-suite.cjs');
+  const workflow = M.steps({name: 'w', family: 'equipmentWorkflow', oracleArgs: [], lifecycle: true, scenarioFile: '/x/w.json'}, ['--source', 's']);
+  assert.deepEqual(workflow.map(s => s.step), ['setup', 'load', 'oracle', 'save', 'assert', 'stop', 'restart', 'restartLoad', 'reload', 'oracleCompare', 'lifecycle', 'lifecycle', 'lifecycle', 'stop', 'restart', 'restartLoad', 'lifecycle', 'lifecycle', 'stop']);
+  assert.deepEqual(workflow.at(-2).args, ['--state', '{state}', '--compare']);
+  assert.deepEqual(M.steps({name: 'b', family: 'batch2', oracleArgs: ['--character', '1'], lifecycle: true, scenarioFile: '/x/b.json'}, []).filter(s => s.step === 'lifecycle' && s.script !== 'verify-game.cjs').map(s => s.script), ['verify-affix-lifecycle.cjs', 'verify-native-lifecycle.cjs']);
+  assert.deepEqual(M.steps({name: 'g', family: 'growth', oracleArgs: [], lifecycle: false}, []).map(s => s.step), ['setup', 'load', 'save', 'assert', 'stop', 'restart', 'restartLoad', 'reload', 'stop']);
+
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'bandit-migration-'));
+  try{
+    const statePath = path.join(dir, 'state.json'); fs.writeFileSync(statePath, JSON.stringify({game: dir}));
+    const proof = JSON.parse(fs.readFileSync(path.join(root, 'knowledge/verification.json'), 'utf8'));
+    const digests = {selectionUi: proof.equipmentWorkflow.groups.equipmentAffixInitialSelection.uiEvidence.eventDigest, qualityUi: 'f'.repeat(64)};
+    const digest = (gameDir, sids) => sids === R.uiEvents.selectionUi ? digests.selectionUi : digests.qualityUi;
+    const copies = () => Object.keys(S.families).map(family => ({name: family, family, oracleArgs: [], lifecycle: family !== 'growth', cases: 1, scenario: family === 'growth' ? null : {items: []}}));
+    const calls = [], sleeps = [];
+    let failLoads = 2;
+    const exec = (script, args) => {
+      calls.push([script, ...args]);
+      if (args.includes('--load') && failLoads > 0) { failLoads--; return {status: 1, stderr: 'Main layout did not become ready'}; }
+      return {status: 0, stdout: args[0] === '--setup' ? 'STATE ' + statePath + '\n' : ''};
+    };
+    const quiet = () => {}, sleep = async ms => { sleeps.push(ms); };
+    const run = await M.runMigration({catalog, proof, copies: copies(), runDir: dir, setupArgs: ['--source', 's'], exec, sleep, log: quiet, digest});
+    assert.equal(run.completed, true);
+    assert.deepEqual(sleeps, [5000, 5000]);
+    assert.equal(run.ui.selectionUi.source, 'native');
+    assert.equal(run.ui.qualityUi.source, 'pending');
+    for (const group of Object.keys(catalog.verification)) for (const [check, ok] of Object.entries(run.checks[group])) assert.equal(ok, check !== 'qualityUi', group + ': ' + check);
+    assert.ok(JSON.parse(fs.readFileSync(path.join(dir, 'results.json'), 'utf8')).completed);
+    assert.ok(!JSON.stringify(run).includes(statePath));
+
+    calls.length = 0;
+    let setups = 0;
+    const failing = (script, args) => { if (args[0] === '--setup') setups++; if (args.includes('--save') && setups === 2) { calls.push([script, ...args]); return {status: 1, stderr: 'Native manual-save file was not created'}; } return exec(script, args); };
+    const failed = await M.runMigration({catalog, proof, copies: copies(), runDir: dir, setupArgs: ['--source', 's'], exec: failing, sleep, log: quiet, digest});
+    assert.equal(failed.completed, false);
+    assert.equal(failed.copies.length, 2);
+    assert.match(failed.copies[1].steps.at(-1).error, /manual-save/);
+    assert.deepEqual(calls.at(-1), ['verify-game.cjs', '--state', statePath, '--stop']);
+    assert.deepEqual(failed.ui, {});
+    assert.ok(Object.values(failed.checks.equipmentAffixCoefficient ?? {}).some(ok => !ok) || !failed.checks.equipmentAffixCoefficient);
+  }finally{fs.rmSync(dir, {recursive: true, force: true});}
+});
