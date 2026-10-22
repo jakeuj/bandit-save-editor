@@ -281,4 +281,4 @@ options可帶`signal`取消與`onProgress({done,total})`；套用可帶`preview`
 
 2026-10-22本機Mac實測已完成24角色六品質／升降／天賦加成、原版IO及新PID讀回；生命週期另涵蓋數值更新、三項服藥、單次自然經驗達轉職門檻、下獄／召回、重生及解雇，各階段皆再次存讀。15來源與原始存檔雜湊未變，自己的程序已停止，副本背景隱藏／靜音／非全螢幕。沒有新增遊戲UI或真實Cloud／成就驗證。
 
-桌面、390px、PWA斷網及一般Edge直接file開啟獨立HTML均已用2501×60×22合成檔完成新功能編輯、預覽及實際下載，逐字符合獨立token預期；桌面、390px與Edge file流程另完成群組還原及復原。直接file結果只涵蓋本版新功能，不代替`sdd/save-knowledge`其他歷史待辦；網路模擬與viewport測後恢復。尚未推送或部署，正式站另待授權。
+桌面、390px、PWA斷網及一般Edge直接file開啟獨立HTML均已用2501×60×22合成檔完成新功能編輯、預覽及實際下載，逐字符合獨立token預期；桌面、390px與Edge file流程另完成群組還原及復原。直接file結果只涵蓋本版新功能，不代替`sdd/save-knowledge`其他歷史待辦；網路模擬與viewport測後恢復。2026-10-22依使用者授權，與v2.6一併以`5d5c55b`推送並完成[Pages正式發布驗證](research/random-character-growth.md#v27-正式發布驗證)；兩案SDD均保留原位置。

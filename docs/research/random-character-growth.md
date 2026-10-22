@@ -30,4 +30,14 @@ v2.8只處理技藝1–9；下調上限不能低於現有等級，等於等級�
 
 2501×60×22合成檔於桌面、390px、PWA斷網與一般Edge直接file開啟獨立HTML均完成新功能預覽、套用及實際下載；桌面、390px及Edge file另完成還原／復原。四份下載皆逐字等於獨立2個token替換預期，保留BOM、空白、指數及大型整數literal。桌面下載另已重載核對。原生Edge選檔的前往路徑對話框曾在Return後重設，改以雙擊已確認的完整路徑項目後按打開完成；沒有變更擴充檔案權限。手機頁寬390px，角色選單最多50個，#2500精確搜尋僅1名。PWA網路與viewport測後恢復；本機waiting→關閉全部分頁→v2.7接手通過，主控台無錯誤。
 
-本輪未提交、推送或正式部署；遊戲UI、真實Cloud／成就、長時間遊玩及v2.8／v2.9寫入不在結論。原始測試資料與截圖在repo外，詳細進度見SDD任務。
+本機驗收完成後，依使用者授權進行下列正式發布。遊戲UI、真實Cloud／成就、長時間遊玩及v2.8／v2.9寫入不在結論。原始測試資料與截圖在repo外，詳細進度見SDD任務。
+
+## v2.7 正式發布驗證
+
+2026-10-22依使用者「push」授權，將保留的v2.6批次操作與v2.7基礎資質一併提交為`5d5c55bc10de78d9e911d5ecc25d3dd143fb22c8`並推送main。[Pages run 39762010213](https://github.com/jakeuj/bandit-save-editor/actions/runs/39762010213)的headSha相符，104項測試、建置同步、build及deploy均成功。兩案SDD未歸檔。
+
+Pages設定與repo網站連結均為[正式網站](https://bandit.jakeuj.com/)，HTTPS強制開啟。正式首頁、index.html離線下載、Mac指南、Manifest、sw.js、sitemap、robots、Mac準備工具及8項assets，共16個網址皆HTTPS 200，回應bytes逐一等於該提交Git blob。HTML、JS、Manifest及PNG的MIME正確；兩頁canonical／og:url、sitemap及robots均指向正式網域，沒有意外noindex。
+
+內建瀏覽器實際觀察舊v2.5的waiting提示，關閉自己建立且未載檔的同源分頁後重開，正式側欄顯示「修改器v2.7 · 2026.10.22」與V1.0.10.2。更新紀錄首筆v2.7功能／限制、次筆v2.6批次操作正確；欄位圖鑑標籤與摘要皆為V1.0.10.2（724事件函式、847寫入、22層、1762名稱）。沒有清快取或強制啟用Worker。
+
+HTTP比對JSON、waiting／更新紀錄／圖鑑畫面保留在repo外的v27-release artifacts。本次正式站驗證不重複宣稱本機遊戲隔離、直接file開檔、手機完整操作或PWA斷網已在正式站重測；各項本機驗收範圍見上一節，也不代表搜尋收錄或社群快取已更新。
