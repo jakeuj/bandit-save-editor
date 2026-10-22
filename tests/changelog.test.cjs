@@ -18,6 +18,12 @@ test('the changelog leads with the editor release shown in the sidebar and both 
   assert.match(html, /\$\('changelogBtn'\)\.onclick=\$\('versionBtn'\)\.onclick=\(\)=>\$\('changelogDialog'\)\.showModal\(\);/);
 });
 
+test('v2.9 limits talent edits to pooled levels and shares the aptitude restore group',()=>{
+ const entry=html.match(/<h3>v2\.9<span>([\s\S]*?)(?=<li><h3>)/)?.[0];
+ assert.ok(entry,'v2.9 changelog entry missing');
+ for(const required of [/遊戲 V1\.0\.11\.2/,/三槽天賦等級/,/等級池/,/ID 不可更換/,/品質 6/,/丹藥/,/整筆阻擋/,/12欄累計一起還原/,/獨立隔離原生驗證/])assert.match(entry,required);
+});
+
 test('v2.8.1 explains the withdrawn set-level path and the scope of consolidation',()=>{
  const entry=html.match(/<h3>v2\.8\.1<span>([\s\S]*?)(?=<li><h3>)/)?.[0];
  assert.ok(entry,'v2.8.1 changelog entry missing');
