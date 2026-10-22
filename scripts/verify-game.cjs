@@ -6,6 +6,19 @@ const {spawn,execFileSync}=require('node:child_process');
 const args=process.argv.slice(2),opt=(key,fallback)=>{const i=args.indexOf(key);return i<0?fallback:args[i+1];};
 const root=path.resolve(__dirname,'..');
 const sum=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+// The prepared Mac copy patches only reviewed path strings in c3runtime.js; prove it derives from the catalog runtime.
+function macRuntimeProof(packageDir,source){return JSON.parse(execFileSync('python3',[path.join(root,'launcher/prepare-macos.py'),'--source',packageDir,'--verify-runtime',source],{encoding:'utf8'}));}
+function checkSource(source,fingerprints,{platform=process.platform,packageDir,verifyRuntime=macRuntimeProof}={}){
+ const hashes={};let runtimePatch=null;
+ for(const [file,hash]of Object.entries(fingerprints)){
+  const actual=sum(path.join(source,file));hashes[file]=actual;if(actual===hash)continue;
+  if(file!=='scripts/c3runtime.js'||platform!=='darwin')throw Error('Test source does not match catalog fingerprint: '+file);
+  if(!packageDir)throw Error('Patched Mac runtime requires --package with the original package.nw');
+  runtimePatch=verifyRuntime(packageDir,source);
+  if(runtimePatch.original_c3runtime_sha256!==hash||runtimePatch.patched_c3runtime_sha256!==actual)throw Error('Mac runtime patch does not derive from the catalog runtime');
+ }
+ return {hashes,runtimePatch};
+}
 function launch(state){
  const log=fs.openSync(path.join(state.dir,'game.log'),'a');
  const child=spawn(state.runtime,[state.game,'--mute-audio','--user-data-dir='+path.join(state.dir,'profile'),'--remote-debugging-port='+state.port,'--remote-debugging-address=127.0.0.1','--enable-logging=stderr'],{cwd:state.game,detached:true,windowsHide:true,stdio:['ignore',log,log]});
@@ -27,7 +40,7 @@ async function setup(){
  const source=path.resolve(opt('--source',path.join(os.homedir(),'bandit-mac-port/game'))),originalRuntime=path.resolve(opt('--runtime',path.join(os.homedir(),'bandit-mac-port/runtime/nwjs-sdk-v0.82.0-osx-arm64/nwjs.app/Contents/MacOS/nwjs')));
  const catalog=JSON.parse(fs.readFileSync(path.resolve(opt('--catalog',path.join(root,'knowledge/catalog.json'))),'utf8'));
  const fingerprints={...catalog.fingerprints,...catalog.batch2Fingerprints};
- for(const [file,hash]of Object.entries(fingerprints))if(sum(path.join(source,file))!==hash)throw Error('Test source does not match catalog fingerprint: '+file);
+ const {hashes:sourceHashes,runtimePatch}=checkSource(source,fingerprints,{packageDir:opt('--package')&&path.resolve(opt('--package'))});
  const artifacts=fs.realpathSync(path.resolve(opt('--artifacts',os.tmpdir()))),relative=path.relative(root,artifacts);
  if(relative===''||(!path.isAbsolute(relative)&&relative!=='..'&&!relative.startsWith('..'+path.sep)))throw Error('Validation artifacts must stay outside the repo');
  const dir=fs.mkdtempSync(path.join(artifacts,'bandit-editor-validation-')),game=path.join(dir,'game');
@@ -86,7 +99,7 @@ async function setup(){
  fs.appendFileSync(path.join(game,'greenworks.js'),`\n(()=>{const gw=module.exports,fs=require('fs'),path=require('path'),base=${JSON.stringify(dir)},init=gw.init;gw.init=function(...a){const result=init.apply(this,a);fs.writeFileSync(path.join(base,'steam-init.json'),JSON.stringify({initialized:true,platform:process.platform,arch:process.arch,nw:process.versions.nw}));return result;};if(typeof gw.enableCloud==='function')gw.enableCloud=()=>{fs.appendFileSync(path.join(base,'steam-writes.jsonl'),JSON.stringify({method:'enableCloud'})+'\\n');return true;};})();\n`);
  const port=Number(opt('--port','19384'));
  const cells=scenario?.observe||[[1,1,0],[1,1,2],[1,3,2],[1,4,2],[1,1,4],[1,1,5],[1,31,2],[1,40,2],[2,2,0],[1,56,2]];
- const state={dir,game,source,runtime,port,fingerprints,before,cells,gameVersion:catalog.gameVersion,expected:cells.map(([x,y,z])=>expected[x][y][z]),assertions:[]};
+ const state={dir,game,source,runtime,port,fingerprints,sourceHashes,runtimePatch,before,cells,gameVersion:catalog.gameVersion,expected:cells.map(([x,y,z])=>expected[x][y][z]),assertions:[]};
  state.pid=launch(state);
  fs.writeFileSync(path.join(dir,'state.json'),JSON.stringify(state,null,2));console.log('STATE '+path.join(dir,'state.json'));
 }
@@ -110,7 +123,7 @@ async function waitMain(state,mainOnly=true){
  throw Error('Main layout did not become ready'+(last?': '+last.message:''));
 }
 async function run(){
- if(args.includes('--help')){console.log('Node 22+, Windows/macOS: verify-game.cjs --setup --source UNPACKED_GAME --runtime NWJS [--save-file ORIGINAL.dat] [--catalog CANDIDATE.json] [--artifacts OUTSIDE_REPO] [--scenario SCENARIO.json]\n--state /outside/repo/state.json --probe | --load [--mode 存档|备份|云存档] | --save | --assert | --stop | --restart\nIsolated launches and restarts are muted (--mute-audio). Stop the disposable process before --restart. Wait for the title/main layout before --load/--assert.');return;}
+ if(args.includes('--help')){console.log('Node 22+, Windows/macOS: verify-game.cjs --setup --source UNPACKED_GAME --runtime NWJS [--save-file ORIGINAL.dat] [--catalog CANDIDATE.json] [--artifacts OUTSIDE_REPO] [--scenario SCENARIO.json] [--package STEAM_GAME_DIR (macOS patched runtime)]\n--state /outside/repo/state.json --probe | --load [--mode 存档|备份|云存档] | --save | --assert | --stop | --restart\nIsolated launches and restarts are muted (--mute-audio). Stop the disposable process before --restart. Wait for the title/main layout before --load/--assert.');return;}
  if(args.includes('--setup'))return setup();
  const state=JSON.parse(fs.readFileSync(opt('--state'),'utf8'));
  if(args.includes('--probe'))await probe(state);
@@ -132,7 +145,7 @@ async function run(){
   const disk=JSON.parse(fs.readFileSync(savedFile,'utf8')).data;
   for(const [i,[x,y,z]]of state.cells.entries())if(disk[x][y][z]!==state.expected[i])throw Error('Game-written save does not match expected cell '+[x,y,z]);
   for(const [name,hash]of Object.entries(state.before))if(sum(path.isAbsolute(name)?name:path.join(state.source,'savedir',name))!==hash)throw Error('Original save changed: '+name);
-  for(const [name,hash]of Object.entries(state.fingerprints))if(sum(path.join(state.game,name))!==hash)throw Error('Tested game source changed: '+name);
+  for(const [name,hash]of Object.entries(state.sourceHashes||state.fingerprints))if(sum(path.join(state.game,name))!==hash)throw Error('Tested game source changed: '+name);
   if(!JSON.parse(fs.readFileSync(path.join(state.dir,'steam-init.json'),'utf8')).initialized)throw Error('Real Steam initialization was not confirmed');
   (state.assertions??=[]).push({restarted:!!state.restarted,pid:state.pid,savedHash:sum(savedFile),passed:true});fs.writeFileSync(opt('--state'),JSON.stringify(state,null,2));
   console.log('PASS: live engine, game-written file and original source hashes');
@@ -140,4 +153,4 @@ async function run(){
  if(args.includes('--stop')){if(!ownedProcess(state))throw Error('Disposable process already stopped');if(process.platform==='win32')execFileSync('taskkill',['/PID',String(state.pid),'/T','/F'],{windowsHide:true});else process.kill(state.pid,'SIGTERM');console.log('Stopped disposable test game');}
 }
 if(require.main===module)run().catch(e=>{console.error(e.stack);process.exitCode=1;});
-module.exports={CDP,connect,evaluate,waitMain};
+module.exports={CDP,connect,evaluate,waitMain,checkSource};
