@@ -20,7 +20,18 @@
 
 需要追蹤部署時，以本次提交的 SHA 找到相同 `headSha` 的 run，確認 build／deploy 都成功。以下 HTTP、DOM 及 PWA 正式驗收僅在使用者要求或相關故障需要時執行：HTTP 內容以 `git show SHA:PATH` 的原始 bytes 比對，避免 Windows checkout 行尾轉換造成誤判。需要正式DOM證據時，以獨立headless context開啟正式欄位圖鑑，同時確認版本標籤與索引摘要；例行PWA交接由暫存建置測試，使用者特定快取問題才採以下人工流程。若 PWA 顯示「新版已備妥」，先匯出尚未保存的修改，再關閉所有同站帳房分頁與 App 視窗後重開；重新整理可能仍由舊 Worker 提供內容。保留可看見版本的截圖於 repo 外，HTTP 成功與瀏覽器結果分別記錄。
 
-### 歷史發布與驗收限制
+## Wiki 維護
+
+本專案 Wiki 已於 2026-10-23 初始化。內容維護使用獨立 Git 儲存庫 `https://github.com/jakeuj/bandit-save-editor.wiki.git`；`gh` 可按需查詢權限與設定，頁面內容透過 Git 維護。
+
+1. 在主 repo 外沿用 Wiki checkout，先核對 remote 與工作樹，再以 `git pull --ff-only` 同步；沒有 checkout 時用 `git clone` 複製上述網址。保留既有未提交修改，遇到分歧先釐清再整合，不強制推送。
+2. 依已發布的 repo 文件更新 `Home.md`、`操作教學.md`、`常見問題.md` 與 `_Sidebar.md`；保留功能限制及來源連結，不把未提交的開發功能或研究計畫寫成已開放能力。
+3. 檢查 Markdown、Wiki 內部連結目標與 `git diff --check`，只提交本次授權內容，推送到 Wiki 的預設分支。Wiki 純文字變更不執行主網站建置或遊戲測試。
+4. Git 推送成功即完成，回報 Wiki 頁面與提交／歷史連結；不查詢或等待 GitHub Pages 部署。除非使用者明確要求瀏覽器操作，否則不開 Edge 或其他瀏覽器，也不為例行維護追加畫面、截圖或重新初始化第一頁。
+
+Wiki 與主 repo 分開提交；若同時修改主 repo 的技能、指引或文件，主 repo 仍依「提交與發布」檢查待提交快照的建置同步。
+
+## 歷史發布與驗收限制
 
 2026-10-21 的 V1.0.10.2 正式發布已驗證至提交 `7adcb01f9f0ddef749c1474850877df79ad78dd9`；對應部署、資產比對、畫面結果及驗收範圍集中於 [V1.0.10.2 正式發布紀錄](../research/v1.0.10.2-audit.md#正式發布驗證)。後續版本以自己的提交重做核對。
 

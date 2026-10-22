@@ -7,6 +7,7 @@
 - 依任務選讀維護文件：核心 API／首次開放讀 `docs/maintenance/core.md`，發布讀 `docs/maintenance/release.md`，PWA／離線讀 `docs/maintenance/pwa.md`；其他功能由 `docs/maintenance.md` 索引進入，不預設載入全部文件；公式與實測證據維護在研究筆記，避免在技能複製完整規則。文件區分離線相依性檢查與直接開檔 UI 實測，依實際結果更新 `sdd/save-knowledge/tasks.md`。
 - 日常推送採快速流程：只檢查建置同步、提交及推送，不重跑全套 Node／瀏覽器／遊戲測試。純技能、文件或忽略規則更新，推送成功即結束，回報提交連結；即使自動觸發 Pages，也不查詢或等待部署。只有影響網站產物、發布設定，或使用者明確要求時，才追蹤對應 SHA 的部署結果並回報部署連結；明確要求確認線上版本時，才額外 GET 首頁。Pages CI 只檢查建置同步並發布；完整驗收保留 `npm run verify:release`，使用者要求或具體故障需要時才執行。失敗才讀詳細日誌及擴大檢查。開發測試入口及隔離見 `docs/testing.md`；新增可寫群組的首次證明要求不變。
 - 實際遊戲 UI／computer use 測試時，先讀 `docs/game-ui-testing.md` 的「快速開始」及目標操作路徑；沿用完成標記與隔離測試資料，座標依當次畫面重新辨識。工具 API 以當次可用的 computer-use 技能為準。
+- Wiki 已初始化，維護時直接編輯獨立 `.wiki.git` 儲存庫並用 Git 提交推送；除非使用者明確要求瀏覽器操作，否則不開 Edge 或其他瀏覽器，也不做例行畫面確認。操作與完成條件見 `docs/maintenance/release.md`「Wiki 維護」。
 - 保留所有未修改原始字元與大型整數 literal；已知唯讀欄位套用統一規則，經驗聯動必須整組可復原。新增寫入需符合 `knowledge/verification.json` 的來源指紋與隔離遊戲實測，才開啟 catalog 閘門。
 - 套裝等級先讀 `docs/research/set-equipment-level.md` 與 `sdd/set-equipment-level/` 的 proposal／tasks；研究 go 僅支持進入實作與首次驗證，實作範圍與授權依最新 SDD 及當前對話，兩庫各自首次證明前維持排除。
 - 遊戲改版先讀本機 `.local/game-sources.json`（若存在）定位版本、解包來源與快取根目錄，核對來源雜湊後沿用，不重新掃描或解包相同來源；本機索引不提交。再核對正式公告，用 `scripts/verify-migration.cjs --plan` 看影響；預設 auto，按相依語意沿用或只驗相關功能。例行更新不使用 computer use，UI 未重驗不阻擋既有群組，實際問題發生後再針對性複查；使用者明確要求才操作遊戲桌面。基準、續跑與寫回條件見 `docs/maintenance/migration.md`「版本遷移重驗」。新增寫入保留首次證明，同步擴充需求表、suite、情境及相依宣告。
