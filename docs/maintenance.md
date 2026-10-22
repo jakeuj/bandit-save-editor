@@ -120,10 +120,33 @@ node scripts/extract-game.cjs --source /path/to/unpacked/game --audit-only --aud
 3. 以 `scripts/verify-game.cjs --help` 查看隔離驗證入口。此工具需要 Windows 或 macOS、Node.js 22+、解包的遊戲、同平台 NW.js runtime 及已登入的 Steam；來源須與 catalog 的全部 13 個指紋相符。Windows 傳入安裝目錄的 `game.exe`，工具會複製 runtime 至隔離遊戲目錄。用 `--catalog` 指定候選目錄、`--save-file` 指定唯讀來源存檔、`--artifacts` 指定已存在的 repo 外目錄；不能沿用不同 runtime 的驗證紀錄。
 4. 確認遊戲載入、遊戲寫檔、停止測試程序後重啟讀回及來源存檔雜湊；測試只在獨立 app／遊戲／profile 中執行，保留授權初始化，Steam 寫入導向本機鏡像與紀錄。
 5. 將去識別結果與相符指紋寫入 `verification.json`，再開啟對應群組。建置會核對全部來源指紋、檢查結果及群組覆蓋，未通過就停止。
+6. 在 `scripts/verification-requirements.cjs` 加入群組的證明區段與必要 checks，在 `scripts/verification-suite.cjs` 指定重驗家族與每個 check 的步驟，並在 `scripts/migration-scenarios.cjs` 補代表情境。漏加時建置與 `tests/version-migration.test.cjs` 會失敗，避免改版後無法重驗。
 
-v2.1 可使用 repo 外 `--scenario` JSON：`baseline` 為 `[x,y,z,value]` 陣列、`operations` 指定三項具名 API 的 `method`／`options`、`observe` 列出預期核對座標。工具只接受這三項操作，候選旗標僅存在隔離 VM；不直接修改公開 catalog。`--load` 等待主畫面，`--save`／`--assert` 確認布局就緒後執行；`scripts/verify-advanced.cjs --state /outside/state.json` 記錄原版屬性／加成，重啟後加 `--compare` 核對。原始 scenario、結果、SID 呼叫及玩家資料仍留在 repo 外。
+v2.1 可使用 repo 外 `--scenario` JSON：`baseline` 為 `[x,y,z,value]` 陣列、`operations` 指定三項具名 API 的 `method`／`options`、`observe` 列出預期核對座標。`verify-game.cjs` 的候選旗標只存在隔離 VM，不修改公開 catalog；只有版本遷移流水線在下節條件下寫回。`--load` 等待主畫面，`--save`／`--assert` 確認布局就緒後執行；`scripts/verify-advanced.cjs --state /outside/state.json` 記錄原版屬性／加成，重啟後加 `--compare` 核對。原始 scenario、結果、SID 呼叫及玩家資料仍留在 repo 外。
 
 完整解析輸出、遊戲內容、玩家存檔、測試 state 與原始 log 均留在 repo 外。`--setup` 產生的測試狀態包含本機路徑及玩家資料，不能作為公開驗證紀錄提交。
+
+## 版本遷移重驗
+
+遊戲正式分支更新後，事件或資料表指紋一變，重建 catalog 就會關閉全部新增群組。`scripts/verify-migration.cjs` 以代表子集一次重驗全部群組，規格與決策見 [SDD](../sdd/version-migration/proposal.md)。
+
+1. 依上節核對 Steam 公告、`appmanifest_4267800.acf` 的 buildid，並以 `--audit-only` 取得 repo 外 audit；依 SID 比對各群組依賴的事件，確認後把新指紋加入 `extract-game.cjs` 的已核對清單並重建 catalog。
+2. macOS 先確認 `launcher/prepare-macos.py` 的四處路徑修正位置仍在，把新腳本雜湊加入 `SCRIPT_SHA256`，再以 `--output` 準備獨立的驗證副本，不覆寫玩家的 `~/bandit-mac-port`。補丁後的 `c3runtime.js` 雜湊必然不同於 catalog；`verify-game.cjs` 只在 `--package` 指向原始安裝、且 `prepare-macos.py --verify-runtime` 證明差異只來自已核對替換時才接受。
+3. 開啟並登入 Mac 版 Steam，執行流水線。每個副本複製一次完整遊戲，結束後可刪除 artifacts 目錄。Mac 副本不會佔用畫面：`package.json` 隱藏視窗並保留背景計時，測試 App 以固定 bundle ID 與 `LSBackgroundOnly` 執行，不出現在 Dock、不搶焦點，區域網路權限最多只詢問一次；`LSUIElement` 會讓 NW.js 載入 ICU 失敗而無法啟動，不能替代。遊戲找不到 `sys\sys.dat` 時預設全螢幕且有聲音，setup 會寫入不全螢幕、靜音的設定（Mac 路徑補丁不處理這個分隔符，檔名就是含反斜線的 `sys\sys.dat`）。
+
+```sh
+node scripts/verify-migration.cjs --source PREPARED_COPY/game --runtime PREPARED_COPY/runtime/nwjs-sdk-v0.82.0-osx-arm64/nwjs.app/Contents/MacOS/nwjs --save-file PREPARED_COPY/game/savedir/ea1save.dat --artifacts /outside/repo/artifacts --package STEAM_LIBRARY/steamapps/common/塔防山贼模拟器
+```
+
+生成器依基準存檔建立 11 個副本：成長、v2.1 一般上界／超限／後續操作、v2.2、v2.3 替換、v2.4 背包與選槽，以及品質四個庫別方向。每個副本依序執行原版載入、原生效果、原生存檔、新 PID 重啟讀回；標記的副本再跑後續原生操作並做第二輪讀寫重啟，品質副本另跑 6,592 組公式比對。基準存檔需有已放置的書院與校場、閒置的草席與木桩，以及第二名角色；尚未完成初建的等級 0 建築只在拋棄式副本設為等級 1。後續副本把第二名角色設為流民 4 級、差 1 點升級，原生自然經驗呼叫一次必須升到 5 級，再轉職為村民；`获得职业经验` 忽略「獲得量」參數，每次只給約十個工作間隔的經驗，不要用大量迴圈補足。
+
+結果寫在 repo 外的 `results.json`，寫回規則如下：
+
+- 全部副本完成、22 群組的原生 checks 都成立，且指紋與現有證明不同時，自動寫入 `knowledge/verification.json` 與 catalog 閘門，重建 HTML 並執行 `--check`。建置失敗會還原 catalog、證明、HTML 與 `sw.js`。不會自動提交或推送。
+- 指紋與現有證明相同時只輸出比較報告，不以代表子集覆寫原本的完整矩陣證明。
+- 任一步失敗或原生 checks 未全過時不寫入；報告列出失敗的副本、步驟與錯誤。
+
+新版證明標示 `coverage: "representative"` 與各副本操作數，不沿用舊版案例數。首次選槽與品質升降的 UI check 只在 `verification-requirements.cjs` 宣告的 UI 事件摘要不變時沿用（`uiEvidence.source: "carried"`）；摘要不同就以關閉狀態寫入，再依 [UI 手冊](game-ui-testing.md#版本遷移後的-ui-補測)補最小案例。摘要只涵蓋宣告的事件，被呼叫但未列入的函式不在保證內。
 
 ## 離線 HTML 人工驗收
 

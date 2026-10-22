@@ -25,6 +25,7 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 - 背包裝備、首次洗練選槽或新取得標記：讀 repo `docs/research/equipment-workflow.md` 與 `sdd/equipment-workflow/tasks.md`。v2.4已正式發布並開放首次選槽；具備代表遊戲選槽UI、原版存檔／新PID讀回、桌面／390px精確下載及PWA離線／更新交接證據。詳細範圍與SHA以repo紀錄為準；直接file://新流程仍待人工。
 - 普通裝備品質升降、完整單件效果或y23語意：讀repo `docs/research/equipment-quality.md`、`sdd/equipment-quality/tasks.md`與維護指引v2.5段落。背包／z9的升品／降品有四個獨立證明，綁定15來源、規則／資料及公式雜湊；新增尾槽須明選，刪槽須確認且保留已選槽。取得事件分支與y23不可再簡化為目前品質。詳細公式、6,592組原生比對、UI及發布狀態留repo。
 - 遊戲驗證先依下方「驗證與交付」選擇方式；只有確定需要操作遊戲UI時，才讀 repo `docs/game-ui-testing.md` 的「快速開始」及目標路徑、完成標記與故障表。工具API以當次computer-use技能為準，座標與視窗ID重新取得；編輯器選檔卡住則讀同檔確認框段落。
+- 遊戲改版後重驗既有群組、Mac 隔離重驗或版本遷移流水線：讀 repo `docs/maintenance.md`「版本遷移重驗」與 `sdd/version-migration/`。流水線以代表子集重驗全部群組；指紋不同且原生 checks 全過才自動寫回，同指紋只比較。UI check 僅在宣告事件摘要不變時沿用，否則依 UI 手冊補最小案例。
 - 核心 API、來源同步、知識驗證或驗收說明：讀 repo 的 `docs/maintenance.md`；待驗收狀態見 `sdd/save-knowledge/tasks.md`。
 - 遊戲知識版本標示同步、SEO、分享預覽、正式網址、GitHub 專案網站連結或 Pages 發布驗證：讀 [references/pages.md](references/pages.md)。
 - Mac 啟動、CrossOver、Steam 或存檔位置：讀 [references/macos.md](references/macos.md) 的來源定位與啟動約束，再讀 repo 的 `launcher/README.md`、`docs/research/macos-runtime-investigation.md`。
@@ -49,7 +50,7 @@ V1.0.10.2 的靜態比對與 Windows 隔離載入／存檔／重啟結果見 rep
 - 匯出只替換指定值的 token，保留其他原始文字，包括大型整數 literal、BOM、空白及指數寫法。數值與字串皆須維持原型別；JSON 字串跳脫與 HTML 顯示跳脫各自處理。
 - 欄位權限由 `resolveField`／`setField` 統一判斷；舊 `set` 與自訂座標不能繞過已知唯讀限制。
 - 角色、已習得職業及九項技藝的經驗使用 `addExperience` 聯動結算；等級與餘額不單獨改寫。同一角色同一類經驗的累計變更整組還原，`undo` 則回到前一次交易；失敗交易全部回滾。
-- 新增可寫群組需追查事件與關聯、完成合成測試及隔離遊戲載入／存檔／重啟驗證，再用相符的完整來源指紋開放 catalog 閘門。詳細流程見維護指引，不能只切換旗標或沿用不同來源的驗證證明。
+- 新增可寫群組需追查事件與關聯、完成合成測試及隔離遊戲載入／存檔／重啟驗證，再用相符的完整來源指紋開放 catalog 閘門。同時加入驗證需求表、重驗群組清單與代表情境，讓改版後能一次重驗。詳細流程見維護指引，不能只切換旗標或沿用不同來源的驗證證明。
 - 真實存檔、遊戲 payload、runtime、驗證 state 與原始 log 留在 repo 外。使用固定副本驗證，修改玩家原檔依任務指示執行並保留備份。
 
 ## 驗證與交付
