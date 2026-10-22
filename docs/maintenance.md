@@ -128,7 +128,7 @@ v2.1 可使用 repo 外 `--scenario` JSON：`baseline` 為 `[x,y,z,value]` 陣�
 
 ## 版本遷移重驗
 
-遊戲正式分支更新後，事件或資料表指紋一變，重建 catalog 就會關閉全部新增群組。`scripts/verify-migration.cjs` 以代表子集一次重驗全部群組，規格與決策見 [SDD](../sdd/version-migration/proposal.md)。
+遊戲正式分支更新後，事件或資料表指紋一變，重建 catalog 就會關閉全部新增群組。`scripts/verify-migration.cjs` 以代表子集一次重驗全部群組，規格與決策見 [SDD](../sdd/archive/2026-10-22-version-migration/proposal.md)。
 
 1. 依上節核對 Steam 公告、`appmanifest_4267800.acf` 的 buildid，並以 `--audit-only` 取得 repo 外 audit；依 SID 比對各群組依賴的事件，確認後把新指紋加入 `extract-game.cjs` 的已核對清單並重建 catalog。
 2. macOS 先確認 `launcher/prepare-macos.py` 的四處路徑修正位置仍在，把新腳本雜湊加入 `SCRIPT_SHA256`，再以 `--output` 準備獨立的驗證副本，不覆寫玩家的 `~/bandit-mac-port`。補丁後的 `c3runtime.js` 雜湊必然不同於 catalog；`verify-game.cjs` 只在 `--package` 指向原始安裝、且 `prepare-macos.py --verify-runtime` 證明差異只來自已核對替換時才接受。

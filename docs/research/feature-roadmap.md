@@ -45,7 +45,7 @@
 
 建議把各群組的代表 scenario 整理成一份 repo 外清單，由單一入口依序完成隔離載入、原生存檔、停止、新 PID 重啟及 assert，再輸出逐群組的去識別結果供人工審核後寫入 verification。這不改變「完整指紋相符才開閘門」的規則，也不把舊證明套到新版。
 
-2026-10-22 已依 [SDD](../../sdd/version-migration/proposal.md) 完成：`scripts/verify-migration.cjs` 由基準存檔產生 11 個代表副本，涵蓋全部 22 群組，並在全部原生 checks 通過、指紋與現有證明不同時自動寫回。同日在 Mac（darwin-arm64、NW.js 0.82.0、真實 Mac Steam 初始化）對 V1.0.10.2 排練：11 個副本、185 個步驟全數通過，比較報告的 22 個群組與現有證明一致，首次選槽與品質的 UI 事件摘要相同；玩家存檔與 repo 內 catalog、證明、HTML、`sw.js` 的雜湊都沒有變。測試副本以背景 App 執行，不開出可見視窗。操作方式見[維護指引](../maintenance.md#版本遷移重驗)。
+2026-10-22 已依 [SDD](../../sdd/archive/2026-10-22-version-migration/proposal.md) 完成：`scripts/verify-migration.cjs` 由基準存檔產生 11 個代表副本，涵蓋全部 22 群組，並在全部原生 checks 通過、指紋與現有證明不同時自動寫回。同日在 Mac（darwin-arm64、NW.js 0.82.0、真實 Mac Steam 初始化）對 V1.0.10.2 排練：11 個副本、185 個步驟全數通過，比較報告的 22 個群組與現有證明一致，首次選槽與品質的 UI 事件摘要相同；玩家存檔與 repo 內 catalog、證明、HTML、`sw.js` 的雜湊都沒有變。測試副本以背景 App 執行，不開出可見視窗。操作方式見[維護指引](../maintenance.md#版本遷移重驗)。
 
 ### 1. 批次操作
 
