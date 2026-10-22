@@ -84,6 +84,8 @@ v2.8.1 若取不到 Windows 隔離環境或 108＋2／15 副本在週期內跑�
 
 ## 6. 套裝等級前置研究清單
 
+2026-10-23 進度：已完成[套裝等級研究](set-equipment-level.md)，結論為 go 進入實作與首次獨立驗證；[SDD 提案](../../sdd/set-equipment-level/proposal.md)與[任務](../../sdd/set-equipment-level/tasks.md)仍待確認、尚未實作。下列清單保留為研究題目，後續沿用研究結果，不重做盤點或據此開閘。
+
 產出 `docs/research/set-equipment-level.md`，結論為 go／no-go。以 SID 定位（V1.0.11.2 的 expression 已整段 +11）：
 
 1. `装备等级上限` SID `713681756866045` 對套裝是否同為 `10+(Q−1)×5`。
