@@ -1,6 +1,6 @@
 # v2.9 一般隨機角色天賦等級任務
 
-狀態：**2026-10-23 A 階段（任務 1–5）完成，`src/core.js` 已凍結；B 尚未開始，`randomCharacterTalents` 保持關閉。** 範圍與決策見[提案](proposal.md#已核准決策2026-10-23)，規則與 SID 見[研究筆記](../../docs/research/random-character-talents.md)。每條 30–60 分鐘；單條超時或需要改動 v2.7 證明綁定的 core 區段時，先回報重估，不壓成一條大任務。
+狀態：**2026-10-23 A 階段（任務 1–5）與 B 任務 6 完成，`src/core.js` 已凍結；任務 7–10 未開始，`randomCharacterTalents` 保持關閉。** 範圍與決策見[提案](proposal.md#已核准決策2026-10-23)，規則與 SID 見[研究筆記](../../docs/research/random-character-talents.md)。每條 30–60 分鐘；單條超時或需要改動 v2.7 證明綁定的 core 區段時，先回報重估，不壓成一條大任務。
 
 範圍：範本 0、非在監、無結丹／重生紀錄的已招募角色，只改三槽天賦**等級**，等級須在品質池內（Q1 1–2、Q2 1–3、Q3 2–4、Q4 3–5、Q5 4–5、Q6 5）。ID 不可改、不寫 0/0、Q6 唯讀、不提供天賦批次。天賦 6 欄與 v2.7 資質 6 欄合併為 12 欄還原群組。
 
@@ -14,10 +14,10 @@
 
 **B：介面、原生證明與發布（任務 6–10，不得再改 `src/core.js`）**
 
-- [ ] 6. 角色養成頁加三槽等級編輯器（顯示 ID／名稱／品質池、資質上限連動與 12 欄還原說明），預覽後明確套用；Node UI 事件與 headless HTTP 1280／390px、直接 file、PWA 案例。
+- [x] 6. 角色養成頁加三槽等級編輯器（顯示 ID／名稱／品質池、資質上限連動與 12 欄還原說明），預覽後明確套用；Node UI 事件與 headless HTTP 1280／390px、直接 file、PWA 案例。（headless 與頁面容器因建置拒絕延到任務 9，見執行紀錄）
 - [ ] 7. 建立原生 oracle 與矩陣／生命週期 runner：535 個 `天赋属性计算` 值；Q1–Q5×3 槽×升／降 30 角色（覆蓋 6 個公式分支、單／雙屬性）＋ID 1／2／3 資質連動 3 角色；2 角色生命週期（數值更新不回填、轉職、下獄／召回、重生、解雇）。逐階段原版存檔、停止、新 PID 讀回；記錄 talent 欄位實際 token 型別。
 - [ ] 8. 在 Windows 隔離副本以相符 15 指紋執行任務 7，合併器重新核算 checks 才寫入 `randomCharacterTalents` 首次證明；其他群組紀錄逐項 deepEqual 保留。
-- [ ] 9. 依維護指引重開 `randomCharacterSkillCaps`（v2.9 唯一一次，以任務 5 凍結的 core 為準），其他 23 群組與首次 108＋2 紀錄不變；建置 `--check` 通過，`npm run verify:release` 全過。
+- [ ] 9. 依維護指引重開 `randomCharacterSkillCaps`（v2.9 唯一一次，以任務 5 凍結的 core 為準），其他 23 群組與首次 108＋2 紀錄不變。建置前先在 `index.html` 的 `skillCapsEditor` 後加 `<div class="form-card" id="talentLevelsEditor"></div>`，再同步建置；`--check` 通過，補任務 6 延後的 headless HTTP 1280／390px、直接 file、PWA 天賦案例，`npm run verify:release` 全過。
 - [ ] 10. 版本 v2.9、更新紀錄（只改等級、ID 不可改、Q6 唯讀、12 欄還原）、README／技能／研究筆記同步；經使用者授權提交推送，核對對應 SHA 的 Pages 結果。
 
 ## 驗收條件
@@ -38,3 +38,6 @@
 - 驗收：170 項 Node 中 165 通過；5 項失敗全因 `randomCharacterSkillCaps` 整檔摘要失效（建置拒絕），與 v2.8.1 開工時相同，任務 9 重開後重跑。`randomCharacterGrowth` 與 `equipmentQuality` formulaHash 與證明相符，v2.7 `problem` 為 null；`--check` 只回報技藝上限。`git diff --check` 通過。
 - 凍結：`src/core.js` SHA-256（工作樹 bytes 即 LF）`fe01461977c8164b97c8c2101c5f9c4b4a43b816d37f53c06e244c7eb75d9756`；天賦 formulaHash 前綴 `66b8a442053a9cd2`。
 - 未做：建置拒絕前無法同步 `index.html`／`sw.js`，兩檔仍是 v2.8.1；`knowledge/migration-baseline.json` 的 coreHash 待任務 9 重開後重建；沒有提交、推送或啟動遊戲。
+- 第 6 條：`src/knowledge-ui.js` 新增 `renderTalentLevels`（比照技藝上限），角色養成頁顯示三槽 #ID／名稱、品質等級池下拉、目前效果，預覽表列等級與效果前後值；改到資質天賦時另列來源 A、丹藥 B、總資質與上限 C，並說明 12 欄一起還原與 ID 不能更換。只經 `previewCharacterTalents` 預覽、`setCharacterTalents` 明確套用；輸入、角色、模型 revision、undo、還原與換檔都使預覽失效。`src/ui.js` 變更檢視對 `aptitude:` 群組加註 12 欄還原。新增 `tests/talent-levels-ui.test.cjs` 5 案：關閉閘門可預覽不可寫、6 種唯讀原因與 Q6 單一等級、僅變更等級 token、丹藥超過新上限阻擋、失效情境、下載 bytes（BOM、大型整數、指數）與重載。核心未改，SHA 仍為 `fe014619…9756`。
+- 第 6 條缺口：`index.html` 加容器會改變 PWA 快取釘選的頁面 bytes，而建置拒絕前無法同步 `sw.js`，曾因此多出 5 項 PWA 測試失敗，所以本輪還原 `index.html`、把容器列入任務 9；`renderTalentLevels` 在容器不存在時直接略過，舊頁不會壞。headless HTTP 1280／390px、直接 file、PWA 案例同樣延到任務 9 建置恢復後補跑。
+- 第 6 條驗收：175 項 Node 中 170 通過，失敗仍只有技藝上限整檔摘要失效的同 5 項；`git diff --check` 通過。沒有提交、推送或啟動遊戲。
