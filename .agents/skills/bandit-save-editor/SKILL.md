@@ -11,6 +11,8 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 
 此技能隨 repo 提供，位於 `.agents/skills/bandit-save-editor/`；`.claude/skills/bandit-save-editor` 是指向同一份的 symlink。以目前 checkout 的 repo 根目錄為工作位置，核對 Git remote 與工作目錄變更。
 
+技能未載入或連結異常時，讀[技能載入與連結修復](references/skill-loading.md)；正常任務不執行修復。
+
 先讀 repo 的 `AGENTS.md`、`README.md` 與任務相關文件。技能提供入口與維護約束；公式、SID、指紋、實測證據及未完成項目以 repo 文件為準。舊對話 `outputs/` 的離線 HTML 不是開發來源。
 
 ## 規則同步檢查
@@ -27,9 +29,11 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 
 | 任務 | 入口 |
 | --- | --- |
+| 架構與跨檔關係 | 若有 `graphify-out/graph.json` 先查圖譜並核對目前來源；建立、更新與完整性限制見 `docs/research/repository-graph.md` |
 | 存檔讀寫、名稱、經驗、知識重建 | [存檔參考](references/save-format.md)、`src/core.js`、`docs/research/save-knowledge.md`、`docs/maintenance/core.md` |
 | 裝備、丹藥、資質、技藝上限、天賦、批次或職業圖鑑 | [功能導覽](references/feature-guide.md) 的對應條目，接著讀該功能研究及 SDD |
 | 遊戲改版、來源快取、原生驗證 | `docs/maintenance/migration.md`、[操作補充](references/operations.md) 的版本更新入口 |
+| 開發測試與驗收 | `docs/testing.md`；新增功能另讀該 SDD 的首次證明要求，隱藏原生測試先讀 `docs/maintenance/migration.md`「本機開發快取」並核對 `.local/game-sources.json` 的 `preferredDevelopmentSourceId` |
 | PWA、直接開檔、離線驗收 | `docs/maintenance/pwa.md`、`docs/testing.md` |
 | 提交、發布、版本標示、SEO、分享預覽 | `docs/maintenance/release.md`、[Pages 參考](references/pages.md)；交付證據界線見[操作補充](references/operations.md) |
 | Wiki 內容與側邊欄維護 | `docs/maintenance/release.md`「Wiki 維護」；已初始化，直接用 Git 提交推送，除非使用者明確要求，否則不開 Edge 或其他瀏覽器 |
@@ -40,7 +44,7 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 | 使用者明確要求遊戲 UI | `docs/game-ui-testing.md` 快速開始與目標路徑，再讀當次 computer-use 技能 |
 | Mac／CrossOver／Steam／存檔位置 | [Mac 參考](references/macos.md)、`launcher/README.md`、`docs/research/macos-runtime-investigation.md` |
 
-日常推送只檢查建置同步；純文件推送成功即結束。完整驗收與部署追蹤條件依發布指引，新增寫入的首次證明要求不變。core 的可執行語法變動先核對技藝上限的整份 core 語法樹摘要，依 `docs/maintenance/talents.md` 核對受影響群組後重開；既有已開放群組因本次變更失效時，不以關閉旗標的狀態推送。新增候選群組在首次證明前則維持關閉。
+日常推送依發布指引對待提交快照執行 `node scripts/build-editor.cjs --check`；純文件推送成功即結束，不追蹤 Pages。完整驗收與部署追蹤條件依發布指引，新增寫入的首次證明要求不變。core 的可執行語法變動須核對所有群組相依，包含技藝上限的整份 core 語法樹摘要，依 `docs/maintenance/talents.md` 核對受影響群組後重開；既有已開放群組因本次變更失效時，不以關閉旗標的狀態推送。新增候選群組在首次證明前則維持關閉。
 
 ## 編輯來源
 
