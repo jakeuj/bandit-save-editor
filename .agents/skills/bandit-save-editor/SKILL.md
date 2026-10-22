@@ -36,6 +36,10 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 
 ## 版本更新入口
 
+開發新功能或補隱藏原生測試時，同樣先讀本機索引：以 `preferredDevelopmentSourceId` 找到完整來源、獨立 `runtime` 及兩份完整性 manifest，核對後直接傳給既有驗證工具的 `--source`／`--runtime`。完整快取保持原始唯讀用途，由 `verify-game.cjs` 複製到隔離測試目錄並套用隱藏、靜音與存檔隔離；固定測試存檔及候選 catalog 依當次任務指定。只有分析來源時才補建完整來源；runtime 依內容摘要快取，保留舊版配對，不依賴 Steam 安裝檔永遠不變。本機索引附有準備／重用指令時優先沿用；完整性通過與實際原生測試成功分開記錄。
+
+先讀本機 `.local/game-sources.json` 與 `.local/game-sources.md`（若存在），取得已記錄版本、完整／精簡來源、快取根目錄及逐檔指紋。先確認路徑仍在且指紋相符，沿用原快取根目錄或直接傳 `--source`；不要為找資料重掃暫存目錄，或把同一包解到新的 artifacts 根目錄。套件雜湊確實改變、快取缺檔或內容不符時才補建。精簡來源供靜態分析，不能當成可執行遊戲。新增解包後更新本機索引；索引由 Git 忽略，機器路徑不寫進公開技能／文件。
+
 處理新版相容性時，先查 [Steam 遊戲最新消息](https://store.steampowered.com/news/app/4267800)，核對公告日期、版本及正式／測試／相容分支，將當次公告的永久連結記入 repo 研究筆記。新聞頁無法取得正文時，改用 [Steam 官方新聞 API](https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=4267800&count=5&maxlength=0&feeds=steam_community_announcements)。
 
 實際安裝版本另以 `appmanifest_4267800.acf` 的 `buildid` 與 `package.nw` 指紋確認；包內版本文字可能落後。先用遷移工具 `--package`／`--plan` 選取必要檔案分析，無關更新不完整解包或啟動遊戲；未知規則再依 [save-format.md 純分析流程](references/save-format.md#重建知識)查 SID。

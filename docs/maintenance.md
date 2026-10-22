@@ -116,7 +116,7 @@ node scripts/extract-game.cjs --source /path/to/unpacked/game --audit-only --aud
 
 1. 追查初始化、讀寫、計算與刪除，記錄欄位型別、值域、關聯及來源 SID；複雜或未釐清項目維持唯讀。
 2. 用合成資料測試非法型別、跨級、上限、交易回滾、完整復原及精確 token 替換。
-3. 以 `scripts/verify-game.cjs --help` 查看隔離驗證入口。此工具需要 Windows 或 macOS、Node.js 22+、解包的遊戲、同平台 NW.js runtime 及已登入的 Steam；來源須與 catalog 的完整15個指紋（13個基礎加yx／tz）相符。Windows 傳入安裝目錄的 `game.exe`，工具會複製 runtime 至隔離遊戲目錄。用 `--catalog` 指定候選目錄、`--save-file` 指定唯讀來源存檔、`--artifacts` 指定已存在的 repo 外目錄；不能沿用不同 runtime 的驗證紀錄。
+3. 以 `scripts/verify-game.cjs --help` 查看隔離驗證入口。此工具需要 Windows 或 macOS、Node.js 22+、解包的遊戲、同平台 NW.js runtime 及已登入的 Steam；來源須與 catalog 的完整15個指紋（13個基礎加yx／tz）相符。Windows 優先傳入本機索引記錄的快取 `game.exe`，也可用安裝目錄的版本；工具會複製 runtime 至隔離遊戲目錄。用 `--catalog` 指定候選目錄、`--save-file` 指定唯讀來源存檔、`--artifacts` 指定已存在的 repo 外目錄；不能沿用不同 runtime 的驗證紀錄。
 4. 確認遊戲載入、遊戲寫檔、停止測試程序後重啟讀回及來源存檔雜湊；測試只在獨立 app／遊戲／profile 中執行，保留授權初始化，Steam 寫入導向本機鏡像與紀錄。
 5. 將去識別結果與相符指紋寫入 `verification.json`，再開啟對應群組。建置會核對全部來源指紋、檢查結果及群組覆蓋，未通過就停止。
 6. 在 `scripts/verification-requirements.cjs` 加群組與 checks，`scripts/verification-suite.cjs` 指定家族／步驟，`scripts/migration-scenarios.cjs` 補代表情境，並在 `scripts/migration-analysis.cjs` 宣告相依。漏加不能在遷移時判為可沿用；首次獨立證明合併後才成為下次遷移的既有群組。
@@ -129,7 +129,17 @@ v2.1 可使用 repo 外 `--scenario` JSON：`baseline` 為 `[x,y,z,value]` 陣�
 
 2026-10-23 起依[已核准規格](../sdd/selective-migration/proposal.md)按影響選跑。預設 `auto`：語意未變沿用，只有相關功能改變才啟動隱藏、靜音的隔離遊戲。例行更新不使用 computer use；UI 疑慮先記錄，實際故障再針對性複查，使用者明確要求才操作桌面。此次成本與重播結果見[精簡流程紀錄](research/selective-migration.md)。
 
+### 本機開發快取
+
+開發新功能或補原生測試先讀 `.local/game-sources.json` 的 `preferredDevelopmentSourceId`，在 `entries` 取得完整 `source`、獨立 Windows `runtime`、`sourceManifest` 及 `runtimeManifest`。核對 manifest 的逐檔 SHA-256 與該版本 15 來源指紋後，直接沿用 `--source`／`--runtime`，不重新解包；精簡來源仍供版本分析。完整快取不作測試寫入，既有 `verify-game.cjs` 會複製到隱藏、靜音的隔離副本，另傳當次候選 catalog、固定存檔與 repo 外 artifacts。Steam 仍須登入。
+
+完整資源以套件摘要、runtime 以其檔案集合摘要分別快取並保留版本配對，避免 Steam 更新改動舊版測試環境。來源 manifest 是 `source-cache.json`，runtime manifest 是 `runtime-cache.json`；索引可記本機準備工具入口。缺檔或摘要不符才修復相應快取，來源版本已改變先重新辨識版本。`integrityVerified` 只表示檔案核對；`executableVerified` 及功能驗證須以實際隔離測試結果另行記錄。
+
+首次確認快取可執行時，只跑一份隱藏、靜音的隔離副本：確認真實 Steam 初始化、載入、原生存檔，再停止並以新 PID 重啟讀回，核對原始存檔及快取未變後停止程序。成功才更新本機 `executableVerified` 與 `nativeSmoke`，保存 repo 外報告位置、報告雜湊及來源／runtime 配對；這是環境冒煙，不開啟功能權限，也不需要全套或 computer use。之後核對快取時，來源、runtime 及報告雜湊相符就保留成功紀錄，不重跑冒煙。
+
 ### 日常更新入口
+
+新工作階段先讀 `.local/game-sources.json`；人類可查 `.local/game-sources.md`。這是 Git 忽略的本機版本／路徑索引，包含來源種類、已核對 build、套件與 15 來源雜湊，以及固定快取根目錄。先查索引並核對檔案，不重掃磁碟或重解同一包；`--package` 沿用索引中的 artifacts 根目錄即可命中既有快取，舊版本比較直接使用記錄的 `--source`。套件已更新或快取缺失／不符時才補建並更新索引。索引只記 metadata，真實存檔及 payload 留在 repo 外，機器路徑不提交。
 
 1. 核對正式分支公告、公告日期與 `appmanifest_4267800.acf` buildid。公告協助縮小範圍，實際判斷仍以來源差異為準。
 2. 先跑下列 `--plan`。`--package` 可傳安裝目錄或 `package.nw`；只擷取 15 個分析來源，依整包 SHA 與逐檔雜湊重用 repo 外快取。相同來源不啟動遊戲，不必每次完整解包圖片、音樂及 runtime。
