@@ -10,7 +10,7 @@ const S = require('./verification-suite.cjs');
 const R = require('./verification-requirements.cjs');
 const root = path.resolve(__dirname, '..');
 // Lifecycle scripts that can re-read their results after the new-PID restart.
-const comparable = new Set(['verify-equipment-workflow.cjs', 'verify-quality-lifecycle.cjs']);
+const comparable = new Set(['verify-random-character-lifecycle.cjs', 'verify-equipment-workflow.cjs', 'verify-quality-lifecycle.cjs']);
 
 // Ordered CLI steps for one copy. '{state}' is replaced by the state path that setup prints.
 function steps(copy, setupArgs) {
@@ -154,6 +154,7 @@ function buildProof({catalog, results, coreSource, steamBuild, previous}) {
     batch2: {date, gameVersion: catalog.gameVersion, fingerprints: catalog.batch2Fingerprints, limits: catalog.batch2Limits, dataHash: sha(catalog.batch2Data), checks: pick(checks[R.sections.batch2.groups[0]], R.sections.batch2.checks), ...coverage('batch2')},
     affixReplacement: {date, gameVersion: catalog.gameVersion, fingerprints: all, limits: catalog.affixReplacementLimits, dataHash: sha({rules: catalog.affixReplacement, items}), checks: checks.equipmentAffixReplacement, ...coverage('affixReplacement')},
     equipmentWorkflow: {date, platform: results.platform, gameVersion: catalog.gameVersion, fingerprints: all, limits: catalog.equipmentWorkflowLimits, dataHash: sha({rules: catalog.equipmentWorkflowLimits, items, formulas: catalog.affixReplacement}), groups: perGroup('equipmentWorkflow'), ...coverage('equipmentWorkflow')},
+    randomCharacterGrowth: require('./random-character-growth-proof.cjs').record(catalog,coreSource,{date,platform:results.platform,checks:checks.randomCharacterBaseAptitudes,...coverage('randomCharacterGrowth')}),
     equipmentQuality: {date, gameVersion: catalog.gameVersion, fingerprints: all, dataHash: sha({quality: catalog.equipmentQuality, items, workflow: catalog.equipmentWorkflowLimits}), ...(formulasPassed ? {formulaHash: sha(qualityFormula(coreSource)), formulaCases: Object.keys(catalog.equipmentQuality.items).length * 24 + Object.keys(catalog.affixReplacement.attributes).length * 20} : {}), groups: perGroup('equipmentQuality'), ...coverage('equipmentQuality')}
   };
 }

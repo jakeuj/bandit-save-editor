@@ -282,9 +282,39 @@
   try{transaction(m,()=>{for(const c of preview.changes)put(m,c.coordinate,c.after,c.label);},'裝備品質調整');}finally{m.currentGroup=previous;}
   return preview;
  }
- function pillInfo(m,characterId,aptitude,pillId){
+ // Exact recruitment feasibility. Rationals keep strict random/round upper bounds distinct.
+ const rational=(n,d=1n)=>{n=BigInt(n);d=BigInt(d);return d<0n?{n:-n,d:-d}:{n,d};};
+ const rationalCompare=(a,b)=>a.n*b.d-b.n*a.d;
+ function recruitmentCombination(quality,raw){
+  const rules=KNOWLEDGE.randomCharacterGrowth;
+  if(!rules||!Number.isInteger(quality)||quality<1||quality>rules.totals.length||!Array.isArray(raw)||raw.length!==3||raw.some(v=>!Number.isSafeInteger(v)||v<1||v>300))return null;
+  const [minimum,maximum]=rules.totals[quality-1],sum=raw.reduce((a,b)=>a+b,0);
+  for(let total=Math.max(minimum,sum-1);total<=Math.min(maximum,sum+1);total++)for(let orientation=0;orientation<rules.weights.length;orientation++){
+   const weights=rules.weights[orientation],n=BigInt(total),lo=raw.map(v=>BigInt(2*v-1)),hi=raw.map(v=>BigInt(2*v+1));
+   // lambda = sum(weights)/(2*N). Each weight lies in [max(a,lo*lambda),min(b,hi*lambda)).
+   const start=rational(weights.reduce((s,w)=>s+w[0],0),2n*n),end=rational(weights.reduce((s,w)=>s+w[1],0),2n*n);
+   const points=[start,end,...weights.flatMap(([a,b],i)=>[rational(a,lo[i]),rational(b,hi[i])])].filter(p=>rationalCompare(p,start)>=0n&&rationalCompare(p,end)<=0n).sort((a,b)=>rationalCompare(a,b)<0n?-1:rationalCompare(a,b)>0n?1:0).filter((p,i,a)=>!i||rationalCompare(p,a[i-1])!==0n);
+   for(let segment=0;segment<points.length-1;segment++){
+    let left=points[segment],right=points[segment+1],leftOpen=false,rightOpen=true;
+    const mid=rational(left.n*right.d+right.n*left.d,2n*left.d*right.d);
+    const lower=weights.map(([a],i)=>BigInt(a)*mid.d>=lo[i]*mid.n?[0n,BigInt(a)]:[lo[i],0n]);
+    const upper=weights.map(([,b],i)=>BigInt(b)*mid.d<=hi[i]*mid.n?[0n,BigInt(b)]:[hi[i],0n]);
+    // Enforce a*lambda+b <= 0 (or <0), intersecting one-dimensional rational intervals.
+    const constrain=(a,b,strict)=>{
+     if(a===0n)return strict?b<0n:b<=0n;
+     const edge=rational(-b,a);
+     if(a>0n){const cmp=rationalCompare(edge,right);if(cmp<0n){right=edge;rightOpen=strict;}else if(cmp===0n)rightOpen ||= strict;}
+     else{const cmp=rationalCompare(edge,left);if(cmp>0n){left=edge;leftOpen=strict;}else if(cmp===0n)leftOpen ||= strict;}
+     const cmp=rationalCompare(left,right);return cmp<0n||cmp===0n&&!leftOpen&&!rightOpen;
+    };
+    const ls=lower.reduce((s,v)=>[s[0]+v[0],s[1]+v[1]],[0n,0n]),us=upper.reduce((s,v)=>[s[0]+v[0],s[1]+v[1]],[0n,0n]);
+    if(lower.every((l,i)=>constrain(l[0]-upper[i][0],l[1]-upper[i][1],true))&&constrain(ls[0]-2n*n,ls[1],false)&&constrain(2n*n-us[0],-us[1],true))return {total,orientation};
+   }
+  }
+  return null;
+ }
+ function characterAptitudeSource(m,characterId,aptitude,baseRaw){
   if(!activeCharacter(m,characterId)||get(m,C(characterId,0,2))!==characterId)throw Error('找不到有效角色。');
-  if(!Number.isInteger(aptitude)||aptitude<1||aptitude>3)throw Error('無效的資質類型。');
   const templateId=get(m,C(characterId,2,2));
   if(!Number.isSafeInteger(templateId)||templateId<0)throw Error('角色範本尚未辨識。');
   const template=templateId===0?{base:[10,11,12].map(y=>get(m,C(characterId,y,2))),talents:[1,2,3].map(y=>get(m,C(characterId,y,12))),talentLevels:[21,22,23].map(y=>get(m,C(characterId,y,12)))}:KNOWLEDGE.batch2Data?.characters[templateId];
@@ -298,13 +328,62 @@
   }
   // Also catch an orphan owner which is absent from the character's slot array.
   for(let i=1;i<m.original.size[0];i++)if(get(m,C(i,7,9))===characterId&&get(m,C(i,0,9))>0)ordinaryEquipment(m,i);
-  let base=template.base[aptitude-1]/10;
+  let base=(baseRaw||template.base)[aptitude-1]/10;
   for(let i=0;i<3;i++){
    const id=template.talents[i],level=template.talentLevels[i];if(id===0&&level===0)continue;
    const talent=KNOWLEDGE.batch2Data.talents[id];
    if(!talent||!Number.isSafeInteger(level)||level<0)throw Error('天賦資料不符。');
    for(let k=0;k<3;k++)if(talent.attributes[k]===103+aptitude)base+=level*talent.coefficients[k]/10;
   }
+  return {base,template};
+ }
+ function randomCharacterGrowthInfo(m,{characterId}){
+  const reasons=[],quality=Number.isSafeInteger(characterId)&&exists(m.original,C(characterId,49,2))?get(m,C(characterId,49,2)):undefined;
+  try{
+   if(!activeCharacter(m,characterId)||get(m,C(characterId,0,2))!==characterId)throw Error('找不到有效的已招募角色。');
+   if(get(m,C(characterId,2,2))!==0)throw Error('有名角色載入時會依範本回填；本功能只支援範本 0。');
+   if(get(m,C(characterId,55,2))!==0)throw Error('目前只支援非在監的已招募角色。');
+   if(!Number.isSafeInteger(quality)||quality<1||quality>6)throw Error('角色品質須為原版 1–6。');
+   const talents=[1,2,3].map(y=>get(m,C(characterId,y,12))),seen=new Set();
+   talents.forEach((id,i)=>{const level=get(m,C(characterId,21+i,12));if(id===0&&level===0)return;if(!Number.isSafeInteger(id)||!KNOWLEDGE.batch2Data.talents[id]||!Number.isSafeInteger(level)||level<1||level>5||seen.has(id))throw Error('天賦 ID／等級、空槽或重複資料不符，保持唯讀。');seen.add(id);});
+   const raw=[10,11,12].map(y=>get(m,C(characterId,y,2)));
+   if(!recruitmentCombination(quality,raw))throw Error('目前三項基礎資質不屬於此品質的原版招募組合。');
+   const aptitudes=[1,2,3].map(aptitude=>{
+    const {base}=characterAptitudeSource(m,characterId,aptitude),bonus=get(m,C(characterId,12+aptitude,2));
+    if(!Number.isSafeInteger(bonus)||bonus<0)throw Error('丹藥增量須為非負整數；既有小數增量保持唯讀。');
+    const cap=Math.round(100*base*1.5)/100,total=Math.round(100*(base+bonus/10))/100;
+    if(!Number.isFinite(total)||total>cap)throw Error('目前丹藥增量超過角色資質上限，請先降低增量。');
+    return {aptitude,name:aptitudeNames[aptitude-1],raw:raw[aptitude-1],base,bonus,total,cap};
+   });
+   return {characterId,quality,baseRaw:raw,aptitudes,eligible:true,reasons,verified:!!KNOWLEDGE.verification.randomCharacterBaseAptitudes};
+  }catch(e){reasons.push(e.message);return {characterId,quality,eligible:false,reasons,verified:!!KNOWLEDGE.verification.randomCharacterBaseAptitudes};}
+ }
+ function previewCharacterBaseAptitudes(m,options){
+  const {characterId,baseRaw}=options,info=randomCharacterGrowthInfo(m,{characterId}),reasons=[...info.reasons];
+  if(Object.keys(options).some(k=>!['characterId','baseRaw'].includes(k)))reasons.push('基礎資質只接受角色編號與完整三項數值。');
+  if(!Array.isArray(baseRaw)||baseRaw.length!==3||baseRaw.some(v=>!Number.isSafeInteger(v)||v<1||v>300))reasons.push('請輸入三項原始資質安全整數；每 1 代表顯示 0.1 點。');
+  if(!info.eligible||reasons.length)return {...info,reasons,canApply:false,changes:[]};
+  const combination=recruitmentCombination(info.quality,baseRaw);
+  if(!combination)reasons.push('三項數值無法由此品質的任一原版招募傾向共同生成。');
+  const aptitudes=info.aptitudes.map(before=>{
+   const base=characterAptitudeSource(m,characterId,before.aptitude,baseRaw).base,cap=Math.round(100*base*1.5)/100,total=Math.round(100*(base+before.bonus/10))/100;
+   if(total>cap)reasons.push(`${before.name}丹藥增量 ${before.bonus} 使新總資質 ${total} 超過上限 ${cap}；請先降低丹藥增量。`);
+   return {aptitude:before.aptitude,name:before.name,before,after:{raw:baseRaw[before.aptitude-1],base,bonus:before.bonus,total,cap}};
+  });
+  const changes=aptitudes.filter(a=>a.before.raw!==a.after.raw).map(a=>({coordinate:C(characterId,9+a.aptitude,2),before:a.before.raw,after:a.after.raw,label:`${get(m,C(characterId,1,2))}・${a.name}基礎資質`}));
+  return {...info,aptitudes,combination,changes,reasons,unchanged:!changes.length,canApply:info.verified&&!reasons.length&&!!changes.length};
+ }
+ function setCharacterBaseAptitudes(m,options){
+  const preview=previewCharacterBaseAptitudes(m,options);
+  if(preview.reasons.length)throw Error(preview.reasons.join('；'));
+  if(!preview.verified)throw Error('一般隨機角色基礎資質尚未完成獨立隔離驗證。');
+  const previous=m.currentGroup;m.currentGroup=`aptitude:${options.characterId}`;
+  try{transaction(m,()=>{for(const c of preview.changes)put(m,c.coordinate,c.after,c.label);},'三項基礎資質調整');}finally{m.currentGroup=previous;}
+  return preview;
+ }
+ function pillInfo(m,characterId,aptitude,pillId){
+  if(!Number.isInteger(aptitude)||aptitude<1||aptitude>3)throw Error('無效的資質類型。');
+  const {base}=characterAptitudeSource(m,characterId,aptitude);
   if(!Number.isSafeInteger(pillId)||pillId<1||pillId>=m.original.size[0])throw Error('無效的丹藥編號。');
   const pill=KNOWLEDGE.batch2Data.pills[pillId];
   if(!pill||pill.aptitude!==aptitude||!Number.isSafeInteger(get(m,C(pillId,6,0)))||get(m,C(pillId,6,0))<1)throw Error('請選擇已持有的對應資質丹藥作為上限依據。');
@@ -317,7 +396,7 @@
   const info=pillInfo(m,characterId,aptitude,pillId);
   if(!info.verified)throw Error('丹藥增量尚未完成隔離遊戲驗證。');
   if(!Number.isSafeInteger(bonus)||bonus<0||bonus>info.max)throw Error(`累積增量須為 0–${info.max} 的整數（每 1 等於資質 0.1 點）。`);
-  return batch2Put(m,info,bonus,`pill:${characterId}:${aptitude}`,`${get(m,C(characterId,1,2))}・${info.name}丹藥累積增量`);
+  return batch2Put(m,info,bonus,`aptitude:${characterId}`,`${get(m,C(characterId,1,2))}・${info.name}丹藥累積增量`);
  }
  /** @returns {FieldDescriptor} */
  function resolveField(m,c){
@@ -333,7 +412,8 @@
   else if(z===0&&y===17&&x===1)named('招募刷新倒數（秒）',{type:'decimal'});
   else if(z===0&&[4,13].includes(y)&&catalogMaps.technologies.has(x))named(y===4?'科技等級':'科技研究狀態',{entity:catalogName('technologies',x)});
   else if(z===0&&y===5&&catalogMaps.professions.has(x))named('職業操練上限',{entity:catalogName('professions',x)});
-  else if(z===2&&y>=13&&y<=15)named(`${aptitudeNames[y-13]}丹藥累積增量`,{reason:'請由角色養成的丹藥增量具名操作修改；每 1 等於資質 0.1 點'});
+  else if(z===2&&y>=10&&y<=12)named(`${aptitudeNames[y-10]}基礎資質`,{reason:'請由角色養成的三項基礎資質具名操作修改；有名角色載入時會依範本回填',related:[10,11,12,13,14,15].map(y=>C(x,y,2)),verification:'randomCharacterBaseAptitudes'});
+  else if(z===2&&y>=13&&y<=15)named(`${aptitudeNames[y-13]}丹藥累積增量`,{reason:'請由角色養成的丹藥增量具名操作修改；每 1 等於資質 0.1 點',related:[10,11,12,13,14,15].map(y=>C(x,y,2))});
   else if(z===2&&activeCharacter(m,x)){
    f.entity=get(m,C(x,1,2));
    const labels={0:'角色序號',1:'角色名稱',2:'角色範本',3:'角色等級',4:'角色經驗餘額',6:'目前職業',10:'力量資質',11:'敏捷資質',12:'智力資質',50:'重生階段',51:'性別',56:'共用池購買等級已花經驗',59:'自動轉職預設'};
@@ -440,6 +520,78 @@
   else if(kind==='inventory'){for(const z of [7,9])for(let x=1;x<m.original.size[0];x++){const item=get(m,C(x,1,z));if(catalogMaps.items.has(item)&&get(m,C(x,0,z))>0)rows.push({id:x,z,name:catalogName('items',item),detail:`${z===7?'背包':'裝備庫／穿戴'}・品質 ${get(m,C(x,5,z))}・Lv ${get(m,C(x,6,z))}`});}}
   return rows;
  }
+ const batchLabels={characterExperience:'角色經驗',professionExperience:'已習得職業經驗',skillExperience:'九項技藝經驗',equipmentMax:'普通裝備升滿',technologyLevel:'進階科技同值'};
+ // Requests describe player actions, never arbitrary methods or coordinates.
+ function batchTargets(m,request){
+  if(!request||typeof request!=='object'||Array.isArray(request)||!Object.hasOwn(batchLabels,request.kind))throw Error('未知的批次操作。');
+  const allowed={characterExperience:['kind','characterIds','amount'],professionExperience:['kind','characterId','amount'],skillExperience:['kind','characterId','amount'],equipmentMax:['kind','plane','includeEquipped'],technologyLevel:['kind','level']}[request.kind];
+  if(Object.keys(request).some(k=>!allowed.includes(k)))throw Error('批次只接受指定動作的參數，不能傳入方法、座標或進階模式。');
+  const r=JSON.parse(JSON.stringify(request)),targets=[],excluded=[];
+  const character=(x,kind,id)=>({name:`${activeCharacter(m,x)?get(m,C(x,1,2)):'角色'} #${x}${kind==='profession'?'・'+catalogName('professions',id):kind==='skill'?'・'+SKILLS[id-1]:''}`,method:'experience',options:{kind,characterId:x,id,amount:r.amount},coordinates:kind==='character'?[C(x,3,2),C(x,4,2)]:kind==='profession'?[C(x,id,4),C(x,id,5)]:[C(x,30+id,2),C(x,39+id,2)]});
+  if(r.kind==='characterExperience'){
+   if(!Array.isArray(r.characterIds)||!r.characterIds.length||r.characterIds.length>m.original.size[0]-1||r.characterIds.some(x=>!Number.isSafeInteger(x)||x<1||x>=m.original.size[0])||new Set(r.characterIds).size!==r.characterIds.length)throw Error('請選擇不重複且在範圍內的角色。');
+   for(const x of r.characterIds)targets.push(character(x,'character'));
+  }else if(['professionExperience','skillExperience'].includes(r.kind)){
+   if(!activeCharacter(m,r.characterId))throw Error('找不到有效角色。');
+   const ids=r.kind==='skillExperience'?SKILLS.map((_,i)=>i+1):KNOWLEDGE.catalogs.professions.filter(p=>get(m,C(r.characterId,p.id,4))!==0).map(p=>p.id);
+   for(const id of ids)targets.push(character(r.characterId,r.kind==='skillExperience'?'skill':'profession',id));
+  }else if(r.kind==='equipmentMax'){
+   if(![7,9].includes(r.plane)||r.includeEquipped!==undefined&&typeof r.includeEquipped!=='boolean')throw Error('請選擇背包或裝備庫，穿戴選項須為布林值。');
+   for(let x=1;x<m.original.size[0];x++){
+    if(!get(m,C(x,0,r.plane)))continue;
+    const item=catalogMaps.items.get(get(m,C(x,1,r.plane))),name=`${r.plane===7?'背包':'裝備庫'} #${x}・${item?.name||'未知物品'}`;
+    if(!item||item.category!=='裝備'||item.kind!=='普通'){excluded.push({name,reason:'非本次範圍：只處理已辨識的普通裝備。',status:'excluded'});continue;}
+    if(r.plane===9&&!r.includeEquipped&&get(m,C(x,7,9))>0){excluded.push({name,reason:'未勾選包含穿戴裝備。',status:'excluded'});continue;}
+    targets.push({name,method:'equipment',options:{itemId:x,plane:r.plane},coordinates:[C(x,6,r.plane)]});
+   }
+  }else for(let id=31;id<=44;id++)targets.push({name:`${catalogName('technologies',id)} #${id}`,method:'technology',options:{technologyId:id,level:r.level},coordinates:[C(id,4,0)]});
+  return {request:r,targets,excluded,label:batchLabels[r.kind]};
+ }
+ function executeBatchTarget(m,target){
+  if(target.method==='experience')return addExperience(m,target.options);
+  if(target.method==='equipment'){
+   const info=editingInfo(m,'equipment',target.options.itemId,target.options.plane);
+   if(info.current>info.normalMax)throw Error('現有裝備超過原版上限，本批次不會自動降級。');
+   return setEquipmentLevel(m,{...target.options,level:info.normalMax,advanced:false});
+  }
+  return setAdvancedTechnologyLevel(m,{...target.options,advanced:false});
+ }
+ const batchPreviews=new WeakMap();
+ const batchClock=()=>globalThis.performance?.now()??Date.now();
+ function batchSnapshot(m){return {original:m.original,text:m.text,changes:new Map(m.changes),history:[...m.history],counter:m.operationCounter,gates:JSON.stringify(KNOWLEDGE.verification)};}
+ function assertBatchCurrent(m,snapshot){
+  if(m.original!==snapshot.original||m.text!==snapshot.text||m.operationCounter!==snapshot.counter||m.changes.size!==snapshot.changes.size||[...snapshot.changes].some(([k,v])=>m.changes.get(k)!==v)||m.history.length!==snapshot.history.length||m.history.some((v,i)=>v!==snapshot.history[i])||JSON.stringify(KNOWLEDGE.verification)!==snapshot.gates)throw Error('存檔或驗證狀態已改變，請重新預覽批次。');
+ }
+ async function runBatch(m,request,{signal,onProgress,preview}={},commit=false){
+  if(m.inTransaction)throw Error('批次不能在同步交易內執行。');
+  const requestKey=JSON.stringify(request),prior=preview&&batchPreviews.get(preview);
+  if(preview){if(!prior||prior.model!==m||prior.requestKey!==requestKey)throw Error('批次預覽不相符，請重新預覽。');assertBatchCurrent(m,prior.snapshot);}
+  const snapshot=batchSnapshot(m),spec=batchTargets(m,request),operation=`${(m.operationCounter||0)+1}：批次・${spec.label}`;
+  // Only this private model stays inside a transaction across yields. No callback in transaction() is async.
+  const staged={...m,changes:new Map(m.changes),history:[],inTransaction:true,currentOperation:operation,currentGroup:null},rows=[];
+  const check=()=>{if(signal?.aborted)throw Error('已取消批次，沒有套用任何修改。');if(JSON.stringify(request)!==requestKey)throw Error('批次參數已改變，請重新預覽。');assertBatchCurrent(m,snapshot);};
+  const progress=done=>onProgress?.({done,total:spec.targets.length});
+  check();progress(0);await new Promise(resolve=>setTimeout(resolve,0));check();
+  let sliceStart=batchClock();
+  for(let i=0;i<spec.targets.length;i++){
+   const target=spec.targets[i],before=target.coordinates.map(c=>get(staged,c)),saved=target.coordinates.map(c=>staged.changes.get(key(c)));
+   let reason='';try{executeBatchTarget(staged,target);}catch(error){reason=error.message;target.coordinates.forEach((c,j)=>{if(saved[j])staged.changes.set(key(c),saved[j]);else staged.changes.delete(key(c));});}
+   const after=target.coordinates.map(c=>get(staged,c)),changed=after.filter((v,j)=>!Object.is(v,before[j])).length;
+   rows.push({name:target.name,status:reason?'blocked':changed?'changed':'unchanged',reason,before,after,coordinates:target.coordinates,changedCells:changed});
+   if(batchClock()-sliceStart>=12){progress(i+1);await new Promise(resolve=>setTimeout(resolve,0));check();sliceStart=batchClock();}
+  }
+  progress(spec.targets.length);check();
+  const summary={targets:rows.length,changed:rows.filter(r=>r.status==='changed').length,unchanged:rows.filter(r=>r.status==='unchanged').length,excluded:spec.excluded.length,blocked:rows.filter(r=>r.status==='blocked').length,changedCells:rows.reduce((n,r)=>n+r.changedCells,0)};
+  const result={label:spec.label,summary,rows:[...rows,...spec.excluded],canApply:summary.targets>0&&summary.blocked===0&&summary.changed>0};
+  if(commit){
+   if(summary.blocked)throw Error(`整批未套用：${summary.blocked} 個目標不合格。${rows.find(r=>r.status==='blocked').name}：${rows.find(r=>r.status==='blocked').reason}`);
+   if(!summary.targets)throw Error('沒有可操作的目標，整批未套用。');
+   if(result.canApply){transaction(m,()=>{m.changes=staged.changes;},`批次・${spec.label}`);}
+  }else batchPreviews.set(result,{model:m,snapshot,requestKey});
+  return result;
+ }
+ const previewBatch=(m,request,options)=>runBatch(m,request,options,false);
+ const applyBatch=(m,request,options)=>runBatch(m,request,options,true);
  function labelFor(o,c){
   const basic=BASICS.find(v=>key(v)===key(c));if(basic)return basic.name;
   if(c.y===6&&c.z===0){const mat=MATERIALS.find(v=>v.x===c.x);if(mat)return `${mat.name}（材料 #${mat.id}）`;}
@@ -461,5 +613,5 @@
   if(patches.length!==m.changes.size)throw Error('部分修改座標未能定位，已停止匯出。');
   const parts=[];let previous=0;for(const p of patches){parts.push(m.text.slice(previous,p.start),p.value);previous=p.end;}parts.push(m.text.slice(previous));return parts.join('');
  }
- globalThis.SaveCore={BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,labelFor,diff,serialize};
+ globalThis.SaveCore={recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,labelFor,diff,serialize,previewBatch,applyBatch};
 })();

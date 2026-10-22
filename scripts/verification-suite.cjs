@@ -12,6 +12,7 @@ const growthChecks = {
 };
 const nativeLifecycleChecks = {load: 'load', save: 'save', restart: 'reload', originalHashes: 'assert', nativeEffects: 'oracleCompare', lifecycle: 'lifecycle'};
 const families = {
+
   growth: {
     groups: ['names', 'characterExperience', 'professionExperience', 'skillExperience'],
     checks: growthChecks
@@ -54,6 +55,10 @@ const families = {
     formulas: true,
     lifecycle: ['verify-quality-lifecycle.cjs'],
     checks: {...nativeLifecycleChecks, qualityUi: 'ui'}
+  },
+  randomCharacterGrowth: {
+    groups: ['randomCharacterBaseAptitudes'], oracle: 'verify-random-character-growth.cjs', lifecycle: ['verify-random-character-lifecycle.cjs'],
+    checks: {load:'load',save:'save',restart:'reload',originalHashes:'assert',nativeEffects:'oracleCompare',numericUpdate:'lifecycle',nativePills:'lifecycle',nativeTransfer:'lifecycle',nativePrison:'lifecycle',nativeRebirth:'lifecycle',nativeDismiss:'lifecycle',stageRoundtrips:'lifecycle'}
   }
 };
 const familyOf = group => Object.keys(families).find(name => families[name].groups.includes(group));

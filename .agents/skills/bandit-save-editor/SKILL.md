@@ -24,6 +24,8 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 - 精準洗練、替換已選槽詞條、單件裝備效果預覽或搬移識別：讀 repo 的 `docs/research/precise-affix-editing.md` 與 `sdd/precise-affix-editing/tasks.md`。v2.3 使用獨立替換驗證群組，不沿用係數證明；原生搬移後 y0 可不同於目前列號，不得據此拒絕合法裝備。
 - 背包裝備、首次洗練選槽或新取得標記：讀 repo `docs/research/equipment-workflow.md` 與 `sdd/equipment-workflow/tasks.md`。v2.4已正式發布並開放首次選槽；具備代表遊戲選槽UI、原版存檔／新PID讀回、桌面／390px精確下載及PWA離線／更新交接證據。詳細範圍與SHA以repo紀錄為準；直接file://新流程仍待人工。
 - 普通裝備品質升降、完整單件效果或y23語意：讀repo `docs/research/equipment-quality.md`、`sdd/equipment-quality/tasks.md`與維護指引v2.5段落。背包／z9的升品／降品有四個獨立證明，綁定15來源、規則／資料及公式雜湊；新增尾槽須明選，刪槽須確認且保留已選槽。取得事件分支與y23不可再簡化為目前品質。詳細公式、6,592組原生比對、UI及發布狀態留repo。
+- 一般隨機角色基礎資質、三項組合值域或與丹藥的還原相依：讀 `docs/research/random-character-growth.md`、`sdd/random-character-growth/tasks.md` 與維護指引 v2.7 段落。v2.7 僅處理範本0基礎資質，技藝上限／天賦另案；開放狀態以獨立證明為準。
+- 批次經驗、普通裝備升滿、科技同值或大量變更預覽：讀`docs/maintenance.md`的v2.6段落與`sdd/batch-editing/`。批次沿用既有具名API及閘門，暫存模型分段檢查，全部合格才一次提交；復原一步撤回整批，個別還原維持累計群組。完整尺寸、瀏覽器及隔離冒煙證據以任務紀錄為準，發布狀態另查repo。
 - 遊戲驗證先依下方「驗證與交付」選擇方式；只有確定需要操作遊戲UI時，才讀 repo `docs/game-ui-testing.md` 的「快速開始」及目標路徑、完成標記與故障表。工具API以當次computer-use技能為準，座標與視窗ID重新取得；編輯器選檔卡住則讀同檔確認框段落。
 - 遊戲改版後重驗既有群組、Mac 隔離重驗或版本遷移流水線：讀 repo `docs/maintenance.md`「版本遷移重驗」與 `sdd/archive/2026-10-22-version-migration/`。流水線以代表子集重驗全部群組；指紋不同且原生 checks 全過才自動寫回，同指紋只比較。UI check 僅在宣告事件摘要不變時沿用，否則依 UI 手冊補最小案例。
 - 核心 API、來源同步、知識驗證或驗收說明：讀 repo 的 `docs/maintenance.md`；待驗收狀態見 `sdd/save-knowledge/tasks.md`。

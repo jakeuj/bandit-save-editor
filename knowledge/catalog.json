@@ -64480,6 +64480,115 @@
     "professionTrainingCap": true,
     "professionTrainingCapAdvanced": true,
     "advancedTechnologyLevel": true,
-    "advancedTechnologyLevelAdvanced": true
+    "advancedTechnologyLevelAdvanced": true,
+    "randomCharacterBaseAptitudes": true
+  },
+  "randomCharacterGrowth": {
+    "version": 1,
+    "totals": [
+      [
+        90,
+        120
+      ],
+      [
+        120,
+        150
+      ],
+      [
+        150,
+        180
+      ],
+      [
+        180,
+        210
+      ],
+      [
+        210,
+        240
+      ],
+      [
+        240,
+        300
+      ]
+    ],
+    "weights": [
+      [
+        [
+          70,
+          90
+        ],
+        [
+          50,
+          70
+        ],
+        [
+          50,
+          70
+        ]
+      ],
+      [
+        [
+          50,
+          70
+        ],
+        [
+          70,
+          90
+        ],
+        [
+          50,
+          70
+        ]
+      ],
+      [
+        [
+          50,
+          70
+        ],
+        [
+          50,
+          70
+        ],
+        [
+          70,
+          90
+        ]
+      ],
+      [
+        [
+          50,
+          80
+        ],
+        [
+          50,
+          80
+        ],
+        [
+          50,
+          80
+        ]
+      ]
+    ],
+    "upperWeightExclusive": true,
+    "scale": 10,
+    "policy": "same-quality-any-native-orientation",
+    "sourceSids": [
+      353435574752032,
+      879483110980295,
+      945993007174840,
+      450284555421069,
+      489035254017381,
+      953598826873759,
+      144692352947544,
+      226111227717877,
+      594381087796989,
+      407776400732220,
+      716009552600469,
+      501010543923483,
+      876351181502276,
+      110565347746026,
+      358500068340403,
+      778369382997146
+    ]
   }
 }

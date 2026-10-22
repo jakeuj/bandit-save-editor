@@ -39,7 +39,7 @@ node --test tests/*.test.cjs
 
 欄位圖鑑摘要由 `src/knowledge-ui.js` 讀取同一份內嵌知識的 `K.gameVersion`。摘要正確不代表其他標籤已同步：本次 V1.0.10.2 首次發布時曾出現摘要為新版、標籤仍為舊版，後由提交 `7adcb01` 修正。`tests/knowledge.test.cjs` 目前核對六個標記均等於內嵌的 `gameVersion`；新增或移除標示時，連同預期數量一起調整。`--check` 會重算產物，拒絕版本文字或 PWA 內容未同步的提交。
 
-更新順序為核對來源與實測紀錄、重建 catalog、執行建置及測試，再提交 catalog、驗證紀錄與產生的 HTML／`sw.js`。版本標示只是呈現知識基準，開放寫入仍受完整來源指紋及 `verification.json` 限制。側欄以醒目的「遊戲版本」顯示這個標記，讓玩家確認存檔對應的遊戲版本；其下的「修改器 v2.5」是工具發布版本，用於對照更新說明、回報問題與確認 PWA 已更新，和 Mac runtime 相容版本一樣不隨此標記改寫。手機版隱藏側欄底部，遊戲版本仍可在職業與欄位圖鑑標籤看到。
+更新順序為核對來源與實測紀錄、重建 catalog、執行建置及測試，再提交 catalog、驗證紀錄與產生的 HTML／`sw.js`。版本標示只是呈現知識基準，開放寫入仍受完整來源指紋及 `verification.json` 限制。側欄以醒目的「遊戲版本」顯示這個標記，讓玩家確認存檔對應的遊戲版本；其下的「修改器 v2.7」是工具發布版本，用於對照更新說明、回報問題與確認 PWA 已更新，和 Mac runtime 相容版本一樣不隨此標記改寫。手機版隱藏側欄底部，遊戲版本仍可在職業與欄位圖鑑標籤看到。
 
 ## PWA 維護與驗收
 
@@ -160,7 +160,7 @@ node scripts/verify-migration.cjs --source PREPARED_COPY/game --runtime PREPARED
 
 ## 提交與發布
 
-發布新版修改器時，同步更新側欄的「修改器 vX.Y · 日期」與 `index.html` 的「更新紀錄」對話框：在最上方加一筆，寫發布日期、對應遊戲版本，以及玩家看得懂的新增功能與限制。側欄版本文字與「更新紀錄」按鈕都會開啟這個對話框；`tests/changelog.test.cjs` 會核對第一筆與側欄版本、日期一致。手機版隱藏側欄底部，目前沒有開啟入口。
+發布新版修改器時，同步更新側欄的「修改器 vX.Y · 日期」與 `index.html` 的「更新紀錄」對話框：在最上方加一筆，寫發布日期、對應遊戲版本，以及玩家看得懂的新增功能與限制。側欄版本文字與「更新紀錄」按鈕都會開啟這個對話框；`tests/changelog.test.cjs` 會核對第一筆與側欄版本、日期一致。手機版隱藏側欄底部，v2.6在主內容上方提供使用說明／更新紀錄入口，未載入存檔也能開啟；頁尾保留復原一步。
 
 推送 `main` 會執行 Pages workflow，先檢查來源同步及核心測試，再以白名單打包靜態檔案。確認對應提交的部署成功，核對正式首頁、離線下載內容及修改過的公開資產。網站異動另驗證桌面／手機流程、主控台錯誤、canonical、分享資訊與 sitemap；文件變更以連結、指令及描述與實作一致性為主。
 
@@ -241,3 +241,44 @@ node scripts/verify-quality.cjs --state /external/state.json --scenario /externa
 公式測試涵蓋243範本及38候選，不把「可計算」當作「已原生比對」。完整6,592組、800件品質寫入、後續行為及代表UI證據見[品質研究](research/equipment-quality.md)，工具原始產物留repo外。UI操作後先核對只有允許的洗練變更與y24提示副作用，才採納後續IO基準。桌面、390px、兩入口下載及PWA離線／等待交接另驗收，直接file://維持獨立狀態。
 
 正式v2.5已經PR #2合併及相符SHA Pages部署、Git blob資產比對與Edge版本／離線驗證。IAB遇到關閉後仍waiting時，先核對所有已知同源分頁與快取雜湊，保留實際差異；本次改用既有v2.4的Edge正常關閉重開完成交接，沒有清快取或強制啟用。不同瀏覽器的結果分別記錄，避免把一個環境成功寫成全部成功。Edge選檔若欠缺擴充檔案權限，保留限制，不為例行驗收變更權限；可用相符建置的已授權測試環境完成檔案流程，正式畫面仍獨立核對。
+
+## v2.6 批次操作維護
+
+`src/batch-ui.js`由`src/ui.js`的批次標記內嵌，新增來源時同步`build-editor.cjs`，勿直接改產物內嵌程式。`previewBatch(model, request, options)`／`applyBatch(model, request, options)`皆回傳Promise；request僅接受下列固定種類：
+
+| kind | 參數 |
+| --- | --- |
+| characterExperience | characterIds（不重複ID陣列）、amount（正整數） |
+| professionExperience | characterId、amount（正數，最多一位小數）；自動展開全部已習得職業 |
+| skillExperience | characterId、amount（正整數）；固定展開九項技藝 |
+| equipmentMax | plane（7或9）、includeEquipped（預設false）；只納入普通裝備 |
+| technologyLevel | level（一般模式存檔值）；固定展開31–44 |
+
+options可帶`signal`取消與`onProgress({done,total})`；套用可帶`preview`，核心會核對該預覽的模型及request快照，過期即拒絕。回傳`summary`含targets、changed、unchanged、excluded、blocked、changedCells，`rows`包含名稱、狀態、前後值／座標與原因，`canApply`表示有變更且全數合格。預覽不是可繞過驗證的寫入清單，套用仍重新呼叫具名API。
+
+私有模型共用原始文字與陣列，只複製變更集合，約12ms讓出畫面；正式模型不跨await開啟同步交易。失敗／取消不動正式變更或歷史，成功只提交一筆；全批無變更不新增歷史。還原保留既有經驗／整件裝備累計群組，復原一步撤回整批。不可增加通用方法名稱、任意座標或略過失敗的路徑。
+
+批次及全域預覽每頁最多50筆；單角色選單最多50個候選，超過以名稱／#ID搜尋，角色勾選跨頁保留。完整尺寸測試分別記錄Node VM耗時、事件迴圈回應、取消及精確匯出；瀏覽器另外核對DOM數量、桌面／390px操作與實際下載，不把同步核心速度當成手機效能承諾。
+
+不新增驗證群組，22個既有群組繼續由三份驗證需求／清單／遷移情境共同覆蓋；批次測試另外確認各既有閘門不能繞過。未來若擴充寫入語意或值域，須重新判斷獨立群組並走開放寫入及版本遷移流程。
+
+隔離冒煙沿用`verify-game.cjs --setup`，加`--batch-requests /outside/repo/requests.json`（1–20筆固定request的JSON陣列），先套用既有scenario，再逐批預覽／套用，將各批次結果與所有聯動座標併入state觀察。其餘載入、原生存檔、assert、停止、新PID重啟、讀回及assert照舊；不寫回catalog或verification。Mac必須先開啟並登入原生Steam，使用相符15指紋及已核對路徑補丁、副本背景隱藏／非全螢幕／靜音。原始request、scenario、state及log留repo外。
+
+2026-10-22：V1.0.10.2隔離副本五種批次均通過，批次聯動55個欄位，併入既有scenario共觀察120個欄位；原生存檔與新PID讀回兩輪assert通過，15來源及原檔雜湊未變，測試程序已停止。完整尺寸與瀏覽器證據見[SDD驗收紀錄](../sdd/batch-editing/tasks.md)。本輪沒有新增遊戲UI、直接file開檔或正式部署驗收。
+
+
+## v2.7 一般隨機角色基礎資質
+
+來源與數值規則見[研究](research/random-character-growth.md)，驗收狀態見[SDD](../sdd/random-character-growth/tasks.md)。範本0、已招募、非在監、y50與z16階段紀錄全零，且完整資質來源可核對才開放；小數丹藥增量停用。有名角色載入依範本回填，不能用此功能或runtime補丁混處理。
+
+`randomCharacterGrowthInfo(model,{characterId})`回資格／原因及三項來源；`previewCharacterBaseAptitudes(model,{characterId,baseRaw})`接受三項原始安全整數，回canApply、差異、前後A／B／總值／C及原因；`setCharacterBaseAptitudes`重跑相同檢查、原子寫三欄。一般模式要求同品質任一原生傾向可生成，三欄不能獨立套範圍。預覽及套用不接受任意方法／座標或超限；自訂座標維持唯讀。
+
+資質與丹藥具名操作共用`aptitude:角色ID`六欄累計還原群組，包括有名角色既有丹藥操作的三欄還原；寫入值域維持原限制。復原一步仍按交易，失敗不留下變更。下調資質使現有B超出新C就阻擋，不默改B或依目前持有丹藥猜測歷史來源。
+
+生成器`random-character-growth-data.cjs`核對招募SID與公式後建立`catalog.randomCharacterGrowth`；來源／規則／資質資料變動關閉新旗標。`randomCharacterBaseAptitudes`有獨立section、family、代表情境與逐項checks，建置核對15來源、規則及天賦／裝備必要資料SHA、核心資質／穿戴檢查計算區段SHA。新增欄位仍由三份驗證需求／清單／遷移情境及版本遷移測試共同覆蓋，現在共23群組。
+
+初次驗證用`verify-random-character-suite.cjs`，參數沿用`--source`、`--runtime`、`--save-file`、`--artifacts`與Mac的`--package`；未帶`--record`只驗證，全部成功後帶此參數才合併新section與旗標，保留原有22群組完整證明。`verify-random-character-growth.cjs`比對原生A／B／C；`verify-random-character-lifecycle.cjs`每階段原生存檔、停止、新PID讀回，另有`--compare`重查最後結果。新群組首次完整矩陣24角色及2角色生命週期；未來版本遷移採Q1／Q6代表子集，同指紋仍只比較。
+
+2026-10-22本機Mac實測已完成24角色六品質／升降／天賦加成、原版IO及新PID讀回；生命週期另涵蓋數值更新、三項服藥、單次自然經驗達轉職門檻、下獄／召回、重生及解雇，各階段皆再次存讀。15來源與原始存檔雜湊未變，自己的程序已停止，副本背景隱藏／靜音／非全螢幕。沒有新增遊戲UI或真實Cloud／成就驗證。
+
+桌面、390px、PWA斷網及一般Edge直接file開啟獨立HTML均已用2501×60×22合成檔完成新功能編輯、預覽及實際下載，逐字符合獨立token預期；桌面、390px與Edge file流程另完成群組還原及復原。直接file結果只涵蓋本版新功能，不代替`sdd/save-knowledge`其他歷史待辦；網路模擬與viewport測後恢復。尚未推送或部署，正式站另待授權。

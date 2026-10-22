@@ -25,6 +25,7 @@ if(Object.values(knowledge.verification).some(Boolean)){
     if(!c||!R.requiredChecks(group).every(k=>c.checks?.[k]===true)||JSON.stringify(p.fingerprints)!==JSON.stringify({...knowledge.fingerprints,...knowledge.batch2Fingerprints})||JSON.stringify(p.limits)!==JSON.stringify(knowledge.equipmentWorkflowLimits)||p.dataHash!==createHash('sha256').update(JSON.stringify({rules:knowledge.equipmentWorkflowLimits,items:knowledge.batch2Data.items,formulas:knowledge.affixReplacement})).digest('hex'))throw Error('裝備操作缺少相符的獨立驗證：'+group);
     const ui=R.uiEvidenceProblem(group,c,knowledge.gameVersion);if(ui)throw Error(ui+'：'+group);
   }
+  if(knowledge.verification.randomCharacterBaseAptitudes){const problem=require('./random-character-growth-proof.cjs').problem(knowledge,proof,fs.readFileSync(path.join(root,'src/core.js'),'utf8'));if(problem)throw Error(problem);}
   for(const [group,enabled]of Object.entries(knowledge.verification))if(enabled&&proof.groups[group]!==true)throw Error('驗證未涵蓋寫入群組：'+group);
   for(const group of R.sections.equipmentQuality.groups)if(knowledge.verification[group]){
     const p=proof.equipmentQuality,c=p?.groups?.[group];
@@ -36,7 +37,7 @@ if(Object.values(knowledge.verification).some(Boolean)){
   if(['equipmentLevel','professionTrainingCap','advancedTechnologyLevel'].some(group=>knowledge.verification[group]||knowledge.verification[group+'Advanced'])&&JSON.stringify(proof.editingLimits)!==JSON.stringify(knowledge.editingLimits))throw Error('進階修改範圍與遊戲驗證紀錄不相符');
 }
 for (const [id, file] of [['save-core', 'core'], ['save-ui', 'ui'], ['save-pwa', 'pwa']]) {
-  const code = fs.readFileSync(path.join(root, `src/${file}.js`), 'utf8').replace('/*__KNOWLEDGE__*/null', JSON.stringify(knowledge).replace(/</g, '\\u003c')).replace('/*__KNOWLEDGE_UI__*/',()=>fs.readFileSync(path.join(root,'src/knowledge-ui.js'),'utf8')).replace('/*__PROFESSION_UI__*/',()=>fs.readFileSync(path.join(root,'src/profession-ui.js'),'utf8'));
+  const code = fs.readFileSync(path.join(root, `src/${file}.js`), 'utf8').replace('/*__KNOWLEDGE__*/null', JSON.stringify(knowledge).replace(/</g, '\\u003c')).replace('/*__KNOWLEDGE_UI__*/',()=>fs.readFileSync(path.join(root,'src/knowledge-ui.js'),'utf8')).replace('/*__PROFESSION_UI__*/',()=>fs.readFileSync(path.join(root,'src/profession-ui.js'),'utf8')).replace('/*__BATCH_UI__*/',()=>fs.readFileSync(path.join(root,'src/batch-ui.js'),'utf8'));
   html = html.replace(new RegExp(`(<script id="${id}">)[\\s\\S]*?(</script>)`), (_, start, end) => `${start}\n${code.trim()}\n${end}`);
 }
 const sha256 = content => createHash('sha256').update(content).digest('hex');

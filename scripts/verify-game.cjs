@@ -40,7 +40,7 @@ function ownedProcess(state){
 const defaultCells=[[1,1,0],[1,1,2],[1,3,2],[1,4,2],[1,1,4],[1,1,5],[1,31,2],[1,40,2],[2,2,0],[1,56,2]];
 // The page's editor core with every candidate gate open, only inside this VM.
 function loadCore(catalog){
- const core=fs.readFileSync(path.join(root,'src/core.js'),'utf8').replace('/*__KNOWLEDGE__*/null',JSON.stringify(catalog)),ctx={};vm.runInNewContext(core,ctx);const C=ctx.SaveCore;
+ const core=fs.readFileSync(path.join(root,'src/core.js'),'utf8').replace('/*__KNOWLEDGE__*/null',JSON.stringify(catalog)),ctx={setTimeout};vm.runInNewContext(core,ctx);const C=ctx.SaveCore;
  for(const k of Object.keys(C.KNOWLEDGE.verification))C.KNOWLEDGE.verification[k]=true;
  return C;
 }
@@ -56,12 +56,23 @@ function editSave(C,saveText,scenario){
  C.addExperience(model,{kind:'profession',characterId:1,id:1,amount:6500});
  C.addExperience(model,{kind:'profession',characterId:1,id:1,amount:1.5});
  C.addExperience(model,{kind:'skill',characterId:1,id:1,amount:21500});
- for(const operation of scenario?.operations||[]){if(!['setEquipmentLevel','setProfessionTrainingCap','setAdvancedTechnologyLevel','setEquipmentAffixCoefficient','setPillAptitudeBonus','setEquipmentAffix','setEquipmentQuality'].includes(operation.method))throw Error('Unsupported scenario operation');C[operation.method](model,operation.options);}
+ for(const operation of scenario?.operations||[]){if(!['setCharacterBaseAptitudes','setEquipmentLevel','setProfessionTrainingCap','setAdvancedTechnologyLevel','setEquipmentAffixCoefficient','setPillAptitudeBonus','setEquipmentAffix','setEquipmentQuality'].includes(operation.method))throw Error('Unsupported scenario operation');C[operation.method](model,operation.options);}
  return model;
+}
+async function applyBatchRequests(C,model,requests){
+ if(!Array.isArray(requests)||!requests.length||requests.length>20)throw Error('Batch smoke requests must contain 1–20 fixed batch requests');
+ const cells=[],results=[];
+ for(const request of requests){
+  const preview=await C.previewBatch(model,request);
+  if(preview.summary.blocked||!preview.summary.targets)throw Error('Batch smoke preview is blocked or empty: '+JSON.stringify(preview.summary));
+  const result=await C.applyBatch(model,request,{preview});results.push({kind:request.kind,...result.summary});
+  for(const row of result.rows)for(const c of row.coordinates||[])cells.push([c.x,c.y,c.z]);
+ }
+ return {cells:[...new Map(cells.map(c=>[c.join(','),c])).values()],results};
 }
 async function setup(){
  const source=path.resolve(opt('--source',path.join(os.homedir(),'bandit-mac-port/game'))),originalRuntime=path.resolve(opt('--runtime',path.join(os.homedir(),'bandit-mac-port/runtime/nwjs-sdk-v0.82.0-osx-arm64/nwjs.app/Contents/MacOS/nwjs')));
- const catalog=JSON.parse(fs.readFileSync(path.resolve(opt('--catalog',path.join(root,'knowledge/catalog.json'))),'utf8'));
+ const catalogPath=path.resolve(opt('--catalog',path.join(root,'knowledge/catalog.json'))),catalog=JSON.parse(fs.readFileSync(catalogPath,'utf8'));
  const fingerprints={...catalog.fingerprints,...catalog.batch2Fingerprints};
  const {hashes:sourceHashes,runtimePatch}=checkSource(source,fingerprints,{packageDir:opt('--package')&&path.resolve(opt('--package'))});
  const artifacts=fs.realpathSync(path.resolve(opt('--artifacts',os.tmpdir()))),relative=path.relative(root,artifacts);
@@ -126,6 +137,7 @@ async function setup(){
  const C=loadCore(catalog);
  const scenarioPath=opt('--scenario'),scenario=scenarioPath?JSON.parse(fs.readFileSync(scenarioPath,'utf8')):null;
  const model=editSave(C,fs.readFileSync(saveFile,'utf8'),scenario);
+ const batchFile=opt('--batch-requests'),batch=batchFile?await applyBatchRequests(C,model,JSON.parse(fs.readFileSync(batchFile,'utf8'))):null;
  const modified=C.serialize(model),expected=JSON.parse(modified).data;
  for(let slot=1;slot<=3;slot++)fs.writeFileSync(path.join(game,`savedir/ea${slot}save.dat`),modified);
  fs.mkdirSync(path.join(game,'backup'),{recursive:true});
@@ -139,8 +151,8 @@ async function setup(){
  fs.appendFileSync(path.join(game,'greenworks.js'),guard);
  fs.appendFileSync(path.join(game,'greenworks.js'),`\n(()=>{const gw=module.exports,fs=require('fs'),path=require('path'),base=${JSON.stringify(dir)},init=gw.init;gw.init=function(...a){const result=init.apply(this,a);fs.writeFileSync(path.join(base,'steam-init.json'),JSON.stringify({initialized:true,platform:process.platform,arch:process.arch,nw:process.versions.nw}));return result;};if(typeof gw.enableCloud==='function')gw.enableCloud=()=>{fs.appendFileSync(path.join(base,'steam-writes.jsonl'),JSON.stringify({method:'enableCloud'})+'\\n');return true;};})();\n`);
  const port=Number(opt('--port','19384'));
- const cells=scenario?.observe||defaultCells;
- const state={dir,game,source,runtime,port,fingerprints,sourceHashes,runtimePatch,before,cells,gameVersion:catalog.gameVersion,expected:cells.map(([x,y,z])=>expected[x][y][z]),assertions:[]};
+ const cells=[...new Map([...(scenario?.observe||defaultCells),...(batch?.cells||[])].map(c=>[c.join(','),c])).values()];
+ const state={dir,game,source,runtime,port,catalogPath,fingerprints,sourceHashes,runtimePatch,before,cells,gameVersion:catalog.gameVersion,expected:cells.map(([x,y,z])=>expected[x][y][z]),batchResults:batch?.results,assertions:[]};
  state.pid=launch(state);
  fs.writeFileSync(path.join(dir,'state.json'),JSON.stringify(state,null,2));console.log('STATE '+path.join(dir,'state.json'));
 }
@@ -164,7 +176,7 @@ async function waitMain(state,mainOnly=true){
  throw Error('Main layout did not become ready'+(last?': '+last.message:''));
 }
 async function run(){
- if(args.includes('--help')){console.log('Node 22+, Windows/macOS: verify-game.cjs --setup --source UNPACKED_GAME --runtime NWJS [--save-file ORIGINAL.dat] [--catalog CANDIDATE.json] [--artifacts OUTSIDE_REPO] [--scenario SCENARIO.json] [--package STEAM_GAME_DIR (macOS patched runtime)]\n--state /outside/repo/state.json --probe | --load [--mode 存档|备份|云存档] | --save | --assert | --stop | --restart\nIsolated launches and restarts are muted (--mute-audio). Stop the disposable process before --restart. Wait for the title/main layout before --load/--assert.');return;}
+ if(args.includes('--help')){console.log('Node 22+, Windows/macOS: verify-game.cjs --setup --source UNPACKED_GAME --runtime NWJS [--save-file ORIGINAL.dat] [--catalog CANDIDATE.json] [--artifacts OUTSIDE_REPO] [--scenario SCENARIO.json] [--batch-requests OUTSIDE_REPO.json] [--package STEAM_GAME_DIR (macOS patched runtime)]\n--state /outside/repo/state.json --probe | --load [--mode 存档|备份|云存档] | --save | --assert | --stop | --restart\nIsolated launches and restarts are muted (--mute-audio). Stop the disposable process before --restart. Wait for the title/main layout before --load/--assert.');return;}
  if(args.includes('--setup'))return setup();
  const state=JSON.parse(fs.readFileSync(opt('--state'),'utf8'));
  if(args.includes('--probe'))await probe(state);
@@ -194,4 +206,4 @@ async function run(){
  if(args.includes('--stop')){if(!ownedProcess(state))throw Error('Disposable process already stopped');if(process.platform==='win32')execFileSync('taskkill',['/PID',String(state.pid),'/T','/F'],{windowsHide:true});else process.kill(state.pid,'SIGTERM');console.log('Stopped disposable test game');}
 }
 if(require.main===module)run().catch(e=>{console.error(e.stack);process.exitCode=1;});
-module.exports={CDP,connect,evaluate,waitMain,checkSource,loadCore,editSave,defaultCells};
+module.exports={CDP,connect,evaluate,waitMain,checkSource,loadCore,editSave,applyBatchRequests,defaultCells};

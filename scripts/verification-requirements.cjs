@@ -2,6 +2,10 @@
 // Which proof section and checks open each write group. Build gating and the migration suite share this table.
 const nativeLifecycle = ['load', 'save', 'restart', 'originalHashes', 'nativeEffects', 'lifecycle'];
 const sections = {
+  randomCharacterGrowth: {
+    groups: ['randomCharacterBaseAptitudes'], perGroup: true,
+    checks: ['load', 'save', 'restart', 'originalHashes', 'nativeEffects', 'numericUpdate', 'nativePills', 'nativeTransfer', 'nativePrison', 'nativeRebirth', 'nativeDismiss', 'stageRoundtrips']
+  },
   base: {
     groups: ['names', 'characterExperience', 'professionExperience', 'skillExperience', 'equipmentLevel', 'equipmentLevelAdvanced', 'professionTrainingCap', 'professionTrainingCapAdvanced', 'advancedTechnologyLevel', 'advancedTechnologyLevelAdvanced'],
     checks: ['loadedIntoMainLayout', 'nativeSaveWritten', 'processRestartedAndReloaded', 'allTenObservedCellsMatch', 'originalSaveHashesUnchanged', 'steamMutationsRedirectedToLocalMirror', 'allThirteenTestedSourceHashesMatch', 'realSteamInitialization', 'restartUsesDifferentProcess', 'advancedNormalAndOvercapNativeRoundtrip', 'nativeEquipmentAndTechnologyEffectsFinite', 'nativeEquipmentUnequipReequip', 'subsequentProfessionTransferAndExperience', 'subsequentResearchAndTrainingStartStop']

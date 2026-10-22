@@ -90,6 +90,22 @@
   $('pillAptitude').onchange=choices;$('pillType').onchange=update;
   $('pillApply').onclick=()=>{if(!$('pillValue').value.trim())return toast('累積增量不能空白。',true);perform(()=>C.setPillAptitudeBonus(model,{characterId:Number($('characterSelect').value),aptitude:Number($('pillAptitude').value),pillId:Number($('pillType').value),bonus:Number($('pillValue').value)}));};choices();
  }
+ function renderBaseAptitudes(){
+  const characterId=Number($('characterSelect').value),info=C.randomCharacterGrowthInfo(model,{characterId});
+  $('baseAptitudeEditor').innerHTML=`<h3>一般隨機角色基礎資質</h3><p class="muted small-text" id="baseAptitudeStatus" role="status"></p><div class="aptitude-inputs">${['力量','敏捷','智力'].map((name,i)=>`<label>${name}原始值<input id="baseAptitude${i}" type="number" min="1" max="300" step="1" value="${esc(read(characterId,10+i,2))}" ${info.eligible?'':'disabled'}></label>`).join('')}</div><p class="muted small-text">每 1 代表顯示資質 0.1 點。三項須能由同品質的原版招募共同生成；不修改品質、天賦或丹藥。還原會一起還原此角色三項基礎及三項丹藥增量。</p><div class="toolbar"><button id="baseAptitudePreviewBtn" class="small">預覽三項資質</button><button id="baseAptitudeApplyBtn" class="primary small" disabled>套用三項資質</button></div><div id="baseAptitudePreview" aria-live="polite"></div>`;
+  $('baseAptitudeStatus').textContent=info.eligible?`品質 ${info.quality} · 同品質任一原生傾向${info.verified?'':' · 尚待獨立隔離驗證，套用停用'}`:info.reasons.join('；');
+  $('baseAptitudePreviewBtn').disabled=!info.eligible;
+  let snapshot=null;
+  const request=()=>({characterId,baseRaw:[0,1,2].map(i=>{const s=$('baseAptitude'+i).value;if(!s.trim())throw Error('三項基礎資質不能空白。');return Number(s);})});
+  const invalidate=()=>{snapshot=null;$('baseAptitudeApplyBtn').disabled=true;$('baseAptitudePreview').textContent='輸入已變更，請重新預覽。';};
+  for(let i=0;i<3;i++)$('baseAptitude'+i).oninput=invalidate;
+  $('baseAptitudePreviewBtn').onclick=()=>{try{
+   const o=request(),p=C.previewCharacterBaseAptitudes(model,o);snapshot={model,revision,request:JSON.stringify(o)};
+   $('baseAptitudePreview').innerHTML=(p.reasons.length?`<p class="negative">${esc(p.reasons.join('；'))}</p>`:'')+(p.aptitudes?.[0]?.after?`<div class="tablewrap"><table><thead><tr><th>資質</th><th>原始值</th><th>來源 A</th><th>丹藥 B</th><th>總資質</th><th>上限 C</th></tr></thead><tbody>${p.aptitudes.map(a=>`<tr><td>${esc(a.name)}</td>${['raw','base','bonus','total','cap'].map(k=>`<td>${esc(a.before[k])} → ${esc(a.after[k])}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`:'')+(p.unchanged?'<p class="muted">三項均無變更。</p>':'');
+   $('baseAptitudeApplyBtn').disabled=!p.canApply;
+  }catch(e){snapshot=null;$('baseAptitudeApplyBtn').disabled=true;$('baseAptitudePreview').textContent=e.message;}};
+  $('baseAptitudeApplyBtn').onclick=()=>{try{const o=request();if(!snapshot||snapshot.model!==model||snapshot.revision!==revision||snapshot.request!==JSON.stringify(o))throw Error('存檔或輸入已變更，請重新預覽。');perform(()=>C.setCharacterBaseAptitudes(model,o));}catch(e){invalidate();toast(e.message,true);}};
+ }
  function paged(kind,list,render,container){
   const size=50,max=Math.max(0,Math.ceil(list.length/size)-1);knowledgePages[kind]=Math.min(knowledgePages[kind],max);
   const page=knowledgePages[kind],start=page*size;
@@ -100,16 +116,18 @@
  function renderKnowledgeTab(name){if(name==='professions')renderProfessions();if(name==='atlas')renderAtlas();if(!model)return;if(name==='characters')renderCharacters();if(name==='settlement')renderSettlement();if(name==='inventory')renderInventory();}
  function renderCharacters(){
   const q=$('characterSearch').value.trim().toLowerCase(),old=$('characterSelect').value;
-  const rows=C.listEntities(model,'characters').filter(r=>`${r.id} ${r.name}`.toLowerCase().includes(q));
-  $('characterSelect').innerHTML=rows.map(r=>`<option value="${r.id}">#${r.id} ${esc(r.name)} · ${esc(r.detail)}</option>`).join('');
-  if(rows.some(r=>String(r.id)===old))$('characterSelect').value=old;
+  const rows=C.listEntities(model,'characters').filter(r=>q.startsWith('#')?String(r.id)===q.slice(1):`${r.id} ${r.name}`.toLowerCase().includes(q));
+  $('characterMatchInfo').textContent=rows.length>50?`符合 ${rows.length} 名，先顯示 50 名；請搜尋名稱或 #ID。`:'';
+  const visible=rows.slice(0,50);
+  $('characterSelect').innerHTML=visible.map(r=>`<option value="${r.id}">#${r.id} ${esc(r.name)} · ${esc(r.detail)}</option>`).join('');
+  if(visible.some(r=>String(r.id)===old))$('characterSelect').value=old;
   $('characterEmpty').hidden=!!rows.length;$('characterBody').hidden=!rows.length;if(!rows.length)return;
   const x=Number($('characterSelect').value);
   $('characterName').value=read(x,1,2);$('renameCharacterBtn').disabled=!K.verification.names;
   $('characterSummary').innerHTML=stat('角色等級',read(x,3,2))+stat('自然經驗餘額',read(x,4,2))+stat('等級上限',(Math.floor(read(x,50,2))+1)*30)+stat('目前職業',C.catalogName('professions',read(x,6,2)))+stat('共用池已投入經驗',read(x,56,2))+stat('自動轉職預設',read(x,59,2));
   $('skillRows').innerHTML=C.SKILLS.map((name,i)=>`<tr><td>${esc(name)}</td><td>${htmlValue(read(x,31+i,2))} / ${htmlValue(read(x,22+i,2))}</td><td>${htmlValue(read(x,40+i,2))}</td><td>${htmlValue(C.experienceNeed.skill(read(x,31+i,2)))}</td></tr>`).join('');
   $('growthStatus').textContent=['names','characterExperience','professionExperience','skillExperience'].every(k=>K.verification[k])?'名稱與經驗已通過隔離驗證':'部分養成功能待遊戲驗證';
-  renderGrowth();renderPills();
+  renderGrowth();renderBaseAptitudes();renderPills();
  }
  function renderGrowth(){
   const x=Number($('characterSelect').value),kind=$('growthKind').value,old=$('growthTarget').value;

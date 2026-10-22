@@ -34,7 +34,7 @@ test('pill rejects malformed inputs, wrong or absent pill and overwritten/high-s
 });
 test('pill group restore and composite transaction rollback preserve other operations',()=>{
  const {C,m,pills,text}=setup();assert.throws(()=>C.transaction(m,()=>{C.setEquipmentAffixCoefficient(m,{itemId:1,slot:1,coefficient:30});C.setPillAptitudeBonus(m,{characterId:1,aptitude:1,pillId:pills[0],bonus:-1});}));assert.equal(C.serialize(m),text);
- C.setPillAptitudeBonus(m,{characterId:1,aptitude:1,pillId:pills[0],bonus:1});C.setPillAptitudeBonus(m,{characterId:1,aptitude:1,pillId:pills[0],bonus:2});C.setPillAptitudeBonus(m,{characterId:1,aptitude:2,pillId:pills[1],bonus:1});C.restore(m,{x:1,y:13,z:2});assert.equal(m.changes.size,1);assert.equal(C.get(m,{x:1,y:14,z:2}),1);
+ C.setPillAptitudeBonus(m,{characterId:1,aptitude:1,pillId:pills[0],bonus:1});C.setPillAptitudeBonus(m,{characterId:1,aptitude:1,pillId:pills[0],bonus:2});C.setPillAptitudeBonus(m,{characterId:1,aptitude:2,pillId:pills[1],bonus:1});C.restore(m,{x:1,y:13,z:2});assert.equal(m.changes.size,0);assert.equal(C.get(m,{x:1,y:14,z:2}),0);
 });
 test('batch two gates are independent and custom coordinates cannot bypass them',()=>{
  const {C,m,pills}=setup();C.KNOWLEDGE.verification.equipmentAffixCoefficient=false;assert.throws(()=>C.setEquipmentAffixCoefficient(m,{itemId:1,slot:1,coefficient:30}),/驗證/);C.setPillAptitudeBonus(m,{characterId:1,aptitude:1,pillId:pills[0],bonus:1});C.KNOWLEDGE.verification.pillAptitudeBonus=false;assert.throws(()=>C.setPillAptitudeBonus(m,{characterId:1,aptitude:1,pillId:pills[0],bonus:2}),/驗證/);
