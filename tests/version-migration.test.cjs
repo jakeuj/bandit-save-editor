@@ -227,3 +227,46 @@ test('migration runner replays each copy in order, stops on failure and derives 
     assert.ok(Object.values(failed.checks.equipmentAffixCoefficient ?? {}).some(ok => !ok) || !failed.checks.equipmentAffixCoefficient);
   }finally{fs.rmSync(dir, {recursive: true, force: true});}
 });
+
+test('write-back opens proven groups on a new build, compares on the proven build and restores on failure',()=>{
+  const os = require('node:os'), M = require('../scripts/verify-migration.cjs'), R = require('../scripts/verification-requirements.cjs'), S = require('../scripts/verification-suite.cjs');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'bandit-writeback-'));
+  try{
+    fs.cpSync(root, dir, {recursive: true, filter: source => !/[\\/](\.git|graphify-out|node_modules)([\\/]|$)/.test(source)});
+    const files = ['knowledge/catalog.json', 'knowledge/verification.json', 'index.html', 'sw.js'].map(f => path.join(dir, f)), snapshot = () => files.map(f => fs.readFileSync(f, 'utf8'));
+    const proof = JSON.parse(fs.readFileSync(files[1], 'utf8')), selection = proof.equipmentWorkflow.groups.equipmentAffixInitialSelection.uiEvidence;
+    const results = (version, overrides = {}) => ({
+      date: '2026-11-01T00:00:00.000Z', platform: 'darwin-arm64', completed: true, gameVersion: version,
+      copies: Object.keys(S.families).map(family => ({name: family, family, cases: 1, ok: true, steps: [{step: 'formulas', ok: true}]})),
+      ui: {selectionUi: {source: 'carried', gameVersion: version, eventSids: R.uiEvents.selectionUi, eventDigest: selection.eventDigest, carriedFrom: {gameVersion: 'V1.0.10.2', eventDigest: selection.eventDigest}}, qualityUi: {source: 'pending', gameVersion: version, eventSids: R.uiEvents.qualityUi, eventDigest: 'f'.repeat(64)}},
+      checks: Object.fromEntries(Object.keys(catalog.verification).map(group => [group, Object.fromEntries(R.requiredChecks(group).map(check => [check, overrides[group + ':' + check] ?? check !== 'qualityUi']))]))
+    });
+    const same = snapshot();
+    const compared = M.writeBack({dir, catalog, proof, results: {...results('V1.0.10.2'), ui: {}}});
+    assert.equal(compared.action, 'compared');
+    assert.equal(compared.consistent, false, 'quality UI pending must differ from the native proof');
+    assert.deepEqual(compared.comparison.filter(c => c.existing !== c.migrated).map(c => c.group).sort(), R.sections.equipmentQuality.groups.slice().sort());
+    assert.deepEqual(snapshot(), same);
+
+    const next = {...catalog, gameVersion: 'V9.9.9', fingerprints: {...catalog.fingerprints, 'cl.json': 'c'.repeat(64)}, verification: Object.fromEntries(Object.keys(catalog.verification).map(g => [g, false]))};
+    fs.writeFileSync(files[0], JSON.stringify(next, null, 2) + '\n');
+    const before = snapshot();
+    assert.equal(M.writeBack({dir, catalog: next, proof, results: results('V9.9.9', {'pillAptitudeBonus:rebirthClears': false})}).action, 'skipped');
+    assert.deepEqual(snapshot(), before);
+    const restored = M.writeBack({dir, catalog: next, proof, results: results('V9.9.9'), exec: () => ({status: 1, stderr: 'build failed'})});
+    assert.deepEqual([restored.action, restored.reason], ['restored', 'build failed']);
+    assert.deepEqual(snapshot(), before);
+
+    const written = M.writeBack({dir, catalog: next, proof, results: results('V9.9.9'), steamBuild: '26200000'});
+    assert.equal(written.action, 'written', written.reason);
+    assert.deepEqual(written.closed.sort(), R.sections.equipmentQuality.groups.slice().sort());
+    const gated = JSON.parse(fs.readFileSync(files[0], 'utf8')), saved = JSON.parse(fs.readFileSync(files[1], 'utf8'));
+    assert.equal(gated.verification.equipmentAffixInitialSelection, true);
+    assert.equal(gated.verification.equipmentQualityUpgrade, false);
+    assert.equal(saved.steamBuildId, '26200000');
+    assert.equal(saved.equipmentWorkflow.groups.equipmentAffixInitialSelection.uiEvidence.source, 'carried');
+    assert.ok(!fs.readFileSync(files[1], 'utf8').includes(os.homedir()));
+    const {spawnSync} = require('node:child_process');
+    assert.equal(spawnSync(process.execPath, ['scripts/build-editor.cjs', '--check'], {cwd: dir, encoding: 'utf8'}).status, 0);
+  }finally{fs.rmSync(dir, {recursive: true, force: true});}
+});

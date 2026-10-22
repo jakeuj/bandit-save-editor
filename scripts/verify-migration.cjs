@@ -21,7 +21,7 @@ function steps(copy, setupArgs) {
   const list = [
     {step: 'setup', script: 'verify-game.cjs', args: ['--setup', ...setupArgs, ...scenario]},
     {...game('load', '--load', '--mode', '云存档'), retry: true},
-    ...oracle(false), game('save', '--save'), game('assert', '--assert', '--quiet'), ...restart('reload'), ...oracle(true)
+    ...oracle(false), ...(family.formulas ? [{step: 'formulas', script: family.oracle, args: ['--state', '{state}', ...scenario, '--formulas']}] : []), game('save', '--save'), game('assert', '--assert', '--quiet'), ...restart('reload'), ...oracle(true)
   ];
   if (copy.lifecycle) {
     const scripts = family.lifecycle || [];
@@ -113,6 +113,67 @@ async function runMigration({catalog, proof, copies, runDir, setupArgs, exec = d
   return results;
 }
 
+const sha = value => require('node:crypto').createHash('sha256').update(typeof value === 'string' ? value : JSON.stringify(value)).digest('hex');
+const qualityFormula = coreSource => coreSource.match(/ function qualityAttributeEffect\([\s\S]*?(?= function previewEquipmentQualityChange)/)?.[0].replace(/\r\n/g, '\n');
+function recordedChecks(proof, group) {
+  const section = R.sectionOf(group);
+  const checks = section === 'base' ? proof.checks : section === 'batch2' ? proof.batch2?.checks : section === 'affixReplacement' ? proof.affixReplacement?.checks : proof[section]?.groups?.[group]?.checks;
+  return Object.fromEntries(R.requiredChecks(group).map(check => [check, checks?.[check] === true]));
+}
+const pick = (checks, names) => Object.fromEntries(names.map(name => [name, checks[name] === true]));
+
+// The proof the build gate expects for this catalog, from a completed representative run.
+function buildProof({catalog, results, coreSource, steamBuild, previous}) {
+  const date = results.date.slice(0, 10), all = {...catalog.fingerprints, ...catalog.batch2Fingerprints}, checks = results.checks;
+  const opened = group => Object.values(checks[group]).every(Boolean);
+  const coverage = family => ({coverage: 'representative', copies: results.copies.filter(c => c.family === family).map(c => ({name: c.name, operations: c.cases}))});
+  const formulasPassed = results.copies.filter(c => c.family === 'equipmentQuality').every(c => c.steps.some(s => s.step === 'formulas' && s.ok));
+  const uiRecord = group => R.uiChecks[group] ? {uiEvidence: results.ui[R.uiChecks[group]]} : {};
+  const groups = Object.fromEntries(Object.keys(catalog.verification).map(group => [group, opened(group) && (R.sectionOf(group) !== 'equipmentQuality' || formulasPassed)]));
+  const perGroup = section => Object.fromEntries(R.sections[section].groups.map(group => [group, {checks: checks[group], ...uiRecord(group)}]));
+  const items = catalog.batch2Data.items;
+  return {
+    date, gameVersion: catalog.gameVersion, steamBuildId: steamBuild || null,
+    eventFingerprint: catalog.fingerprints['data.json'], runtimeFingerprint: catalog.fingerprints['scripts/c3runtime.js'], fingerprints: catalog.fingerprints,
+    environment: `${results.platform}；獨立遊戲、runtime、profile 與存檔；真實 Steam 初始化`,
+    method: 'verify-migration.cjs 代表子集：每個副本以原版函式載入、原生存檔、停止後新 PID 重啟讀回，並執行原生效果與後續操作',
+    checks: pick(checks[R.sections.base.groups[0]], R.sections.base.checks), groups,
+    scenarios: results.copies.map(c => c.name),
+    limits: ['代表子集，不是原版本的完整矩陣；各副本與操作數見各區段 copies', '未驗證真實雲端上傳、成就或統計寫入', `UI 證據依事件摘要${Object.values(results.ui).map(u => u.source).join('／')}`],
+    editingLimits: catalog.editingLimits,
+    migration: {runner: 'verify-migration.cjs', previousGameVersion: previous.gameVersion, completed: results.completed},
+    advancedEditing: {date, ...coverage('advanced')},
+    batch2: {date, gameVersion: catalog.gameVersion, fingerprints: catalog.batch2Fingerprints, limits: catalog.batch2Limits, dataHash: sha(catalog.batch2Data), checks: pick(checks[R.sections.batch2.groups[0]], R.sections.batch2.checks), ...coverage('batch2')},
+    affixReplacement: {date, gameVersion: catalog.gameVersion, fingerprints: all, limits: catalog.affixReplacementLimits, dataHash: sha({rules: catalog.affixReplacement, items}), checks: checks.equipmentAffixReplacement, ...coverage('affixReplacement')},
+    equipmentWorkflow: {date, platform: results.platform, gameVersion: catalog.gameVersion, fingerprints: all, limits: catalog.equipmentWorkflowLimits, dataHash: sha({rules: catalog.equipmentWorkflowLimits, items, formulas: catalog.affixReplacement}), groups: perGroup('equipmentWorkflow'), ...coverage('equipmentWorkflow')},
+    equipmentQuality: {date, gameVersion: catalog.gameVersion, fingerprints: all, dataHash: sha({quality: catalog.equipmentQuality, items, workflow: catalog.equipmentWorkflowLimits}), ...(formulasPassed ? {formulaHash: sha(qualityFormula(coreSource)), formulaCases: Object.keys(catalog.equipmentQuality.items).length * 24 + Object.keys(catalog.affixReplacement.attributes).length * 20} : {}), groups: perGroup('equipmentQuality'), ...coverage('equipmentQuality')}
+  };
+}
+
+// Writes the new proof and gates only when every native check passed on a build the current proof does not cover;
+// a build failure restores every touched file. On the proven build it only compares, keeping the existing proof.
+function writeBack({dir = root, catalog, proof, results, steamBuild, exec = (script, args) => spawnSync(process.execPath, [path.join(dir, 'scripts', script), ...args], {cwd: dir, encoding: 'utf8'})}) {
+  const groups = Object.keys(catalog.verification);
+  if (!results.completed || groups.some(group => !results.checks[group])) return {action: 'skipped', reason: '流水線未完成或未涵蓋全部群組'};
+  const failing = groups.filter(group => Object.entries(results.checks[group]).some(([check, ok]) => !ok && check !== R.uiChecks[group]));
+  const comparison = groups.map(group => ({group, existing: Object.values(recordedChecks(proof, group)).every(Boolean) && catalog.verification[group] === true, migrated: Object.values(results.checks[group]).every(Boolean)}));
+  if (JSON.stringify(proof.fingerprints) === JSON.stringify(catalog.fingerprints) && JSON.stringify(proof.batch2?.fingerprints) === JSON.stringify(catalog.batch2Fingerprints))
+    return {action: 'compared', consistent: failing.length === 0 && comparison.every(c => c.existing === c.migrated), failing, comparison};
+  if (failing.length) return {action: 'skipped', reason: '原生 checks 未全部通過', failing};
+  const files = ['knowledge/catalog.json', 'knowledge/verification.json', 'index.html', 'sw.js'].map(file => path.join(dir, file)), backup = files.map(file => fs.readFileSync(file));
+  const next = buildProof({catalog, results, coreSource: fs.readFileSync(path.join(dir, 'src/core.js'), 'utf8'), steamBuild, previous: proof});
+  const gated = {...catalog, verification: {...next.groups}};
+  try {
+    fs.writeFileSync(files[0], JSON.stringify(gated, null, 2) + '\n');
+    fs.writeFileSync(files[1], JSON.stringify(next, null, 2) + '\n');
+    for (const args of [[], ['--check']]) { const r = exec('build-editor.cjs', args); if (r.status !== 0) throw Error(String(r.stderr || r.stdout).trim()); }
+  } catch (error) {
+    files.forEach((file, i) => fs.writeFileSync(file, backup[i]));
+    return {action: 'restored', reason: error.message};
+  }
+  return {action: 'written', opened: groups.filter(group => next.groups[group]), closed: groups.filter(group => !next.groups[group])};
+}
+
 async function main() {
   const args = process.argv.slice(2), opt = key => args.includes(key) ? args[args.indexOf(key) + 1] : undefined;
   if (args.includes('--help') || !opt('--source') || !opt('--runtime') || !opt('--save-file') || !opt('--artifacts')) {
@@ -129,9 +190,17 @@ async function main() {
   const runDir = fs.mkdtempSync(path.join(artifacts, 'migration-'));
   const setupArgs = ['--source', opt('--source'), '--runtime', opt('--runtime'), '--save-file', opt('--save-file'), '--artifacts', runDir, '--catalog', catalogPath, ...(opt('--package') ? ['--package', opt('--package')] : [])];
   const results = await runMigration({catalog, proof, copies, runDir, setupArgs, digest: (dir, sids) => eventDigest(inspectGame(dir), sids)});
+  if (!only) {
+    // The Steam manifest sits two levels above the game directory; its build id is recorded when present.
+    const manifest = opt('--package') && path.join(path.resolve(opt('--package')), '../../appmanifest_4267800.acf');
+    const steamBuild = manifest && fs.existsSync(manifest) ? /"buildid"\s+"(\d+)"/.exec(fs.readFileSync(manifest, 'utf8'))?.[1] : null;
+    results.writeBack = writeBack({catalog, proof, results, steamBuild});
+    fs.writeFileSync(path.join(runDir, 'results.json'), JSON.stringify(results, null, 2));
+    console.log('WRITE-BACK ' + JSON.stringify(results.writeBack).slice(0, 2000));
+  }
   console.log(`RESULTS ${path.join(runDir, 'results.json')}`);
   console.log(results.completed ? 'PASS: every copy completed' : 'FAILED: see results for the failing copy and step');
-  if (!results.completed) process.exitCode = 1;
+  if (!results.completed || ['restored', 'skipped'].includes(results.writeBack?.action) || results.writeBack?.consistent === false) process.exitCode = 1;
 }
 if (require.main === module) main().catch(e => { console.error(e.stack); process.exitCode = 1; });
-module.exports = {steps, provenChecks, uiEvidence, runMigration};
+module.exports = {steps, provenChecks, uiEvidence, runMigration, buildProof, writeBack};

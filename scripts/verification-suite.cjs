@@ -50,6 +50,8 @@ const families = {
   equipmentQuality: {
     groups: ['backpackEquipmentQualityUpgrade', 'backpackEquipmentQualityDowngrade', 'equipmentQualityUpgrade', 'equipmentQualityDowngrade'],
     oracle: 'verify-quality.cjs',
+    // The formula matrix binds the quality formula hash; it compares native functions only and writes nothing.
+    formulas: true,
     lifecycle: ['verify-quality-lifecycle.cjs'],
     checks: {...nativeLifecycleChecks, qualityUi: 'ui'}
   }
