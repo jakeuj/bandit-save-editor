@@ -12,6 +12,7 @@ const equipment = ['装备主属性','装备属性计算','装备等级上限','
 const equipLife = ['词条洗练','词条洗练魂魄','穿戴装备','卸下装备','装备库取出','装备库存入','装备排序'];
 const characterLife = ['数值更新','转职','转职条件判断','角色下狱','召回监牢人员','角色重生','角色解雇'];
 const dependencies = {
+  setEquipmentLevel:{effects:[...equipment,'套装属性','套装数量检测','相同套装数','升级装备','升级最大装备','升级装备货币','基础货币基数'],lifecycle:[...equipLife,'套装合成','合成灵物编号','获得物品','获得灵物'],tables:['wp','sx','tz','lw']},
   growth: {effects:['获得角色经验','获得职业经验','获得技艺经验','角色升级经验','职业升级经验','技艺升级经验'], lifecycle:[], tables:['zy','yx','tz']},
   advanced: {effects:['装备属性计算','加成属性效果','装备等级上限','操练等级上限','科技等级上限'], lifecycle:['穿戴装备','卸下装备','获得职业经验','转职','转职条件判断','科技研究','职业操练','取消设施进程'], tables:['wp','sx','zy','kj','jz','ss']},
   batch2: {effects:[...equipment,'角色资质计算','角色资质上限','普通丹药效果','丹药资质上限'], lifecycle:[...equipLife,'服用普通丹药','角色重生'], tables:['wp','sx','tf','js','yx','tz']},
@@ -25,6 +26,7 @@ const dependencies = {
 const sharedIo = ['存档','存档备份','读取进度'];
 // Existing editable save regions. Additional writers are dependencies even when no declared entry point calls them.
 const regions = {
+  setEquipmentLevel:[[7,'*',[0,59]],[9,'*',[0,59]],[2,'*',[16,21]]],
   growth:[[0,1,1],[0,[1,5],2],[2,'*',1],[2,'*',[3,5]],[2,'*',[31,48]],[4,'*','*'],[5,'*','*']],
   advanced:[[0,[31,44],4],[0,'*',5],[9,'*',6]],
   batch2:[[2,'*',[13,15]],[9,'*',[8,20]]], affixReplacement:[[9,'*',[8,33]]],

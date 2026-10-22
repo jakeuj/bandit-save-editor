@@ -95,3 +95,14 @@ node scripts/extract-game.cjs --source /path/to/unpacked/game --audit-only --aud
 v2.1 可使用 repo 外 `--scenario` JSON：`baseline` 為 `[x,y,z,value]` 陣列、`operations` 指定三項具名 API 的 `method`／`options`、`observe` 列出預期核對座標。`verify-game.cjs` 的候選旗標只存在隔離 VM，不修改公開 catalog；只有版本遷移流水線在下節條件下寫回。`--load` 等待主畫面，`--save`／`--assert` 確認布局就緒後執行；`scripts/verify-advanced.cjs --state /outside/state.json` 記錄原版屬性／加成，重啟後加 `--compare` 核對。原始 scenario、結果、SID 呼叫及玩家資料仍留在 repo 外。
 
 完整解析輸出、遊戲內容、玩家存檔、測試 state 與原始 log 均留在 repo 外。`--setup` 產生的測試狀態包含本機路徑及玩家資料，不能作為公開驗證紀錄提交。
+
+
+## 套裝等級首次證明與遷移
+
+詳見[研究與原生結果](../research/set-equipment-level.md)、[SDD](../../sdd/set-equipment-level/tasks.md)。`setEquipmentLevelInfo(model,{itemId,plane})` 核對套裝 metadata、Q1–Q6／T1–T9、等級、owner 與雙向唯一指標；`editingInfo(model,'equipment',id,plane)` 依種類分派，`setEquipmentLevel` 僅改 y6。z7 使用 `backpackSetEquipmentLevel`，z9 使用 `setEquipmentLevel`；品質、詞條、套裝合成及進階模式不在範圍。y0 是保留身分，可不同於目前列號；y23／26／27 保留。各群組的獨立首次證明通過後才開放。
+
+首次工具：`verify-set-equipment-level-suite.cjs --config EXTERNAL_CONFIG`。設定提供來源、runtime、原始基準與 SHA-256、兩份快取 manifest／檔案數及 repo 外 out；先依本機來源索引定位，不將設定提交。工具核對全部快取與 15 指紋，再執行原生生成、矩陣與 12 生命週期副本。各階段結果保存在 out；續跑綁定精確 core、原生 driver、oracle、情境、來源與輸入摘要。`--merge-results OUT --config EXTERNAL_CONFIG --record` 重讀完整原始結果、逐案重算後，只插入新 proof section／群組旗標並建置；失敗回滾四個產物。重跑已合併證據時省略 `--record` 作檢查，不覆寫首次證明。
+
+公開 section `setEquipmentLevel.initialVerification[group]` 各自保存原始來源、核心語法樹摘要、manifest／evidence 摘要及覆蓋數。建置核對目前 15 來源、資料、oracle、整份 core AST 與該庫首次證明；代表子集不能首次開閘。原始觀察不放 repo。資料仍是靜態抽取，不以 catalog 的階段描述代替 verification。
+
+日後代表遷移使用 `set-level-7-representative`／`set-level-9-representative`，分別 2 件 Q1／Q6 升降，另經搬移穿卸、原版存檔／不同 PID 重載。需求表、suite、操作白名單、來源事件／表格／存檔區域及資料摘要均已接線；schema 2 保存 `setInitialVerification`，只能沿用已存在的首次證明。每庫由自身副本產生 checks，缺庫或只有成功旗標不算通過。修改可執行 core 後亦須依技藝上限維護指引重驗，不能只換摘要。

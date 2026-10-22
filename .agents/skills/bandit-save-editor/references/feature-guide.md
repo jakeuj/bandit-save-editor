@@ -5,11 +5,11 @@
 ## 依任務讀取
 
 - 完整轉職表、職業條件與社群工作圖：讀 repo 的 `src/profession-ui.js`、`knowledge/profession-guide.json`；前置資料由 `extract-game.cjs` 重建，規則與來源界線見研究筆記「職業轉職圖鑑」。
-- 裝備等級、職業操練上限、進階科技或超限模式：讀 repo 的 `docs/research/advanced-editing.md` 與 `sdd/advanced-editing/tasks.md`；基礎資質、技藝上限、天賦回填或自然職業30級限制另讀 `sdd/runtime-patch/proposal.md`。v2.8.1 已在 `editingInfo` 的 z9 分支補普通／setLink 檢查，套裝等級唯讀；v2.8 及以前的可寫路徑是未證明缺口，舊存檔不追溯，該件等級不能由本版還原。
+- 裝備等級、職業操練上限、進階科技或超限模式：讀 repo 的 `docs/research/advanced-editing.md` 與 `sdd/advanced-editing/tasks.md`；基礎資質、技藝上限、天賦回填或自然職業30級限制另讀 `sdd/runtime-patch/proposal.md`。v2.8.1 已在 `editingInfo` 的 z9 分支補普通／setLink 檢查，當時套裝等級唯讀；目前獨立套裝功能另見下項；v2.8 及以前的可寫路徑是未證明缺口，舊存檔不追溯，該件等級不能由本版還原。
 
 ### 套裝與規劃
 
-- 套裝等級、套裝積分或合成後搬移：讀 repo 的 `docs/research/set-equipment-level.md`、`sdd/set-equipment-level/proposal.md` 與 `tasks.md`。研究結論為 go 進入實作與首次驗證；實作階段與授權須核對最新 SDD 及當前對話；研究結論不代表開閘。首版只改 y6，z7／z9 預計各用 `backpackSetEquipmentLevel`／`setEquipmentLevel` 獨立群組與首次證明，不沿用普通裝備證明。原生升級只處理 z9，背包 oracle 須經原生搬移取得實際目的列；y23 積分與 y26／y27 合成來源保留，y0 不必等於列號。矩陣、合法基準及來源 SID／expression 依研究與提案，不在技能複製；首次證明前維持排除，套裝品質、詞條及超限另案。
+- 套裝等級、套裝積分或合成後搬移：讀 repo 的 `docs/research/set-equipment-level.md`、`sdd/set-equipment-level/proposal.md` 與 `tasks.md`。研究結論為 go 進入實作與首次驗證；實作階段與授權須核對最新 SDD 及當前對話；研究結論不代表開閘。首版只改 y6，z7／z9 各用 `backpackSetEquipmentLevel`／`setEquipmentLevel` 獨立群組與首次證明，不沿用普通裝備證明。原生升級只處理 z9，背包 oracle 須經原生搬移取得實際目的列；y23 積分與 y26／y27 合成來源保留，y0 不必等於列號。v2.10 已完成兩庫首次原生證明與介面驗收，發布範圍見 `docs/releases.md`；矩陣、合法基準及來源 SID／expression 依研究、SDD 及 `docs/maintenance/core.md`，不在技能複製；任何新來源仍依證明開閘，套裝品質、詞條及超限另案。
 - 規劃下一版或評估候選順序：先讀 repo 的 `docs/research/next-version-plan.md`（目前進度、候選及歷史盤點入口），需要單項排序理由再讀 `docs/research/feature-roadmap.md`；路線圖的 v2.8 排序及 V1.0.11.0 影響段屬歷史研究脈絡。不重做已記錄的盤點；開閘門仍依維護指引。範本0一般隨機角色的資質、技藝上限與天賦不受載入回填，與補丁提案範圍不同。
 - v2.8.1 鞏固版（z9 套裝唯讀、文件對齊 V1.0.11.2、發布核對紀錄）：讀 `sdd/v2.8.1-consolidation/proposal.md` 與 `tasks.md`，歷史上 2026-10-23 使用者已核准四項決定及該版提交／推送；實作、驗收與發布見任務紀錄，不延伸為新任務授權。本版不新增修改功能。v2.8.1 當時採整檔文字摘要；現行整份 core 語法樹摘要會因可執行語法變動失效（格式與舊證明對照見 `docs/research/core-ast-proof.md`），改完後依維護指引重開，既有已開放群組失效時不以關閉旗標的狀態推送；新增候選群組則在首次證明前維持關閉。
 

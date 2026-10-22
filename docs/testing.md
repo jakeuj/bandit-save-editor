@@ -52,3 +52,6 @@ Linux CI另加`--with-deps`安裝系統函式庫。Playwright版本由package與
 發布檢查依[提交與發布](maintenance/release.md#提交與發布)按變更範圍執行：純文件推送後即結束，影響網站產物或發布設定才追蹤相符 SHA 的部署；明確要求確認線上版本才 GET 首頁，多頁 HTTP bytes／metadata 僅在使用者要求或故障需要時核對。需要正式DOM證據時使用獨立headless context，使用者既有快取或安裝問題才升級computer use；PWA更新交接的例行回歸由上述暫存建置測試負責。記錄實際環境與通過層級，保留歷史未測範圍，不將單次自動測試擴張成所有瀏覽器已驗收。
 
 測試基線見[程式化測試SDD](../sdd/programmatic-testing/tasks.md)；v2.8新增介面在正式開閘後通過138 Node／12 headless，完整分層結果見[B驗收](../sdd/random-character-skill-caps-b/tasks.md)。
+
+
+套裝等級的首次原生完整矩陣、12副本生命週期與合併入口見[核心維護](maintenance/core.md#套裝等級首次證明與遷移)；`set-equipment-level-*.test.cjs` 驗證核心、oracle、manifest與proof拒絕條件，`tests/browser/set-equipment-level.spec.cjs` 驗兩庫介面、下載、file與PWA。Node／瀏覽器合成存檔不替代原生首次證明；日後代表遷移僅沿用既有首次證明。

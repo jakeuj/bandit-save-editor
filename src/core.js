@@ -60,9 +60,37 @@
   }
   return false;
  }
+ // Set-level candidates are independent of ordinary equipment and remain gated until their own first proof.
+ function setEquipmentLevelInfo(m,{itemId,plane=9}){
+  const fail=reason=>{throw Error('套裝等級：'+reason);},rules=KNOWLEDGE.setEquipmentLevel;
+  if(!rules||rules.version!==1||![7,9].includes(plane)||!Number.isSafeInteger(itemId)||itemId<1||itemId>=m.original.size[0])fail('庫別、資料或編號不符。');
+  const record=Array.from({length:60},(_,y)=>get(m,C(itemId,y,plane))),item=catalogMaps.items.get(record[1]),t=rules.items[record[1]],origin=rules.origins[record[27]],quality=record[5],level=record[6],owner=record[7];
+  if(!item||item.kind!=='套装'||!t||!rules.sets[t.setLink]?.members.includes(record[1])||t.slot!==item.slot||t.part!==t.slot)fail('範本或 setLink 尚未涵蓋。');
+  if(!Number.isSafeInteger(record[0])||record[0]<1||record[0]>=m.original.size[0]||record[2]!==1||record[3]!==t.tier||!Number.isSafeInteger(t.tier)||t.tier<1||t.tier>9)fail('識別、數量或等階不符。');
+  if(!Number.isSafeInteger(quality)||quality<1||quality>6||!Number.isSafeInteger(level)||level<1||level>10+5*(quality-1))fail('只支援原版品質與等級，超限停用。');
+  // Only the first conversion of an ordinary template is covered; repeated set conversion is unknown.
+  if(!origin||origin.slot!==t.slot||origin.tier!==t.tier||!Number.isSafeInteger(record[23])||record[23]<1||record[23]>6||!decimal2(record[26])||record[26]<0||!Number.isSafeInteger(Math.round(record[26]*10))||Math.abs(record[26]*10-Math.round(record[26]*10))>1e-7)fail('合成來源 metadata 尚未涵蓋。');
+  if(![0,1].includes(record[24])||record[25]!==0||!Number.isSafeInteger(record[8])||record[8]<80+30*(quality-1)||record[8]>80+30*quality||!Number.isSafeInteger(owner)||owner<0)fail('特殊狀態、主係數或歸屬不符。');
+  let selected=0;
+  for(let slot=1;slot<=6;slot++){
+   const id=record[8+slot],coefficient=record[14+slot],flag=record[27+slot];
+   if(![0,1].includes(flag))fail('洗練旗標不符。');
+   if(slot<quality){if(!origin.affixIds.includes(id)||!decimal2(coefficient)||coefficient<10*(quality-1)||coefficient>60+10*quality)fail('原裝備詞條或係數不符。');}
+   else if(id!==0||coefficient!==0||flag!==0)fail('品質外詞條槽仍有資料。');
+   if(flag&&++selected>1)fail('多個已選洗練槽尚未涵蓋。');
+  }
+  let references=0;
+  for(let x=1;plane===9&&x<m.original.size[0];x++)for(let slot=1;slot<=6;slot++)if(get(m,C(x,15+slot,2))===itemId){
+   references++;if(owner!==x||!activeCharacter(m,x)||slot!==t.slot)fail('穿戴雙向指標不一致。');
+  }
+  if(plane===7&&owner!==0||owner>0&&(!activeCharacter(m,owner)||references!==1)||owner===0&&references!==0)fail('穿戴雙向指標不一致。');
+  const group=plane===7?'backpackSetEquipmentLevel':'setEquipmentLevel',normalMax=10+5*(quality-1);
+  return {kind:'equipment',isSet:true,id:itemId,itemId,plane,name:item.name,coordinate:C(itemId,6,plane),current:level,min:1,normalMax,advancedMax:normalMax,advancedVerified:false,verified:KNOWLEDGE.verification[group]===true,group,record,template:t,metadataStatus:'preserved; independent-native-proof-required'};
+ }
  function editingInfo(m,kind,id,plane=9){
   if(kind==='equipment'&&![7,9].includes(plane))throw Error('裝備庫別只接受 7 或 9。');
   if(!Number.isSafeInteger(id)||id<1||id>=m.original.size[0])throw Error('無效的資料編號。');
+  if(kind==='equipment'&&catalogMaps.items.get(get(m,C(id,1,plane)))?.kind==='套装')return setEquipmentLevelInfo(m,{itemId:id,plane});
   let coordinate,normalMax,min=1,name;
   if(kind==='equipment'){
    const item=catalogMaps.items.get(get(m,C(id,1,plane))),quality=get(m,C(id,5,plane)),owner=get(m,C(id,7,plane));
@@ -99,7 +127,7 @@
  function setEditingValue(m,kind,id,value,advanced=false,plane=9){
   if(typeof advanced!=='boolean')throw Error('進階模式參數不正確。');
   const info=editingInfo(m,kind,id,plane);
-  if(kind==='equipment'&&plane===7)ordinaryEquipment(m,id,plane);
+  if(kind==='equipment'&&plane===7&&!info.isSet)ordinaryEquipment(m,id,plane);
   if(!info.verified||advanced&&!info.advancedVerified)throw Error('此修改模式尚未完成隔離遊戲驗證，目前停用。');
   if(!Number.isSafeInteger(value)||value<info.min)throw Error(`請輸入不小於 ${info.min} 的安全整數；操練上限不得低於角色現有職業等級。`);
   const max=advanced?info.advancedMax:Math.min(info.normalMax,info.advancedMax);
@@ -838,5 +866,5 @@
   if(patches.length!==m.changes.size)throw Error('部分修改座標未能定位，已停止匯出。');
   const parts=[];let previous=0;for(const p of patches){parts.push(m.text.slice(previous,p.start),p.value);previous=p.end;}parts.push(m.text.slice(previous));return parts.join('');
  }
- globalThis.SaveCore={randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
+ globalThis.SaveCore={setEquipmentLevelInfo,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
 })();

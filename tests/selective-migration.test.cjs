@@ -60,8 +60,8 @@ test('formula changes select their native family without unchanged lifecycle; sh
   const changed=P.selection(base,f.snap(),f.groups);
   assert.deepEqual(CLI.selectNames(changed),['growth']);assert.equal(changed.families.growth.lifecycle,false);
   f.set('存档');const global=P.selection(base,f.snap(),f.groups);
-  assert.equal(CLI.selectNames(global).length,17);
-  const full=P.selection(base,base,f.groups,{mode:'full'});assert.equal(CLI.selectNames(full).length,17);assert.equal(full.families.equipmentQuality.formulas,true);
+  assert.equal(CLI.selectNames(global).length,Object.entries(require('../scripts/migration-scenarios.cjs').availableCopies).filter(([,family])=>f.groups.some(g=>require('../scripts/verification-suite.cjs').familyOf(g)===family)).length);
+  const full=P.selection(base,base,f.groups,{mode:'full'});assert.equal(CLI.selectNames(full).length,Object.entries(require('../scripts/migration-scenarios.cjs').availableCopies).filter(([,family])=>f.groups.some(g=>require('../scripts/verification-suite.cjs').familyOf(g)===family)).length);assert.equal(full.families.equipmentQuality.formulas,true);
 });
 
 test('missing events, unknown references, changed variable defaults and incomplete dependency records cannot silently carry',t=>{
@@ -178,10 +178,10 @@ test('unknown and duplicate copy names fail before source/save setup',()=>{
   const C=require('../scripts/core-source-proof.cjs'),f=fixture(t),base=f.snap();
   const cosmetic={...A.snapshot(f.g,core+'\n// no operation'),gameVersion:base.gameVersion,dataHashes:base.dataHashes};
   assert.deepEqual(CLI.selectNames(P.selection(base,cosmetic,f.groups)),[]);
-  const old={...base,coreHash:C.rawHash(core)};delete old.coreHashAlgorithm;
-  assert.deepEqual(CLI.selectNames(P.selection(old,cosmetic,f.groups)),[],'verified legacy bridge normalizes both sides');
+  const bridge=require('../knowledge/core-ast-baselines.json').bindings[0],old={...base,coreHash:bridge.legacyHash};delete old.coreHashAlgorithm;
+  assert.deepEqual(CLI.selectNames(P.selection(old,{...cosmetic,coreHash:bridge.astHash},f.groups)),[],'verified legacy bridge normalizes both sides');
   const executable={...A.snapshot(f.g,core+'\nglobalThis.semanticChange=true;'),gameVersion:base.gameVersion,dataHashes:base.dataHashes};
-  assert.equal(CLI.selectNames(P.selection(base,executable,f.groups)).length,17);
+  assert.equal(CLI.selectNames(P.selection(base,executable,f.groups)).length,Object.entries(require('../scripts/migration-scenarios.cjs').availableCopies).filter(([,family])=>f.groups.some(g=>require('../scripts/verification-suite.cjs').familyOf(g)===family)).length);
   const unknown={...base,coreHashAlgorithm:'unknown'};
   assert.throws(()=>P.selection(unknown,base,f.groups),/algorithm/);
  });

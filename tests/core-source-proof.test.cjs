@@ -22,16 +22,18 @@ test('AST omits trivia but retains all executable syntax, directives, regex and 
  assert.throws(()=>C.identity('a'.repeat(64),'future-algorithm'));
 });
 test('legacy proof remains byte-identical and only an exact verified source can establish its AST bridge',()=>{
+ const legacyProof=structuredClone(proof);legacyProof.randomCharacterSkillCaps.formulaHash=C.rawHash(core);delete legacyProof.randomCharacterSkillCaps.formulaHashAlgorithm;
+ const legacyBaseline={...baseline,coreHash:C.rawHash(core),proofHash:require('../scripts/migration-analysis.cjs').sha(legacyProof)};delete legacyBaseline.coreHashAlgorithm;
  const prepare=require('../scripts/prepare-core-ast-baseline.cjs').prepare;
- const original=JSON.stringify(proof),base=JSON.stringify(baseline);
- const result=prepare(core,proof,baseline,catalog);
- assert.equal(result.bindings[0].legacyHash,proof.randomCharacterSkillCaps.formulaHash);
+ const original=JSON.stringify(legacyProof),base=JSON.stringify(legacyBaseline);
+ const result=prepare(core,legacyProof,legacyBaseline,catalog);
+ assert.equal(result.bindings[0].legacyHash,legacyProof.randomCharacterSkillCaps.formulaHash);
  assert.equal(result.bindings[0].astHash,C.hash(core));
- assert.equal(JSON.stringify(proof),original);assert.equal(JSON.stringify(baseline),base);
- assert.throws(()=>prepare(core+'\n// identical AST but not original bytes',proof,baseline,catalog),/Original core bytes/);
- const wrong=structuredClone(proof);delete wrong.randomCharacterSkillCaps.initialVerification;
- assert.throws(()=>prepare(core,wrong,baseline,catalog),/invalid/);
- assert.throws(()=>prepare(core,proof,{...baseline,proofHash:'0'.repeat(64)},catalog),/does not belong/);
+ assert.equal(JSON.stringify(legacyProof),original);assert.equal(JSON.stringify(legacyBaseline),base);
+ assert.throws(()=>prepare(core+'\n// identical AST but not original bytes',legacyProof,legacyBaseline,catalog),/Original core bytes/);
+ const wrong=structuredClone(legacyProof);delete wrong.randomCharacterSkillCaps.initialVerification;
+ assert.throws(()=>prepare(core,wrong,legacyBaseline,catalog),/invalid/);
+ assert.throws(()=>prepare(core,legacyProof,{...legacyBaseline,proofHash:'0'.repeat(64)},catalog),/does not belong/);
  assert.equal(P.problem(catalog,proof,core+'\n// legacy bridge'),null);
  assert.ok(P.problem(catalog,proof,core+'\nglobalThis.semanticChange=true;'));
  assert.equal(C.matches('const untouched=1;',C.rawHash('const untouched=1;')),true);
@@ -61,5 +63,5 @@ test('actual builder accepts cosmetic core rebuilds without rewriting native evi
  assert.deepEqual(fs.readFileSync(path.join(dir,'knowledge/verification.json')),nativeBefore);
  assert.deepEqual(fs.readFileSync(path.join(dir,'knowledge/migration-baseline.json')),baselineBefore);
  fs.appendFileSync(path.join(dir,'src/core.js'),'\nglobalThis.semanticChange=true;');
- const rejected=run([]);assert.notEqual(rejected.status,0);assert.match(rejected.stderr,/技藝上限/);
+ const rejected=run([]);assert.notEqual(rejected.status,0);assert.match(rejected.stderr,/技藝上限|套裝等級/);
 });

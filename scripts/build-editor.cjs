@@ -7,6 +7,7 @@ const root = path.resolve(__dirname, '..');
 const htmlPath = path.join(root, 'index.html');
 let html = fs.readFileSync(htmlPath, 'utf8');
 const knowledge = JSON.parse(fs.readFileSync(path.join(root, 'knowledge/catalog.json'), 'utf8'));
+
 knowledge.professionGuide = JSON.parse(fs.readFileSync(path.join(root, 'knowledge/profession-guide.json'), 'utf8'));
 const versionLabel = knowledge.gameVersion.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 html = html.replace(/(<span data-knowledge-version>)[\s\S]*?(<\/span>)/g, (_, start, end) => start + versionLabel + end);
@@ -15,6 +16,7 @@ if(Object.values(knowledge.verification).some(Boolean)){
   if(!fs.existsSync(proofPath))throw Error('寫入閘門缺少遊戲驗證紀錄');
   const proof=JSON.parse(fs.readFileSync(proofPath,'utf8'));
   if(Object.hasOwn(proof,'schemaVersion')&&proof.schemaVersion!==2)throw Error('不支援的驗證證明格式');
+  const setProblem=require('./set-equipment-level-proof.cjs').problem(knowledge,proof,fs.readFileSync(path.join(root,'src/core.js'),'utf8'));if(setProblem)throw Error(setProblem);
   if(proof.schemaVersion===2){
     const issue=require('./migration-proof.cjs').problem(knowledge,proof,fs.readFileSync(path.join(root,'src/core.js'),'utf8'));
     if(issue)throw Error(issue);

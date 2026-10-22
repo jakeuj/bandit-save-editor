@@ -39,7 +39,7 @@ test('selecting a stored set shows its readonly reason and disables level editin
  const {ctx,$,m,listeners}=setup();m.original.data[1][1][9]=28;
  const change=value=>listeners.change.forEach(fn=>fn({target:{dataset:{editTarget:'equipment'},value}}));
  change('9:1');
- assert.match($('equipmentEditor').innerHTML,/套裝等級尚未隔離驗證/);
+ assert.match($('equipmentEditor').innerHTML,/套裝等級/);
  assert.match($('equipmentEditor').innerHTML,/data-edit-value="equipment"[^>]*disabled/);
  assert.match($('equipmentEditor').innerHTML,/data-edit-apply="equipment"[^>]*disabled/);
  assert.equal(m.changes.size,0);

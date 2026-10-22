@@ -2,6 +2,7 @@
 // Which proof section and checks open each write group. Build gating and the migration suite share this table.
 const nativeLifecycle = ['load', 'save', 'restart', 'originalHashes', 'nativeEffects', 'lifecycle'];
 const sections = {
+  setEquipmentLevel: {groups:['backpackSetEquipmentLevel','setEquipmentLevel'],perGroup:true,checks:nativeLifecycle},
   randomCharacterTalents: {
     groups: ['randomCharacterTalents'], perGroup: true,
     checks: ['load','save','restart','originalHashes','nativeEffects','talentFormulas','aptitudeCap','numericUpdate','nativeTransfer','nativePrison','nativeRebirth','nativeDismiss','stageRoundtrips']
