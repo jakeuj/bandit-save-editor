@@ -2,6 +2,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const {createHash} = require('node:crypto');
+const R = require('./verification-requirements.cjs');
 const root = path.resolve(__dirname, '..');
 const htmlPath = path.join(root, 'index.html');
 let html = fs.readFileSync(htmlPath, 'utf8');
@@ -14,19 +15,21 @@ if(Object.values(knowledge.verification).some(Boolean)){
   if(!fs.existsSync(proofPath))throw Error('寫入閘門缺少遊戲驗證紀錄');
   const proof=JSON.parse(fs.readFileSync(proofPath,'utf8'));
   if(proof.eventFingerprint!==knowledge.fingerprints['data.json']||proof.runtimeFingerprint!==knowledge.fingerprints['scripts/c3runtime.js']||!Object.values(proof.checks).every(v=>v===true))throw Error('遊戲驗證紀錄與來源不相符');
+  for(const [group,enabled]of Object.entries(knowledge.verification))if(enabled)R.requiredChecks(group);
+  if(R.sections.base.groups.some(group=>knowledge.verification[group])&&!R.sections.base.checks.every(k=>proof.checks[k]===true))throw Error('基礎與進階修改缺少必要的遊戲驗證項目');
   if(!proof.fingerprints||Object.keys(proof.fingerprints).length!==Object.keys(knowledge.fingerprints).length||Object.entries(knowledge.fingerprints).some(([file,hash])=>proof.fingerprints[file]!==hash))throw Error('資料表指紋與遊戲驗證紀錄不相符');
-  if(['equipmentAffixCoefficient','pillAptitudeBonus'].some(group=>knowledge.verification[group])&&(!proof.batch2||!proof.batch2.checks||!Object.values(proof.batch2.checks).every(v=>v===true)||JSON.stringify(proof.batch2.fingerprints)!==JSON.stringify(knowledge.batch2Fingerprints)||JSON.stringify(proof.batch2.limits)!==JSON.stringify(knowledge.batch2Limits)||proof.batch2.dataHash!==createHash('sha256').update(JSON.stringify(knowledge.batch2Data)).digest('hex')))throw Error('第二批來源、規則或值域缺少相符驗證');
-  if(knowledge.verification.equipmentAffixReplacement){const p=proof.affixReplacement;const required=['nativeEffects','load','save','restart','originalHashes','equipmentCycle','nativeWash'];if(!p||!required.every(k=>p.checks?.[k]===true)||JSON.stringify(p.fingerprints)!==JSON.stringify({...knowledge.fingerprints,...knowledge.batch2Fingerprints})||JSON.stringify(p.limits)!==JSON.stringify(knowledge.affixReplacementLimits)||p.dataHash!==createHash('sha256').update(JSON.stringify({rules:knowledge.affixReplacement,items:knowledge.batch2Data.items})).digest('hex'))throw Error('精準洗練缺少相符的獨立驗證');}
-  for(const group of ['backpackEquipmentLevel','backpackEquipmentAffixCoefficient','backpackEquipmentAffixReplacement','equipmentAffixInitialSelection','equipmentNewItemMarker'])if(knowledge.verification[group]){
+  if(R.sections.batch2.groups.some(group=>knowledge.verification[group])&&(!proof.batch2||!proof.batch2.checks||!Object.values(proof.batch2.checks).every(v=>v===true)||!R.sections.batch2.checks.every(k=>proof.batch2.checks[k]===true)||JSON.stringify(proof.batch2.fingerprints)!==JSON.stringify(knowledge.batch2Fingerprints)||JSON.stringify(proof.batch2.limits)!==JSON.stringify(knowledge.batch2Limits)||proof.batch2.dataHash!==createHash('sha256').update(JSON.stringify(knowledge.batch2Data)).digest('hex')))throw Error('第二批來源、規則或值域缺少相符驗證');
+  if(knowledge.verification.equipmentAffixReplacement){const p=proof.affixReplacement;const required=R.requiredChecks('equipmentAffixReplacement');if(!p||!required.every(k=>p.checks?.[k]===true)||JSON.stringify(p.fingerprints)!==JSON.stringify({...knowledge.fingerprints,...knowledge.batch2Fingerprints})||JSON.stringify(p.limits)!==JSON.stringify(knowledge.affixReplacementLimits)||p.dataHash!==createHash('sha256').update(JSON.stringify({rules:knowledge.affixReplacement,items:knowledge.batch2Data.items})).digest('hex'))throw Error('精準洗練缺少相符的獨立驗證');}
+  for(const group of R.sections.equipmentWorkflow.groups)if(knowledge.verification[group]){
     const p=proof.equipmentWorkflow,c=p?.groups?.[group];
-    if(!c||!['load','save','restart','originalHashes','nativeEffects','lifecycle'].every(k=>c.checks?.[k]===true)||group==='equipmentAffixInitialSelection'&&c.checks.selectionUi!==true||JSON.stringify(p.fingerprints)!==JSON.stringify({...knowledge.fingerprints,...knowledge.batch2Fingerprints})||JSON.stringify(p.limits)!==JSON.stringify(knowledge.equipmentWorkflowLimits)||p.dataHash!==createHash('sha256').update(JSON.stringify({rules:knowledge.equipmentWorkflowLimits,items:knowledge.batch2Data.items,formulas:knowledge.affixReplacement})).digest('hex'))throw Error('裝備操作缺少相符的獨立驗證：'+group);
+    if(!c||!R.requiredChecks(group).every(k=>c.checks?.[k]===true)||JSON.stringify(p.fingerprints)!==JSON.stringify({...knowledge.fingerprints,...knowledge.batch2Fingerprints})||JSON.stringify(p.limits)!==JSON.stringify(knowledge.equipmentWorkflowLimits)||p.dataHash!==createHash('sha256').update(JSON.stringify({rules:knowledge.equipmentWorkflowLimits,items:knowledge.batch2Data.items,formulas:knowledge.affixReplacement})).digest('hex'))throw Error('裝備操作缺少相符的獨立驗證：'+group);
   }
   for(const [group,enabled]of Object.entries(knowledge.verification))if(enabled&&proof.groups[group]!==true)throw Error('驗證未涵蓋寫入群組：'+group);
-  for(const group of ['backpackEquipmentQualityUpgrade','backpackEquipmentQualityDowngrade','equipmentQualityUpgrade','equipmentQualityDowngrade'])if(knowledge.verification[group]){
+  for(const group of R.sections.equipmentQuality.groups)if(knowledge.verification[group]){
     const p=proof.equipmentQuality,c=p?.groups?.[group];
     const formula=fs.readFileSync(path.join(root,'src/core.js'),'utf8').match(/ function qualityAttributeEffect\([\s\S]*?(?= function previewEquipmentQualityChange)/)?.[0].replace(/\r\n/g,'\n');
     if(!formula||p?.formulaHash!==createHash('sha256').update(formula).digest('hex'))throw Error('品質升降公式缺少相符的獨立驗證：'+group);
-    if(!c||!['load','save','restart','originalHashes','nativeEffects','lifecycle','qualityUi'].every(k=>c.checks?.[k]===true)||JSON.stringify(p.fingerprints)!==JSON.stringify({...knowledge.fingerprints,...knowledge.batch2Fingerprints})||p.dataHash!==createHash('sha256').update(JSON.stringify({quality:knowledge.equipmentQuality,items:knowledge.batch2Data.items,workflow:knowledge.equipmentWorkflowLimits})).digest('hex'))throw Error('品質升降缺少相符的獨立驗證：'+group);
+    if(!c||!R.requiredChecks(group).every(k=>c.checks?.[k]===true)||JSON.stringify(p.fingerprints)!==JSON.stringify({...knowledge.fingerprints,...knowledge.batch2Fingerprints})||p.dataHash!==createHash('sha256').update(JSON.stringify({quality:knowledge.equipmentQuality,items:knowledge.batch2Data.items,workflow:knowledge.equipmentWorkflowLimits})).digest('hex'))throw Error('品質升降缺少相符的獨立驗證：'+group);
   }
   if(['equipmentLevel','professionTrainingCap','advancedTechnologyLevel'].some(group=>knowledge.verification[group]||knowledge.verification[group+'Advanced'])&&JSON.stringify(proof.editingLimits)!==JSON.stringify(knowledge.editingLimits))throw Error('進階修改範圍與遊戲驗證紀錄不相符');
 }
