@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "algorithm": "core-estree-acorn-8.15.0-es2024-v1",
+  "bindings": [
+    {
+      "legacyHash": "fe01461977c8164b97c8c2101c5f9c4b4a43b816d37f53c06e244c7eb75d9756",
+      "astHash": "b32442d524bc5b053ba40aa92963014e22bac492d97d06e0db3d4dccc001dbd5",
+      "proofHash": "4b9f48538e3330cebf32ee7f67a72b48b5ae9dfe79be8bb37a17127e6f8ff0e5"
+    }
+  ]
+}

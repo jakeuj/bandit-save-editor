@@ -3,10 +3,18 @@ const assert=require('node:assert/strict'),{createHash}=require('node:crypto');
 const sha=v=>createHash('sha256').update(typeof v==='string'?v:JSON.stringify(v)).digest('hex');
 const group='randomCharacterSkillCaps',hashPattern=/^[0-9a-f]{64}$/;
 // Bind all unembedded write logic, including eligibility, transactions, batches and exact serialization.
-const formulaHash=source=>sha(source.replace(/\r\n/g,'\n'));
+const Core=require('./core-source-proof.cjs');
+const formulaHash=Core.hash;
 const dataHash=k=>sha(k.randomCharacterSkillCaps);
-const binding=(k,source)=>({gameVersion:k.gameVersion,fingerprints:{...k.fingerprints,...k.batch2Fingerprints},dataHash:dataHash(k),formulaHash:formulaHash(source)});
+const binding=(k,source)=>({gameVersion:k.gameVersion,fingerprints:{...k.fingerprints,...k.batch2Fingerprints},dataHash:dataHash(k),formulaHash:formulaHash(source),formulaHashAlgorithm:Core.algorithm});
 const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
+function storedBinding(p){
+ return {gameVersion:p.gameVersion,fingerprints:p.fingerprints,dataHash:p.dataHash,formulaHash:p.formulaHash,...(p.formulaHashAlgorithm!==undefined?{formulaHashAlgorithm:p.formulaHashAlgorithm}:{})};
+}
+function bindingMatches(k,source,p){
+ if(!p)return false;
+ try{return same(p.fingerprints,{...k.fingerprints,...k.batch2Fingerprints})&&p.gameVersion===k.gameVersion&&p.dataHash===dataHash(k)&&Core.matches(source,p.formulaHash,p.formulaHashAlgorithm);}catch{return false;}
+}
 function sourceChecks(source,expected){
  assert.ok(source&&Object.keys(source.fingerprints||{}).length===15,'缺少實際15來源紀錄');
  assert.deepEqual(source.fingerprints,expected.fingerprints,'實際來源與測試catalog不符');
@@ -106,7 +114,8 @@ function validateMigrationCopy(copy,k,expected){manifestProblem([copy],false,k,{
 function validateResults(k,source,results,{initial=true}={}){
  assert.equal(results?.completed,true,'隔離矩陣未完成');
  assert.equal(results.gameVersion,k.gameVersion,'結果遊戲版本不符');
- const expected=binding(k,source);assert.deepEqual(results.skillCapsBinding,expected,'來源／資料／core摘要已改變');
+ assert.ok(bindingMatches(k,source,results.skillCapsBinding),'來源／資料／core摘要已改變');
+ const expected=storedBinding(results.skillCapsBinding);
  const copies=results.copies?.filter(c=>c.family===group)||[];
  if(initial)assert.equal(results.copies.length,2,'初次獨立證明只能包含完整上限矩陣與生命週期');
  const manifest=manifestProblem(copies,initial,k),derived=copies.map(c=>copyChecks(c,expected));
@@ -116,7 +125,7 @@ function validateResults(k,source,results,{initial=true}={}){
  assert.deepEqual(results.checks?.[group],checks,'傳入checks與原生觀測不符');
  return {checks,validation:{version:1,runner:initial?'verify-skill-caps-suite.cjs':'verify-migration.cjs',...manifest,evidenceHash:sha({binding:expected,copies})}};
 }
-function initialProblem(initial){return !initial||initial.coverage!=='initial-matrix'||initial.matrixCases!==108||initial.lifecycleCases!==2||Object.keys(initial.fingerprints||{}).length!==15||!hashPattern.test(initial.dataHash||'')||!hashPattern.test(initial.formulaHash||'')||!hashPattern.test(initial.manifestHash||'')||!hashPattern.test(initial.evidenceHash||'');}
+function initialProblem(initial){return !initial||initial.coverage!=='initial-matrix'||initial.matrixCases!==108||initial.lifecycleCases!==2||Object.keys(initial.fingerprints||{}).length!==15||!hashPattern.test(initial.dataHash||'')||!hashPattern.test(initial.formulaHash||'')||!Core.supported(initial.formulaHashAlgorithm)||!hashPattern.test(initial.manifestHash||'')||!hashPattern.test(initial.evidenceHash||'');}
 function record(k,source,{date,platform,checks,coverage='representative',copies,validation,initialVerification}){
  if(coverage==='initial-matrix')initialVerification={coverage,...binding(k,source),...validation};
  assert.ok(!initialProblem(initialVerification),'首次完整矩陣證明缺失');
@@ -125,8 +134,8 @@ function record(k,source,{date,platform,checks,coverage='representative',copies,
 }
 function problem(k,proof,source){
  if(proof.schemaVersion===2)return require('./migration-proof.cjs').problem(k,proof,source,group);
- const p=proof[group],expected=binding(k,source),required=require('./verification-requirements.cjs').requiredChecks(group);
- if(!p||!k.randomCharacterSkillCaps||Object.keys(expected.fingerprints).length!==15||!same({gameVersion:p.gameVersion,fingerprints:p.fingerprints,dataHash:p.dataHash,formulaHash:p.formulaHash},expected)||initialProblem(p.initialVerification)||!['initial-matrix','representative'].includes(p.coverage)||p.validation?.version!==1||!hashPattern.test(p.validation?.evidenceHash||'')||!hashPattern.test(p.validation?.manifestHash||'')||p.validation.lifecycleCases!==2||p.validation.matrixCases!==(p.coverage==='initial-matrix'?108:2)||p.validation.runner!==(p.coverage==='initial-matrix'?'verify-skill-caps-suite.cjs':'verify-migration.cjs')||!required.every(c=>p.groups?.[group]?.checks?.[c]===true))return '一般隨機角色技藝上限缺少相符的獨立驗證';
+ const p=proof[group],expected=p&&storedBinding(p),required=require('./verification-requirements.cjs').requiredChecks(group);
+ if(!p||!k.randomCharacterSkillCaps||Object.keys(expected.fingerprints).length!==15||!bindingMatches(k,source,p)||initialProblem(p.initialVerification)||!['initial-matrix','representative'].includes(p.coverage)||p.validation?.version!==1||!hashPattern.test(p.validation?.evidenceHash||'')||!hashPattern.test(p.validation?.manifestHash||'')||p.validation.lifecycleCases!==2||p.validation.matrixCases!==(p.coverage==='initial-matrix'?108:2)||p.validation.runner!==(p.coverage==='initial-matrix'?'verify-skill-caps-suite.cjs':'verify-migration.cjs')||!required.every(c=>p.groups?.[group]?.checks?.[c]===true))return '一般隨機角色技藝上限缺少相符的獨立驗證';
  const initial=p.coverage==='initial-matrix',copies=[{name:initial?'random-skill-caps-matrix':'random-skill-caps-representative',operations:initial?108:2},{name:'random-skill-caps-lifecycle',operations:2}];
  if(!same(p.copies,copies)||initial&&!same(p.initialVerification,{coverage:p.coverage,...expected,...p.validation}))return '一般隨機角色技藝上限缺少相符的獨立驗證';
  return null;
@@ -136,4 +145,4 @@ function requireNativeRunner(){
  if(family.pendingReason)throw Error(family.pendingReason+'；不可產生或合併成功證明');
  for(const [file,fn]of [['verify-random-character-skill-caps.cjs','validateEffects'],['verify-skill-caps-lifecycle.cjs','validateLifecycle']])assert.equal(typeof require('./'+file)[fn],'function','原生驗證器尚未完成');
 }
-module.exports={group,sha,binding,formulaHash,dataHash,record,problem,requireNativeRunner,copyChecks,validateMigrationCopy,validateResults,initialProblem};
+module.exports={group,sha,binding,bindingMatches,formulaHash,dataHash,record,problem,requireNativeRunner,copyChecks,validateMigrationCopy,validateResults,initialProblem};

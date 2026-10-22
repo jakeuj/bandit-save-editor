@@ -105,7 +105,8 @@ test('complete native-shaped fixture merges only the new group; partial matrices
  const retained=structuredClone(merged.proof);delete retained[P.group];retained.groups[P.group]=old.groups[P.group];
  if(!Object.hasOwn(old.groups,P.group))delete retained.groups[P.group];assert.deepEqual(retained,old,'every old group and proof section is retained');
  assert.deepEqual(old,originalProof);assert.deepEqual(k,originalCatalog);assert.equal(merged.catalog.verification.randomCharacterTalents,k.verification.randomCharacterTalents);
- assert.throws(()=>mergeProof({catalog:k,proof:old,results,coreSource:core+'\n'}),/摘要/);
+ assert.doesNotThrow(()=>mergeProof({catalog:k,proof:old,results,coreSource:core+'\n// formatting only'}));
+ assert.throws(()=>mergeProof({catalog:k,proof:old,results,coreSource:core+'\nglobalThis.semanticChange=true;'}),/摘要/);
  assert.throws(()=>mergeProof({catalog:k,proof:old,results:resultFixture({representative:true}),coreSource:core}),/矩陣/);
  for(const mutate of [
   r=>r.copies.pop(),r=>r.copies[0].evidence.scenario.skillCapManifest.pop(),r=>r.copies[0].evidence.scenario.skillCapManifest[0].quality=2,

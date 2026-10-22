@@ -17,3 +17,5 @@
 - 更新技能或工作流程規則時，同步核對適用的 `AGENTS.md` 與相關指引，依技能「規則同步檢查」消除衝突；完成時說明 AGENTS 已調整或核對後不需調整，不能只改技能便宣稱規則已生效。
 - 開始處理本專案任務時，若技能清單沒有 `bandit-save-editor`，先直接讀技能正本照做，再修復連結：`.claude/skills/bandit-save-editor` 若是內容為相對路徑的一般檔案（常見於 Windows `core.symlinks=false`），執行 `git config core.symlinks true`、刪除該檔並 `git checkout -- .claude/skills/bandit-save-editor`；建立 symlink 權限不足時，改在本機建 directory junction 指向 `.agents/skills/bandit-save-editor`，但不提交 junction，也不在 repo 另存副本。確認可經連結讀到 `SKILL.md` 後，告知使用者需開新工作階段才會重新載入技能。
 - 現況與歷史分開維護：目前規劃讀 `docs/research/next-version-plan.md`，各版功能與驗收見 `docs/releases.md`；歷史盤點、執行紀錄及舊 prompt 不視為目前狀態或新授權。拆分文件時保留證據、修正相對連結，並更新技能與本指引的任務入口。
+
+- 整份 core 證明採固定解析器的語法樹摘要；一般註解／排版不失效，但任何可執行語法改變仍需核對所有群組。舊證明只經已驗證原始程式建立對照，不改寫歷史實測；摘要格式、適用範圍與維護見 `docs/research/core-ast-proof.md`。續跑 checkpoint 仍綁精確 bytes。

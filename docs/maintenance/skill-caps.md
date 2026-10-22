@@ -2,6 +2,8 @@
 
 [維護索引](../maintenance.md)；只讀本次任務相關章節。版本與日期標示的實測紀錄只證明當時範圍，現行開放狀態以 catalog／verification 與相應 SDD 為準。
 
+> 整份 core 摘要現採[語法樹格式](../research/core-ast-proof.md)：一般註解／排版不影響綁定，可執行語法仍全檔保護。下列舊版整檔文字摘要與實測數字保留歷史脈絡；其他功能的區段摘要沒有在本階段改造。
+
 ## v2.8 A 交付紀錄：技藝上限核心，當時尚未開放
 
 詳見[研究與A／B界線](../research/random-character-skill-caps.md)及[SDD任務](../../sdd/random-character-skill-caps/tasks.md)。`randomCharacterSkillCapsInfo(model,{characterId})`查資格；`previewCharacterSkillCaps(model,{characterId,caps})`接受九個安全整數，回九列C／L／E、共同生成見證及差異；`setCharacterSkillCaps(model,request,{preview})`要求同模型、同請求且未過期的核心預覽，重驗後一次提交。同值不新增歷史；降低到有餘額的目前等級時阻擋。預覽物件的changes不具執行權限。

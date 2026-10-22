@@ -2,6 +2,8 @@
 
 [維護索引](../maintenance.md)；只讀本次任務相關章節。版本與日期標示的實測紀錄只證明當時範圍，現行開放狀態以 catalog／verification 與相應 SDD 為準。
 
+> 整份 core 摘要現採[語法樹格式](../research/core-ast-proof.md)：一般註解／排版不影響綁定，可執行語法仍全檔保護。下列舊版整檔文字摘要與實測數字保留歷史脈絡；其他功能的區段摘要沒有在本階段改造。
+
 ## 版本遷移重驗
 
 2026-10-23 起依[已核准規格](../../sdd/selective-migration/proposal.md)按影響選跑。預設 `auto`：語意未變沿用，只有相關功能改變才啟動隱藏、靜音的隔離遊戲。例行更新不使用 computer use；UI 疑慮先記錄，實際故障再針對性複查，使用者明確要求才操作桌面。此次成本與重播結果見[精簡流程紀錄](../research/selective-migration.md)。

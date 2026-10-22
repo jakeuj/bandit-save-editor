@@ -91,7 +91,8 @@ test('composite evidence carries original native origins, defers UI and refuses 
   const e=next.migration.evidence.equipmentQualityUpgrade;
   assert.equal(e.load.source,'carried');assert.equal(e.qualityUi.source,'deferred');
   assert.equal(next.migration.anchors[e.load.anchor].gameVersion,'V1');
-  assert.match(P.problem(nextK,next,core+'\n// changed'),/不相符/);
+  assert.equal(P.problem(nextK,next,core+'\n// formatting only'),null);
+  assert.match(P.problem(nextK,next,core+'\nglobalThis.semanticChange=true;'),/不相符/);
   const missing=structuredClone(next);delete missing.migration.evidence.names.nativeSaveWritten;assert.match(P.problem(nextK,missing,core),/證據無效/);
   const first=structuredClone(next);first.migration.enabledBefore=first.migration.enabledBefore.filter(g=>g!=='names');assert.match(P.problem(nextK,first,core),/既有群組/);
   const tampered=structuredClone(next);tampered.migration.anchors[e.load.anchor].gameVersion='fake';assert.match(P.problem(nextK,tampered,core),/證據無效/);
@@ -172,3 +173,15 @@ test('unknown and duplicate copy names fail before source/save setup',()=>{
   const cli=spawnSync(process.execPath,['scripts/verify-migration.cjs','--source','missing','--artifacts',os.tmpdir(),'--copies','typo'],{cwd:root,encoding:'utf8'});
   assert.notEqual(cli.status,0);assert.match(cli.stderr,/Unknown/);assert.ok(!cli.stderr.includes('ENOENT'));
 });
+
+ test('whole-core AST identity carries comments but selects semantic changes, including legacy verified baselines',t=>{
+  const C=require('../scripts/core-source-proof.cjs'),f=fixture(t),base=f.snap();
+  const cosmetic={...A.snapshot(f.g,core+'\n// no operation'),gameVersion:base.gameVersion,dataHashes:base.dataHashes};
+  assert.deepEqual(CLI.selectNames(P.selection(base,cosmetic,f.groups)),[]);
+  const old={...base,coreHash:C.rawHash(core)};delete old.coreHashAlgorithm;
+  assert.deepEqual(CLI.selectNames(P.selection(old,cosmetic,f.groups)),[],'verified legacy bridge normalizes both sides');
+  const executable={...A.snapshot(f.g,core+'\nglobalThis.semanticChange=true;'),gameVersion:base.gameVersion,dataHashes:base.dataHashes};
+  assert.equal(CLI.selectNames(P.selection(base,executable,f.groups)).length,17);
+  const unknown={...base,coreHashAlgorithm:'unknown'};
+  assert.throws(()=>P.selection(unknown,base,f.groups),/algorithm/);
+ });

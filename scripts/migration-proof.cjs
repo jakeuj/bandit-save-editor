@@ -1,5 +1,6 @@
 'use strict';
 // Composite evidence keeps native observations at their original version. Carried/deferred checks are never booleans.
+const Core=require('./core-source-proof.cjs');
 const A = require('./migration-analysis.cjs'), R = require('./verification-requirements.cjs'), S = require('./verification-suite.cjs');
 const allSources = k => ({...k.fingerprints,...k.batch2Fingerprints});
 const hashPattern = /^[a-f0-9]{64}$/;
@@ -108,7 +109,7 @@ function mergeInitial(catalog,proof,group,record,results,source) {
 function problem(k,proof,source,onlyGroup) {
   try {
     const m=proof.migration;
-    if(proof.schemaVersion!==2||m?.version!==2||m.policy!=='selective-existing-v1'||proof.gameVersion!==k.gameVersion||Object.keys(allSources(k)).length!==15||!Object.values(allSources(k)).every(h=>hashPattern.test(h))||!A.same(allSources(k),m.snapshot?.fingerprints)||!A.same(proof.fingerprints,k.fingerprints)||!A.same(proof.batch2Fingerprints,k.batch2Fingerprints)||m.snapshot.coreHash!==A.sha(source.replace(/\r\n/g,'\n'))||!Array.isArray(m.snapshot.unknown)||m.snapshot.unknown.length) throw Error('複合證明與來源或程式不相符');
+    if(proof.schemaVersion!==2||m?.version!==2||m.policy!=='selective-existing-v1'||proof.gameVersion!==k.gameVersion||Object.keys(allSources(k)).length!==15||!Object.values(allSources(k)).every(h=>hashPattern.test(h))||!A.same(allSources(k),m.snapshot?.fingerprints)||!A.same(proof.fingerprints,k.fingerprints)||!A.same(proof.batch2Fingerprints,k.batch2Fingerprints)||!Core.matches(source,m.snapshot.coreHash,m.snapshot.coreHashAlgorithm)||!Array.isArray(m.snapshot.unknown)||m.snapshot.unknown.length) throw Error('複合證明與來源或程式不相符');
     const groups=onlyGroup?[onlyGroup]:Object.keys(k.verification).filter(g=>k.verification[g]);
     for(const group of groups) {
       if(!proof.groups[group]||!m.enabledBefore.includes(group)||m.snapshot.dataHashes?.[group]!==dataHash(k,group))throw Error('缺少既有群組或規則證據：'+group);

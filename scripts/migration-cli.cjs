@@ -1,5 +1,6 @@
 'use strict';
 const fs=require('node:fs'),path=require('node:path'),{spawnSync}=require('node:child_process');
+const Core=require('./core-source-proof.cjs');
 const A=require('./migration-analysis.cjs'),P=require('./migration-proof.cjs'),Source=require('./migration-source.cjs');
 const {availableCopies,validateNames,buildScenarios}=require('./migration-scenarios.cjs');
 const root=path.resolve(__dirname,'..');
@@ -23,10 +24,10 @@ function inputIdentity({catalog,copies,runtime,saveText,plan}) {
     const walk=dir=>{for(const name of fs.readdirSync(dir).sort()){const file=path.join(dir,name),stat=fs.lstatSync(file);if(stat.isDirectory())walk(file);else runtimeHashes.push([path.relative(app,file),stat.isSymbolicLink()?fs.readlinkSync(file):A.sha(fs.readFileSync(file))]);}};
     walk(app);
   }
-  return A.sha({catalog,plan,scripts,runtime:runtimeHashes,save:A.sha(saveText),core:A.sha(fs.readFileSync(path.join(root,'src/core.js'))),copies:copies.map(c=>({name:c.name,scenario:c.scenario,batch:c.batchRequests,lifecycle:c.lifecycle,formulas:c.formulas}))});
+  return A.sha({catalog,plan,scripts,runtime:runtimeHashes,save:A.sha(saveText),core:A.sha(fs.readFileSync(path.join(root,'src/core.js'))),coreIdentityPolicy:['scripts/vendor/acorn.cjs','knowledge/core-ast-baselines.json'].map(n=>[n,fs.existsSync(path.join(root,n))?A.sha(fs.readFileSync(path.join(root,n))):null]),copies:copies.map(c=>({name:c.name,scenario:c.scenario,batch:c.batchRequests,lifecycle:c.lifecycle,formulas:c.formulas}))});
 }
 function writeSelective({dir=root,catalog,previous,base,current,plan,results,steamBuild,expectedState,exec=(args)=>spawnSync(process.execPath,['scripts/build-editor.cjs',...args],{cwd:dir,encoding:'utf8'})}) {
-  if(A.same(base.fingerprints,current.fingerprints)&&base.coreHash===current.coreHash&&A.same(base.roles,current.roles)&&A.same(base.dataHashes,current.dataHashes))return {action:'compared',consistent:results.completed};
+  if(A.same(base.fingerprints,current.fingerprints)&&Core.same(base,current)&&A.same(base.roles,current.roles)&&A.same(base.dataHashes,current.dataHashes))return {action:'compared',consistent:results.completed};
   if(!results.completed||!A.same(results.copies.map(c=>c.name).sort(),selectNames(plan).sort()))return {action:'skipped',reason:'選跑副本尚未完整完成'};
   if(plan.families.equipmentQuality?.formulas&&!results.copies.some(c=>c.family==='equipmentQuality'&&c.steps.some(s=>s.step==='formulas'&&s.ok)))return {action:'skipped',reason:'缺少共用公式比對'};
   const M=require('./verify-migration.cjs'),derived=M.provenChecks(results.copies,{},results.skillCapsBinding,catalog);
@@ -54,7 +55,7 @@ async function main(M) {
   if(opt('--previous-source')&&!args.includes('--plan'))throw Error('--previous-source is for replay planning only');
   const artifacts=Source.external(opt('--artifacts')),catalog=JSON.parse(fs.readFileSync(opt('--catalog')||path.join(root,'knowledge/catalog.json'),'utf8'));
   const previous=JSON.parse(fs.readFileSync(path.join(root,'knowledge/verification.json'),'utf8')),core=fs.readFileSync(path.join(root,'src/core.js'),'utf8');
-  const expectedState=Object.fromEntries(['knowledge/catalog.json','knowledge/verification.json','knowledge/migration-baseline.json','index.html','sw.js'].filter(n=>fs.existsSync(path.join(root,n))).map(n=>[n,A.sha(fs.readFileSync(path.join(root,n)))]));
+  const expectedState=Object.fromEntries(['knowledge/catalog.json','knowledge/verification.json','knowledge/migration-baseline.json','knowledge/core-ast-baselines.json','index.html','sw.js'].filter(n=>fs.existsSync(path.join(root,n))).map(n=>[n,A.sha(fs.readFileSync(path.join(root,n)))]));
   const reportFile=path.join(artifacts,'migration-plan.json');
   let source=opt('--source')||Source.prepare(opt('--package'),artifacts).source,current;
   try {
@@ -67,7 +68,7 @@ async function main(M) {
     const verified=spawnSync(process.execPath,['scripts/build-editor.cjs','--check'],{cwd:root,encoding:'utf8'});
     if(verified.status!==0)throw Error('既有證明未通過建置檢查：'+verified.stderr);
     const b=previous.schemaVersion===2?previous.migration.snapshot:P.baseline(catalog,previous,current);
-    if(!A.same(b.fingerprints,current.fingerprints)||b.coreHash!==current.coreHash)throw Error('基準來源與現有證明不符');
+    if(!A.same(b.fingerprints,current.fingerprints)||!Core.same(b,current))throw Error('基準來源與現有證明不符');
     fs.writeFileSync(baselineFile,JSON.stringify(b,null,2)+'\n');console.log('BASELINE: 相符已驗證來源；未啟動遊戲');return;
   }
   let base=JSON.parse(fs.readFileSync(baselineFile,'utf8'));

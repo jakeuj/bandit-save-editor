@@ -1,5 +1,6 @@
 'use strict';
 const fs = require('node:fs'), path = require('node:path'), {createHash} = require('node:crypto');
+const Core=require('./core-source-proof.cjs');
 const S = require('./verification-suite.cjs'), R = require('./verification-requirements.cjs');
 const canonical = v => Array.isArray(v) ? v.map(canonical) : v && typeof v==='object' ? Object.fromEntries(Object.keys(v).sort().map(k=>[k,canonical(v[k])])) : v;
 const sha = value => createHash('sha256').update(typeof value === 'string' || Buffer.isBuffer(value) ? value : JSON.stringify(canonical(value))).digest('hex');
@@ -123,7 +124,7 @@ function snapshot(game, coreSource) {
   }
   const ui = Object.fromEntries(Object.entries(R.uiEvents).map(([check,sids])=>[check,index.digest(sids,{omitPresentation:false})]));
   for (const [name,d] of Object.entries(ui)) roles[name] = d.digest;
-  return {version:2,fingerprints:{...game.fingerprints,...Object.fromEntries(['yx','tz'].map(t=>[t+'.json',sha(fs.readFileSync(path.join(game.root,t+'.json')))]))},coreHash:sha(coreSource.replace(/\r\n/g,'\n')),roles,unknown:[...new Set(unknown)]};
+  return {version:2,fingerprints:{...game.fingerprints,...Object.fromEntries(['yx','tz'].map(t=>[t+'.json',sha(fs.readFileSync(path.join(game.root,t+'.json')))]))},coreHash:Core.hash(coreSource),coreHashAlgorithm:Core.algorithm,roles,unknown:[...new Set(unknown)]};
 }
 function owners(group,check) {
   const own=S.familyOf(group);
@@ -139,7 +140,7 @@ function checkDigest(snap,group,check) {
   if (R.uiChecks[group] === check) return snap.roles[check];
   const deps = owners(group,check).map(f=>{const part=role(check,f),r=snap.roles[f];return [f,part,part==='io'&&r?.io&&r?.effects?sha({io:r.io,effects:r.effects}):part==='lifecycle'&&r?.io&&r?.lifecycle?sha({io:r.io,lifecycle:r.lifecycle}):r?.[part]];});
   if (!deps.length || deps.some(d=>!d[2])) throw Error('缺少檢查相依資訊：' + group + ':' + check);
-  return sha({coreHash:snap.coreHash,deps});
+  return sha({coreHash:Core.identity(snap.coreHash,snap.coreHashAlgorithm),deps});
 }
 function plan(previous, current, groups, {mode='auto'}={}) {
   if (!['auto','full'].includes(mode)) throw Error('Unknown migration mode: ' + mode);
