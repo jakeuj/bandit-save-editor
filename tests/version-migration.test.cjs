@@ -209,7 +209,13 @@ test('migration runner replays each copy in order, stops on failure and derives 
       return {status: 0, stdout: args[0] === '--setup' ? 'STATE ' + statePath + '\n' : ''};
     };
     const quiet = () => {}, sleep = async ms => { sleeps.push(ms); };
-    const run = await M.runMigration({catalog, proof, copies: copies(), runDir: dir, setupArgs: ['--source', 's'], exec, sleep, log: quiet, digest});
+    let removed = [];
+    const remove = target => removed.push(path.relative(dir, target));
+    const run = await M.runMigration({catalog, proof, copies: copies(), runDir: dir, setupArgs: ['--source', 's'], exec, sleep, log: quiet, digest, remove});
+    const families = Object.keys(S.families).length;
+    assert.equal(removed.filter(p => p === 'game').length, families);
+    assert.equal(removed.filter(p => p === 'profile').length, families);
+    assert.deepEqual(removed.slice(-2), ['BANDIT Editor Test.app', 'BANDIT Editor Test.source.json']);
     assert.equal(run.completed, true);
     assert.deepEqual(sleeps, [5000, 5000]);
     assert.equal(run.ui.selectionUi.source, 'native');
@@ -221,7 +227,12 @@ test('migration runner replays each copy in order, stops on failure and derives 
     calls.length = 0;
     let setups = 0;
     const failing = (script, args) => { if (args[0] === '--setup') setups++; if (args.includes('--save') && setups === 2) { calls.push([script, ...args]); return {status: 1, stderr: 'Native manual-save file was not created'}; } return exec(script, args); };
-    const failed = await M.runMigration({catalog, proof, copies: copies(), runDir: dir, setupArgs: ['--source', 's'], exec: failing, sleep, log: quiet, digest});
+    removed = [];
+    const failed = await M.runMigration({catalog, proof, copies: copies(), runDir: dir, setupArgs: ['--source', 's'], exec: failing, sleep, log: quiet, digest, remove});
+    assert.deepEqual(removed, ['game', 'profile'], 'only the passing first copy is pruned; the failed copy and shared runtime stay');
+    removed = [];
+    await M.runMigration({catalog, proof, copies: copies(), runDir: dir, setupArgs: ['--source', 's'], exec, sleep, log: quiet, digest, remove, keepCopies: true});
+    assert.deepEqual(removed, []);
     assert.equal(failed.completed, false);
     assert.equal(failed.copies.length, 2);
     assert.match(failed.copies[1].steps.at(-1).error, /manual-save/);

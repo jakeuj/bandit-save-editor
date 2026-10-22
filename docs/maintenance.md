@@ -132,7 +132,7 @@ v2.1 可使用 repo 外 `--scenario` JSON：`baseline` 為 `[x,y,z,value]` 陣�
 
 1. 依上節核對 Steam 公告、`appmanifest_4267800.acf` 的 buildid，並以 `--audit-only` 取得 repo 外 audit；依 SID 比對各群組依賴的事件，確認後把新指紋加入 `extract-game.cjs` 的已核對清單並重建 catalog。
 2. macOS 先確認 `launcher/prepare-macos.py` 的四處路徑修正位置仍在，把新腳本雜湊加入 `SCRIPT_SHA256`，再以 `--output` 準備獨立的驗證副本，不覆寫玩家的 `~/bandit-mac-port`。補丁後的 `c3runtime.js` 雜湊必然不同於 catalog；`verify-game.cjs` 只在 `--package` 指向原始安裝、且 `prepare-macos.py --verify-runtime` 證明差異只來自已核對替換時才接受。
-3. 開啟並登入 Mac 版 Steam，執行流水線。每個副本複製一次完整遊戲，結束後可刪除 artifacts 目錄。Mac 副本不會佔用畫面：`package.json` 隱藏視窗並保留背景計時，測試 App 以固定 bundle ID 與 `LSBackgroundOnly` 執行，不出現在 Dock、不搶焦點，區域網路權限最多只詢問一次；`LSUIElement` 會讓 NW.js 載入 ICU 失敗而無法啟動，不能替代。遊戲找不到 `sys\sys.dat` 時預設全螢幕且有聲音，setup 會寫入不全螢幕、靜音的設定（Mac 路徑補丁不處理這個分隔符，檔名就是含反斜線的 `sys\sys.dat`）。
+3. 開啟並登入 Mac 版 Steam，執行流水線。Mac 的遊戲資料夾以 `cp -c` 建立 APFS clone，未修改的資源不另佔空間（`fs.cpSync` 即使指定 `COPYFILE_FICLONE` 仍會完整複製）；同一 artifacts 目錄的副本共用一份測試 App，來源 runtime 改變時才重建。通過的副本只保留 state、log 與證據 JSON，整輪完成後再刪共用 App；失敗的副本完整保留以便除錯，加 `--keep-copies` 可全部保留。一次完整排練約留下數 MB。Mac 副本不會佔用畫面：`package.json` 隱藏視窗並保留背景計時，測試 App 以固定 bundle ID 與 `LSBackgroundOnly` 執行，不出現在 Dock、不搶焦點，區域網路權限最多只詢問一次；`LSUIElement` 會讓 NW.js 載入 ICU 失敗而無法啟動，不能替代。遊戲找不到 `sys\sys.dat` 時預設全螢幕且有聲音，setup 會寫入不全螢幕、靜音的設定（Mac 路徑補丁不處理這個分隔符，檔名就是含反斜線的 `sys\sys.dat`）。
 
 ```sh
 node scripts/verify-migration.cjs --source PREPARED_COPY/game --runtime PREPARED_COPY/runtime/nwjs-sdk-v0.82.0-osx-arm64/nwjs.app/Contents/MacOS/nwjs --save-file PREPARED_COPY/game/savedir/ea1save.dat --artifacts /outside/repo/artifacts --package STEAM_LIBRARY/steamapps/common/塔防山贼模拟器

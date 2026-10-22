@@ -69,22 +69,36 @@ async function setup(){
  const dir=fs.mkdtempSync(path.join(artifacts,'bandit-editor-validation-')),game=path.join(dir,'game');
  let runtime;
  if(process.platform==='darwin'){
-  const app=path.join(dir,'BANDIT Editor Test.app');execFileSync('ditto',[path.resolve(originalRuntime,'../../..'),app]);
-  // One stable test identity, so macOS asks for local-network access once instead of once per copy.
-  execFileSync('plutil',['-replace','CFBundleIdentifier','-string','com.jakeuj.bandit.editor-test',path.join(app,'Contents/Info.plist')]);
-  execFileSync('plutil',['-replace','CFBundleName','-string','BANDIT Editor Test',path.join(app,'Contents/Info.plist')]);
-  // Background-only app: no Dock icon or activation, so isolated runs never take over the user's screen.
-  // LSUIElement is not an option: NW.js then fails to load its ICU data and exits at startup.
-  execFileSync('plutil',['-replace','LSBackgroundOnly','-bool','true',path.join(app,'Contents/Info.plist')]);
+  // Copies only differ in their game folder and profile, so one test app per artifacts folder serves them all;
+  // it is rebuilt when the source runtime changes.
+  const origin=path.resolve(originalRuntime,'../../..'),app=path.join(artifacts,'BANDIT Editor Test.app'),stampFile=path.join(artifacts,'BANDIT Editor Test.source.json');
+  const binary=fs.statSync(path.join(origin,'Contents/MacOS/nwjs')),stamp=JSON.stringify({origin:fs.realpathSync(origin),size:binary.size,mtime:binary.mtimeMs});
+  if(!fs.existsSync(app)||!fs.existsSync(stampFile)||fs.readFileSync(stampFile,'utf8')!==stamp){
+   fs.rmSync(app,{recursive:true,force:true});
+   // APFS clones share unchanged blocks with the source runtime; other volumes fall back to a full copy.
+   try{execFileSync('cp',['-cR',origin,app]);}catch{fs.rmSync(app,{recursive:true,force:true});execFileSync('ditto',[origin,app]);}
+   // One stable test identity, so macOS asks for local-network access once instead of once per copy.
+   execFileSync('plutil',['-replace','CFBundleIdentifier','-string','com.jakeuj.bandit.editor-test',path.join(app,'Contents/Info.plist')]);
+   execFileSync('plutil',['-replace','CFBundleName','-string','BANDIT Editor Test',path.join(app,'Contents/Info.plist')]);
+   // Background-only app: no Dock icon or activation, so isolated runs never take over the user's screen.
+   // LSUIElement is not an option: NW.js then fails to load its ICU data and exits at startup.
+   execFileSync('plutil',['-replace','LSBackgroundOnly','-bool','true',path.join(app,'Contents/Info.plist')]);
+   fs.writeFileSync(stampFile,stamp);
+  }
   runtime=path.join(app,'Contents/MacOS/nwjs');
  }else if(process.platform==='win32')runtime=path.join(game,path.basename(originalRuntime));
  else throw Error('Validation setup supports Windows and macOS');
- fs.cpSync(source,game,{recursive:true});fs.mkdirSync(path.join(dir,'cloud-mirror'));
+ // On macOS, cp -c makes APFS copy-on-write clones, so unchanged game assets take no extra space; fs.cpSync always
+ // copies in full even with COPYFILE_FICLONE. Other volumes and platforms fall back to a plain copy.
+ let cloned=false;
+ if(process.platform==='darwin')try{execFileSync('cp',['-cR',source,game]);cloned=true;}catch{fs.rmSync(game,{recursive:true,force:true});}
+ if(!cloned)fs.cpSync(source,game,{recursive:true});
+ fs.mkdirSync(path.join(dir,'cloud-mirror'));
  if(process.platform==='win32'){
   const runtimeDir=path.dirname(originalRuntime);
-  for(const name of fs.readdirSync(runtimeDir))if(/\.(dll|pak|bin)$/i.test(name)||['icudtl.dat','vk_swiftshader_icd.json',path.basename(originalRuntime)].includes(name))fs.copyFileSync(path.join(runtimeDir,name),path.join(game,name));
+  for(const name of fs.readdirSync(runtimeDir))if(/\.(dll|pak|bin)$/i.test(name)||['icudtl.dat','vk_swiftshader_icd.json',path.basename(originalRuntime)].includes(name))fs.copyFileSync(path.join(runtimeDir,name),path.join(game,name),fs.constants.COPYFILE_FICLONE);
   fs.mkdirSync(path.join(game,'locales'),{recursive:true});
-  for(const name of fs.readdirSync(path.join(runtimeDir,'locales')))fs.copyFileSync(path.join(runtimeDir,'locales',name),path.join(game,'locales',name));
+  for(const name of fs.readdirSync(path.join(runtimeDir,'locales')))fs.copyFileSync(path.join(runtimeDir,'locales',name),path.join(game,'locales',name),fs.constants.COPYFILE_FICLONE);
   const manifestPath=path.join(game,'package.json'),manifest=JSON.parse(fs.readFileSync(manifestPath,'utf8'));
   manifest.name='com.jakeuj.bandit.validation.'+path.basename(dir);manifest.window={...manifest.window,show:false};
   manifest['chromium-args']=(manifest['chromium-args']||'').replace('--disable-devtools','')+' --disable-background-timer-throttling';

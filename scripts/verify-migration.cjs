@@ -85,30 +85,37 @@ async function runCopy(copy, setupArgs, {exec, sleep, log}) {
 }
 
 // UI evidence for the tested build: carried when the declared UI events digest the same as the current proof.
-function uiEvidence(gameDir, proof, gameVersion, digest) {
+function uiEvidence(digests, proof, gameVersion) {
   const records = {selectionUi: proof.equipmentWorkflow?.groups?.equipmentAffixInitialSelection?.uiEvidence, qualityUi: proof.equipmentQuality?.groups?.equipmentQualityUpgrade?.uiEvidence};
   return Object.fromEntries(Object.entries(R.uiEvents).map(([check, sids]) => {
-    const eventDigest = digest(gameDir, sids), previous = records[check];
+    const eventDigest = digests[check], previous = records[check];
     if (previous?.eventDigest !== eventDigest) return [check, {source: 'pending', gameVersion, eventSids: sids, eventDigest}];
     if (previous.gameVersion === gameVersion) return [check, previous];
     return [check, {source: 'carried', gameVersion, eventSids: sids, eventDigest, carriedFrom: {gameVersion: previous.gameVersion, eventDigest}}];
   }));
 }
 
-async function runMigration({catalog, proof, copies, runDir, setupArgs, exec = defaultExec, sleep = defaultSleep, log = console.log, digest}) {
+const defaultRemove = target => fs.rmSync(target, {recursive: true, force: true, maxRetries: 5, retryDelay: 1000});
+
+async function runMigration({catalog, proof, copies, runDir, setupArgs, exec = defaultExec, sleep = defaultSleep, log = console.log, digest, keepCopies = false, remove = defaultRemove}) {
   for (const copy of copies) if (copy.scenario) {
     copy.scenarioFile = path.join(runDir, copy.name + '.json');
     fs.writeFileSync(copy.scenarioFile, JSON.stringify(copy.scenario));
   }
   const records = [];
+  let digests;
   for (const copy of copies) {
     const record = await runCopy(copy, setupArgs, {exec, sleep, log});
     records.push(record);
     if (!record.ok) break;
+    // Digest the UI events from the first passing copy before its game folder is pruned.
+    digests ??= Object.fromEntries(Object.entries(R.uiEvents).map(([check, sids]) => [check, digest(JSON.parse(fs.readFileSync(record.state, 'utf8')).game, sids)]));
+    // A passing copy keeps its state, logs and JSON evidence; the game folder and profile are only needed to debug failures.
+    if (!keepCopies) for (const name of ['game', 'profile']) remove(path.join(path.dirname(record.state), name));
   }
   const completed = records.length === copies.length && records.every(r => r.ok);
-  const gameDir = records.find(r => r.state) && JSON.parse(fs.readFileSync(records.find(r => r.state).state, 'utf8')).game;
-  const ui = completed && gameDir ? uiEvidence(gameDir, proof, catalog.gameVersion, digest) : {};
+  if (completed && !keepCopies) for (const name of ['BANDIT Editor Test.app', 'BANDIT Editor Test.source.json']) remove(path.join(runDir, name));
+  const ui = completed && digests ? uiEvidence(digests, proof, catalog.gameVersion) : {};
   const results = {date: new Date().toISOString(), gameVersion: catalog.gameVersion, platform: `${process.platform}-${process.arch}`, completed, copies: records.map(({state, ...r}) => r), ui, checks: provenChecks(records, ui)};
   fs.writeFileSync(path.join(runDir, 'results.json'), JSON.stringify(results, null, 2));
   return results;
@@ -178,7 +185,7 @@ function writeBack({dir = root, catalog, proof, results, steamBuild, exec = (scr
 async function main() {
   const args = process.argv.slice(2), opt = key => args.includes(key) ? args[args.indexOf(key) + 1] : undefined;
   if (args.includes('--help') || !opt('--source') || !opt('--runtime') || !opt('--save-file') || !opt('--artifacts')) {
-    console.log('Node 22+: verify-migration.cjs --source PREPARED_GAME --runtime NWJS --save-file BASE.dat --artifacts OUTSIDE_REPO [--package STEAM_GAME_DIR (macOS)] [--catalog CATALOG.json] [--copies name,name]');
+    console.log('Node 22+: verify-migration.cjs --source PREPARED_GAME --runtime NWJS --save-file BASE.dat --artifacts OUTSIDE_REPO [--package STEAM_GAME_DIR (macOS)] [--catalog CATALOG.json] [--copies name,name] [--keep-copies]');
     return;
   }
   const artifacts = fs.realpathSync(opt('--artifacts')), rel = path.relative(root, artifacts);
@@ -190,7 +197,7 @@ async function main() {
   const copies = buildScenarios({catalog, saveText: fs.readFileSync(opt('--save-file'), 'utf8')}).filter(c => !only || only.includes(c.name));
   const runDir = fs.mkdtempSync(path.join(artifacts, 'migration-'));
   const setupArgs = ['--source', opt('--source'), '--runtime', opt('--runtime'), '--save-file', opt('--save-file'), '--artifacts', runDir, '--catalog', catalogPath, ...(opt('--package') ? ['--package', opt('--package')] : [])];
-  const results = await runMigration({catalog, proof, copies, runDir, setupArgs, digest: (dir, sids) => eventDigest(inspectGame(dir), sids)});
+  const results = await runMigration({catalog, proof, copies, runDir, setupArgs, keepCopies: args.includes('--keep-copies'), digest: (dir, sids) => eventDigest(inspectGame(dir), sids)});
   if (!only) {
     // The Steam manifest sits two levels above the game directory; its build id is recorded when present.
     const manifest = opt('--package') && path.join(path.resolve(opt('--package')), '../../appmanifest_4267800.acf');
