@@ -122,3 +122,28 @@ test('UI proofs are accepted natively or carried only with an unchanged event di
     assert.equal(R.uiEvidenceProblem(group, record, catalog.gameVersion), null, group);
   }
 });
+
+test('representative scenarios replay on the base save and together cover every write group',()=>{
+  const {buildScenarios} = require('../scripts/migration-scenarios.cjs'), S = require('../scripts/verification-suite.cjs');
+  const data = Array.from({length: 2501}, () => Array.from({length: 60}, () => Array(22).fill(0)));
+  data[0][0][1] = 'szmnqea'; data[1][1][0] = '山寨'; data[1][0][2] = 1; data[1][1][2] = '驗證甲'; data[1][3][2] = 1;
+  for (const y of [10, 11, 12]) data[1][y][2] = 50;
+  // A placed academy (5) and drill ground (6) that have not finished their first build.
+  for (const [x, template] of [[4, 5], [12, 6]]) { data[x][0][1] = x; data[x][1][1] = template; }
+  const saveText = JSON.stringify({c2array: true, size: [2501, 60, 22], data});
+  const copies = buildScenarios({catalog, saveText});
+  const covered = copies.flatMap(c => c.groups || S.families[c.family].groups);
+  assert.deepEqual([...new Set(covered)].sort(), Object.keys(catalog.verification).sort());
+  const byName = Object.fromEntries(copies.map(c => [c.name, c]));
+  const level = (c, x, y, z) => c.scenario.baseline.filter(([a, b, d]) => a === x && b === y && d === z).at(-1)?.[3];
+  assert.equal(level(byName['advanced-normal'], 4, 5, 1), 1);
+  assert.equal(level(byName['advanced-normal'], 12, 5, 1), 1);
+  assert.deepEqual(byName['advanced-normal'].scenario.operations.find(o => o.method === 'setAdvancedTechnologyLevel').options, {technologyId: 31, level: 119, advanced: false});
+  assert.equal(byName['advanced-overcap'].scenario.operations.find(o => o.options.technologyId === 33).options.level, 299);
+  assert.deepEqual(byName['batch2'].scenario.operations.filter(o => o.method === 'setEquipmentAffixCoefficient').map(o => o.options.coefficient), [10.01, 80, 10, 80, 50, 120, 50, 119.99]);
+  assert.deepEqual(byName['equipment-workflow'].scenario.operations.filter(o => o.options.selectUnwashedSlot).map(o => o.options.plane), [7, 9]);
+  for (const name of ['quality-7-Upgrade', 'quality-9-Downgrade']) assert.ok(byName[name].scenario.items.some(i => i.options.quality === 2), name);
+  for (const c of copies.filter(c => c.scenario)) assert.ok(c.scenario.operations.length > 0 && c.scenario.observe.length >= 10, c.name);
+  data[12][1][1] = 7;
+  assert.throws(() => buildScenarios({catalog, saveText: JSON.stringify({c2array: true, size: [2501, 60, 22], data})}), /基準存檔需要已放置的校場/);
+});

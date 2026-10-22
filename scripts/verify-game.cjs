@@ -36,6 +36,29 @@ function ownedProcess(state){
  let command;try{command=execFileSync('ps',['-p',String(state.pid),'-o','command='],{encoding:'utf8'});}catch{return false;}
  if(!command.includes(state.game))throw Error('PID no longer belongs to disposable game');return true;
 }
+// Names, the three growth results, common pool and refund basis observed when a scenario adds no cells.
+const defaultCells=[[1,1,0],[1,1,2],[1,3,2],[1,4,2],[1,1,4],[1,1,5],[1,31,2],[1,40,2],[2,2,0],[1,56,2]];
+// The page's editor core with every candidate gate open, only inside this VM.
+function loadCore(catalog){
+ const core=fs.readFileSync(path.join(root,'src/core.js'),'utf8').replace('/*__KNOWLEDGE__*/null',JSON.stringify(catalog)),ctx={};vm.runInNewContext(core,ctx);const C=ctx.SaveCore;
+ for(const k of Object.keys(C.KNOWLEDGE.verification))C.KNOWLEDGE.verification[k]=true;
+ return C;
+}
+// Disposable baseline plus the named editor operations every validation copy carries.
+function editSave(C,saveText,scenario){
+ const base=JSON.parse(saveText.replace(/^\uFEFF/,''));
+ // Only the disposable baseline changes; the actual editor still performs precise raw-text edits.
+ base.data[1][3][2]=1;base.data[1][4][2]=0;base.data[1][50][2]=0;base.data[1][1][4]=1;base.data[1][1][5]=0;base.data[1][5][0]=5;base.data[1][59][2]=0;base.data[1][6][2]=1;base.data[1][31][2]=1;base.data[1][40][2]=0;base.data[1][22][2]=15;
+ for(const [x,y,z,value]of scenario?.baseline||[])base.data[x][y][z]=value;
+ const model=C.parse(JSON.stringify(base));
+ C.transaction(model,()=>{C.setField(model,{x:1,y:1,z:0},'驗證山寨');C.setField(model,{x:1,y:1,z:2},'驗證甲');});
+ C.addExperience(model,{kind:'character',characterId:1,amount:6500});
+ C.addExperience(model,{kind:'profession',characterId:1,id:1,amount:6500});
+ C.addExperience(model,{kind:'profession',characterId:1,id:1,amount:1.5});
+ C.addExperience(model,{kind:'skill',characterId:1,id:1,amount:21500});
+ for(const operation of scenario?.operations||[]){if(!['setEquipmentLevel','setProfessionTrainingCap','setAdvancedTechnologyLevel','setEquipmentAffixCoefficient','setPillAptitudeBonus','setEquipmentAffix','setEquipmentQuality'].includes(operation.method))throw Error('Unsupported scenario operation');C[operation.method](model,operation.options);}
+ return model;
+}
 async function setup(){
  const source=path.resolve(opt('--source',path.join(os.homedir(),'bandit-mac-port/game'))),originalRuntime=path.resolve(opt('--runtime',path.join(os.homedir(),'bandit-mac-port/runtime/nwjs-sdk-v0.82.0-osx-arm64/nwjs.app/Contents/MacOS/nwjs')));
  const catalog=JSON.parse(fs.readFileSync(path.resolve(opt('--catalog',path.join(root,'knowledge/catalog.json'))),'utf8'));
@@ -71,20 +94,9 @@ async function setup(){
   const info=path.join(path.dirname(saveFile),'saveinfo.dat');if(fs.existsSync(info))fs.copyFileSync(info,path.join(game,folder,'saveinfo.dat'));
  }
  before[saveFile]=sum(saveFile);
- const core=fs.readFileSync(path.join(root,'src/core.js'),'utf8').replace('/*__KNOWLEDGE__*/null',JSON.stringify(catalog)),ctx={};vm.runInNewContext(core,ctx);const C=ctx.SaveCore;
- for(const k of Object.keys(C.KNOWLEDGE.verification))C.KNOWLEDGE.verification[k]=true;
- const base=JSON.parse(fs.readFileSync(saveFile,'utf8').replace(/^\uFEFF/,''));
- // Only the disposable baseline changes; the actual editor still performs precise raw-text edits.
- base.data[1][3][2]=1;base.data[1][4][2]=0;base.data[1][50][2]=0;base.data[1][1][4]=1;base.data[1][1][5]=0;base.data[1][5][0]=5;base.data[1][59][2]=0;base.data[1][6][2]=1;base.data[1][31][2]=1;base.data[1][40][2]=0;base.data[1][22][2]=15;
+ const C=loadCore(catalog);
  const scenarioPath=opt('--scenario'),scenario=scenarioPath?JSON.parse(fs.readFileSync(scenarioPath,'utf8')):null;
- for(const [x,y,z,value]of scenario?.baseline||[])base.data[x][y][z]=value;
- const model=C.parse(JSON.stringify(base));
- C.transaction(model,()=>{C.setField(model,{x:1,y:1,z:0},'驗證山寨');C.setField(model,{x:1,y:1,z:2},'驗證甲');});
- C.addExperience(model,{kind:'character',characterId:1,amount:6500});
- C.addExperience(model,{kind:'profession',characterId:1,id:1,amount:6500});
- C.addExperience(model,{kind:'profession',characterId:1,id:1,amount:1.5});
- C.addExperience(model,{kind:'skill',characterId:1,id:1,amount:21500});
- for(const operation of scenario?.operations||[]){if(!['setEquipmentLevel','setProfessionTrainingCap','setAdvancedTechnologyLevel','setEquipmentAffixCoefficient','setPillAptitudeBonus','setEquipmentAffix','setEquipmentQuality'].includes(operation.method))throw Error('Unsupported scenario operation');C[operation.method](model,operation.options);}
+ const model=editSave(C,fs.readFileSync(saveFile,'utf8'),scenario);
  const modified=C.serialize(model),expected=JSON.parse(modified).data;
  for(let slot=1;slot<=3;slot++)fs.writeFileSync(path.join(game,`savedir/ea${slot}save.dat`),modified);
  fs.mkdirSync(path.join(game,'backup'),{recursive:true});
@@ -98,7 +110,7 @@ async function setup(){
  fs.appendFileSync(path.join(game,'greenworks.js'),guard);
  fs.appendFileSync(path.join(game,'greenworks.js'),`\n(()=>{const gw=module.exports,fs=require('fs'),path=require('path'),base=${JSON.stringify(dir)},init=gw.init;gw.init=function(...a){const result=init.apply(this,a);fs.writeFileSync(path.join(base,'steam-init.json'),JSON.stringify({initialized:true,platform:process.platform,arch:process.arch,nw:process.versions.nw}));return result;};if(typeof gw.enableCloud==='function')gw.enableCloud=()=>{fs.appendFileSync(path.join(base,'steam-writes.jsonl'),JSON.stringify({method:'enableCloud'})+'\\n');return true;};})();\n`);
  const port=Number(opt('--port','19384'));
- const cells=scenario?.observe||[[1,1,0],[1,1,2],[1,3,2],[1,4,2],[1,1,4],[1,1,5],[1,31,2],[1,40,2],[2,2,0],[1,56,2]];
+ const cells=scenario?.observe||defaultCells;
  const state={dir,game,source,runtime,port,fingerprints,sourceHashes,runtimePatch,before,cells,gameVersion:catalog.gameVersion,expected:cells.map(([x,y,z])=>expected[x][y][z]),assertions:[]};
  state.pid=launch(state);
  fs.writeFileSync(path.join(dir,'state.json'),JSON.stringify(state,null,2));console.log('STATE '+path.join(dir,'state.json'));
@@ -153,4 +165,4 @@ async function run(){
  if(args.includes('--stop')){if(!ownedProcess(state))throw Error('Disposable process already stopped');if(process.platform==='win32')execFileSync('taskkill',['/PID',String(state.pid),'/T','/F'],{windowsHide:true});else process.kill(state.pid,'SIGTERM');console.log('Stopped disposable test game');}
 }
 if(require.main===module)run().catch(e=>{console.error(e.stack);process.exitCode=1;});
-module.exports={CDP,connect,evaluate,waitMain,checkSource};
+module.exports={CDP,connect,evaluate,waitMain,checkSource,loadCore,editSave,defaultCells};
