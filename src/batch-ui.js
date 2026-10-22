@@ -12,6 +12,7 @@
   const kind=$('batchKind').value,characters=C.listEntities(model,'characters');
   $('batchCharacterScope').hidden=kind!=='characterExperience';
   $('batchSingleCharacter').hidden=!['professionExperience','skillExperience'].includes(kind);
+  $('batchSkillRestoreNote').hidden=kind!=='skillExperience';
   $('batchEquipmentOptions').hidden=kind!=='equipmentMax';$('batchValueLabel').hidden=kind==='equipmentMax';
   $('batchIncludeEquipped').disabled=$('batchPlane').value!=='9';
   $('batchNumberLabel').textContent=kind==='technologyLevel'?'目標存檔值（遊戲 Lv = 此值 + 1）':'每個目標增加的經驗';

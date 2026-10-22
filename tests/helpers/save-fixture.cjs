@@ -29,4 +29,21 @@ function saveFixture({size = 221, characters = 0, exclusions = false} = {}) {
   return {data, raw: renderSave(data), expected: patches => renderSave(data, patches)};
 }
 
-module.exports = {renderSave, saveFixture};
+function skillCapsFixture({size = 2501, characters = 2500, exclusions = true, nearCapId = characters} = {}) {
+  const {data} = saveFixture({size, characters});
+  for (let id = 1; id <= characters; id++) {
+    [28, 20, 10, 10, 10, 10, 10, 10, 10].forEach((cap, i) => { data[id][22 + i][2] = cap; });
+    for (let i = 0; i < 3; i++) { data[id][1 + i][12] = i + 1; data[id][21 + i][12] = 1; }
+  }
+  if (nearCapId) { data[nearCapId][31][2] = 27; data[nearCapId][40][2] = 0.5; }
+  if (exclusions) {
+    data[1][2][2] = 1;
+    data[2][55][2] = 2;
+    data[3][50][2] = 1;
+    // Individually bounded values with no shared primary/secondary witness.
+    for (let i = 0; i < 9; i++) data[4][22 + i][2] = 28;
+  }
+  return {data, raw: renderSave(data), expected: patches => renderSave(data, patches)};
+}
+
+module.exports = {renderSave, saveFixture, skillCapsFixture};

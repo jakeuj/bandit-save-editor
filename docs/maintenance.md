@@ -38,7 +38,7 @@ npm run verify:release
 
 欄位圖鑑摘要由 `src/knowledge-ui.js` 讀取同一份內嵌知識的 `K.gameVersion`。摘要正確不代表其他標籤已同步：本次 V1.0.10.2 首次發布時曾出現摘要為新版、標籤仍為舊版，後由提交 `7adcb01` 修正。`tests/knowledge.test.cjs` 目前核對六個標記均等於內嵌的 `gameVersion`；新增或移除標示時，連同預期數量一起調整。`--check` 會重算產物，拒絕版本文字或 PWA 內容未同步的提交。
 
-更新順序為核對來源與實測紀錄、重建 catalog、執行建置及測試，再提交 catalog、驗證紀錄與產生的 HTML／`sw.js`。版本標示只是呈現知識基準，開放寫入仍受完整來源指紋及 `verification.json` 限制。側欄以醒目的「遊戲版本」顯示這個標記，讓玩家確認存檔對應的遊戲版本；其下的「修改器 v2.7」是工具發布版本，用於對照更新說明、回報問題與確認 PWA 已更新，和 Mac runtime 相容版本一樣不隨此標記改寫。手機版隱藏側欄底部，遊戲版本仍可在職業與欄位圖鑑標籤看到。
+更新順序為核對來源與實測紀錄、重建 catalog、執行建置及測試，再提交 catalog、驗證紀錄與產生的 HTML／`sw.js`。版本標示只是呈現知識基準，開放寫入仍受完整來源指紋及 `verification.json` 限制。側欄以醒目的「遊戲版本」顯示這個標記，讓玩家確認存檔對應的遊戲版本；其下的「修改器 v2.8」是工具發布版本，用於對照更新說明、回報問題與確認 PWA 已更新，和 Mac runtime 相容版本一樣不隨此標記改寫。手機版隱藏側欄底部，遊戲版本仍可在職業與欄位圖鑑標籤看到。
 
 ## PWA 維護與驗收
 
@@ -116,7 +116,7 @@ node scripts/extract-game.cjs --source /path/to/unpacked/game --audit-only --aud
 
 1. 追查初始化、讀寫、計算與刪除，記錄欄位型別、值域、關聯及來源 SID；複雜或未釐清項目維持唯讀。
 2. 用合成資料測試非法型別、跨級、上限、交易回滾、完整復原及精確 token 替換。
-3. 以 `scripts/verify-game.cjs --help` 查看隔離驗證入口。此工具需要 Windows 或 macOS、Node.js 22+、解包的遊戲、同平台 NW.js runtime 及已登入的 Steam；來源須與 catalog 的全部 13 個指紋相符。Windows 傳入安裝目錄的 `game.exe`，工具會複製 runtime 至隔離遊戲目錄。用 `--catalog` 指定候選目錄、`--save-file` 指定唯讀來源存檔、`--artifacts` 指定已存在的 repo 外目錄；不能沿用不同 runtime 的驗證紀錄。
+3. 以 `scripts/verify-game.cjs --help` 查看隔離驗證入口。此工具需要 Windows 或 macOS、Node.js 22+、解包的遊戲、同平台 NW.js runtime 及已登入的 Steam；來源須與 catalog 的完整15個指紋（13個基礎加yx／tz）相符。Windows 傳入安裝目錄的 `game.exe`，工具會複製 runtime 至隔離遊戲目錄。用 `--catalog` 指定候選目錄、`--save-file` 指定唯讀來源存檔、`--artifacts` 指定已存在的 repo 外目錄；不能沿用不同 runtime 的驗證紀錄。
 4. 確認遊戲載入、遊戲寫檔、停止測試程序後重啟讀回及來源存檔雜湊；測試只在獨立 app／遊戲／profile 中執行，保留授權初始化，Steam 寫入導向本機鏡像與紀錄。
 5. 將去識別結果與相符指紋寫入 `verification.json`，再開啟對應群組。建置會核對全部來源指紋、檢查結果及群組覆蓋，未通過就停止。
 6. 在 `scripts/verification-requirements.cjs` 加入群組的證明區段與必要 checks，在 `scripts/verification-suite.cjs` 指定重驗家族與每個 check 的步驟，並在 `scripts/migration-scenarios.cjs` 補代表情境。漏加時建置與 `tests/version-migration.test.cjs` 會失敗，避免改版後無法重驗。
@@ -274,7 +274,7 @@ options可帶`signal`取消與`onProgress({done,total})`；套用可帶`preview`
 
 資質與丹藥具名操作共用`aptitude:角色ID`六欄累計還原群組，包括有名角色既有丹藥操作的三欄還原；寫入值域維持原限制。復原一步仍按交易，失敗不留下變更。下調資質使現有B超出新C就阻擋，不默改B或依目前持有丹藥猜測歷史來源。
 
-生成器`random-character-growth-data.cjs`核對招募SID與公式後建立`catalog.randomCharacterGrowth`；來源／規則／資質資料變動關閉新旗標。`randomCharacterBaseAptitudes`有獨立section、family、代表情境與逐項checks，建置核對15來源、規則及天賦／裝備必要資料SHA、核心資質／穿戴檢查計算區段SHA。新增欄位仍由三份驗證需求／清單／遷移情境及版本遷移測試共同覆蓋，v2.7共23個已開放群組；v2.8 A另增1個關閉的候選群組。
+生成器`random-character-growth-data.cjs`核對招募SID與公式後建立`catalog.randomCharacterGrowth`；來源／規則／資質資料變動關閉新旗標。`randomCharacterBaseAptitudes`有獨立section、family、代表情境與逐項checks，建置核對15來源、規則及天賦／裝備必要資料SHA、核心資質／穿戴檢查計算區段SHA。新增欄位仍由三份驗證需求／清單／遷移情境及版本遷移測試共同覆蓋，v2.7共23個已開放群組；v2.8 A另增1個候選群組，B取得完整獨立證明後合併為第24個。
 
 初次驗證用`verify-random-character-suite.cjs`，參數沿用`--source`、`--runtime`、`--save-file`、`--artifacts`與Mac的`--package`；未帶`--record`只驗證，全部成功後帶此參數才合併新section與旗標，保留原有22群組完整證明。`verify-random-character-growth.cjs`比對原生A／B／C；`verify-random-character-lifecycle.cjs`每階段原生存檔、停止、新PID讀回，另有`--compare`重查最後結果。新群組首次完整矩陣24角色及2角色生命週期；未來版本遷移採Q1／Q6代表子集，同指紋仍只比較。
 
@@ -282,10 +282,30 @@ options可帶`signal`取消與`onProgress({done,total})`；套用可帶`preview`
 
 桌面、390px、PWA斷網及一般Edge直接file開啟獨立HTML均已用2501×60×22合成檔完成新功能編輯、預覽及實際下載，逐字符合獨立token預期；桌面、390px與Edge file流程另完成群組還原及復原。直接file結果只涵蓋本版新功能，不代替`sdd/save-knowledge`其他歷史待辦；網路模擬與viewport測後恢復。2026-10-22依使用者授權，與v2.6一併以`5d5c55b`推送並完成[Pages正式發布驗證](research/random-character-growth.md#v27-正式發布驗證)；兩案SDD均保留原位置。
 
-## v2.8 A：技藝上限核心，尚未開放
+## v2.8 A 交付紀錄：技藝上限核心，當時尚未開放
 
 詳見[研究與A／B界線](research/random-character-skill-caps.md)及[SDD任務](../sdd/random-character-skill-caps/tasks.md)。`randomCharacterSkillCapsInfo(model,{characterId})`查資格；`previewCharacterSkillCaps(model,{characterId,caps})`接受九個安全整數，回九列C／L／E、共同生成見證及差異；`setCharacterSkillCaps(model,request,{preview})`要求同模型、同請求且未過期的核心預覽，重驗後一次提交。同值不新增歷史；降低到有餘額的目前等級時阻擋。預覽物件的changes不具執行權限。
 
 第一次有效cap調整後，該角色全部技藝cap／L／E累計一起還原；之前及之後的單項／九項經驗都納入。`restoreAll(model)`清除差異及私有群組模式；勿再直接clear changes來實作還原全部。undo回上一筆交易，含群組模式。已知z2 y22–48在未啟用列也維持唯讀，舊set／自訂座標不能繞過。
 
-生成器新增`random-character-skill-caps-data.cjs`，獨立群組`randomCharacterSkillCaps`保持false；沒有randomCharacterTalents寫入群組。proof綁15來源、最小規則／天賦選取資料及整份未嵌入知識的core摘要。原生family尚有pendingReason；oracle／lifecycle與初次merge入口明確拒絕，不能當作已完成runner。所有既有23組證明保持原檔；包含候選群組的全套遷移尚無法完成，選取已就緒副本則可重驗舊群組，寫回保持新群組關閉。同指紋仍只比較。B完成UI及獨立證明前不改玩家版號／更新紀錄。
+A交付時，生成器新增`random-character-skill-caps-data.cjs`，獨立群組`randomCharacterSkillCaps`保持false；沒有randomCharacterTalents寫入群組。proof綁15來源、最小規則／天賦選取資料及整份未嵌入知識的core摘要。當時原生family帶pendingReason，oracle／lifecycle與初次merge入口明確拒絕；既有23組證明保持原檔，包含候選群組的全套遷移無法完成。這是歷史狀態；B的實作及首次驗收見下節與[B任務](../sdd/random-character-skill-caps-b/tasks.md)。同指紋遷移仍只比較。
+
+## v2.8 B：介面與首次獨立證明
+
+此節接續上節A交付歷史，實際完成狀態見[B任務](../sdd/random-character-skill-caps-b/tasks.md)及[研究紀錄](research/random-character-skill-caps.md)。角色養成新增九上限輸入與完整九列C/L/E預覽，輸入／角色／模型變化使舊預覽失效；套用必須帶核心產生的原始preview，不能用自建changes執行。角色、批次及變更列表顯示27欄累計還原範圍，其他角色保留原分組。
+
+首次開放入口：
+
+```sh
+node scripts/verify-skill-caps-suite.cjs --source PREPARED_GAME --runtime NWJS --save-file BASE.dat --artifacts OUTSIDE_REPO --package STEAM_GAME_DIR
+```
+
+Mac沿用已核對的準備副本，`--package`指向原始安裝目錄。未帶`--record`只產生repo外結果；完成完整驗收後才以同一入口的`--record`寫入，或由維護程式將本次實際`results.json`傳給匯出的`recordProof`，它會重新驗證完整結果與目前來源／資料／core摘要。正式CLI與匯出的合併介面都不能接受只有全true的checks。
+
+首次矩陣108角色覆蓋六品質、九主位置、升降方向與不同次位置；另有兩角色生命週期副本、招募與有名回填對照。矩陣後九技藝批次與後續原生經驗、剛達cap／已封頂／提高後原生成長分開驗證。有效階段各自原版存檔、停止及新PID讀回，來源／原檔hash與階段PID／存檔SHA鏈必須相符。公開proof保留manifest／證據摘要，不提交原始report或玩家資料。
+
+`random-character-skill-caps-proof.cjs`綁15來源、最小規則／天賦選取資料及整份未嵌入知識的core。修改共享核心後須重驗此群組；既有群組維持各自摘要及證明，不改hash冒充重驗。首次合併只加本群組及section，四產物寫入／建置／check任一步失敗會完整回滾。代表遷移維持Q1／Q6矩陣及兩角色生命週期，同指紋只比較（忽略fingerprint物件key排序）；沒有完整初次證明不能藉遷移第一次開放。天賦編輯仍另案。
+
+新UI有Node事件與HTTP桌面／390px、file、PWA三種環境案例。閘門關閉時headless成功只代表預覽與停用；正式開放後須重新跑成功套用、交錯經驗、27欄還原／復原及實際下載重載。詳細流程及輸出在[測試指引](testing.md)。
+
+2026-10-22 B已完成108＋2完整隔離矩陣及13階段，正式合併為第24群組；來源仍為V1.0.10.2／build26094666，V1.0.11.2公告不代表已驗證。既有23群組紀錄完整保留，核心未更動；詳細實測與發布分層結果見[研究紀錄](research/random-character-skill-caps.md)及[B任務](../sdd/random-character-skill-caps-b/tasks.md)。

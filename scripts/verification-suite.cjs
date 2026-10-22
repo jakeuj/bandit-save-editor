@@ -14,9 +14,9 @@ const nativeLifecycleChecks = {load: 'load', save: 'save', restart: 'reload', or
 const families = {
   randomCharacterSkillCaps: {
     groups:['randomCharacterSkillCaps'],
-    pendingReason:'A 階段只有規則與核心測試；B 階段原生矩陣及逐階段存讀尚未完成',
+    initialProofRequired:true,
     oracle:'verify-random-character-skill-caps.cjs', lifecycle:['verify-skill-caps-lifecycle.cjs'],
-    checks:{load:'load',save:'save',restart:'reload',originalHashes:'assert',nativeEffects:'oracleCompare',nativeRecruitment:'oracle',numericUpdate:'lifecycle',nativeSkillExperience:'lifecycle',capRemainderTiming:'lifecycle',batchCompatibility:'oracleCompare',nativeTransfer:'lifecycle',nativePrison:'lifecycle',nativeRebirth:'lifecycle',nativeDismiss:'lifecycle',stageRoundtrips:'lifecycle'}
+    checks:{load:'load',save:'save',restart:'reload',originalHashes:'assert',nativeEffects:'oracleCompare',nativeRecruitment:'lifecycle',numericUpdate:'lifecycle',nativeSkillExperience:'lifecycle',capRemainderTiming:'lifecycle',batchCompatibility:'oracleCompare',nativeTransfer:'lifecycle',nativePrison:'lifecycle',nativeRebirth:'lifecycle',nativeDismiss:'lifecycle',stageRoundtrips:'lifecycle'}
   },
 
   growth: {

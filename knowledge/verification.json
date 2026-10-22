@@ -44,7 +44,8 @@
     "backpackEquipmentQualityDowngrade": true,
     "equipmentQualityUpgrade": true,
     "equipmentQualityDowngrade": true,
-    "randomCharacterBaseAptitudes": true
+    "randomCharacterBaseAptitudes": true,
+    "randomCharacterSkillCaps": true
   },
   "scenarios": [
     "山寨與角色改名",
@@ -897,6 +898,99 @@
           "nativeEffects": true,
           "numericUpdate": true,
           "nativePills": true,
+          "nativeTransfer": true,
+          "nativePrison": true,
+          "nativeRebirth": true,
+          "nativeDismiss": true,
+          "stageRoundtrips": true
+        }
+      }
+    }
+  },
+  "randomCharacterSkillCaps": {
+    "date": "2026-10-22",
+    "platform": "darwin-arm64",
+    "gameVersion": "V1.0.10.2",
+    "fingerprints": {
+      "data.json": "32a36accc1b97e9bb3498eb3be76950e1e72b2e8f7a0cf9ce293b57aa5e0d820",
+      "scripts/c3runtime.js": "1e1643722efc032824881f03ce4d81df1135e6a8cd8e08d9fd87e56e480ac9f6",
+      "cl.json": "c121cf702eb6a4edb184d7180ad83d41aa90efca4a1e5e21e652dd1ff24f47b7",
+      "js.json": "5c360c93cd1248fe96d0373428ddae4649698574d032b333432e4b777fcc0ee4",
+      "zy.json": "8dd8ccc0a6318d3e3a58bc4d9951fb57d281b812e8b3ce1ba68847eb5283c75c",
+      "sx.json": "6a24e20ad0a70d5ad17a0310f0a9e7619dda5c4718d536a3df51d385abd748e7",
+      "wp.json": "14516d34cedf209c497fca10699e179c26c43558c2a3253bc87c8b33493a82c4",
+      "kj.json": "b051136f1366eb1c990004a4fa8a2d8f90339c7defbc10eb90c68c2ff36e5309",
+      "jz.json": "cf4d691dc7f6814db5ba1e0e28ac206d7a15c58ddccba55a473975461841b0bf",
+      "rw.json": "705f541917d9a62cff9ef5805032fd29496fdc98b03a7f065ff3fc6fab937b4b",
+      "tf.json": "c8a3005201d8f17a0899584baf7e0286b073aa84d4697807edcd44e00902fa1f",
+      "ss.json": "4350cb979c4026ce0d8dc25e7807fde3d29a1d42fbd2e499673614a4f67e1bc7",
+      "lw.json": "7a4f5a5bfd5967f3a74e36aa9a0c2cda132619b2908bdc39b1406da4b346bde6",
+      "yx.json": "58b8eb984cf8190f52ed4e53d044079733cf82096224dd7014ec36e1da2b45bc",
+      "tz.json": "a4b008981f39abc371b5673abe4c780bef5c91229a5ae3a42d2e8fef4e780c74"
+    },
+    "dataHash": "d60b2d38a7e1174db75d7c37187240183f31be2523a185e291c9a8c5b7b5e18e",
+    "formulaHash": "26d02971b7f595b294ba007029eb1100506b2c319ea69901787ca802ff516a9c",
+    "coverage": "initial-matrix",
+    "copies": [
+      {
+        "name": "random-skill-caps-matrix",
+        "operations": 108
+      },
+      {
+        "name": "random-skill-caps-lifecycle",
+        "operations": 2
+      }
+    ],
+    "validation": {
+      "version": 1,
+      "runner": "verify-skill-caps-suite.cjs",
+      "matrixCases": 108,
+      "lifecycleCases": 2,
+      "manifestHash": "614d3ee0d8c8ba217efa4a705b41709499d4772b2679aa571c52b3e0bc47e2c3",
+      "evidenceHash": "aaaf07075acf2ea337059f896b4d4efbf80dc663f912c8bb0640017b6b09fe0a"
+    },
+    "initialVerification": {
+      "coverage": "initial-matrix",
+      "gameVersion": "V1.0.10.2",
+      "fingerprints": {
+        "data.json": "32a36accc1b97e9bb3498eb3be76950e1e72b2e8f7a0cf9ce293b57aa5e0d820",
+        "scripts/c3runtime.js": "1e1643722efc032824881f03ce4d81df1135e6a8cd8e08d9fd87e56e480ac9f6",
+        "cl.json": "c121cf702eb6a4edb184d7180ad83d41aa90efca4a1e5e21e652dd1ff24f47b7",
+        "js.json": "5c360c93cd1248fe96d0373428ddae4649698574d032b333432e4b777fcc0ee4",
+        "zy.json": "8dd8ccc0a6318d3e3a58bc4d9951fb57d281b812e8b3ce1ba68847eb5283c75c",
+        "sx.json": "6a24e20ad0a70d5ad17a0310f0a9e7619dda5c4718d536a3df51d385abd748e7",
+        "wp.json": "14516d34cedf209c497fca10699e179c26c43558c2a3253bc87c8b33493a82c4",
+        "kj.json": "b051136f1366eb1c990004a4fa8a2d8f90339c7defbc10eb90c68c2ff36e5309",
+        "jz.json": "cf4d691dc7f6814db5ba1e0e28ac206d7a15c58ddccba55a473975461841b0bf",
+        "rw.json": "705f541917d9a62cff9ef5805032fd29496fdc98b03a7f065ff3fc6fab937b4b",
+        "tf.json": "c8a3005201d8f17a0899584baf7e0286b073aa84d4697807edcd44e00902fa1f",
+        "ss.json": "4350cb979c4026ce0d8dc25e7807fde3d29a1d42fbd2e499673614a4f67e1bc7",
+        "lw.json": "7a4f5a5bfd5967f3a74e36aa9a0c2cda132619b2908bdc39b1406da4b346bde6",
+        "yx.json": "58b8eb984cf8190f52ed4e53d044079733cf82096224dd7014ec36e1da2b45bc",
+        "tz.json": "a4b008981f39abc371b5673abe4c780bef5c91229a5ae3a42d2e8fef4e780c74"
+      },
+      "dataHash": "d60b2d38a7e1174db75d7c37187240183f31be2523a185e291c9a8c5b7b5e18e",
+      "formulaHash": "26d02971b7f595b294ba007029eb1100506b2c319ea69901787ca802ff516a9c",
+      "version": 1,
+      "runner": "verify-skill-caps-suite.cjs",
+      "matrixCases": 108,
+      "lifecycleCases": 2,
+      "manifestHash": "614d3ee0d8c8ba217efa4a705b41709499d4772b2679aa571c52b3e0bc47e2c3",
+      "evidenceHash": "aaaf07075acf2ea337059f896b4d4efbf80dc663f912c8bb0640017b6b09fe0a"
+    },
+    "groups": {
+      "randomCharacterSkillCaps": {
+        "checks": {
+          "load": true,
+          "save": true,
+          "restart": true,
+          "originalHashes": true,
+          "nativeEffects": true,
+          "nativeRecruitment": true,
+          "numericUpdate": true,
+          "nativeSkillExperience": true,
+          "capRemainderTiming": true,
+          "batchCompatibility": true,
           "nativeTransfer": true,
           "nativePrison": true,
           "nativeRebirth": true,

@@ -32,3 +32,5 @@
 - 全程使用合成資料及自建瀏覽器context，沒有computer use，也未使用個人瀏覽器、真實存檔或Downloads。正常完成後關閉測試程序並清除暫存站點；失敗診斷依設計保留。
 
 CI已接上相同完整檢查及失敗artifact，Pages維持原有靜態白名單。本次尚未推送，GitHub上的實際CI／部署結果待後續發布確認；未啟動遊戲或重做既有隔離證明。後續測試分工與操作方式見[測試指引](../../docs/testing.md)。
+
+2026-10-22 v2.8 B在此基線新增5項九上限headless及5項UI事件測試；正式獨立proof開閘後，完整release為138 Node／12 headless全部通過。來源、原生矩陣及正式發布各層證據見[B任務](../random-character-skill-caps-b/tasks.md)，此補充不歸檔原SDD。

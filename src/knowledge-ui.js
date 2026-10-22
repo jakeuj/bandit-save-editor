@@ -106,6 +106,26 @@
   }catch(e){snapshot=null;$('baseAptitudeApplyBtn').disabled=true;$('baseAptitudePreview').textContent=e.message;}};
   $('baseAptitudeApplyBtn').onclick=()=>{try{const o=request();if(!snapshot||snapshot.model!==model||snapshot.revision!==revision||snapshot.request!==JSON.stringify(o))throw Error('存檔或輸入已變更，請重新預覽。');perform(()=>C.setCharacterBaseAptitudes(model,o));}catch(e){invalidate();toast(e.message,true);}};
  }
+ function renderSkillCaps(){
+  const characterId=Number($('characterSelect').value),info=C.randomCharacterSkillCapsInfo(model,{characterId});
+  $('skillCapsEditor').innerHTML=`<h3>一般隨機角色九項技藝上限</h3><p class="muted small-text" id="skillCapsStatus" role="status"></p><div class="aptitude-inputs">${C.SKILLS.map((name,i)=>`<label for="skillCap${i+1}">${esc(name)}上限<input id="skillCap${i+1}" type="number" min="1" step="1" value="${esc(read(characterId,22+i,2))}" ${info.eligible?'':'disabled'}></label>`).join('')}</div><p class="muted small-text">九項須與目前品質、原始資質及三項天賦符合相同的原版招募傾向與主副技藝條件；只調上限，不改天賦。提高上限保留等級與經驗餘額，不會立即升級；低於目前等級，或降低至目前等級且仍有餘額時，整筆阻擋。</p><p class="muted small-text" id="skillCapsRestoreNote">首次有效上限調整後，此角色九項上限、等級與經驗餘額共 27 欄會累計一起還原，包含先前及後續的單項／全部技藝經驗修改。還原回載入時；復原一步只撤回上一筆操作。其他角色不受影響。</p><div class="toolbar"><button id="skillCapsPreviewBtn" class="small">預覽九項上限</button><button id="skillCapsApplyBtn" class="primary small" disabled>套用九項上限</button></div><div id="skillCapsPreview" aria-live="polite"></div>`;
+  $('skillCapsStatus').textContent=info.eligible?`品質 ${info.quality} · 目前九項有共同生成條件${info.verified?' · 已通過獨立隔離驗證':' · 尚待獨立隔離驗證，可預覽，套用停用'}`:info.reasons.join('；');
+  $('skillCapsPreviewBtn').disabled=!info.eligible;
+  let snapshot=null;
+  const request=()=>({characterId,caps:C.SKILLS.map((_,i)=>{const value=$('skillCap'+(i+1)).value;if(!value.trim())throw Error('九項上限不能空白。');return Number(value);})});
+  const invalidate=()=>{snapshot=null;$('skillCapsApplyBtn').disabled=true;$('skillCapsPreview').textContent='輸入已變更，請重新預覽。';};
+  for(let i=1;i<=9;i++)$('skillCap'+i).oninput=invalidate;
+  $('skillCapsPreviewBtn').onclick=()=>{try{
+   const options=request(),preview=C.previewCharacterSkillCaps(model,options);snapshot={model,revision,request:JSON.stringify(options),preview};
+   const witness=preview.witnesses[0],orientation=witness?.orientation==='生产'?'生產':witness?.orientation;
+   $('skillCapsPreview').innerHTML=(preview.reasons.length?`<p class="negative">${esc(preview.reasons.join('；'))}</p>`:'')+(preview.rows.length?`<div class="tablewrap"><table><thead><tr><th>技藝</th><th>上限（目前 → 套用後）</th><th>等級（目前 → 套用後）</th><th>經驗餘額（目前 → 套用後）</th></tr></thead><tbody>${preview.rows.map(row=>`<tr${row.before.cap!==row.after.cap?' class="changed"':''}><td>${esc(row.name)}</td>${['cap','level','experience'].map(key=>`<td>${htmlValue(row.before[key])} → ${htmlValue(row.after[key])}</td>`).join('')}</tr>`).join('')}</tbody></table></div><p class="small-text">${preview.unchanged?'九項均無變更，不會新增歷史。':`上限變更 ${preview.changes.length} 項；全部九項等級與經驗餘額保持原值。`}</p>`:'')+(witness?`<p class="muted small-text">可行招募組合之一：${esc(orientation)}傾向、主要${esc(C.SKILLS[witness.primary-1])}、次要${esc(C.SKILLS[witness.secondary-1])}。這是固定資質與天賦下的可生成條件，不代表角色的招募歷史。</p>`:'')+(!preview.verified?'<p class="negative">尚待相符來源的獨立隔離驗證，目前不能套用。</p>':'');
+   $('skillCapsApplyBtn').disabled=!preview.canApply;
+  }catch(error){snapshot=null;$('skillCapsApplyBtn').disabled=true;$('skillCapsPreview').textContent=error.message;}};
+  $('skillCapsApplyBtn').onclick=()=>{try{
+   const options=request();if(!snapshot||snapshot.model!==model||snapshot.revision!==revision||snapshot.request!==JSON.stringify(options))throw Error('存檔或輸入已變更，請重新預覽。');
+   if(perform(()=>C.setCharacterSkillCaps(model,options,{preview:snapshot.preview})))toast('九項上限已套用；此角色全部技藝會累計一起還原。');
+  }catch(error){invalidate();toast(error.message,true);}};
+ }
  function paged(kind,list,render,container){
   const size=50,max=Math.max(0,Math.ceil(list.length/size)-1);knowledgePages[kind]=Math.min(knowledgePages[kind],max);
   const page=knowledgePages[kind],start=page*size;
@@ -127,7 +147,7 @@
   $('characterSummary').innerHTML=stat('角色等級',read(x,3,2))+stat('自然經驗餘額',read(x,4,2))+stat('等級上限',(Math.floor(read(x,50,2))+1)*30)+stat('目前職業',C.catalogName('professions',read(x,6,2)))+stat('共用池已投入經驗',read(x,56,2))+stat('自動轉職預設',read(x,59,2));
   $('skillRows').innerHTML=C.SKILLS.map((name,i)=>`<tr><td>${esc(name)}</td><td>${htmlValue(read(x,31+i,2))} / ${htmlValue(read(x,22+i,2))}</td><td>${htmlValue(read(x,40+i,2))}</td><td>${htmlValue(C.experienceNeed.skill(read(x,31+i,2)))}</td></tr>`).join('');
   $('growthStatus').textContent=['names','characterExperience','professionExperience','skillExperience'].every(k=>K.verification[k])?'名稱與經驗已通過隔離驗證':'部分養成功能待遊戲驗證';
-  renderGrowth();renderBaseAptitudes();renderPills();
+  renderGrowth();renderBaseAptitudes();renderSkillCaps();renderPills();
  }
  function renderGrowth(){
   const x=Number($('characterSelect').value),kind=$('growthKind').value,old=$('growthTarget').value;

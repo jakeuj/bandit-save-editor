@@ -8,6 +8,7 @@ const os = require('node:os');
 const {spawnSync} = require('node:child_process');
 const S = require('./verification-suite.cjs');
 const R = require('./verification-requirements.cjs');
+const Caps = require('./random-character-skill-caps-proof.cjs');
 const root = path.resolve(__dirname, '..');
 // Lifecycle scripts that can re-read their results after the new-PID restart.
 const comparable = new Set(['verify-skill-caps-lifecycle.cjs','verify-random-character-lifecycle.cjs', 'verify-equipment-workflow.cjs', 'verify-quality-lifecycle.cjs']);
@@ -20,7 +21,7 @@ function steps(copy, setupArgs) {
   const restart = tag => [game('stop', '--stop'), {...game('restart', '--restart'), retry: true}, {...game('restartLoad', '--load', '--mode', '存档'), retry: true}, game(tag, '--assert', '--quiet')];
   const oracle = compare => family.oracle ? [{step: compare ? 'oracleCompare' : 'oracle', script: family.oracle, args: ['--state', '{state}', ...scenario, ...copy.oracleArgs, ...(compare ? ['--compare'] : [])]}] : [];
   const list = [
-    {step: 'setup', script: 'verify-game.cjs', args: ['--setup', ...setupArgs, ...scenario]},
+    {step: 'setup', script: 'verify-game.cjs', args: ['--setup', ...setupArgs, ...scenario, ...(copy.batchRequestsFile ? ['--batch-requests', copy.batchRequestsFile] : [])]},
     {...game('load', '--load', '--mode', '云存档'), retry: true},
     ...oracle(false), ...(family.formulas ? [{step: 'formulas', script: family.oracle, args: ['--state', '{state}', ...scenario, '--formulas']}] : []), game('save', '--save'), game('assert', '--assert', '--quiet'), ...restart('reload'), ...oracle(true)
   ];
@@ -37,7 +38,7 @@ function steps(copy, setupArgs) {
 // Required checks proven by the recorded copies. A check holds when at least one copy of an owning family ran its step
 // and every such step passed; lifecycle steps run only on marked copies. Groups whose families did not run are left
 // out. UI checks hold only for native or carried UI evidence.
-function provenChecks(copies, ui = {}) {
+function provenChecks(copies, ui = {}, skillCapsBinding) {
   const familyRan = family => copies.some(c => c.family === family);
   const passed = (family, step) => {
     const ran = copies.filter(c => c.family === family).flatMap(c => c.steps.filter(s => s.step === step));
@@ -46,6 +47,14 @@ function provenChecks(copies, ui = {}) {
   const result = {};
   for (const [family, spec] of Object.entries(S.families)) for (const group of spec.groups) {
     if (!familyRan(family)) continue;
+    if (family === Caps.group) {
+      const derived = copies.filter(c => c.family === family).map(c => { try { return Caps.copyChecks(c, skillCapsBinding); } catch { return null; } });
+      result[group] = Object.fromEntries(R.requiredChecks(group).map(check => {
+        const owners = derived.filter(c => c && Object.hasOwn(c, check));
+        return [check, derived.every(Boolean) && owners.length > 0 && owners.every(c => c[check] === true)];
+      }));
+      continue;
+    }
     const section = R.sectionOf(group), peers = Object.keys(S.families).filter(name => familyRan(name) && S.families[name].groups.some(g => R.sectionOf(g) === section));
     result[group] = Object.fromEntries(R.requiredChecks(group).map(check => {
       if(spec.pendingReason)return [check,false];
@@ -59,7 +68,7 @@ function provenChecks(copies, ui = {}) {
 const defaultExec = (script, args, timeout) => spawnSync(process.execPath, [path.join(__dirname, script), ...args], {cwd: root, encoding: 'utf8', maxBuffer: 1 << 28, timeout});
 const defaultSleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-async function runCopy(copy, setupArgs, {exec, sleep, log}) {
+async function runCopy(copy, setupArgs, {exec, sleep, log, skillCapsBinding}) {
   const record = {name: copy.name, family: copy.family, cases: copy.cases, lifecycle: !!copy.lifecycle, steps: []};
   if(S.families[copy.family].pendingReason)return {...record,ok:false,steps:[{step:'pending',ok:false,error:S.families[copy.family].pendingReason}]};
   let state;
@@ -73,7 +82,17 @@ async function runCopy(copy, setupArgs, {exec, sleep, log}) {
     }
     const ok = result.status === 0, entry = {step: step.step, script: step.script, args: args.filter(a => a !== state).filter(a => !String(a).startsWith(os.homedir())), ok, seconds: Math.round((Date.now() - started) / 1000)};
     if (step.step === 'setup' && ok) state = /STATE (.+)/.exec(result.stdout)?.[1]?.trim();
-    if (!ok) entry.error = String(result.stderr || result.error || '').split('\n').map(line => line.trim()).filter(line => line && !line.startsWith('at ')).slice(-3).join(' ').slice(0, 400);
+    if (!ok) {
+      const lines = String(result.stderr || result.error || result.stdout || '').split('\n').map(line => line.trim()).filter(line => line && !line.startsWith('at '));
+      const subject = lines.findIndex(line => /(?:AssertionError|TypeError|RangeError|Error)(?:\s|:|\[)/.test(line));
+      entry.error = lines.slice(Math.max(0, subject), Math.max(0, subject) + 3).join(' ').slice(0, 600);
+      const artifactIndex = setupArgs.indexOf('--artifacts'), failureDir = state ? path.dirname(state) : artifactIndex >= 0 ? setupArgs[artifactIndex + 1] : null;
+      if (failureDir && fs.existsSync(failureDir)) {
+        const file = `${copy.name}-${record.steps.length + 1}-${step.step}.log`.replace(/[^a-zA-Z0-9_.-]/g, '_');
+        fs.writeFileSync(path.join(failureDir, file), `STDOUT\n${result.stdout || ''}\nSTDERR\n${result.stderr || result.error || ''}`);
+        entry.errorLog = file;
+      }
+    }
     record.steps.push(entry);
     log(`${copy.name} ${step.step} ${path.basename(step.script)} ${ok ? 'ok' : 'FAILED'}`);
     if (!ok) {
@@ -83,6 +102,16 @@ async function runCopy(copy, setupArgs, {exec, sleep, log}) {
   }
   record.ok = record.steps.every(s => s.ok) && record.steps.length === steps(copy, setupArgs).length;
   record.state = state;
+  if (copy.family === Caps.group && record.ok) {
+    try {
+      const s = JSON.parse(fs.readFileSync(state, 'utf8')), read = name => JSON.parse(fs.readFileSync(path.join(s.dir, name), 'utf8'));
+      record.scenarioHash = Caps.sha(copy.scenario); record.batchHash = Caps.sha(copy.batchRequests || []);
+      record.evidence = {scenario: copy.scenario, batchRequests: copy.batchRequests || [],
+        source: {fingerprints: s.fingerprints, sourceHashes: s.sourceHashes, runtimePatch: s.runtimePatch, originalFileHashes: Object.values(s.before || {}), assertions: s.assertions},
+        effects: read('skill-caps-effects.json'), ...(copy.lifecycle ? {lifecycle: read('skill-caps-lifecycle.json')} : {})};
+      Caps.copyChecks(record, skillCapsBinding);
+    } catch (error) { record.ok = false; record.steps.push({step: 'evidence', ok: false, error: error.message}); log(`${copy.name} evidence FAILED: ${error.message}`); }
+  }
   return record;
 }
 
@@ -100,14 +129,19 @@ function uiEvidence(digests, proof, gameVersion) {
 const defaultRemove = target => fs.rmSync(target, {recursive: true, force: true, maxRetries: 5, retryDelay: 1000});
 
 async function runMigration({catalog, proof, copies, runDir, setupArgs, exec = defaultExec, sleep = defaultSleep, log = console.log, digest, keepCopies = false, remove = defaultRemove}) {
+  const skillCapsBinding = copies.some(c => c.family === Caps.group) ? Caps.binding(catalog, fs.readFileSync(path.join(root, 'src/core.js'), 'utf8')) : undefined;
   for (const copy of copies) if (copy.scenario) {
     copy.scenarioFile = path.join(runDir, copy.name + '.json');
     fs.writeFileSync(copy.scenarioFile, JSON.stringify(copy.scenario));
+    if (copy.batchRequests) {
+      copy.batchRequestsFile = path.join(runDir, copy.name + '-batch.json');
+      fs.writeFileSync(copy.batchRequestsFile, JSON.stringify(copy.batchRequests));
+    }
   }
   const records = [];
   let digests;
   for (const copy of copies) {
-    const record = await runCopy(copy, setupArgs, {exec, sleep, log});
+    const record = await runCopy(copy, setupArgs, {exec, sleep, log, skillCapsBinding});
     records.push(record);
     if (!record.ok) break;
     // Digest the UI events from the first passing copy before its game folder is pruned.
@@ -118,7 +152,7 @@ async function runMigration({catalog, proof, copies, runDir, setupArgs, exec = d
   const completed = records.length === copies.length && records.every(r => r.ok);
   if (completed && !keepCopies) for (const name of ['BANDIT Editor Test.app', 'BANDIT Editor Test.source.json']) remove(path.join(runDir, name));
   const ui = completed && digests ? uiEvidence(digests, proof, catalog.gameVersion) : {};
-  const results = {date: new Date().toISOString(), gameVersion: catalog.gameVersion, platform: `${process.platform}-${process.arch}`, completed, copies: records.map(({state, ...r}) => r), ui, checks: provenChecks(records, ui)};
+  const results = {date: new Date().toISOString(), gameVersion: catalog.gameVersion, platform: `${process.platform}-${process.arch}`, completed, copies: records.map(({state, ...r}) => r), ui, ...(skillCapsBinding ? {skillCapsBinding} : {}), checks: provenChecks(records, ui, skillCapsBinding)};
   fs.writeFileSync(path.join(runDir, 'results.json'), JSON.stringify(results, null, 2));
   return results;
 }
@@ -131,11 +165,13 @@ function recordedChecks(proof, group) {
   return Object.fromEntries(R.requiredChecks(group).map(check => [check, checks?.[check] === true]));
 }
 const pick = (checks, names) => Object.fromEntries(names.map(name => [name, checks[name] === true]));
+const sameFingerprints = (left, right) => !!left && !!right && Object.keys(left).length === Object.keys(right).length && Object.entries(left).every(([file, hash]) => Object.hasOwn(right, file) && right[file] === hash);
 
 // The proof the build gate expects for this catalog, from a completed representative run.
 function buildProof({catalog, results, coreSource, steamBuild, previous}) {
   const date = results.date.slice(0, 10), all = {...catalog.fingerprints, ...catalog.batch2Fingerprints}, checks = results.checks;
-  const opened = group => !S.families[S.familyOf(group)].pendingReason && R.requiredChecks(group).every(c=>checks[group]?.[c]===true);
+  const caps = !Caps.initialProblem(previous[Caps.group]?.initialVerification) ? Caps.validateResults(catalog, coreSource, results, {initial: false}) : null;
+  const opened = group => (group !== Caps.group || !!caps) && !S.families[S.familyOf(group)].pendingReason && R.requiredChecks(group).every(c=>checks[group]?.[c]===true);
   const coverage = family => ({coverage: 'representative', copies: results.copies.filter(c => c.family === family).map(c => ({name: c.name, operations: c.cases}))});
   const formulasPassed = results.copies.filter(c => c.family === 'equipmentQuality').every(c => c.steps.some(s => s.step === 'formulas' && s.ok));
   const uiRecord = group => R.uiChecks[group] ? {uiEvidence: results.ui[R.uiChecks[group]]} : {};
@@ -156,7 +192,7 @@ function buildProof({catalog, results, coreSource, steamBuild, previous}) {
     batch2: {date, gameVersion: catalog.gameVersion, fingerprints: catalog.batch2Fingerprints, limits: catalog.batch2Limits, dataHash: sha(catalog.batch2Data), checks: pick(checks[R.sections.batch2.groups[0]], R.sections.batch2.checks), ...coverage('batch2')},
     affixReplacement: {date, gameVersion: catalog.gameVersion, fingerprints: all, limits: catalog.affixReplacementLimits, dataHash: sha({rules: catalog.affixReplacement, items}), checks: checks.equipmentAffixReplacement, ...coverage('affixReplacement')},
     equipmentWorkflow: {date, platform: results.platform, gameVersion: catalog.gameVersion, fingerprints: all, limits: catalog.equipmentWorkflowLimits, dataHash: sha({rules: catalog.equipmentWorkflowLimits, items, formulas: catalog.affixReplacement}), groups: perGroup('equipmentWorkflow'), ...coverage('equipmentWorkflow')},
-    ...(!S.families.randomCharacterSkillCaps.pendingReason?{randomCharacterSkillCaps:require('./random-character-skill-caps-proof.cjs').record(catalog,coreSource,{date,platform:results.platform,checks:checks.randomCharacterSkillCaps,...coverage('randomCharacterSkillCaps')})}:{}),
+    ...(caps ? {randomCharacterSkillCaps:Caps.record(catalog,coreSource,{date,platform:results.platform,...caps,initialVerification:previous[Caps.group].initialVerification,...coverage(Caps.group)})} : {}),
     randomCharacterGrowth: require('./random-character-growth-proof.cjs').record(catalog,coreSource,{date,platform:results.platform,checks:checks.randomCharacterBaseAptitudes,...coverage('randomCharacterGrowth')}),
     equipmentQuality: {date, gameVersion: catalog.gameVersion, fingerprints: all, dataHash: sha({quality: catalog.equipmentQuality, items, workflow: catalog.equipmentWorkflowLimits}), ...(formulasPassed ? {formulaHash: sha(qualityFormula(coreSource)), formulaCases: Object.keys(catalog.equipmentQuality.items).length * 24 + Object.keys(catalog.affixReplacement.attributes).length * 20} : {}), groups: perGroup('equipmentQuality'), ...coverage('equipmentQuality')}
   };
@@ -165,18 +201,22 @@ function buildProof({catalog, results, coreSource, steamBuild, previous}) {
 // Writes the new proof and gates only when every native check passed on a build the current proof does not cover;
 // a build failure restores every touched file. On the proven build it only compares, keeping the existing proof.
 function writeBack({dir = root, catalog, proof, results, steamBuild, exec = (script, args) => spawnSync(process.execPath, [path.join(dir, 'scripts', script), ...args], {cwd: dir, encoding: 'utf8'})}) {
-  const allGroups=Object.keys(catalog.verification),groups=allGroups.filter(g=>!S.families[S.familyOf(g)]?.pendingReason);
+  const needsInitial = group => S.families[S.familyOf(group)]?.initialProofRequired && Caps.initialProblem(proof[group]?.initialVerification);
+  const allGroups=Object.keys(catalog.verification),groups=allGroups.filter(g=>!S.families[S.familyOf(g)]?.pendingReason&&!needsInitial(g));
   if(allGroups.some(g=>S.families[S.familyOf(g)]?.pendingReason&&catalog.verification[g]))return {action:'skipped',reason:'未完成的原生群組不可開啟'};
+  if(allGroups.some(g=>needsInitial(g)&&catalog.verification[g]))return {action:'skipped',reason:'缺少首次完整矩陣證明；代表遷移不可首次開放'};
   if (!results.completed || groups.some(group => !results.checks[group])) return {action: 'skipped', reason: '流水線未完成或未涵蓋全部群組'};
   const failing = groups.filter(group => R.requiredChecks(group).some(check => results.checks[group]?.[check] !== true && check !== R.uiChecks[group]));
-  const comparison = allGroups.map(group => ({group, existing: Object.values(recordedChecks(proof, group)).every(Boolean) && catalog.verification[group] === true, migrated: !S.families[S.familyOf(group)]?.pendingReason && R.requiredChecks(group).every(check=>results.checks[group]?.[check]===true), ...(S.families[S.familyOf(group)]?.pendingReason?{pending:S.families[S.familyOf(group)].pendingReason}:{})}));
-  if (JSON.stringify(proof.fingerprints) === JSON.stringify(catalog.fingerprints) && JSON.stringify(proof.batch2?.fingerprints) === JSON.stringify(catalog.batch2Fingerprints))
+  if(groups.includes(Caps.group))try{Caps.validateResults(catalog,fs.readFileSync(path.join(dir,'src/core.js'),'utf8'),results,{initial:false});}catch(error){if(!failing.includes(Caps.group))failing.push(Caps.group);}
+  const comparison = allGroups.map(group => ({group, existing: Object.values(recordedChecks(proof, group)).every(Boolean) && catalog.verification[group] === true, migrated: !needsInitial(group) && !failing.includes(group) && !S.families[S.familyOf(group)]?.pendingReason && R.requiredChecks(group).every(check=>results.checks[group]?.[check]===true), ...(S.families[S.familyOf(group)]?.pendingReason?{pending:S.families[S.familyOf(group)].pendingReason}:needsInitial(group)?{pending:'首次完整矩陣須以獨立證明合併'}:{})}));
+  if (sameFingerprints(proof.fingerprints, catalog.fingerprints) && sameFingerprints(proof.batch2?.fingerprints, catalog.batch2Fingerprints))
     return {action: 'compared', consistent: failing.length === 0 && comparison.every(c => c.existing === c.migrated), failing, comparison};
   if (failing.length) return {action: 'skipped', reason: '原生 checks 未全部通過', failing};
   const files = ['knowledge/catalog.json', 'knowledge/verification.json', 'index.html', 'sw.js'].map(file => path.join(dir, file)), backup = files.map(file => fs.readFileSync(file));
-  const next = buildProof({catalog, results, coreSource: fs.readFileSync(path.join(dir, 'src/core.js'), 'utf8'), steamBuild, previous: proof});
-  const gated = {...catalog, verification: {...next.groups}};
+  let next;
   try {
+    next = buildProof({catalog, results, coreSource: fs.readFileSync(path.join(dir, 'src/core.js'), 'utf8'), steamBuild, previous: proof});
+    const gated = {...catalog, verification: {...next.groups}};
     fs.writeFileSync(files[0], JSON.stringify(gated, null, 2) + '\n');
     fs.writeFileSync(files[1], JSON.stringify(next, null, 2) + '\n');
     for (const args of [[], ['--check']]) { const r = exec('build-editor.cjs', args); if (r.status !== 0) throw Error(String(r.stderr || r.stdout).trim()); }

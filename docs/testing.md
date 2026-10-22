@@ -32,6 +32,8 @@ Linux CI另加`--with-deps`安裝系統函式庫。Playwright版本由package與
 
 新增功能時擴充對應層的代表案例，完整數值矩陣留Node。Headless桌面／手機viewport只證明該Chromium引擎的結果；Safari、真實手機、PWA原生安裝視窗及個人瀏覽器擴充影響各自按需驗證。CSS視覺品質可先檢視自動截圖，不必開啟使用者瀏覽器。
 
+九項技藝上限另有 `tests/skill-caps-ui.test.cjs` 與 `tests/browser/skill-caps.spec.cjs`。UI事件用測試VM中的單一候選旗標覆蓋成功及關閉分支；它不是原生開放證明。Headless讀真正建置與catalog：關閉時只驗預覽／停用；相符獨立proof開放後才驗實際套用、交錯經驗、27欄還原／復原、下載及重載。兩種結果須分開記錄，不能把關閉分支通過宣稱發布完成。新增合法fixture保留舊全50上限fixture的原用途；HTTP兩寬度、直接file、PWA離線與兩頁waiting交接各自有案例。
+
 ## 隔離、輸出與清理
 
 預設單worker、headless及每案獨立context，所有輸入都是合成檔。測試以setInputFiles指定暫存檔，等待真實download事件並saveAs到暫存目錄；實際檔案bytes對照獨立預期，重載也使用該下載檔。正式程式沒有測試後門或被替換的SaveCore API。
@@ -44,4 +46,4 @@ Linux CI另加`--with-deps`安裝系統函式庫。Playwright版本由package與
 
 正式發布先核對相符SHA的CI／deploy、公開HTTP bytes及metadata。需要正式DOM證據時使用獨立headless context，使用者既有快取或安裝問題才升級computer use；PWA更新交接的例行回歸由上述暫存建置測試負責。記錄實際環境與通過層級，保留歷史未測範圍，不將單次自動測試擴張成所有瀏覽器已驗收。
 
-本次實作與完整結果見[程式化測試SDD](../sdd/programmatic-testing/tasks.md)。
+測試基線見[程式化測試SDD](../sdd/programmatic-testing/tasks.md)；v2.8新增介面在正式開閘後通過138 Node／12 headless，完整分層結果見[B驗收](../sdd/random-character-skill-caps-b/tasks.md)。

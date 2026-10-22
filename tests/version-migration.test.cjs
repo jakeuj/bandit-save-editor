@@ -144,7 +144,7 @@ test('representative scenarios replay on the base save and together cover every 
   const followupCopy = byName['advanced-followup'].scenario;
   assert.deepEqual(followupCopy.followup, {equipment: {id: 3, slot: followupCopy.followup.equipment.slot}, character: 2, profession: 3, technology: 31, drillGround: 12, academy: 4});
   assert.deepEqual([level(byName['advanced-followup'], 2, 1, 4), level(byName['advanced-followup'], 2, 1, 5), level(byName['advanced-followup'], 2, 6, 2)], [4, 4499, 1]);
-  assert.deepEqual(copies.filter(c => c.lifecycle).map(c => c.name), ['advanced-followup', 'batch2', 'affix-replacement', 'equipment-workflow', 'quality-7-Upgrade', 'quality-7-Downgrade', 'quality-9-Upgrade', 'quality-9-Downgrade', 'random-skill-caps-representative', 'random-growth-lifecycle']);
+  assert.deepEqual(copies.filter(c => c.lifecycle).map(c => c.name), ['advanced-followup', 'batch2', 'affix-replacement', 'equipment-workflow', 'quality-7-Upgrade', 'quality-7-Downgrade', 'quality-9-Upgrade', 'quality-9-Downgrade', 'random-skill-caps-lifecycle', 'random-growth-lifecycle']);
   assert.deepEqual(byName['batch2'].scenario.pills.map(p => p.aptitude), [1, 2, 3]);
   assert.deepEqual(byName['batch2'].scenario.operations.filter(o => o.method === 'setEquipmentAffixCoefficient').map(o => o.options.coefficient), [10.01, 80, 10, 80, 50, 120, 50, 119.99]);
   assert.deepEqual(byName['equipment-workflow'].scenario.operations.filter(o => o.options.selectUnwashedSlot).map(o => o.options.plane), [7, 9]);
@@ -200,7 +200,8 @@ test('migration runner replays each copy in order, stops on failure and derives 
     const proof = JSON.parse(fs.readFileSync(path.join(root, 'knowledge/verification.json'), 'utf8'));
     const digests = {selectionUi: proof.equipmentWorkflow.groups.equipmentAffixInitialSelection.uiEvidence.eventDigest, qualityUi: 'f'.repeat(64)};
     const digest = (gameDir, sids) => sids === R.uiEvents.selectionUi ? digests.selectionUi : digests.qualityUi;
-    const copies = () => Object.keys(S.families).filter(f=>!S.families[f].pendingReason).map(family => ({name: family, family, oracleArgs: [], lifecycle: family !== 'growth', cases: 1, scenario: family === 'growth' ? null : {items: []}}));
+    // The new cap family has separate raw-evidence tests; a generic exit-zero mock cannot prove it.
+    const copies = () => Object.keys(S.families).filter(f=>!S.families[f].pendingReason&&!S.families[f].initialProofRequired).map(family => ({name: family, family, oracleArgs: [], lifecycle: family !== 'growth', cases: 1, scenario: family === 'growth' ? null : {items: []}}));
     const calls = [], sleeps = [];
     let failLoads = 2;
     const exec = (script, args) => {
@@ -212,7 +213,7 @@ test('migration runner replays each copy in order, stops on failure and derives 
     let removed = [];
     const remove = target => removed.push(path.relative(dir, target));
     const run = await M.runMigration({catalog, proof, copies: copies(), runDir: dir, setupArgs: ['--source', 's'], exec, sleep, log: quiet, digest, remove});
-    const families = Object.values(S.families).filter(f=>!f.pendingReason).length;
+    const families = Object.values(S.families).filter(f=>!f.pendingReason&&!f.initialProofRequired).length;
     assert.equal(removed.filter(p => p === 'game').length, families);
     assert.equal(removed.filter(p => p === 'profile').length, families);
     assert.deepEqual(removed.slice(-2), ['BANDIT Editor Test.app', 'BANDIT Editor Test.source.json']);
@@ -226,7 +227,7 @@ test('migration runner replays each copy in order, stops on failure and derives 
 
     calls.length = 0;
     let setups = 0;
-    const failing = (script, args) => { if (args[0] === '--setup') setups++; if (args.includes('--save') && setups === 2) { calls.push([script, ...args]); return {status: 1, stderr: 'Native manual-save file was not created'}; } return exec(script, args); };
+    const failing = (script, args) => { if (args[0] === '--setup') setups++; if (args.includes('--save') && setups === 2) { calls.push([script, ...args]); return {status: 1, stderr: 'AssertionError [ERR_ASSERTION]: Native manual-save file was not created\n+ actual\n- expected\n    at runner\n- 0\n- 0\n]'}; } return exec(script, args); };
     removed = [];
     const failed = await M.runMigration({catalog, proof, copies: copies(), runDir: dir, setupArgs: ['--source', 's'], exec: failing, sleep, log: quiet, digest, remove});
     assert.deepEqual(removed, ['game', 'profile'], 'only the passing first copy is pruned; the failed copy and shared runtime stay');
@@ -236,6 +237,9 @@ test('migration runner replays each copy in order, stops on failure and derives 
     assert.equal(failed.completed, false);
     assert.equal(failed.copies.length, 2);
     assert.match(failed.copies[1].steps.at(-1).error, /manual-save/);
+    assert.match(failed.copies[1].steps.at(-1).error, /^AssertionError/);
+    const failureLog = failed.copies[1].steps.at(-1).errorLog;
+    assert.ok(failureLog && fs.readFileSync(path.join(dir, failureLog), 'utf8').includes('Native manual-save file was not created'));
     assert.deepEqual(calls.at(-1), ['verify-game.cjs', '--state', statePath, '--stop']);
     assert.deepEqual(failed.ui, {});
     assert.ok(Object.values(failed.checks.equipmentAffixCoefficient ?? {}).some(ok => !ok) || !failed.checks.equipmentAffixCoefficient);
@@ -244,11 +248,15 @@ test('migration runner replays each copy in order, stops on failure and derives 
 
 test('write-back opens proven groups on a new build, compares on the proven build and restores on failure',()=>{
   const os = require('node:os'), M = require('../scripts/verify-migration.cjs'), R = require('../scripts/verification-requirements.cjs'), S = require('../scripts/verification-suite.cjs');
+  // This generic suite fixture has no cap observations. First-opening and cap migration use their own raw fixtures.
+  const catalog = JSON.parse(fs.readFileSync(path.join(root, 'knowledge/catalog.json'), 'utf8'));
+  catalog.verification.randomCharacterSkillCaps = false;
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'bandit-writeback-'));
   try{
     fs.cpSync(root, dir, {recursive: true, filter: source => !/[\\/](\.git|graphify-out|node_modules)([\\/]|$)/.test(source)});
     const files = ['knowledge/catalog.json', 'knowledge/verification.json', 'index.html', 'sw.js'].map(f => path.join(dir, f)), snapshot = () => files.map(f => fs.readFileSync(f, 'utf8'));
     const proof = JSON.parse(fs.readFileSync(files[1], 'utf8')), selection = proof.equipmentWorkflow.groups.equipmentAffixInitialSelection.uiEvidence;
+    delete proof.randomCharacterSkillCaps; delete proof.groups.randomCharacterSkillCaps;
     const results = (version, overrides = {}) => ({
       date: '2026-11-01T00:00:00.000Z', platform: 'darwin-arm64', completed: true, gameVersion: version,
       copies: Object.keys(S.families).map(family => ({name: family, family, cases: 1, ok: true, steps: [{step: 'formulas', ok: true}]})),
@@ -261,6 +269,9 @@ test('write-back opens proven groups on a new build, compares on the proven buil
     assert.equal(compared.consistent, false, 'quality UI pending must differ from the native proof');
     assert.deepEqual(compared.comparison.filter(c => c.existing !== c.migrated).map(c => c.group).sort(), [...R.sections.equipmentQuality.groups,...(!catalog.verification.randomCharacterBaseAptitudes?['randomCharacterBaseAptitudes']:[])].sort());
     assert.deepEqual(snapshot(), same);
+    const reordered = {...catalog, fingerprints: Object.fromEntries(Object.entries(catalog.fingerprints).reverse()), batch2Fingerprints: Object.fromEntries(Object.entries(catalog.batch2Fingerprints).reverse())};
+    assert.equal(M.writeBack({dir, catalog: reordered, proof, results: {...results('V1.0.10.2'), ui: {}}, exec: () => { throw Error('same fingerprint must not build after key reordering'); }}).action, 'compared');
+    assert.deepEqual(snapshot(), same, 'key order alone must never replace a complete proof with representative coverage');
 
     const next = {...catalog, gameVersion: 'V9.9.9', fingerprints: {...catalog.fingerprints, 'cl.json': 'c'.repeat(64)}, verification: Object.fromEntries(Object.keys(catalog.verification).map(g => [g, false]))};
     fs.writeFileSync(files[0], JSON.stringify(next, null, 2) + '\n');

@@ -64482,7 +64482,7 @@
     "advancedTechnologyLevel": true,
     "advancedTechnologyLevelAdvanced": true,
     "randomCharacterBaseAptitudes": true,
-    "randomCharacterSkillCaps": false
+    "randomCharacterSkillCaps": true
   },
   "randomCharacterGrowth": {
     "version": 1,
