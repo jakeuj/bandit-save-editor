@@ -9,7 +9,7 @@ _site/
 playwright-report/
 test-results/
 # Rebuildable local repository graph, caches, and machine-specific paths.
-/graphify-out/
+graphify-out/
 .env
 .env.*
 .DS_Store
