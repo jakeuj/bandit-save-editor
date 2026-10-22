@@ -7,7 +7,7 @@
 | 按影響遷移 | 已有選跑流程；改版依相依摘要沿用或驗相關群組 | [遷移維護](../maintenance/migration.md)、[任務](../../sdd/selective-migration/tasks.md) |
 | v2.8.1 鞏固版 | z9 未證明套裝路徑已關閉；舊存檔不追溯，該件保持唯讀且無法由本版還原 | [任務](../../sdd/v2.8.1-consolidation/tasks.md) |
 | v2.9 天賦等級 | 已發布，首次原生證明及瀏覽器驗收見任務；尚未驗證範圍仍保留 | [研究](random-character-talents.md)、[任務](../../sdd/random-character-talents/tasks.md) |
-| 套裝等級 | A／B 已完成：兩庫各自完整首次證明後開閘，Node／瀏覽器驗收通過；使用者驗收通過，納入 v2.10 發布 | [研究](set-equipment-level.md)、[提案](../../sdd/set-equipment-level/proposal.md)、[任務](../../sdd/set-equipment-level/tasks.md) |
+| v2.10 套裝等級 | 已發布並驗收歸檔；兩庫各自首次證明及 Node／瀏覽器驗收通過，對應 SHA 的 Pages build／deploy 成功 | [研究](set-equipment-level.md)、[提案](../../sdd/archive/2026-10-23-set-equipment-level/proposal.md)、[任務](../../sdd/archive/2026-10-23-set-equipment-level/tasks.md) |
 | 其他候選 | 寶物、丹藥擴充、套裝品質、靈物、內丹、城市、超限、建築等，依原路線圖重新核對未完成範圍 | [路線圖](feature-roadmap.md) |
 
 ## 接續工作

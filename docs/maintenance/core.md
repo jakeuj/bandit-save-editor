@@ -99,7 +99,7 @@ v2.1 可使用 repo 外 `--scenario` JSON：`baseline` 為 `[x,y,z,value]` 陣�
 
 ## 套裝等級首次證明與遷移
 
-詳見[研究與原生結果](../research/set-equipment-level.md)、[SDD](../../sdd/set-equipment-level/tasks.md)。`setEquipmentLevelInfo(model,{itemId,plane})` 核對套裝 metadata、Q1–Q6／T1–T9、等級、owner 與雙向唯一指標；`editingInfo(model,'equipment',id,plane)` 依種類分派，`setEquipmentLevel` 僅改 y6。z7 使用 `backpackSetEquipmentLevel`，z9 使用 `setEquipmentLevel`；品質、詞條、套裝合成及進階模式不在範圍。y0 是保留身分，可不同於目前列號；y23／26／27 保留。各群組的獨立首次證明通過後才開放。
+詳見[研究與原生結果](../research/set-equipment-level.md)、[SDD](../../sdd/archive/2026-10-23-set-equipment-level/tasks.md)。`setEquipmentLevelInfo(model,{itemId,plane})` 核對套裝 metadata、Q1–Q6／T1–T9、等級、owner 與雙向唯一指標；`editingInfo(model,'equipment',id,plane)` 依種類分派，`setEquipmentLevel` 僅改 y6。z7 使用 `backpackSetEquipmentLevel`，z9 使用 `setEquipmentLevel`；品質、詞條、套裝合成及進階模式不在範圍。y0 是保留身分，可不同於目前列號；y23／26／27 保留。各群組的獨立首次證明通過後才開放。
 
 首次工具：`verify-set-equipment-level-suite.cjs --config EXTERNAL_CONFIG`。設定提供來源、runtime、原始基準與 SHA-256、兩份快取 manifest／檔案數及 repo 外 out；先依本機來源索引定位，不將設定提交。工具核對全部快取與 15 指紋，再執行原生生成、矩陣與 12 生命週期副本。各階段結果保存在 out；續跑綁定精確 core、原生 driver、oracle、情境、來源與輸入摘要。`--merge-results OUT --config EXTERNAL_CONFIG --record` 重讀完整原始結果、逐案重算後，只插入新 proof section／群組旗標並建置；失敗回滾四個產物。重跑已合併證據時省略 `--record` 作檢查，不覆寫首次證明。
 
