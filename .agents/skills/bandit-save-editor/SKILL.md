@@ -1,6 +1,6 @@
 ---
 name: bandit-save-editor
-description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模擬器存檔修改器）的資源與成長編輯、存檔知識、離線版、SEO／分享預覽、GitHub Pages、專案 Wiki，以及 repo 內的實驗性 macOS ARM64 啟動器。用於此專案的開發、驗證、發布、Wiki 維護與 Mac／CrossOver 啟動調查；其他專案的一般 GitHub 操作或其他遊戲不適用。
+description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模擬器存檔修改器）的資源與成長編輯、存檔知識、離線版、SEO／分享預覽、GitHub Pages、專案 Wiki／Project，以及 repo 內的實驗性 macOS ARM64 啟動器。用於此專案的開發、驗證、發布、Wiki／Project 維護與 Mac／CrossOver 啟動調查；其他專案的一般 GitHub 操作或其他遊戲不適用。
 ---
 
 # 山寨帳房 Repo 維護
@@ -33,6 +33,7 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 | PWA、直接開檔、離線驗收 | `docs/maintenance/pwa.md`、`docs/testing.md` |
 | 提交、發布、版本標示、SEO、分享預覽 | `docs/maintenance/release.md`、[Pages 參考](references/pages.md)；交付證據界線見[操作補充](references/operations.md) |
 | Wiki 內容與側邊欄維護 | `docs/maintenance/release.md`「Wiki 維護」；已初始化，直接用 Git 提交推送，除非使用者明確要求，否則不開 Edge 或其他瀏覽器 |
+| Project 卡片、狀態與清單異常 | `docs/maintenance/projects.md`；直接用 `gh` 更新既有 ID，清單異常不重複新增，除非使用者明確要求，否則不開瀏覽器 |
 | 下一版規劃、候選優先順序 | `docs/research/next-version-plan.md`；歷史盤點不當作現況或新授權 |
 | 使用者明確要求遊戲 UI | `docs/game-ui-testing.md` 快速開始與目標路徑，再讀當次 computer-use 技能 |
 | Mac／CrossOver／Steam／存檔位置 | [Mac 參考](references/macos.md)、`launcher/README.md`、`docs/research/macos-runtime-investigation.md` |
