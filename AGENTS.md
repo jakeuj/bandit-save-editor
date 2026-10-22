@@ -12,3 +12,4 @@
 - 處理 Mac 啟動、存檔路徑或 CrossOver 時，先讀 `launcher/README.md` 與 `docs/research/macos-runtime-investigation.md`；沿用 repo 的準備工具，在隔離副本驗證，分開記錄 Steam 清單、實際讀寫與重啟續玩結果。
 - 真實存檔、遊戲 payload、runtime、原始 log 與 crash dump 放 repo 外；repo 只維護程式、合成測試及去識別的研究筆記。
 - 專案技能正本為 `.agents/skills/bandit-save-editor/SKILL.md`（Codex 直接掃描）；`.claude/skills/bandit-save-editor` 是給 Claude Code 的相對 symlink，不另存副本。可重用的專案知識同步技能與 repo 文件，詳細證據以 repo 為準；技能隨 repo 公開，不寫入機器路徑、真實存檔位置或私人資料。
+- 開始處理本專案任務時，若技能清單沒有 `bandit-save-editor`，先直接讀技能正本照做，再修復連結：`.claude/skills/bandit-save-editor` 若是內容為相對路徑的一般檔案（常見於 Windows `core.symlinks=false`），執行 `git config core.symlinks true`、刪除該檔並 `git checkout -- .claude/skills/bandit-save-editor`；建立 symlink 權限不足時，改在本機建 directory junction 指向 `.agents/skills/bandit-save-editor`，但不提交 junction，也不在 repo 另存副本。確認可經連結讀到 `SKILL.md` 後，告知使用者需開新工作階段才會重新載入技能。
