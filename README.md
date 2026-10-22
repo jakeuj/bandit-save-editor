@@ -4,6 +4,8 @@
 
 **[開啟修改器](https://bandit.jakeuj.com/)**
 
+[Wiki 首頁](https://github.com/jakeuj/bandit-save-editor/wiki) · [操作教學](https://github.com/jakeuj/bandit-save-editor/wiki/操作教學) · [常見問題](https://github.com/jakeuj/bandit-save-editor/wiki/常見問題)
+
 ## 功能
 
 - v2.9 一般隨機角色天賦等級（遊戲 V1.0.11.2）：在品質的原版等級池內調整三槽天賦等級，預覽每槽效果；天賦 ID 不可更換或清空，品質 6 無可調整值。資質天賦連動丹藥上限，超過即整筆阻擋；同角色天賦、基礎資質與丹藥共 12 欄一起還原。詳見[本版說明](docs/releases.md#v29-一般隨機角色天賦等級)。
