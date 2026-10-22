@@ -131,3 +131,7 @@ Mac 啟動與存檔位置讀 [launcher 說明](../launcher/README.md)；規劃�
 <a id="v29-的技藝上限重開"></a>
 
 - [v2.9 的技藝上限重開](maintenance/talents.md#v29-的技藝上限重開)
+
+## 進度與續做
+
+問目前進度、下一步或繼續實作時，先看[下一步與目前進度](research/next-version-plan.md)，再依[承接流程](maintenance/planning.md)讀當前 SDD；不要從歷史排序重開已完成工作。

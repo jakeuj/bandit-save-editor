@@ -1,4 +1,4 @@
 interface:
   display_name: "山寨帳房 Repo 維護"
-  short_description: "維護山寨帳房存檔知識、成長編輯、Mac 啟動器與 Pages 發布"
-  default_prompt: "使用 $bandit-save-editor，依 repo 最新文件維護存檔修改器或 Mac 啟動器，完成所需修改並區分各階段驗證結果。"
+  short_description: "承接山寨帳房目前進度、下一版規劃與實作，維護存檔知識及發布"
+  default_prompt: "使用 $bandit-save-editor，先讀下一步與目前進度及當前 SDD，回報現在做到哪，或依我的實作指示接續第一個未完成任務；區分研究、驗證與發布。"

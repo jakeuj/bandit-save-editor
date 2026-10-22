@@ -6,6 +6,7 @@
 
 - 處理本專案的開發、研究、測試、發布或 GitHub 維護時，先載入 [bandit-save-editor 技能](.agents/skills/bandit-save-editor/SKILL.md)，再依任務表只讀相關文件；不要預設載入全部維護資料。一般對話不需載入。
 - 技能未出現在清單時，直接讀上述正本照做；載入或連結異常依[技能載入與連結修復](.agents/skills/bandit-save-editor/references/skill-loading.md)處理。
+- 問「現在做到哪／下一步做什麼／繼續實作下一版」時，從[下一步與目前進度](docs/research/next-version-plan.md)承接，操作規則見技能的進度承接入口。
 - 目前規劃、功能狀態與證據以最新 repo 文件及當前對話為準；歷史盤點、舊 prompt 與執行紀錄不當作新授權。
 
 ## 共通界線
