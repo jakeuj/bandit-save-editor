@@ -8,7 +8,9 @@
 python3 launcher/prepare-macos.py
 ```
 
-預設從 `NGO-Steam-0` bottle 的 `bandit` 安裝目錄複製，輸出到 `~/bandit-mac-port`；可用 `--source`、`--output` 指定其他位置。首次下載官方 runtime 約 141 MiB，並核對固定 SHA-256。工具僅支援已核對的遊戲腳本指紋，遊戲更新時會停止，需重新調查。
+預設從 `NGO-Steam-0` bottle 的 `塔防山贼模拟器` 安裝目錄複製（找不到時改用舊的 `bandit`），輸出到 `~/bandit-mac-port`；可用 `--source`、`--output` 指定其他位置。首次下載官方 runtime 約 141 MiB，並核對固定 SHA-256。工具只接受已核對路徑修正位置的遊戲腳本（目前為 V1.0.9.1、V1.0.10.2）；遊戲更新時會停止，需重新調查。
+
+`--verify-runtime GAME_DIR` 只做檢查、不寫入：確認準備好的副本的 `scripts/c3runtime.js` 恰好等於 `--source` 原始腳本套用已核對路徑修正的結果，並輸出原始與修正後的 SHA-256。隔離驗證工具用它確認 Mac 副本與 catalog 指紋的對應關係。
 
 準備完成後，雙擊 `~/bandit-mac-port/啟動山賊.command`。遊戲必須由此啟動器開啟，因為修正後的資料根目錄使用啟動時的 working directory。
 

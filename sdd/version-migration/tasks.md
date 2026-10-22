@@ -1,6 +1,6 @@
 # 版本遷移重驗任務
 
-- [ ] 1. `prepare-macos.py` 支援已核對指紋清單、中文安裝目錄預設及 `--verify-runtime`；以 V1.0.10.2 package 產生 repo 外副本，確認替換次數與重驗結果。
+- [x] 1. `prepare-macos.py` 支援已核對指紋清單、中文安裝目錄預設及 `--verify-runtime`；以 V1.0.10.2 package 產生 repo 外副本，確認替換次數與重驗結果。
 - [ ] 2. `verify-game.cjs` 在 darwin 接受「原始 15 指紋相符＋已核對補丁」的 runtime，state 記錄兩組雜湊；補拒絕情境的合成測試。
 - [ ] 3. 抽出共用的群組必要 checks，新增 `verification-suite.cjs` 群組清單，並以測試確保 22 群組全數涵蓋、與 build-editor 一致。
 - [ ] 4. 實作 `eventDigest` 正規化摘要，計算 V1.0.10.2 的 5 個 UI 群組摘要並補記到 verification；build-editor 接受並核對 `ui.source`。

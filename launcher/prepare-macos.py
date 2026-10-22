@@ -8,17 +8,23 @@ from pathlib import Path
 import shutil
 import subprocess
 import zipfile
-from urllib.request import urlopen
+from urllib.request import Request, urlopen
 
 
 VERSION = "0.82.0"
 ARCHIVE = f"nwjs-sdk-v{VERSION}-osx-arm64.zip"
 RUNTIME_SHA256 = "d2f38741cd6065e255aab6f947a8a1d417e59b2d6419a03f7ac45ac863621803"
-SCRIPT_SHA256 = "b5bf45f38e8165bbd5093702695486fe77797a27914bba8b1fdd5f46658396bc"
-DEFAULT_SOURCE = Path.home() / (
+# Original game scripts whose path patch sites were reviewed.
+SCRIPT_SHA256 = {
+    "b5bf45f38e8165bbd5093702695486fe77797a27914bba8b1fdd5f46658396bc": "V1.0.9.1",
+    "1e1643722efc032824881f03ce4d81df1135e6a8cd8e08d9fd87e56e480ac9f6": "V1.0.10.2",
+}
+STEAM_COMMON = Path.home() / (
     "Library/Application Support/CrossOver/Bottles/NGO-Steam-0/drive_c/"
-    "Program Files (x86)/Steam/steamapps/common/bandit"
+    "Program Files (x86)/Steam/steamapps/common"
 )
+SOURCE_CANDIDATES = (STEAM_COMMON / "塔防山贼模拟器", STEAM_COMMON / "bandit")
+DEFAULT_SOURCE = next((p for p in SOURCE_CANDIDATES if (p / "package.nw").exists()), SOURCE_CANDIDATES[0])
 
 
 def digest(path):
@@ -30,7 +36,7 @@ def digest(path):
 
 
 def patch_runtime(script):
-    if hashlib.sha256(script).hexdigest() != SCRIPT_SHA256:
+    if hashlib.sha256(script).hexdigest() not in SCRIPT_SHA256:
         raise SystemExit("遊戲版本已變更：請重新核對路徑修正，尚未修改任何遊戲副本。")
     text = script.decode("utf-8")
     replacements = {
@@ -51,18 +57,38 @@ def patch_runtime(script):
     return text.encode("utf-8"), counts
 
 
+def verify_runtime(source, game):
+    """Confirm a prepared copy differs from the original only by the reviewed path patches."""
+    with zipfile.ZipFile(source / "package.nw") as package:
+        original = package.read("scripts/c3runtime.js")
+    patched, counts = patch_runtime(original)
+    if (game / "scripts/c3runtime.js").read_bytes() != patched:
+        raise SystemExit("副本的 runtime 與已核對的路徑修正結果不同。")
+    print(json.dumps({
+        "game_version": SCRIPT_SHA256[hashlib.sha256(original).hexdigest()],
+        "original_c3runtime_sha256": hashlib.sha256(original).hexdigest(),
+        "patched_c3runtime_sha256": hashlib.sha256(patched).hexdigest(),
+        "path_replacements": counts,
+    }, ensure_ascii=False))
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", type=Path, default=DEFAULT_SOURCE)
     parser.add_argument("--output", type=Path, default=Path.home() / "bandit-mac-port")
     parser.add_argument("--runtime-archive", type=Path, help="Reuse an official downloaded archive")
+    parser.add_argument("--verify-runtime", type=Path, metavar="GAME_DIR",
+                        help="Only check a prepared game directory against --source; writes nothing")
     args = parser.parse_args()
+    if args.verify_runtime:
+        return verify_runtime(args.source.expanduser().resolve(), args.verify_runtime.expanduser().resolve())
     source, output = args.source.expanduser().resolve(), args.output.expanduser().resolve()
     if output == source or source in output.parents or output in source.parents:
         raise SystemExit("輸出必須與 Steam 遊戲目錄分開。")
 
     with zipfile.ZipFile(source / "package.nw") as package:
-        patched, counts = patch_runtime(package.read("scripts/c3runtime.js"))
+        original = package.read("scripts/c3runtime.js")
+        patched, counts = patch_runtime(original)
         for info in package.infolist():
             target = output / "game" / info.filename
             if not target.resolve().is_relative_to(output / "game"):
@@ -75,7 +101,9 @@ def main():
     if not archive.exists():
         print(f"下載官方 NW.js {VERSION} ARM64…", flush=True)
         partial = archive.with_suffix(".partial")
-        with urlopen(f"https://dl.nwjs.io/v{VERSION}/{ARCHIVE}", timeout=60) as response:
+        # The NW.js CDN rejects Python's default User-Agent.
+        request = Request(f"https://dl.nwjs.io/v{VERSION}/{ARCHIVE}", headers={"User-Agent": "bandit-save-editor-prepare"})
+        with urlopen(request, timeout=60) as response:
             with partial.open("wb") as stream:
                 shutil.copyfileobj(response, stream)
         if digest(partial) != RUNTIME_SHA256:
@@ -120,7 +148,8 @@ def main():
     command.chmod(0o755)
     (output / "build-info.json").write_text(json.dumps({
         "nwjs": VERSION, "architecture": "arm64", "runtime_sha256": RUNTIME_SHA256,
-        "original_c3runtime_sha256": SCRIPT_SHA256, "path_replacements": counts,
+        "game_version": SCRIPT_SHA256[hashlib.sha256(original).hexdigest()],
+        "original_c3runtime_sha256": hashlib.sha256(original).hexdigest(), "path_replacements": counts,
     }, ensure_ascii=False, indent=2) + "\n")
     print(f"啟動器：{command}\n獨立存檔：{game / 'savedir'}\nLog：{output / 'logs/game.log'}")
 
