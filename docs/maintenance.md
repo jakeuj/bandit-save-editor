@@ -119,7 +119,7 @@ node scripts/extract-game.cjs --source /path/to/unpacked/game --audit-only --aud
 3. 以 `scripts/verify-game.cjs --help` 查看隔離驗證入口。此工具需要 Windows 或 macOS、Node.js 22+、解包的遊戲、同平台 NW.js runtime 及已登入的 Steam；來源須與 catalog 的完整15個指紋（13個基礎加yx／tz）相符。Windows 傳入安裝目錄的 `game.exe`，工具會複製 runtime 至隔離遊戲目錄。用 `--catalog` 指定候選目錄、`--save-file` 指定唯讀來源存檔、`--artifacts` 指定已存在的 repo 外目錄；不能沿用不同 runtime 的驗證紀錄。
 4. 確認遊戲載入、遊戲寫檔、停止測試程序後重啟讀回及來源存檔雜湊；測試只在獨立 app／遊戲／profile 中執行，保留授權初始化，Steam 寫入導向本機鏡像與紀錄。
 5. 將去識別結果與相符指紋寫入 `verification.json`，再開啟對應群組。建置會核對全部來源指紋、檢查結果及群組覆蓋，未通過就停止。
-6. 在 `scripts/verification-requirements.cjs` 加入群組的證明區段與必要 checks，在 `scripts/verification-suite.cjs` 指定重驗家族與每個 check 的步驟，並在 `scripts/migration-scenarios.cjs` 補代表情境。漏加時建置與 `tests/version-migration.test.cjs` 會失敗，避免改版後無法重驗。
+6. 在 `scripts/verification-requirements.cjs` 加群組與 checks，`scripts/verification-suite.cjs` 指定家族／步驟，`scripts/migration-scenarios.cjs` 補代表情境，並在 `scripts/migration-analysis.cjs` 宣告相依。漏加不能在遷移時判為可沿用；首次獨立證明合併後才成為下次遷移的既有群組。
 
 v2.1 可使用 repo 外 `--scenario` JSON：`baseline` 為 `[x,y,z,value]` 陣列、`operations` 指定三項具名 API 的 `method`／`options`、`observe` 列出預期核對座標。`verify-game.cjs` 的候選旗標只存在隔離 VM，不修改公開 catalog；只有版本遷移流水線在下節條件下寫回。`--load` 等待主畫面，`--save`／`--assert` 確認布局就緒後執行；`scripts/verify-advanced.cjs --state /outside/state.json` 記錄原版屬性／加成，重啟後加 `--compare` 核對。原始 scenario、結果、SID 呼叫及玩家資料仍留在 repo 外。
 
@@ -127,25 +127,45 @@ v2.1 可使用 repo 外 `--scenario` JSON：`baseline` 為 `[x,y,z,value]` 陣�
 
 ## 版本遷移重驗
 
-遊戲正式分支更新後，事件或資料表指紋一變，重建 catalog 就會關閉全部新增群組。`scripts/verify-migration.cjs` 以代表子集一次重驗全部群組，規格與決策見 [SDD](../sdd/archive/2026-10-22-version-migration/proposal.md)。
+2026-10-23 起依[已核准規格](../sdd/selective-migration/proposal.md)按影響選跑。預設 `auto`：語意未變沿用，只有相關功能改變才啟動隱藏、靜音的隔離遊戲。例行更新不使用 computer use；UI 疑慮先記錄，實際故障再針對性複查，使用者明確要求才操作桌面。此次成本與重播結果見[精簡流程紀錄](research/selective-migration.md)。
 
-1. 依上節核對 Steam 公告、`appmanifest_4267800.acf` 的 buildid，並以 `--audit-only` 取得 repo 外 audit；依 SID 比對各群組依賴的事件，確認後把新指紋加入 `extract-game.cjs` 的已核對清單並重建 catalog。
-2. macOS 先確認 `launcher/prepare-macos.py` 的四處路徑修正位置仍在，把新腳本雜湊加入 `SCRIPT_SHA256`，再以 `--output` 準備獨立的驗證副本，不覆寫玩家的 `~/bandit-mac-port`。補丁後的 `c3runtime.js` 雜湊必然不同於 catalog；`verify-game.cjs` 只在 `--package` 指向原始安裝、且 `prepare-macos.py --verify-runtime` 證明差異只來自已核對替換時才接受。
-3. 開啟並登入 Mac 版 Steam，執行流水線。Mac 的遊戲資料夾以 `cp -c` 建立 APFS clone，未修改的資源不另佔空間（`fs.cpSync` 即使指定 `COPYFILE_FICLONE` 仍會完整複製）；同一 artifacts 目錄的副本共用一份測試 App，來源 runtime 改變時才重建。通過的副本只保留 state、log 與證據 JSON，整輪完成後再刪共用 App；失敗的副本完整保留以便除錯，加 `--keep-copies` 可全部保留。一次完整排練約留下數 MB。Mac 副本不會佔用畫面：`package.json` 隱藏視窗並保留背景計時，測試 App 以固定 bundle ID 與 `LSBackgroundOnly` 執行，不出現在 Dock、不搶焦點，區域網路權限最多只詢問一次；`LSUIElement` 會讓 NW.js 載入 ICU 失敗而無法啟動，不能替代。遊戲找不到 `sys\sys.dat` 時預設全螢幕且有聲音，setup 會寫入不全螢幕、靜音的設定（Mac 路徑補丁不處理這個分隔符，檔名就是含反斜線的 `sys\sys.dat`）。
+### 日常更新入口
+
+1. 核對正式分支公告、公告日期與 `appmanifest_4267800.acf` buildid。公告協助縮小範圍，實際判斷仍以來源差異為準。
+2. 先跑下列 `--plan`。`--package` 可傳安裝目錄或 `package.nw`；只擷取 15 個分析來源，依整包 SHA 與逐檔雜湊重用 repo 外快取。相同來源不啟動遊戲，不必每次完整解包圖片、音樂及 runtime。
+3. 未知事件／runtime 的知識生成仍須靜態查核：依 SID 確認後更新生成器來源清單、重建候選 catalog。`--plan` 可以先分析未知來源；真正寫回要求 `--catalog` 與實際 15 來源完全相符。格式無法解析就留下待查報告及既有發布版，不升級成 UI 操作或自行宣稱相容。
+4. 去掉 `--plan` 執行。沒有原生案例時只合併合法沿用證據；需要原生案例才提供 runtime／固定存檔。工具會按需解出完整隔離來源，保留原版 Steam 初始化、存檔／新 PID 讀回與原始雜湊檢查。
 
 ```sh
-node scripts/verify-migration.cjs --source PREPARED_COPY/game --runtime PREPARED_COPY/runtime/nwjs-sdk-v0.82.0-osx-arm64/nwjs.app/Contents/MacOS/nwjs --save-file PREPARED_COPY/game/savedir/ea1save.dat --artifacts /outside/repo/artifacts --package STEAM_LIBRARY/steamapps/common/塔防山贼模拟器
+node scripts/verify-migration.cjs --package STEAM_GAME_DIR --artifacts EXTERNAL_DIR --plan
+node scripts/verify-migration.cjs --package STEAM_GAME_DIR --artifacts EXTERNAL_DIR --catalog CANDIDATE.json --runtime STEAM_GAME_DIR/game.exe --save-file BASE.dat
 ```
 
-生成器目前依基準存檔建立 15 個副本：成長、v2.1 一般上界／超限／後續操作、v2.2、v2.3 替換、v2.4 背包與選槽、品質四個庫別方向，以及一般隨機角色基礎資質與技藝上限各兩個代表／生命週期副本。每個副本依序執行原版載入、原生效果、原生存檔、新 PID 重啟讀回；標記的副本再跑後續原生操作並做第二輪讀寫重啟，品質副本另跑 6,592 組公式比對。基準存檔需有已放置的書院與校場、閒置的草席與木桩，以及第二名角色；尚未完成初建的等級 0 建築只在拋棄式副本設為等級 1。後續副本把第二名角色設為流民 4 級、差 1 點升級，原生自然經驗呼叫一次必須升到 5 級，再轉職為村民；`获得职业经验` 忽略「獲得量」參數，每次只給約十個工作間隔的經驗，不要用大量迴圈補足。
+公告連結可加 `--announcement URL` 寫入分析報告；預設終端只印選跑摘要及報告位置，需逐步 log 才加 `--verbose`。純知識更新本機用 `npm run verify:knowledge`，受影響功能另補相關 Node，完整 `verify:release` 留給 Pages CI；驗證框架或編輯器程式本身變更仍在本機完整跑一次。
 
-結果寫在 repo 外的 `results.json`，寫回規則如下：
+### 相依與證據
 
-- 全部副本完成、24 群組的原生 checks 都成立，且指紋與現有證明不同時，自動寫入 `knowledge/verification.json` 與 catalog 閘門，重建 HTML 並執行 `--check`。建置失敗會還原 catalog、證明、HTML 與 `sw.js`。不會自動提交或推送。
-- 指紋與現有證明相同時只輸出比較報告，不以代表子集覆寫原本的完整矩陣證明。
-- 任一步失敗或原生 checks 未全過時不寫入；報告列出失敗的副本、步驟與錯誤。
+`migration-analysis.cjs` 宣告各家族的存讀、公式、生命週期、必要資料表與寫入區域。語意摘要解析 expression、物件與 bound-reference 編號、變數 SID／初值及被呼叫函式；保留常數、條件、寫入位置和未知項目。只排除已辨識的顯示操作與職業文案欄，並將已核對的套裝合成動態庫別限制在裝備範圍。未宣告、缺失或不支援的原生相依資訊不能當作未變。
 
-新版證明標示 `coverage: "representative"` 與各副本操作數，不沿用舊版案例數。首次選槽與品質升降的 UI check 只在 `verification-requirements.cjs` 宣告的 UI 事件摘要不變時沿用（`uiEvidence.source: "carried"`）；摘要不同就以關閉狀態寫入，再依 [UI 手冊](game-ui-testing.md#版本遷移後的-ui-補測)補最小案例。摘要只涵蓋宣告的事件，被呼叫但未列入的函式不在保證內。
+`knowledge/migration-baseline.json` 只保存摘要與指紋，不含遊戲 payload。repo 已附 V1.0.11.2 基準；需要初建時，以相符已驗證來源執行 `--baseline`，工具先檢查現有建置證明，不能用未驗證的新來源建立沿用基準。
+
+- 來源、相依與編輯器程式都未變：不跑原生測試，完整重跑也只比較，不覆寫首次完整矩陣。
+- 公式／規則改變：跑該家族的效果及原版存讀；未變的生命週期沿用。生命週期改變只選對應副本；共用 IO 改變才擴大。
+- 品質公式矩陣依相符來源／規則共用，未變省略，有變最多在一份完成副本執行一次。
+- 新版複合證明逐項保存 `native`／`carried`／`deferred`；沿用直指原始實測版本與摘要，連續改版不堆疊證據鏈。未跑項目不填原生通過；UI 記為本版未重驗，不阻擋既有功能。
+- 新增可寫群組仍走獨立首次證明，不能以代表遷移或 UI 未重驗政策首次開放。
+
+建置與各獨立 proof 檢查器共用複合證據閘門，核對當前 15 來源、核心程式、規則摘要、原始證據與群組覆蓋。完成所有選跑及合法沿用後才更新 catalog／verification／基準，重建 HTML／SW；失敗還原五份檔案。不提交或推送。
+
+### 擴大與續跑
+
+`--mode full` 明確要求全部代表副本，目前為 15 份；UI 仍不自動操作。`--copies name,name` 供診斷，未知或重複名稱立即報錯，且不寫回正式證明。`--previous-source OLD_SOURCE --plan` 可重播兩版靜態分析，不能用來寫入證明。
+
+原生執行每完成一份副本立即保存 repo 外 `checkpoint.json`。中斷後用原參數加 `--resume RUN_DIR`；來源、候選 catalog、驗證工具、核心程式、runtime、基準存檔及情境都須相符，完成證據檔也須逐一匹配，才重用成功副本；失敗／未跑的副本從頭重試。工具／輸入或證據改變就拒絕續用，不把舊成功帶到新條件。
+
+清理只針對本輪外部目錄，失敗記為告警，不取消測試結果；`--keep-copies` 保留完整副本。原始存檔、state、checkpoint、原生觀察及 log 都不能提交。
+
+Mac 啟動器不是每個 Windows 版本的固定驗收項。明確處理 Mac 時才依 [launcher 說明](../launcher/README.md)核對路徑補丁與獨立準備來源；`--source` 傳補丁後完整副本，`--package` 指原安裝供驗證來源。Windows 沿用／原生結果不能擴張成 Mac 已實測。
 
 ## 離線 HTML 人工驗收
 

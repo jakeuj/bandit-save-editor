@@ -24,7 +24,7 @@ v2.2 的既有詞條係數走 `affixInfo`／`setEquipmentAffixCoefficient`，丹
 
 來源為使用者合法持有、解包的遊戲副本。`package.nw` 可作 ZIP 分析；原始解析輸出與完整遊戲資料留在 repo 外。
 
-未知指紋先使用 `node scripts/extract-game.cjs --source /outside/repo/unpacked-game --audit-only --audit /outside/repo/audit.json`，取得指紋與原始事件／讀寫索引；此模式不修改 catalog、繁中對照或驗證旗標。以 SID 追查規則，expression 編號可能隨版本移動。完成規則查核後才考慮下列知識重建；新版仍需相符來源的隔離實測。
+版本遷移先依 repo `docs/maintenance.md` 跑 `verify-migration.cjs --plan`：先選取必要來源，語意未變沿用原始證據，需要才建立原生副本。未知規則再使用 `node scripts/extract-game.cjs --source /outside/repo/unpacked-game --audit-only --audit /outside/repo/audit.json` 取得原始事件／讀寫索引；此模式不修改 catalog、繁中對照或驗證旗標。以 SID 追查規則，expression 編號可能移動；只有受影響功能補相符來源實測，新增寫入保留首次證明。
 
 ```sh
 node scripts/extract-game.cjs --source /path/to/unpacked/game --audit /outside/repo/bandit-audit.json
@@ -45,7 +45,7 @@ node scripts/build-editor.cjs
 
 ## 驗收界線
 
-存檔修改器以隔離遊戲原生函式與原版存檔／停止／新程序重啟讀回為主要遊戲證據；合成測試與編輯器網頁驗收另做。遊戲 UI 僅針對顯示／快取差異、選單／按鈕限制、輸入／視窗問題或明確使用者需求補驗，不必為每次版本補齊全套點擊路徑與截圖。完整來源、關聯與雜湊核對仍是寫入開放條件。報告按實際證據命名，不把原生函式操作稱為 UI 操作。
+存檔修改器以原生函式及原版存讀／重啟為首次遊戲證據；既有功能改版依相依摘要選跑或沿用。例行 UI 未重驗不阻擋既有功能，疑慮待實際故障複查，使用者明確要求才操作遊戲桌面。完整來源、規則與原始證據仍核對，報告區分本版原生、沿用及 UI 未重驗；原生函式操作不稱為 UI 操作。
 
 研究筆記已記錄名稱、三類經驗與 v2.1 三項進階修改在隔離遊戲的載入、本機存檔及重啟讀回；這不等於完整選單重播、真實 Cloud 上傳、成就、DLC 獎勵或長時間穩定性。報告引用這些範圍，新增改動另做對應驗證。
 
@@ -57,7 +57,7 @@ node scripts/build-editor.cjs
 
 核心入口為 `equipmentAffixReplacementInfo`、`previewEquipmentAffixReplacement`、`setEquipmentAffix`，參數與交易見 repo `docs/maintenance.md`。只替換普通裝備唯一已選槽的合法 ID／係數，原版範圍、禁止新增重複、共用整件裝備還原群組；無變更不新增交易。合法池來自生成器，效果預覽只計單件，不推算完整角色面板。
 
-`equipmentAffixReplacement` 獨立證明核對 13+2 來源、限制與規則／資料雜湊。原生公式、38 候選／品質2–6 的 380 組比對、76 次後續原生洗練及搬移再編輯證據以 repo `docs/research/precise-affix-editing.md` 為準，避免在技能複製公式。來源異動須重做證明。
+`equipmentAffixReplacement` 首次獨立證明核對 13+2 來源、限制與規則／資料雜湊。原生公式、38 候選／品質2–6 的 380 組比對、76 次後續原生洗練及搬移再編輯證據以 repo `docs/research/precise-affix-editing.md` 為準；後續改版依遷移相依判斷沿用或選跑，不因整包指紋改變重做完整矩陣。
 
 z9 y0 為初始背包列號，搬移後可不等於目前列號且可重複；保留範本、界內正整數及穿戴雙向指標檢查，不自動改寫識別欄。原生洗練快取與函式公式結果分開記錄，不能以主動全刷新掩蓋遊戲行為。
 

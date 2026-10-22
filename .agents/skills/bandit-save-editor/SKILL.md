@@ -27,8 +27,8 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 - 一般隨機角色基礎資質、三項組合值域或與丹藥的還原相依：讀 `docs/research/random-character-growth.md`、`sdd/random-character-growth/tasks.md` 與維護指引 v2.7 段落。v2.7 僅處理範本0基礎資質，技藝上限／天賦另案；開放狀態以獨立證明為準。
 - 一般隨機角色九項技藝上限、27欄累計還原、原生封頂餘額或首次證明：讀 `docs/research/random-character-skill-caps.md`、`sdd/random-character-skill-caps-b/tasks.md` 與維護指引 v2.8 段落。A核心與B介面／完整矩陣分開驗收，首次開放走獨立suite，代表遷移不能取代；相符15來源、規則及整份core摘要才有效，天賦編輯另案。
 - 批次經驗、普通裝備升滿、科技同值或大量變更預覽：讀`docs/maintenance.md`的v2.6段落與`sdd/batch-editing/`。批次沿用既有具名API及閘門，暫存模型分段檢查，全部合格才一次提交；復原一步撤回整批，個別還原維持累計群組。完整尺寸、瀏覽器及隔離冒煙證據以任務紀錄為準，發布狀態另查repo。
-- 遊戲驗證先依下方「驗證與交付」選擇方式；只有確定需要操作遊戲UI時，才讀 repo `docs/game-ui-testing.md` 的「快速開始」及目標路徑、完成標記與故障表。工具API以當次computer-use技能為準，座標與視窗ID重新取得；編輯器選檔卡住則讀同檔確認框段落。
-- 遊戲改版後重驗既有群組、Mac 隔離重驗或版本遷移流水線：讀 repo `docs/maintenance.md`「版本遷移重驗」與 `sdd/archive/2026-10-22-version-migration/`。流水線以代表子集重驗全部群組；指紋不同且原生 checks 全過才自動寫回，同指紋只比較。UI check 僅在宣告事件摘要不變時沿用，否則依 UI 手冊補最小案例。
+- 使用者明確要求操作遊戲 UI 時，才讀 repo `docs/game-ui-testing.md` 的「快速開始」、目標路徑與完成標記；工具 API 以當次 computer-use 技能為準，座標與視窗 ID 重新取得。
+- 遊戲改版／版本遷移：讀 repo `docs/maintenance.md`「版本遷移重驗」。先看正式公告，再跑 `verify-migration.cjs --plan`；預設 auto 按語意相依選跑，未變沿用，相關疑慮只補隱藏原生測試。UI 未重驗不阻擋既有功能，例行 computer use 為零。來源快取、基準、full／resume 與寫回細節以該文件為準；原代表全驗流程留在歷史 SDD。
 - 核心 API、來源同步、知識驗證或驗收說明：讀 repo 的 `docs/maintenance.md`；待驗收狀態見 `sdd/save-knowledge/tasks.md`。
 - 遊戲知識版本標示同步、SEO、分享預覽、正式網址、GitHub 專案網站連結或 Pages 發布驗證：讀 [references/pages.md](references/pages.md)。
 - Mac 啟動、CrossOver、Steam 或存檔位置：讀 [references/macos.md](references/macos.md) 的來源定位與啟動約束，再讀 repo 的 `launcher/README.md`、`docs/research/macos-runtime-investigation.md`。
@@ -37,9 +37,9 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 
 處理新版相容性時，先查 [Steam 遊戲最新消息](https://store.steampowered.com/news/app/4267800)，核對公告日期、版本及正式／測試／相容分支，將當次公告的永久連結記入 repo 研究筆記。新聞頁無法取得正文時，改用 [Steam 官方新聞 API](https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=4267800&count=5&maxlength=0&feeds=steam_community_announcements)。
 
-實際安裝版本另以 `appmanifest_4267800.acf` 的 `buildid` 與 `package.nw` 來源指紋確認；包內個別版本字串可能落後。未知來源先依 [save-format.md 的純分析流程](references/save-format.md#重建知識)取得 audit，再以 SID 查核規則。
+實際安裝版本另以 `appmanifest_4267800.acf` 的 `buildid` 與 `package.nw` 指紋確認；包內版本文字可能落後。先用遷移工具 `--package`／`--plan` 選取必要檔案分析，無關更新不完整解包或啟動遊戲；未知規則再依 [save-format.md 純分析流程](references/save-format.md#重建知識)查 SID。
 
-新版 V1.0.11.2 的來源差異、Windows 遷移與必要 UI 補測見 repo 的 `docs/research/v1.0.11.2-audit.md`；前版歷史見 `docs/research/v1.0.10.2-audit.md`，實際開放版本以 catalog／verification 為準。公告與靜態分析各自記錄，只有完成相符來源的遊戲讀寫及重啟驗證後才更新實測標示；Windows 結果不代表新版 Mac 啟動器已相容。
+V1.0.11.2 當次完整驗證見 `docs/research/v1.0.11.2-audit.md`；後續精簡政策及兩版重播見 `docs/research/selective-migration.md`。實際開放版本以 catalog／verification 為準，分清本版原生實測、沿用及 UI 未重驗；Windows 結果不代表 Mac 已實測。
 
 ## 編輯來源
 
@@ -53,16 +53,16 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 - 匯出只替換指定值的 token，保留其他原始文字，包括大型整數 literal、BOM、空白及指數寫法。數值與字串皆須維持原型別；JSON 字串跳脫與 HTML 顯示跳脫各自處理。
 - 欄位權限由 `resolveField`／`setField` 統一判斷；舊 `set` 與自訂座標不能繞過已知唯讀限制。
 - 角色、已習得職業及九項技藝的經驗使用 `addExperience` 聯動結算；等級與餘額不單獨改寫。同一角色同一類經驗的累計變更整組還原，`undo` 則回到前一次交易；失敗交易全部回滾。
-- 新增可寫群組需追查事件與關聯、完成合成測試及隔離遊戲載入／存檔／重啟驗證，再用相符的完整來源指紋開放 catalog 閘門。同時加入驗證需求表、重驗群組清單與代表情境，讓改版後能一次重驗。詳細流程見維護指引，不能只切換旗標或沿用不同來源的驗證證明。
+- 新增可寫群組保留首次獨立證明：追查關聯、完成合成及隔離原生存讀／重啟後，以相符完整來源開閘。同時擴充需求表、suite、情境及相依宣告；代表遷移與 UI 未重驗政策不能首次開放新群組。
 - 真實存檔、遊戲 payload、runtime、驗證 state 與原始 log 留在 repo 外。使用固定副本驗證，修改玩家原檔依任務指示執行並保留備份。
 
 ## 驗證與交付
 
 日常推送採快速流程：只檢查建置同步、提交及推送，不重跑全套 Node／瀏覽器／遊戲測試。Pages CI 只檢查建置同步並發布；完整驗收保留 `npm run verify:release`，使用者要求或具體故障需要時才執行。發布後只查對應 SHA 的部署結果；明確要求確認線上版本時，額外 GET 首頁核對版本。成功僅回報提交與部署連結，失敗才讀詳細日誌及擴大檢查。 開發測試分工見 `docs/testing.md`。
 
-存檔修改預設以合成測試、隔離遊戲原生函式、原版存檔及停止／新 PID 重啟讀回為主，保留完整來源與原始存檔雜湊核對。一般功能驗證沿用上述流程及仍相符的既有證據。
+遊戲遷移先依相依摘要沿用／選跑，只有受影響部分補隔離原生函式、原版存檔／新 PID 讀回；保留來源與原始存檔雜湊。已完成副本可依相同輸入續跑，公式共用，清理告警不推翻結果。
 
-僅在使用者明確要求，或有無法由原生函式／存檔證據回答的具體問題時操作遊戲UI，例如按鈕資格、選槽限制、即時顯示或實際輸入異常。開始前說明要補哪項證據，只跑最小代表案例，取得完成標記即停止；不為例行回歸重走導覽或重拍完整矩陣。工具受阻時記錄缺口，繼續可獨立完成的原生驗證；既有強制UI閘門仍須取得證據才開放。編輯器的原生選檔視窗、安裝流程、使用者特定瀏覽器或無法由程式回答的視覺問題，也依相同原則補最小computer use。詳細操作見 repo `docs/game-ui-testing.md`。
+例行更新不使用 computer use。遊戲 UI 變動先記錄，實際故障後先查原生／存檔證據；使用者明確要求桌面操作時，說明缺口並只跑最小案例。既有群組不因 UI 未重驗關閉；新增功能首次證明另依原規格。編輯器的原生選檔、安裝或特定使用者瀏覽器問題，也先用程式化證據縮小範圍。
 
 隔離遊戲測試一律預設靜音，沿用 `scripts/verify-game.cjs` 共用啟動器的 `--mute-audio`；既有副本重啟及手動啟動也須保留。不要調整 Windows 主音量、玩家遊戲或 Discord，也不要自行開聲音驗收；音訊測試須由使用者明確要求。
 

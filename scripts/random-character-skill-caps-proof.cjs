@@ -59,24 +59,26 @@ function copyChecks(copy,expected){
  }
  return checks;
 }
-function manifestProblem(copies,initial,catalog){
+function manifestProblem(copies,initial,catalog,{partial=false}={}){
  const expectedNames=initial?['random-skill-caps-matrix','random-skill-caps-lifecycle']:['random-skill-caps-representative','random-skill-caps-lifecycle'];
- assert.deepEqual(copies.map(c=>c.name).sort(),expectedNames.sort(),'完整矩陣／代表矩陣與生命週期副本不完整');
+ if(partial)assert.ok(!initial&&copies.length>0&&copies.length<=2&&new Set(copies.map(c=>c.name)).size===copies.length&&copies.every(c=>expectedNames.includes(c.name)),'未知或重複代表副本');
+ else assert.deepEqual(copies.map(c=>c.name).sort(),expectedNames.sort(),'完整矩陣／代表矩陣與生命週期副本不完整');
  const matrix=copies.find(c=>!c.lifecycle),lifecycle=copies.find(c=>c.lifecycle);
- assert.ok(matrix&&lifecycle,'缺少矩陣或生命週期');
- const manifest=matrix.evidence?.scenario?.skillCapManifest,life=lifecycle.evidence?.scenario?.skillCapManifest;
+ if(!partial)assert.ok(matrix&&lifecycle,'缺少矩陣或生命週期');
+ const manifest=matrix?.evidence?.scenario?.skillCapManifest||[],life=lifecycle?.evidence?.scenario?.skillCapManifest||[];
  assert.ok(Array.isArray(manifest)&&Array.isArray(life),'缺少完整manifest');
+ if(matrix){
  assert.equal(manifest.length,initial?108:2,'矩陣案例數不完整');
  assert.ok(manifest.every(m=>Number.isSafeInteger(m.id)&&m.id>0),'角色ID不合法');
  assert.equal(new Set(manifest.map(m=>m.id)).size,manifest.length,'矩陣角色重複');
- assert.equal(matrix.cases,manifest.length);assert.equal(lifecycle.cases,2);assert.equal(life.length,2);
+ assert.equal(matrix.cases,manifest.length);
  assert.deepEqual(matrix.evidence.batchRequests,[{kind:'skillExperience',characterId:manifest[0].id,amount:20000}],'批次矩陣要求不符');
- assert.deepEqual(lifecycle.evidence.batchRequests,[],'生命週期副本不應混入批次');
- assert.deepEqual(life.map(m=>m.id),[10,11]);assert.ok(life.every(m=>m.quality===1));
  const keys=manifest.map(m=>`${m.quality}:${m.primary}:${m.direction}`).sort();
  const expected=[];for(const q of initial?[1,2,3,4,5,6]:[1,6])for(const p of initial?[1,2,3,4,5,6,7,8,9]:[1])for(const d of initial?['up','down']:['up'])expected.push(`${q}:${p}:${d}`);
  assert.deepEqual(keys,expected.sort(),'矩陣缺少品質／主技藝／方向');
  for(const m of manifest)assert.equal(m.secondary,(m.primary-1+(m.direction==='up'?1:4))%9+1,'次技藝位置不符完整矩陣');
+ }
+ if(lifecycle){assert.equal(lifecycle.cases,2);assert.equal(life.length,2);assert.deepEqual(lifecycle.evidence.batchRequests,[],'生命週期副本不應混入批次');assert.deepEqual(life.map(m=>m.id),[10,11]);assert.ok(life.every(m=>m.quality===1));}
  for(const c of copies){
   const scenario=c.evidence.scenario;assert.equal(scenario.skillCapCoverage,initial?'initial-matrix':'representative','coverage不符');assert.equal(scenario.skillCapMatrixVersion,1,'未知矩陣版本');
   assert.deepEqual(scenario.skillCapCharacters,scenario.skillCapManifest.map(m=>m.id));assert.equal(scenario.skillCapCases?.length,c.cases);
@@ -100,6 +102,7 @@ function manifestProblem(copies,initial,catalog){
  }
  return {matrixCases:manifest.length,lifecycleCases:life.length,manifestHash:sha(copies.map(c=>({name:c.name,manifest:c.evidence.scenario.skillCapManifest})))};
 }
+function validateMigrationCopy(copy,k,expected){manifestProblem([copy],false,k,{partial:true});return copyChecks(copy,expected);}
 function validateResults(k,source,results,{initial=true}={}){
  assert.equal(results?.completed,true,'隔離矩陣未完成');
  assert.equal(results.gameVersion,k.gameVersion,'結果遊戲版本不符');
@@ -121,6 +124,7 @@ function record(k,source,{date,platform,checks,coverage='representative',copies,
  return {date,platform,...binding(k,source),coverage,copies,validation,initialVerification,groups:{[group]:{checks}}};
 }
 function problem(k,proof,source){
+ if(proof.schemaVersion===2)return require('./migration-proof.cjs').problem(k,proof,source,group);
  const p=proof[group],expected=binding(k,source),required=require('./verification-requirements.cjs').requiredChecks(group);
  if(!p||!k.randomCharacterSkillCaps||Object.keys(expected.fingerprints).length!==15||!same({gameVersion:p.gameVersion,fingerprints:p.fingerprints,dataHash:p.dataHash,formulaHash:p.formulaHash},expected)||initialProblem(p.initialVerification)||!['initial-matrix','representative'].includes(p.coverage)||p.validation?.version!==1||!hashPattern.test(p.validation?.evidenceHash||'')||!hashPattern.test(p.validation?.manifestHash||'')||p.validation.lifecycleCases!==2||p.validation.matrixCases!==(p.coverage==='initial-matrix'?108:2)||p.validation.runner!==(p.coverage==='initial-matrix'?'verify-skill-caps-suite.cjs':'verify-migration.cjs')||!required.every(c=>p.groups?.[group]?.checks?.[c]===true))return '一般隨機角色技藝上限缺少相符的獨立驗證';
  const initial=p.coverage==='initial-matrix',copies=[{name:initial?'random-skill-caps-matrix':'random-skill-caps-representative',operations:initial?108:2},{name:'random-skill-caps-lifecycle',operations:2}];
@@ -132,4 +136,4 @@ function requireNativeRunner(){
  if(family.pendingReason)throw Error(family.pendingReason+'；不可產生或合併成功證明');
  for(const [file,fn]of [['verify-random-character-skill-caps.cjs','validateEffects'],['verify-skill-caps-lifecycle.cjs','validateLifecycle']])assert.equal(typeof require('./'+file)[fn],'function','原生驗證器尚未完成');
 }
-module.exports={group,sha,binding,formulaHash,dataHash,record,problem,requireNativeRunner,copyChecks,validateResults,initialProblem};
+module.exports={group,sha,binding,formulaHash,dataHash,record,problem,requireNativeRunner,copyChecks,validateMigrationCopy,validateResults,initialProblem};

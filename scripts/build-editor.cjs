@@ -14,6 +14,11 @@ const proofPath=path.join(root,'knowledge/verification.json');
 if(Object.values(knowledge.verification).some(Boolean)){
   if(!fs.existsSync(proofPath))throw Error('寫入閘門缺少遊戲驗證紀錄');
   const proof=JSON.parse(fs.readFileSync(proofPath,'utf8'));
+  if(Object.hasOwn(proof,'schemaVersion')&&proof.schemaVersion!==2)throw Error('不支援的驗證證明格式');
+  if(proof.schemaVersion===2){
+    const issue=require('./migration-proof.cjs').problem(knowledge,proof,fs.readFileSync(path.join(root,'src/core.js'),'utf8'));
+    if(issue)throw Error(issue);
+  }else{
   if(proof.eventFingerprint!==knowledge.fingerprints['data.json']||proof.runtimeFingerprint!==knowledge.fingerprints['scripts/c3runtime.js']||!Object.values(proof.checks).every(v=>v===true))throw Error('遊戲驗證紀錄與來源不相符');
   for(const [group,enabled]of Object.entries(knowledge.verification))if(enabled)R.requiredChecks(group);
   if(R.sections.base.groups.some(group=>knowledge.verification[group])&&!R.sections.base.checks.every(k=>proof.checks[k]===true))throw Error('基礎與進階修改缺少必要的遊戲驗證項目');
@@ -36,6 +41,7 @@ if(Object.values(knowledge.verification).some(Boolean)){
     const ui=R.uiEvidenceProblem(group,c,knowledge.gameVersion);if(ui)throw Error(ui+'：'+group);
   }
   if(['equipmentLevel','professionTrainingCap','advancedTechnologyLevel'].some(group=>knowledge.verification[group]||knowledge.verification[group+'Advanced'])&&JSON.stringify(proof.editingLimits)!==JSON.stringify(knowledge.editingLimits))throw Error('進階修改範圍與遊戲驗證紀錄不相符');
+  }
 }
 for (const [id, file] of [['save-core', 'core'], ['save-ui', 'ui'], ['save-pwa', 'pwa']]) {
   const code = fs.readFileSync(path.join(root, `src/${file}.js`), 'utf8').replace('/*__KNOWLEDGE__*/null', JSON.stringify(knowledge).replace(/</g, '\\u003c')).replace('/*__KNOWLEDGE_UI__*/',()=>fs.readFileSync(path.join(root,'src/knowledge-ui.js'),'utf8')).replace('/*__PROFESSION_UI__*/',()=>fs.readFileSync(path.join(root,'src/profession-ui.js'),'utf8')).replace('/*__BATCH_UI__*/',()=>fs.readFileSync(path.join(root,'src/batch-ui.js'),'utf8'));

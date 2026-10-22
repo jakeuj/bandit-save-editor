@@ -90,6 +90,15 @@ function resultFixture({representative=false,catalog=k}={}){
  return {date:'2026-10-22T12:00:00.000Z',gameVersion:catalog.gameVersion,platform:'synthetic-test-only',completed:true,copies:records,skillCapsBinding:P.binding(catalog,core),checks:{[P.group]:checks()},ui:{}};
 }
 
+test('selective cap migration validates each present representative manifest without requiring unchanged lifecycle',()=>{
+ const results=resultFixture({representative:true});
+ for(const copy of results.copies)assert.ok(P.validateMigrationCopy(copy,k,results.skillCapsBinding).restart);
+ const matrix=structuredClone(results.copies[0]);matrix.evidence.scenario.skillCapManifest.pop();
+ assert.throws(()=>P.validateMigrationCopy(matrix,k,results.skillCapsBinding),/案例數/);
+ const life=structuredClone(results.copies[1]);life.evidence.source.assertions.at(-1).pid++;
+ assert.throws(()=>P.validateMigrationCopy(life,k,results.skillCapsBinding));
+});
+
 test('complete native-shaped fixture merges only the new group; partial matrices, stale calculations and disconnected observations fail',()=>{
  const results=resultFixture(),originalProof=structuredClone(old),originalCatalog=structuredClone(k),merged=mergeProof({catalog:k,proof:old,results,coreSource:core});
  assert.equal(P.problem(merged.catalog,merged.proof,core),null);assert.equal(merged.catalog.verification[P.group],true);

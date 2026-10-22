@@ -23,7 +23,7 @@ function steps(copy, setupArgs) {
   const list = [
     {step: 'setup', script: 'verify-game.cjs', args: ['--setup', ...setupArgs, ...scenario, ...(copy.batchRequestsFile ? ['--batch-requests', copy.batchRequestsFile] : [])]},
     {...game('load', '--load', '--mode', '云存档'), retry: true},
-    ...oracle(false), ...(family.formulas ? [{step: 'formulas', script: family.oracle, args: ['--state', '{state}', ...scenario, '--formulas']}] : []), game('save', '--save'), game('assert', '--assert', '--quiet'), ...restart('reload'), ...oracle(true)
+    ...oracle(false), ...(family.formulas && copy.formulas!==false ? [{step: 'formulas', script: family.oracle, args: ['--state', '{state}', ...scenario, '--formulas']}] : []), game('save', '--save'), game('assert', '--assert', '--quiet'), ...restart('reload'), ...oracle(true)
   ];
   if (copy.lifecycle) {
     const scripts = family.lifecycle || [];
@@ -38,7 +38,7 @@ function steps(copy, setupArgs) {
 // Required checks proven by the recorded copies. A check holds when at least one copy of an owning family ran its step
 // and every such step passed; lifecycle steps run only on marked copies. Groups whose families did not run are left
 // out. UI checks hold only for native or carried UI evidence.
-function provenChecks(copies, ui = {}, skillCapsBinding) {
+function provenChecks(copies, ui = {}, skillCapsBinding, catalog) {
   const familyRan = family => copies.some(c => c.family === family);
   const passed = (family, step) => {
     const ran = copies.filter(c => c.family === family).flatMap(c => c.steps.filter(s => s.step === step));
@@ -46,9 +46,10 @@ function provenChecks(copies, ui = {}, skillCapsBinding) {
   };
   const result = {};
   for (const [family, spec] of Object.entries(S.families)) for (const group of spec.groups) {
-    if (!familyRan(family)) continue;
+    const owners=check=>require('./migration-analysis.cjs').owners(group,check);
+    if (!familyRan(family)&&!R.requiredChecks(group).some(check=>owners(check).some(familyRan))) continue;
     if (family === Caps.group) {
-      const derived = copies.filter(c => c.family === family).map(c => { try { return Caps.copyChecks(c, skillCapsBinding); } catch { return null; } });
+      const derived = copies.filter(c => c.family === family).map(c => { try { return catalog&&c.evidence?.scenario?.skillCapCoverage==='representative'?Caps.validateMigrationCopy(c,catalog,skillCapsBinding):Caps.copyChecks(c, skillCapsBinding); } catch { return null; } });
       result[group] = Object.fromEntries(R.requiredChecks(group).map(check => {
         const owners = derived.filter(c => c && Object.hasOwn(c, check));
         return [check, derived.every(Boolean) && owners.length > 0 && owners.every(c => c[check] === true)];
@@ -59,7 +60,7 @@ function provenChecks(copies, ui = {}, skillCapsBinding) {
     result[group] = Object.fromEntries(R.requiredChecks(group).map(check => {
       if(spec.pendingReason)return [check,false];
       if (check === R.uiChecks[group]) return [check, ui[check]?.source === 'carried' || ui[check]?.source === 'native'];
-      return [check, peers.some(name => S.families[name].checks[check] && passed(name, S.families[name].checks[check]))];
+      return [check, owners(check).some(name => familyRan(name) && passed(name, S.families[name].checks[check]))];
     }));
   }
   return result;
@@ -68,7 +69,7 @@ function provenChecks(copies, ui = {}, skillCapsBinding) {
 const defaultExec = (script, args, timeout) => spawnSync(process.execPath, [path.join(__dirname, script), ...args], {cwd: root, encoding: 'utf8', maxBuffer: 1 << 28, timeout});
 const defaultSleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-async function runCopy(copy, setupArgs, {exec, sleep, log, skillCapsBinding}) {
+async function runCopy(copy, setupArgs, {exec, sleep, log, skillCapsBinding, catalog}) {
   const record = {name: copy.name, family: copy.family, cases: copy.cases, lifecycle: !!copy.lifecycle, steps: []};
   if(S.families[copy.family].pendingReason)return {...record,ok:false,steps:[{step:'pending',ok:false,error:S.families[copy.family].pendingReason}]};
   let state;
@@ -109,7 +110,7 @@ async function runCopy(copy, setupArgs, {exec, sleep, log, skillCapsBinding}) {
       record.evidence = {scenario: copy.scenario, batchRequests: copy.batchRequests || [],
         source: {fingerprints: s.fingerprints, sourceHashes: s.sourceHashes, runtimePatch: s.runtimePatch, originalFileHashes: Object.values(s.before || {}), assertions: s.assertions},
         effects: read('skill-caps-effects.json'), ...(copy.lifecycle ? {lifecycle: read('skill-caps-lifecycle.json')} : {})};
-      Caps.copyChecks(record, skillCapsBinding);
+      if(copy.scenario.skillCapCoverage==='representative')Caps.validateMigrationCopy(record,catalog,skillCapsBinding);else Caps.copyChecks(record, skillCapsBinding);
     } catch (error) { record.ok = false; record.steps.push({step: 'evidence', ok: false, error: error.message}); log(`${copy.name} evidence FAILED: ${error.message}`); }
   }
   return record;
@@ -128,7 +129,19 @@ function uiEvidence(digests, proof, gameVersion) {
 
 const defaultRemove = target => fs.rmSync(target, {recursive: true, force: true, maxRetries: 5, retryDelay: 1000});
 
-async function runMigration({catalog, proof, copies, runDir, setupArgs, exec = defaultExec, sleep = defaultSleep, log = console.log, digest, keepCopies = false, remove = defaultRemove}) {
+async function runMigration({catalog, proof, copies, runDir, setupArgs, exec = defaultExec, sleep = defaultSleep, log = console.log, digest, keepCopies = false, remove = defaultRemove, identity, resume = false}) {
+  const A=require('./migration-analysis.cjs'), checkpointFile=path.join(runDir,'checkpoint.json');
+  const warnings=[], completedCopies=[];
+  const checkpoint=resume&&fs.existsSync(checkpointFile)?JSON.parse(fs.readFileSync(checkpointFile,'utf8')):null;
+  if(resume&&(!identity||checkpoint?.version!==1||checkpoint.identity!==identity))throw Error('Resume input identity does not match');
+  if(checkpoint&&(!Array.isArray(checkpoint.copies)||new Set(checkpoint.copies.map(c=>c.record.name)).size!==checkpoint.copies.length||checkpoint.copies.some(c=>!copies.some(copy=>copy.name===c.record.name))))throw Error('Resume copy manifest does not match');
+  const evidenceFiles=state=>Object.fromEntries(fs.readdirSync(path.dirname(state)).filter(n=>/\.json$/.test(n)).map(n=>{const file=path.join(path.dirname(state),n);return [file,A.sha(fs.readFileSync(file))];}));
+  const saveCheckpoint=()=>{if(identity){const temp=checkpointFile+'.tmp';fs.writeFileSync(temp,JSON.stringify({version:1,identity,copies:completedCopies},null,2));fs.renameSync(temp,checkpointFile);}};
+  if(!resume)saveCheckpoint();
+  const prune=target=>{try{const actual=fs.realpathSync(target),rel=path.relative(fs.realpathSync(runDir),actual);if(!rel||path.isAbsolute(rel)||rel==='..'||rel.startsWith('..'+path.sep))throw Error('Cleanup target escaped run directory');remove(target);}catch(e){if(e.code!=='ENOENT')warnings.push({step:'cleanup',target:path.basename(target),error:e.message});}};
+  // One formula matrix per family/source binding, shared by its independent save scenarios.
+  const formulas=new Set();
+  for(const copy of copies)if(S.families[copy.family].formulas&&copy.formulas!==false){copy.formulas=!formulas.has(copy.family);formulas.add(copy.family);}
   const skillCapsBinding = copies.some(c => c.family === Caps.group) ? Caps.binding(catalog, fs.readFileSync(path.join(root, 'src/core.js'), 'utf8')) : undefined;
   for (const copy of copies) if (copy.scenario) {
     copy.scenarioFile = path.join(runDir, copy.name + '.json');
@@ -141,18 +154,26 @@ async function runMigration({catalog, proof, copies, runDir, setupArgs, exec = d
   const records = [];
   let digests;
   for (const copy of copies) {
-    const record = await runCopy(copy, setupArgs, {exec, sleep, log, skillCapsBinding});
+    const saved=checkpoint?.copies.find(c=>c.record.name===copy.name), copyHash=A.sha({name:copy.name,family:copy.family,cases:copy.cases,scenario:copy.scenario||null,batch:copy.batchRequests||[],lifecycle:copy.lifecycle,formulas:copy.formulas??null});
+    let record;
+    if(saved){
+      if(saved.copyHash!==copyHash||saved.recordHash!==A.sha(saved.record)||!saved.record.ok||Object.entries(saved.files).some(([file,hash])=>!fs.existsSync(file)||A.sha(fs.readFileSync(file))!==hash))throw Error('Resume evidence does not match: '+copy.name);
+      record=saved.record; digests??=saved.digests;
+      log(copy.name+' reused');
+    }else record = await runCopy(copy, setupArgs, {exec, sleep, log, skillCapsBinding, catalog});
     records.push(record);
     if (!record.ok) break;
     // Digest the UI events from the first passing copy before its game folder is pruned.
-    digests ??= Object.fromEntries(Object.entries(R.uiEvents).map(([check, sids]) => [check, digest(JSON.parse(fs.readFileSync(record.state, 'utf8')).game, sids)]));
+    if(digest)digests ??= Object.fromEntries(Object.entries(R.uiEvents).map(([check, sids]) => [check, digest(JSON.parse(fs.readFileSync(record.state, 'utf8')).game, sids)]));
+    completedCopies.push(saved||{copyHash,record,recordHash:A.sha(record),files:evidenceFiles(record.state),digests});
+    saveCheckpoint();
     // A passing copy keeps its state, logs and JSON evidence; the game folder and profile are only needed to debug failures.
-    if (!keepCopies) for (const name of ['game', 'profile']) remove(path.join(path.dirname(record.state), name));
+    if (!keepCopies) for (const name of ['game', 'profile']) prune(path.join(path.dirname(record.state), name));
   }
   const completed = records.length === copies.length && records.every(r => r.ok);
-  if (completed && !keepCopies) for (const name of ['BANDIT Editor Test.app', 'BANDIT Editor Test.source.json']) remove(path.join(runDir, name));
+  if (completed && !keepCopies) for (const name of ['BANDIT Editor Test.app', 'BANDIT Editor Test.source.json']) prune(path.join(runDir, name));
   const ui = completed && digests ? uiEvidence(digests, proof, catalog.gameVersion) : {};
-  const results = {date: new Date().toISOString(), gameVersion: catalog.gameVersion, platform: `${process.platform}-${process.arch}`, completed, copies: records.map(({state, ...r}) => r), ui, ...(skillCapsBinding ? {skillCapsBinding} : {}), checks: provenChecks(records, ui, skillCapsBinding)};
+  const results = {date: new Date().toISOString(), gameVersion: catalog.gameVersion, platform: `${process.platform}-${process.arch}`, completed, warnings, copies: records.map(({state, ...r}) => r), ui, ...(skillCapsBinding ? {skillCapsBinding} : {}), checks: provenChecks(records, ui, skillCapsBinding,catalog)};
   fs.writeFileSync(path.join(runDir, 'results.json'), JSON.stringify(results, null, 2));
   return results;
 }
@@ -173,7 +194,7 @@ function buildProof({catalog, results, coreSource, steamBuild, previous}) {
   const caps = !Caps.initialProblem(previous[Caps.group]?.initialVerification) ? Caps.validateResults(catalog, coreSource, results, {initial: false}) : null;
   const opened = group => (group !== Caps.group || !!caps) && !S.families[S.familyOf(group)].pendingReason && R.requiredChecks(group).every(c=>checks[group]?.[c]===true);
   const coverage = family => ({coverage: 'representative', copies: results.copies.filter(c => c.family === family).map(c => ({name: c.name, operations: c.cases}))});
-  const formulasPassed = results.copies.filter(c => c.family === 'equipmentQuality').every(c => c.steps.some(s => s.step === 'formulas' && s.ok));
+  const formulasPassed = results.copies.some(c => c.family === 'equipmentQuality' && c.steps.some(s => s.step === 'formulas' && s.ok));
   const uiRecord = group => R.uiChecks[group] ? {uiEvidence: results.ui[R.uiChecks[group]]} : {};
   const groups = Object.fromEntries(Object.keys(catalog.verification).map(group => [group, opened(group) && (R.sectionOf(group) !== 'equipmentQuality' || formulasPassed)]));
   const perGroup = section => Object.fromEntries(R.sections[section].groups.map(group => [group, {checks: checks[group], ...uiRecord(group)}]));
@@ -227,33 +248,6 @@ function writeBack({dir = root, catalog, proof, results, steamBuild, exec = (scr
   return {action: 'written', opened: groups.filter(group => next.groups[group]), closed: allGroups.filter(group => !next.groups[group])};
 }
 
-async function main() {
-  const args = process.argv.slice(2), opt = key => args.includes(key) ? args[args.indexOf(key) + 1] : undefined;
-  if (args.includes('--help') || !opt('--source') || !opt('--runtime') || !opt('--save-file') || !opt('--artifacts')) {
-    console.log('Node 22+: verify-migration.cjs --source PREPARED_GAME --runtime NWJS --save-file BASE.dat --artifacts OUTSIDE_REPO [--package STEAM_GAME_DIR (macOS)] [--catalog CATALOG.json] [--copies name,name] [--keep-copies]');
-    return;
-  }
-  const artifacts = fs.realpathSync(opt('--artifacts')), rel = path.relative(root, artifacts);
-  if (!rel || (!path.isAbsolute(rel) && rel !== '..' && !rel.startsWith('..' + path.sep))) throw Error('Validation artifacts must stay outside the repo');
-  const catalogPath = path.resolve(opt('--catalog') || path.join(root, 'knowledge/catalog.json')), catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
-  const proof = JSON.parse(fs.readFileSync(path.join(root, 'knowledge/verification.json'), 'utf8'));
-  const {buildScenarios} = require('./migration-scenarios.cjs'), {inspectGame, eventDigest} = require('./extract-game.cjs');
-  const only = opt('--copies')?.split(',');
-  const copies = buildScenarios({catalog, saveText: fs.readFileSync(opt('--save-file'), 'utf8')}).filter(c => !only || only.includes(c.name));
-  const runDir = fs.mkdtempSync(path.join(artifacts, 'migration-'));
-  const setupArgs = ['--source', opt('--source'), '--runtime', opt('--runtime'), '--save-file', opt('--save-file'), '--artifacts', runDir, '--catalog', catalogPath, ...(opt('--package') ? ['--package', opt('--package')] : [])];
-  const results = await runMigration({catalog, proof, copies, runDir, setupArgs, keepCopies: args.includes('--keep-copies'), digest: (dir, sids) => eventDigest(inspectGame(dir), sids)});
-  if (!only) {
-    // The Steam manifest sits two levels above the game directory; its build id is recorded when present.
-    const manifest = opt('--package') && path.join(path.resolve(opt('--package')), '../../appmanifest_4267800.acf');
-    const steamBuild = manifest && fs.existsSync(manifest) ? /"buildid"\s+"(\d+)"/.exec(fs.readFileSync(manifest, 'utf8'))?.[1] : null;
-    results.writeBack = writeBack({catalog, proof, results, steamBuild});
-    fs.writeFileSync(path.join(runDir, 'results.json'), JSON.stringify(results, null, 2));
-    console.log('WRITE-BACK ' + JSON.stringify(results.writeBack).slice(0, 2000));
-  }
-  console.log(`RESULTS ${path.join(runDir, 'results.json')}`);
-  console.log(results.completed ? 'PASS: every copy completed' : 'FAILED: see results for the failing copy and step');
-  if (!results.completed || ['restored', 'skipped'].includes(results.writeBack?.action) || results.writeBack?.consistent === false) process.exitCode = 1;
-}
+async function main() { return require("./migration-cli.cjs").main({runMigration,provenChecks,writeBack}); }
 if (require.main === module) main().catch(e => { console.error(e.stack); process.exitCode = 1; });
 module.exports = {steps, provenChecks, uiEvidence, runMigration, buildProof, writeBack};

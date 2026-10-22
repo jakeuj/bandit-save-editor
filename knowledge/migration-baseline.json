@@ -1,0 +1,94 @@
+{
+  "version": 2,
+  "fingerprints": {
+    "data.json": "aac06ce18a840ae221d7683fba21182b0dcf4bb7ae1caf3431199264a1c5f62e",
+    "scripts/c3runtime.js": "3e0febeb8342138ed47d9e8499e3646f4e8ddc2ce89a9faa0bebbad9ba83280e",
+    "cl.json": "c121cf702eb6a4edb184d7180ad83d41aa90efca4a1e5e21e652dd1ff24f47b7",
+    "js.json": "5c360c93cd1248fe96d0373428ddae4649698574d032b333432e4b777fcc0ee4",
+    "zy.json": "97d59a029aefbfbba315c9cec7b83a168571def79282eec2be9edbfeb3759188",
+    "sx.json": "6a24e20ad0a70d5ad17a0310f0a9e7619dda5c4718d536a3df51d385abd748e7",
+    "wp.json": "14516d34cedf209c497fca10699e179c26c43558c2a3253bc87c8b33493a82c4",
+    "kj.json": "b051136f1366eb1c990004a4fa8a2d8f90339c7defbc10eb90c68c2ff36e5309",
+    "jz.json": "cf4d691dc7f6814db5ba1e0e28ac206d7a15c58ddccba55a473975461841b0bf",
+    "rw.json": "705f541917d9a62cff9ef5805032fd29496fdc98b03a7f065ff3fc6fab937b4b",
+    "tf.json": "c8a3005201d8f17a0899584baf7e0286b073aa84d4697807edcd44e00902fa1f",
+    "ss.json": "4350cb979c4026ce0d8dc25e7807fde3d29a1d42fbd2e499673614a4f67e1bc7",
+    "lw.json": "7a4f5a5bfd5967f3a74e36aa9a0c2cda132619b2908bdc39b1406da4b346bde6",
+    "yx.json": "58b8eb984cf8190f52ed4e53d044079733cf82096224dd7014ec36e1da2b45bc",
+    "tz.json": "a4b008981f39abc371b5673abe4c780bef5c91229a5ae3a42d2e8fef4e780c74"
+  },
+  "coreHash": "26d02971b7f595b294ba007029eb1100506b2c319ea69901787ca802ff516a9c",
+  "roles": {
+    "growth": {
+      "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
+      "effects": "484e93232c66abefd5b01ef32d600c4b2dcb0af64fcbaf5a0c50a1443a7849c4",
+      "lifecycle": "d615137ed2a4d590507b87810199f627acf5798a029dbb9f954ad659e577f663"
+    },
+    "advanced": {
+      "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
+      "effects": "09670295fa3b0ed028998afeb80209d3d715199ebfcf2d90779f7c17b9958a22",
+      "lifecycle": "d279edbddcd07e008c47e0dfdd16dc8cbe89f4b5179220314d6b123a5aacc21a"
+    },
+    "batch2": {
+      "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
+      "effects": "6270dc482af4235f1786cbcacbb408baf755dfc910a485851fddb4d889bc7ccf",
+      "lifecycle": "bf39c510eb1db98a0cb27278f0b53cee759c27c19a8e60414c64a0d79516a828"
+    },
+    "affixReplacement": {
+      "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
+      "effects": "2683a407bc00e8ace6d682fa703b6a0c5f39961756beecdfa97de02602f7860b",
+      "lifecycle": "65d4d4a595e30336b7ab375fe661503175f0f8878d4d84c4211599d767cbb022"
+    },
+    "equipmentWorkflow": {
+      "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
+      "effects": "2683a407bc00e8ace6d682fa703b6a0c5f39961756beecdfa97de02602f7860b",
+      "lifecycle": "1fd0d19b0eca063104b1a6a5c44b4e898271b743e930dbe776d6d255872487ea"
+    },
+    "equipmentQuality": {
+      "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
+      "effects": "2683a407bc00e8ace6d682fa703b6a0c5f39961756beecdfa97de02602f7860b",
+      "lifecycle": "7143508a312fa7eaa05bc352f2d71f79ea1bf695bd6fd7ad92094faab0f2699e"
+    },
+    "randomCharacterGrowth": {
+      "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
+      "effects": "126c36497fcd20588543019f0608d001a3c4347f35fc83250b57b7f4b26f7adb",
+      "lifecycle": "47082f2f30dcb77b7f3a053e595b98244a33f783c8e36ec0cd558155c52ef079"
+    },
+    "randomCharacterSkillCaps": {
+      "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
+      "effects": "97a26ff7d4e4ba2ced054fb9bc1b625b994c694b91ac72b31cb2f7bf15ec2ca3",
+      "lifecycle": "79e7a5eced133080639c4dc190e3c49dd0e11b2431775c3300aa364e78fed22b"
+    },
+    "selectionUi": "d82afa4d18abd003fa7f69fca258c8ca2a65caf18361b9bdcbd7d40dc500b2cd",
+    "qualityUi": "da9bda72fe879e8ab98eb11a476cce95500f32fe2676be8d44470171ea2cfa48"
+  },
+  "unknown": [],
+  "gameVersion": "V1.0.11.2",
+  "dataHashes": {
+    "randomCharacterSkillCaps": "24690926687b1bc8130cfc789ef8152d650b42dbb0c92c558b5cb20c88f39398",
+    "randomCharacterBaseAptitudes": "3a5f3d21fc65d09694aebd302f32813f5dc82723fd87f16d795329306431fd76",
+    "backpackEquipmentQualityUpgrade": "50a6f076ae9c0c739cf7acfb488c5a036290440c6ea9f6ab259e730e555ca4c1",
+    "backpackEquipmentQualityDowngrade": "50a6f076ae9c0c739cf7acfb488c5a036290440c6ea9f6ab259e730e555ca4c1",
+    "equipmentQualityUpgrade": "50a6f076ae9c0c739cf7acfb488c5a036290440c6ea9f6ab259e730e555ca4c1",
+    "equipmentQualityDowngrade": "50a6f076ae9c0c739cf7acfb488c5a036290440c6ea9f6ab259e730e555ca4c1",
+    "backpackEquipmentLevel": "4caafefbdc1a7d626eb6c5ee6bbe2734d0e619ca74f4dba0a54309ff0e87b2c3",
+    "backpackEquipmentAffixCoefficient": "4caafefbdc1a7d626eb6c5ee6bbe2734d0e619ca74f4dba0a54309ff0e87b2c3",
+    "backpackEquipmentAffixReplacement": "4caafefbdc1a7d626eb6c5ee6bbe2734d0e619ca74f4dba0a54309ff0e87b2c3",
+    "equipmentAffixInitialSelection": "4caafefbdc1a7d626eb6c5ee6bbe2734d0e619ca74f4dba0a54309ff0e87b2c3",
+    "equipmentNewItemMarker": "4caafefbdc1a7d626eb6c5ee6bbe2734d0e619ca74f4dba0a54309ff0e87b2c3",
+    "equipmentAffixReplacement": "d5cbd5a08eeaff7749416dd5065ceffc1843052c4f14ff6ae6fd368772fc47e8",
+    "equipmentAffixCoefficient": "49ea41b8e8134213d58e463a2d382f0de2cae8d4adb012deefe4d2024c300aa0",
+    "pillAptitudeBonus": "49ea41b8e8134213d58e463a2d382f0de2cae8d4adb012deefe4d2024c300aa0",
+    "names": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "characterExperience": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "professionExperience": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "skillExperience": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "equipmentLevel": "9cfc45ae4559b614a2453173e26df0cc5ff6299902f468bb07488acb4d91fe2b",
+    "equipmentLevelAdvanced": "9cfc45ae4559b614a2453173e26df0cc5ff6299902f468bb07488acb4d91fe2b",
+    "professionTrainingCap": "9cfc45ae4559b614a2453173e26df0cc5ff6299902f468bb07488acb4d91fe2b",
+    "professionTrainingCapAdvanced": "9cfc45ae4559b614a2453173e26df0cc5ff6299902f468bb07488acb4d91fe2b",
+    "advancedTechnologyLevel": "9cfc45ae4559b614a2453173e26df0cc5ff6299902f468bb07488acb4d91fe2b",
+    "advancedTechnologyLevelAdvanced": "9cfc45ae4559b614a2453173e26df0cc5ff6299902f468bb07488acb4d91fe2b"
+  },
+  "proofHash": "7e224003cae91543b6b0b230307ff5766400841ee78c3d3b7220c353691ca478"
+}

@@ -12,6 +12,7 @@ function record(k,coreSource,{date,platform,checks,coverage='representative',cop
  return {date,gameVersion:k.gameVersion,platform,fingerprints:{...k.fingerprints,...k.batch2Fingerprints},dataHash:dataHash(k),formulaHash:formulaHash(coreSource),coverage,copies,groups:{randomCharacterBaseAptitudes:{checks}}};
 }
 function problem(k,proof,coreSource){
+ if(proof.schemaVersion===2)return require('./migration-proof.cjs').problem(k,proof,coreSource,'randomCharacterBaseAptitudes');
  const p=proof.randomCharacterGrowth,all={...k.fingerprints,...k.batch2Fingerprints},required=require('./verification-requirements.cjs').requiredChecks('randomCharacterBaseAptitudes');
  if(!p||p.gameVersion!==k.gameVersion||Object.keys(p.fingerprints||{}).length!==15||Object.keys(all).length!==15||Object.entries(all).some(([f,h])=>p.fingerprints[f]!==h)||p.dataHash!==dataHash(k)||p.formulaHash!==formulaHash(coreSource)||!required.every(c=>p.groups?.randomCharacterBaseAptitudes?.checks?.[c]===true))return '一般隨機角色基礎資質缺少相符的獨立驗證';
  return null;

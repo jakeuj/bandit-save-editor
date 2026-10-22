@@ -227,4 +227,4 @@ if (require.main === module) {
   writeAudit();
   console.log(JSON.stringify({ ...catalog.counts, planes: catalog.planes.length, catalogRows: Object.values(catalog.catalogs).reduce((n, rows) => n + rows.length, 0) }));
 }
-module.exports = { inspectGame, createCatalog, eventDigest };
+module.exports = { inspectGame, createCatalog, eventDigest, semanticDigest: (...args) => require('./migration-analysis.cjs').semanticDigest(...args) };

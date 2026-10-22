@@ -196,6 +196,8 @@ test('migration runner replays each copy in order, stops on failure and derives 
 
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'bandit-migration-'));
   try{
+    for(const name of ['game','profile','BANDIT Editor Test.app'])fs.mkdirSync(path.join(dir,name));
+    fs.writeFileSync(path.join(dir,'BANDIT Editor Test.source.json'),'{}');
     const statePath = path.join(dir, 'state.json'); fs.writeFileSync(statePath, JSON.stringify({game: dir}));
     const proof = JSON.parse(fs.readFileSync(path.join(root, 'knowledge/verification.json'), 'utf8'));
     const digests = {selectionUi: proof.equipmentWorkflow.groups.equipmentAffixInitialSelection.uiEvidence.eventDigest, qualityUi: 'f'.repeat(64)};

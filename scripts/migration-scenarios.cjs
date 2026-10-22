@@ -74,15 +74,21 @@ function requireBuilding(saveData, templateId, label, put) {
   return placed.x;
 }
 
-function buildScenarios({catalog, saveText}) {
+const availableCopies = {growth:'growth','advanced-normal':'advanced','advanced-overcap':'advanced','advanced-followup':'advanced',batch2:'batch2','affix-replacement':'affixReplacement','equipment-workflow':'equipmentWorkflow','quality-7-Upgrade':'equipmentQuality','quality-7-Downgrade':'equipmentQuality','quality-9-Upgrade':'equipmentQuality','quality-9-Downgrade':'equipmentQuality','random-skill-caps-representative':'randomCharacterSkillCaps','random-skill-caps-lifecycle':'randomCharacterSkillCaps','random-growth-matrix':'randomCharacterGrowth','random-growth-lifecycle':'randomCharacterGrowth'};
+function validateNames(names) {
+  if(names&&(!names.length||new Set(names).size!==names.length||names.some(n=>!Object.hasOwn(availableCopies,n))))throw Error('Unknown or duplicate migration copy: '+names.join(','));
+}
+function buildScenarios({catalog, saveText, names}) {
+  validateNames(names);
+  const wants = name => !names || names.includes(name);
   const k = JSON.parse(JSON.stringify(catalog)), C = loadCore(JSON.parse(JSON.stringify(catalog)));
   const save = JSON.parse(saveText.replace(/^\uFEFF/, '')), size = save.size, templates = ordinaryTemplates(k);
   const make = spec => copy(C, k, saveText, size, spec);
-  const copies = [{name: 'growth', family: 'growth', oracleArgs: [], lifecycle: false, cases: 4, scenario: null}];
+  const copies = wants('growth') ? [{name: 'growth', family: 'growth', oracleArgs: [], lifecycle: false, cases: 4, scenario: null}] : [];
 
   // Boundary copies prove the normal and over-cap ranges; the follow-up copy keeps values below building limits so
   // native research and training can still start after editing, as in the original follow-up case.
-  for (const mode of ['normal', 'overcap', 'followup']) copies.push(make({
+  for (const mode of ['normal', 'overcap', 'followup'].filter(mode=>wants('advanced-'+mode))) copies.push(make({
     name: 'advanced-' + mode, family: 'advanced', oracleArgs: ['--item', '3'], lifecycle: mode === 'followup',
     prepare({place, equip, put, extra}) {
       const t = template(templates, {tier: 1, maxSlot: 4});
@@ -113,7 +119,7 @@ function buildScenarios({catalog, saveText}) {
   }));
 
   const pills = [1, 2, 3].map(aptitude => Object.entries(k.batch2Data.pills).filter(([, p]) => p.aptitude === aptitude).sort((a, b) => b[1].cap - a[1].cap)[0]).map(([id], i) => ({aptitude: i + 1, pillId: Number(id)}));
-  copies.push(make({
+  if(wants('batch2')) copies.push(make({
     name: 'batch2', family: 'batch2', oracleArgs: ['--character', '1'],
     prepare({place, equip, put, extra}) {
       let id = 0;
@@ -144,7 +150,7 @@ function buildScenarios({catalog, saveText}) {
     }
   }));
 
-  copies.push(make({
+  if(wants('affix-replacement')) copies.push(make({
     name: 'affix-replacement', family: 'affixReplacement',
     prepare({place, equip, extra}) {
       let id = 0;
@@ -165,7 +171,7 @@ function buildScenarios({catalog, saveText}) {
     }
   }));
 
-  copies.push(make({
+  if(wants('equipment-workflow')) copies.push(make({
     name: 'equipment-workflow', family: 'equipmentWorkflow',
     prepare({place, extra}) {
       const t1 = template(templates, {tier: 1, maxSlot: 4}), t9 = template(templates, {tier: 9, maxSlot: 4});
@@ -201,13 +207,14 @@ function buildScenarios({catalog, saveText}) {
   }));
 
   for (const plane of [7, 9]) for (const direction of ['Upgrade', 'Downgrade']) {
+    if(!wants(`quality-${plane}-${direction}`))continue;
     const scenario = qualityScenario(C, k, plane, direction, {representative: true});
     editSave(C, saveText, scenario);
     copies.push({name: `quality-${plane}-${direction}`, family: 'equipmentQuality', oracleArgs: [], lifecycle: true, cases: scenario.items.length, scenario, groups: [(plane === 7 ? 'backpackEquipmentQuality' : 'equipmentQuality') + direction]});
   }
   // The initial release suite uses the full matrix. Later migrations select two representative qualities.
-  copies.push(...require('./random-character-skill-caps-scenarios.cjs').buildSkillCapScenarios({catalog,saveText}));
-  copies.push(...require('./random-character-growth-scenarios.cjs').buildGrowthScenarios({catalog,saveText,representative:true}));
+  if(Object.keys(availableCopies).some(n=>availableCopies[n]==='randomCharacterSkillCaps'&&wants(n)))copies.push(...require('./random-character-skill-caps-scenarios.cjs').buildSkillCapScenarios({catalog,saveText}).filter(c=>wants(c.name)));
+  if(Object.keys(availableCopies).some(n=>availableCopies[n]==='randomCharacterGrowth'&&wants(n)))copies.push(...require('./random-character-growth-scenarios.cjs').buildGrowthScenarios({catalog,saveText,representative:true}).filter(c=>wants(c.name)));
   return copies;
 }
 
@@ -222,4 +229,4 @@ if (require.main === module) {
     console.log(`${c.name}: ${c.cases} operations`);
   }
 }
-module.exports = {buildScenarios};
+module.exports = {buildScenarios,availableCopies,validateNames};
