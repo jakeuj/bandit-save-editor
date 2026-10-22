@@ -6,6 +6,8 @@
 
 [Wiki 首頁](https://github.com/jakeuj/bandit-save-editor/wiki) · [操作教學](https://github.com/jakeuj/bandit-save-editor/wiki/操作教學) · [常見問題](https://github.com/jakeuj/bandit-save-editor/wiki/常見問題)
 
+[Discussions 討論區](https://github.com/jakeuj/bandit-save-editor/discussions) · [山寨帳房介紹與使用入口公告](https://github.com/jakeuj/bandit-save-editor/discussions/3)
+
 ## 專案進度
 
 [山寨帳房 Project](https://github.com/users/jakeuj/projects/3) 依現有規劃與 SDD 追蹤功能開發、驗收缺口及候選評估，分為「待辦」、「進行中」與「已完成」。目前為私人專案，需具存取權限才能查看。
