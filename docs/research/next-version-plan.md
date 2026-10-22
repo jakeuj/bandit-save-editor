@@ -10,6 +10,18 @@
 | v2.10 套裝等級 | 已發布並驗收歸檔；兩庫各自首次證明及 Node／瀏覽器驗收通過，對應 SHA 的 Pages build／deploy 成功 | [研究](set-equipment-level.md)、[提案](../../sdd/archive/2026-10-23-set-equipment-level/proposal.md)、[任務](../../sdd/archive/2026-10-23-set-equipment-level/tasks.md) |
 | 其他候選 | 寶物、丹藥擴充、套裝品質、靈物、內丹、城市、超限、建築等，依原路線圖重新核對未完成範圍 | [路線圖](feature-roadmap.md) |
 
+## 尚待驗收
+
+- 名稱、三類經驗與設定，以及 v2.1–v2.5 各功能的直接下載 HTML／file 流程仍依各 SDD 保留缺口；新版功能的 file 或 PWA 通過不代替舊功能驗收。
+- V1.0.11.2 的 Mac 啟動、本機存讀與新程序重啟仍待補驗，不能沿用舊版結果。
+- 有名角色與自然職業上限的 [runtime 補丁](../../sdd/runtime-patch/proposal.md)另列研究候選，與網站修改器分開。
+
+## 公開入口與追蹤
+
+本頁集中目前進度與候選；[功能路線圖](feature-roadmap.md)保留研究排序與技術理由，[各版紀錄](../releases.md)記錄已發布能力與驗收界線。[Wiki 開發進度與後續候選](https://github.com/jakeuj/bandit-save-editor/wiki/開發進度與後續候選)提供玩家導覽。
+
+[Project](https://github.com/users/jakeuj/projects/3)追蹤具體任務，為私人專案，需存取權限；候選不代表排定版本、日期或實作授權。
+
 ## 接續工作
 
 1. 讀目標研究及 SDD 的最新狀態，核對工作樹；已完成的盤點與首次證明直接引用，不重做。
