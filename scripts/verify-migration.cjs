@@ -10,7 +10,7 @@ const S = require('./verification-suite.cjs');
 const R = require('./verification-requirements.cjs');
 const root = path.resolve(__dirname, '..');
 // Lifecycle scripts that can re-read their results after the new-PID restart.
-const comparable = new Set(['verify-random-character-lifecycle.cjs', 'verify-equipment-workflow.cjs', 'verify-quality-lifecycle.cjs']);
+const comparable = new Set(['verify-skill-caps-lifecycle.cjs','verify-random-character-lifecycle.cjs', 'verify-equipment-workflow.cjs', 'verify-quality-lifecycle.cjs']);
 
 // Ordered CLI steps for one copy. '{state}' is replaced by the state path that setup prints.
 function steps(copy, setupArgs) {
@@ -48,6 +48,7 @@ function provenChecks(copies, ui = {}) {
     if (!familyRan(family)) continue;
     const section = R.sectionOf(group), peers = Object.keys(S.families).filter(name => familyRan(name) && S.families[name].groups.some(g => R.sectionOf(g) === section));
     result[group] = Object.fromEntries(R.requiredChecks(group).map(check => {
+      if(spec.pendingReason)return [check,false];
       if (check === R.uiChecks[group]) return [check, ui[check]?.source === 'carried' || ui[check]?.source === 'native'];
       return [check, peers.some(name => S.families[name].checks[check] && passed(name, S.families[name].checks[check]))];
     }));
@@ -60,6 +61,7 @@ const defaultSleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 async function runCopy(copy, setupArgs, {exec, sleep, log}) {
   const record = {name: copy.name, family: copy.family, cases: copy.cases, lifecycle: !!copy.lifecycle, steps: []};
+  if(S.families[copy.family].pendingReason)return {...record,ok:false,steps:[{step:'pending',ok:false,error:S.families[copy.family].pendingReason}]};
   let state;
   for (const step of steps(copy, setupArgs)) {
     const args = step.args.map(a => a === '{state}' ? state : a), started = Date.now();
@@ -133,7 +135,7 @@ const pick = (checks, names) => Object.fromEntries(names.map(name => [name, chec
 // The proof the build gate expects for this catalog, from a completed representative run.
 function buildProof({catalog, results, coreSource, steamBuild, previous}) {
   const date = results.date.slice(0, 10), all = {...catalog.fingerprints, ...catalog.batch2Fingerprints}, checks = results.checks;
-  const opened = group => Object.values(checks[group]).every(Boolean);
+  const opened = group => !S.families[S.familyOf(group)].pendingReason && R.requiredChecks(group).every(c=>checks[group]?.[c]===true);
   const coverage = family => ({coverage: 'representative', copies: results.copies.filter(c => c.family === family).map(c => ({name: c.name, operations: c.cases}))});
   const formulasPassed = results.copies.filter(c => c.family === 'equipmentQuality').every(c => c.steps.some(s => s.step === 'formulas' && s.ok));
   const uiRecord = group => R.uiChecks[group] ? {uiEvidence: results.ui[R.uiChecks[group]]} : {};
@@ -154,6 +156,7 @@ function buildProof({catalog, results, coreSource, steamBuild, previous}) {
     batch2: {date, gameVersion: catalog.gameVersion, fingerprints: catalog.batch2Fingerprints, limits: catalog.batch2Limits, dataHash: sha(catalog.batch2Data), checks: pick(checks[R.sections.batch2.groups[0]], R.sections.batch2.checks), ...coverage('batch2')},
     affixReplacement: {date, gameVersion: catalog.gameVersion, fingerprints: all, limits: catalog.affixReplacementLimits, dataHash: sha({rules: catalog.affixReplacement, items}), checks: checks.equipmentAffixReplacement, ...coverage('affixReplacement')},
     equipmentWorkflow: {date, platform: results.platform, gameVersion: catalog.gameVersion, fingerprints: all, limits: catalog.equipmentWorkflowLimits, dataHash: sha({rules: catalog.equipmentWorkflowLimits, items, formulas: catalog.affixReplacement}), groups: perGroup('equipmentWorkflow'), ...coverage('equipmentWorkflow')},
+    ...(!S.families.randomCharacterSkillCaps.pendingReason?{randomCharacterSkillCaps:require('./random-character-skill-caps-proof.cjs').record(catalog,coreSource,{date,platform:results.platform,checks:checks.randomCharacterSkillCaps,...coverage('randomCharacterSkillCaps')})}:{}),
     randomCharacterGrowth: require('./random-character-growth-proof.cjs').record(catalog,coreSource,{date,platform:results.platform,checks:checks.randomCharacterBaseAptitudes,...coverage('randomCharacterGrowth')}),
     equipmentQuality: {date, gameVersion: catalog.gameVersion, fingerprints: all, dataHash: sha({quality: catalog.equipmentQuality, items, workflow: catalog.equipmentWorkflowLimits}), ...(formulasPassed ? {formulaHash: sha(qualityFormula(coreSource)), formulaCases: Object.keys(catalog.equipmentQuality.items).length * 24 + Object.keys(catalog.affixReplacement.attributes).length * 20} : {}), groups: perGroup('equipmentQuality'), ...coverage('equipmentQuality')}
   };
@@ -162,10 +165,11 @@ function buildProof({catalog, results, coreSource, steamBuild, previous}) {
 // Writes the new proof and gates only when every native check passed on a build the current proof does not cover;
 // a build failure restores every touched file. On the proven build it only compares, keeping the existing proof.
 function writeBack({dir = root, catalog, proof, results, steamBuild, exec = (script, args) => spawnSync(process.execPath, [path.join(dir, 'scripts', script), ...args], {cwd: dir, encoding: 'utf8'})}) {
-  const groups = Object.keys(catalog.verification);
+  const allGroups=Object.keys(catalog.verification),groups=allGroups.filter(g=>!S.families[S.familyOf(g)]?.pendingReason);
+  if(allGroups.some(g=>S.families[S.familyOf(g)]?.pendingReason&&catalog.verification[g]))return {action:'skipped',reason:'未完成的原生群組不可開啟'};
   if (!results.completed || groups.some(group => !results.checks[group])) return {action: 'skipped', reason: '流水線未完成或未涵蓋全部群組'};
-  const failing = groups.filter(group => Object.entries(results.checks[group]).some(([check, ok]) => !ok && check !== R.uiChecks[group]));
-  const comparison = groups.map(group => ({group, existing: Object.values(recordedChecks(proof, group)).every(Boolean) && catalog.verification[group] === true, migrated: Object.values(results.checks[group]).every(Boolean)}));
+  const failing = groups.filter(group => R.requiredChecks(group).some(check => results.checks[group]?.[check] !== true && check !== R.uiChecks[group]));
+  const comparison = allGroups.map(group => ({group, existing: Object.values(recordedChecks(proof, group)).every(Boolean) && catalog.verification[group] === true, migrated: !S.families[S.familyOf(group)]?.pendingReason && R.requiredChecks(group).every(check=>results.checks[group]?.[check]===true), ...(S.families[S.familyOf(group)]?.pendingReason?{pending:S.families[S.familyOf(group)].pendingReason}:{})}));
   if (JSON.stringify(proof.fingerprints) === JSON.stringify(catalog.fingerprints) && JSON.stringify(proof.batch2?.fingerprints) === JSON.stringify(catalog.batch2Fingerprints))
     return {action: 'compared', consistent: failing.length === 0 && comparison.every(c => c.existing === c.migrated), failing, comparison};
   if (failing.length) return {action: 'skipped', reason: '原生 checks 未全部通過', failing};
@@ -180,7 +184,7 @@ function writeBack({dir = root, catalog, proof, results, steamBuild, exec = (scr
     files.forEach((file, i) => fs.writeFileSync(file, backup[i]));
     return {action: 'restored', reason: error.message};
   }
-  return {action: 'written', opened: groups.filter(group => next.groups[group]), closed: groups.filter(group => !next.groups[group])};
+  return {action: 'written', opened: groups.filter(group => next.groups[group]), closed: allGroups.filter(group => !next.groups[group])};
 }
 
 async function main() {

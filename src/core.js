@@ -282,6 +282,112 @@
   try{transaction(m,()=>{for(const c of preview.changes)put(m,c.coordinate,c.after,c.label);},'裝備品質調整');}finally{m.currentGroup=previous;}
   return preview;
  }
+ // Skill cap rules begin. Independently bound by the skill-cap proof.
+ function skillCapAptitudeWitness(quality,raw,orientation){
+  const rules=KNOWLEDGE.randomCharacterSkillCaps;
+  if(!rules||!Number.isInteger(quality)||quality<1||quality>rules.totals.length||!Array.isArray(raw)||raw.length!==3||!Number.isInteger(orientation)||orientation<0||orientation>3||quality===1&&orientation!==3||Array.from(raw).some(v=>!Number.isSafeInteger(v)||v<1||v>300))return null;
+  const [minimum,maximum]=rules.totals[quality-1],sum=raw.reduce((a,b)=>a+b,0);
+  for(let total=Math.max(minimum,sum-1);total<=Math.min(maximum,sum+1);total++){
+   const weights=rules.weights[orientation],n=BigInt(total),lo=raw.map(v=>BigInt(2*v-1)),hi=raw.map(v=>BigInt(2*v+1));
+   // lambda = sum(weights)/(2*N). Each weight lies in [max(a,lo*lambda),min(b,hi*lambda)).
+   const start=rational(weights.reduce((s,w)=>s+w[0],0),2n*n),end=rational(weights.reduce((s,w)=>s+w[1],0),2n*n);
+   const points=[start,end,...weights.flatMap(([a,b],i)=>[rational(a,lo[i]),rational(b,hi[i])])].filter(p=>rationalCompare(p,start)>=0n&&rationalCompare(p,end)<=0n).sort((a,b)=>rationalCompare(a,b)<0n?-1:rationalCompare(a,b)>0n?1:0).filter((p,i,a)=>!i||rationalCompare(p,a[i-1])!==0n);
+   for(let segment=0;segment<points.length-1;segment++){
+    let left=points[segment],right=points[segment+1],leftOpen=false,rightOpen=true;
+    const mid=rational(left.n*right.d+right.n*left.d,2n*left.d*right.d);
+    const lower=weights.map(([a],i)=>BigInt(a)*mid.d>=lo[i]*mid.n?[0n,BigInt(a)]:[lo[i],0n]);
+    const upper=weights.map(([,b],i)=>BigInt(b)*mid.d<=hi[i]*mid.n?[0n,BigInt(b)]:[hi[i],0n]);
+    // Enforce a*lambda+b <= 0 (or <0), intersecting one-dimensional rational intervals.
+    const constrain=(a,b,strict)=>{
+     if(a===0n)return strict?b<0n:b<=0n;
+     const edge=rational(-b,a);
+     if(a>0n){const cmp=rationalCompare(edge,right);if(cmp<0n){right=edge;rightOpen=strict;}else if(cmp===0n)rightOpen ||= strict;}
+     else{const cmp=rationalCompare(edge,left);if(cmp>0n){left=edge;leftOpen=strict;}else if(cmp===0n)leftOpen ||= strict;}
+     const cmp=rationalCompare(left,right);return cmp<0n||cmp===0n&&!leftOpen&&!rightOpen;
+    };
+    const ls=lower.reduce((s,v)=>[s[0]+v[0],s[1]+v[1]],[0n,0n]),us=upper.reduce((s,v)=>[s[0]+v[0],s[1]+v[1]],[0n,0n]);
+    if(lower.every((l,i)=>constrain(l[0]-upper[i][0],l[1]-upper[i][1],true))&&constrain(ls[0]-2n*n,ls[1],false)&&constrain(2n*n-us[0],-us[1],true))return {total,orientation};
+   }
+  }
+  return null;
+ }
+ function skillCapCombinations(quality,raw,talents,talentLevels,caps){
+  const rules=KNOWLEDGE.randomCharacterSkillCaps;
+  if(!rules||!Number.isInteger(quality)||quality<1||quality>6||!Array.isArray(caps)||caps.length!==9||Array.from(caps).some(v=>!Number.isSafeInteger(v))||!Array.isArray(talents)||talents.length!==3||new Set(talents).size!==3||!Array.isArray(talentLevels)||talentLevels.length!==3)return [];
+  if(Array.from(talents).some((id,i)=>!Number.isSafeInteger(id)||id<=0||!rules.talents[id]||!Number.isSafeInteger(talentLevels[i])||!rules.talentLevels[quality-1].includes(talentLevels[i])))return [];
+  const witnesses=[],ranges=rules.ranges[quality-1],within=(v,r)=>v>=r[0]&&v<=r[1];
+  for(let orientation=0;orientation<4;orientation++){
+   const aptitude=skillCapAptitudeWitness(quality,raw,orientation);if(!aptitude)continue;
+   const selected=talents.map(id=>rules.talents[id]);
+   if(quality!==1&&selected.some(t=>orientation===3?!['生产','通用'].includes(t.category):![rules.orientations[orientation],'通用'].includes(t.orientation)))continue;
+   for(let primary=1;primary<=9;primary++){
+    if(!within(caps[primary-1],ranges.primary)||selected.some(t=>t.excludedPrimary.includes(primary)))continue;
+    for(let secondary=1;secondary<=9;secondary++)if(primary!==secondary&&caps.every((v,i)=>within(v,i+1===primary?ranges.primary:i+1===secondary?ranges.secondary:ranges.base)))witnesses.push({...aptitude,orientation:quality===1?'通用':rules.orientations[orientation],primary,secondary});
+   }
+  }
+  return witnesses;
+ }
+ function randomCharacterSkillCapsInfo(m,{characterId}){
+  const reasons=[],verified=!!KNOWLEDGE.verification.randomCharacterSkillCaps,info={characterId,verified,eligible:false,reasons,skills:[],witnesses:[]};
+  try{
+   if(!activeCharacter(m,characterId)||get(m,C(characterId,0,2))!==characterId)throw Error('找不到有效的已招募角色。');
+   if(get(m,C(characterId,2,2))!==0)throw Error('有名角色載入／數值更新會依範本回填技藝上限；只支援範本 0。');
+   if(get(m,C(characterId,55,2))!==0)throw Error('目前只支援非在監的已招募角色。');
+   if(get(m,C(characterId,50,2))!==0||Array.from({length:16},(_,i)=>get(m,C(characterId,i+1,16))).some(v=>v!==0))throw Error('目前只支援無結丹及重生階段紀錄的角色。');
+   info.quality=get(m,C(characterId,49,2));
+   if(!Number.isSafeInteger(info.quality)||info.quality<1||info.quality>6)throw Error('角色品質須為原版 1–6。');
+   info.raw=[10,11,12].map(y=>get(m,C(characterId,y,2)));
+   info.talents=[1,2,3].map(y=>get(m,C(characterId,y,12)));
+   info.talentLevels=[21,22,23].map(y=>get(m,C(characterId,y,12)));
+   info.skills=SKILLS.map((name,i)=>({id:i+1,name,cap:get(m,C(characterId,22+i,2)),level:get(m,C(characterId,31+i,2)),experience:get(m,C(characterId,40+i,2))}));
+   if(info.skills.some(s=>!Number.isSafeInteger(s.cap)||!Number.isSafeInteger(s.level)||s.level<1||s.cap<s.level||typeof s.experience!=='number'||!Number.isFinite(s.experience)||s.experience<0||s.experience>Number.MAX_SAFE_INTEGER))throw Error('現有技藝上限、等級或餘額型別／範圍不符。');
+   info.witnesses=skillCapCombinations(info.quality,info.raw,info.talents,info.talentLevels,info.skills.map(s=>s.cap));
+   if(!info.witnesses.length)throw Error('目前九上限與固定基礎資質／三槽天賦沒有原版共同生成見證，保持唯讀。');
+   info.eligible=true;
+  }catch(e){reasons.push(e.message);}
+  return info;
+ }
+ const skillCapPreviews=new WeakMap();
+ function skillCapPreviewState(m,characterId){
+  // Small dependency signature also detects direct changes to public parsed input, not only named transactions.
+  const row=Number.isSafeInteger(characterId)&&characterId>0&&characterId<m.original.size[0]?m.original.data[characterId]:null;
+  return JSON.stringify([KNOWLEDGE.randomCharacterSkillCaps,row?.map(v=>[v[2],v[12],v[16]]),[...m.changes],m.revision]);
+ }
+ function previewCharacterSkillCaps(m,options){
+  const {characterId,caps}=options,info=randomCharacterSkillCapsInfo(m,{characterId}),reasons=[...info.reasons];
+  if(Object.keys(options).some(k=>!['characterId','caps'].includes(k)))reasons.push('技藝上限只接受角色編號與完整九項數值。');
+  if(!Array.isArray(caps)||caps.length!==9||Array.from(caps).some(v=>!Number.isSafeInteger(v)))reasons.push('請輸入完整九項上限安全整數。');
+  let rows=[],changes=[],witnesses=[];
+  if(info.eligible&&!reasons.length){
+   witnesses=skillCapCombinations(info.quality,info.raw,info.talents,info.talentLevels,caps);
+   if(!witnesses.length)reasons.push('目標九上限與固定基礎資質／天賦沒有共同生成見證。');
+   rows=info.skills.map((s,i)=>{
+    if(caps[i]<s.level)reasons.push(`${s.name}上限不得低於目前等級 ${s.level}。`);
+    if(caps[i]<s.cap&&caps[i]===s.level&&s.experience>0)reasons.push(`${s.name}下調至目前等級時仍有餘額 ${s.experience}；不自動清零，已阻擋。`);
+    return {id:s.id,name:s.name,before:{cap:s.cap,level:s.level,experience:s.experience},after:{cap:caps[i],level:s.level,experience:s.experience}};
+   });
+   changes=rows.filter(r=>r.before.cap!==r.after.cap).map(r=>({id:r.id,name:r.name,before:r.before.cap,after:r.after.cap}));
+  }
+  const result={...info,reasons,rows,changes,witnesses,unchanged:rows.length===9&&!changes.length,canApply:info.verified&&!reasons.length&&!!changes.length,restoreScope:'此角色全部九項技藝上限、等級與經驗餘額會一起還原'};
+  skillCapPreviews.set(result,{model:m,request:JSON.stringify(options),snapshot:batchSnapshot(m),state:skillCapPreviewState(m,characterId)});
+  return result;
+ }
+ function setCharacterSkillCaps(m,options,{preview}={}){
+  const prior=preview&&skillCapPreviews.get(preview);
+  if(!prior||prior.model!==m||prior.request!==JSON.stringify(options))throw Error('技藝上限預覽不相符，請重新預覽。');
+  assertBatchCurrent(m,prior.snapshot);
+  if(prior.state!==skillCapPreviewState(m,options.characterId))throw Error('技藝上限輸入、模型或規則已改變，請重新預覽。');
+  const checked=previewCharacterSkillCaps(m,options);
+  if(checked.reasons.length)throw Error(checked.reasons.join('；'));
+  if(!checked.verified)throw Error('一般隨機角色技藝上限尚未完成獨立隔離驗證。');
+  if(!checked.unchanged){
+   const previous=m.currentGroup;m.currentGroup=`skill-growth:${options.characterId}`;
+   try{transaction(m,()=>{activateSkillGroup(m,options.characterId);for(const change of checked.changes)put(m,C(options.characterId,21+change.id,2),change.after,`${get(m,C(options.characterId,1,2))}・${change.name}上限`);},'九項技藝上限調整');}finally{m.currentGroup=previous;}
+  }
+  skillCapPreviews.delete(preview);
+  return checked;
+ }
+ // Skill cap rules end.
  // Exact recruitment feasibility. Rationals keep strict random/round upper bounds distinct.
  const rational=(n,d=1n)=>{n=BigInt(n);d=BigInt(d);return d<0n?{n:-n,d:-d}:{n,d};};
  const rationalCompare=(a,b)=>a.n*b.d-b.n*a.d;
@@ -414,13 +520,11 @@
   else if(z===0&&y===5&&catalogMaps.professions.has(x))named('職業操練上限',{entity:catalogName('professions',x)});
   else if(z===2&&y>=10&&y<=12)named(`${aptitudeNames[y-10]}基礎資質`,{reason:'請由角色養成的三項基礎資質具名操作修改；有名角色載入時會依範本回填',related:[10,11,12,13,14,15].map(y=>C(x,y,2)),verification:'randomCharacterBaseAptitudes'});
   else if(z===2&&y>=13&&y<=15)named(`${aptitudeNames[y-13]}丹藥累積增量`,{reason:'請由角色養成的丹藥增量具名操作修改；每 1 等於資質 0.1 點',related:[10,11,12,13,14,15].map(y=>C(x,y,2))});
+  else if(z===2&&y>=22&&y<=48){const k=y<=30?y-21:y<=39?y-30:y-39;named(`${SKILLS[k-1]}${y<=30?'等級上限':y<=39?'等級':'經驗餘額'}`,{entity:activeCharacter(m,x)?get(m,C(x,1,2)):`角色 #${x}`,reason:y<=30?'技藝上限須使用九項具名預覽操作；有名角色依範本回填':'請由角色養成增加經驗，等級與餘額一起結算',related:skillModes(m).has(x)?Array.from({length:27},(_,i)=>C(x,22+i,2)):[C(x,21+k,2),C(x,30+k,2),C(x,39+k,2)]});}
   else if(z===2&&activeCharacter(m,x)){
    f.entity=get(m,C(x,1,2));
    const labels={0:'角色序號',1:'角色名稱',2:'角色範本',3:'角色等級',4:'角色經驗餘額',6:'目前職業',10:'力量資質',11:'敏捷資質',12:'智力資質',50:'重生階段',51:'性別',56:'共用池購買等級已花經驗',59:'自動轉職預設'};
    if(labels[y])named(labels[y],y===1?{type:'string',maxLength:6,verification:'names',editable:!!KNOWLEDGE.verification.names,reason:'名稱群組尚待遊戲驗證'}:{});
-   if(y>=22&&y<=30)named(`${SKILLS[y-22]}等級上限`);
-   if(y>=31&&y<=39)named(`${SKILLS[y-31]}等級`);
-   if(y>=40&&y<=48)named(`${SKILLS[y-40]}經驗餘額`);
   }else if([4,5].includes(z)&&activeCharacter(m,x)&&catalogMaps.professions.has(y))named(z===4?'職業等級':'職業經驗餘額',{entity:`${get(m,C(x,1,2))}・${catalogName('professions',y)}`,type:z===5?'decimal':'integer'});
   else if(z===12){named(`衍生屬性：${catalogName('attributes',y)}`,{entity:activeCharacter(m,x)?get(m,C(x,1,2)):`角色 #${x}`,type:'decimal'});}
   else if([7,9].includes(z)){
@@ -440,7 +544,7 @@
   if(z===2&&activeCharacter(m,x)){
    if([3,4,50].includes(y)){f.description='自然經驗逐級結算；上限為（重生階段向下取整 + 1）× 30。不扣共用池、不增加退款基數。';f.related=[C(x,3,2),C(x,4,2),C(x,50,2)];}
    if(y===56)f.description='由共用池購買等級已投入的經驗，供遣散／重生退款計算；不是自然經驗累計值。';
-   if(y>=22&&y<=48){const k=y<=30?y-21:y<=39?y-30:y-39;f.description='九項技藝依個別角色上限結算；增加經驗不修改技藝上限。';f.related=[C(x,21+k,2),C(x,30+k,2),C(x,39+k,2)];}
+   if(y>=22&&y<=48){const k=y<=30?y-21:y<=39?y-30:y-39;f.description='九項技藝依個別角色上限結算；增加經驗不修改技藝上限。';f.related=skillModes(m).has(x)?Array.from({length:27},(_,i)=>C(x,22+i,2)):[C(x,21+k,2),C(x,30+k,2),C(x,39+k,2)];}
   }
   if([4,5].includes(z)&&f.known){f.description='職業必須已習得；依職業等階計算需求，上限為 min(30, 操練上限)。自動轉職啟用時禁止增加。';f.related=[C(x,y,4),C(x,y,5),C(y,5,0),C(x,59,2)];}
   if(f.related.length&&![50,56,59].includes(y)&&((z===2&&[3,4].includes(y))||(z===2&&y>=31&&y<=48)||[4,5].includes(z)))f.reason='請由角色養成增加經驗，等級與餘額一起結算';
@@ -454,6 +558,7 @@
  }
  function put(m,c,value,label){
   if(Object.is(get(m,c),value))return;
+  m.revision=(m.revision||0)+1;
   const old=cell(m.original,c);if(Object.is(value,old)||value===old)m.changes.delete(key(c));else m.changes.set(key(c),{...c,original:old,value,label:label||labelFor(m.original,c),operation:m.currentOperation||null,group:m.currentGroup||null});
  }
  function setField(m,c,value,label){
@@ -478,9 +583,41 @@
   if((BASICS.some(b=>key(b)===key(c))||(c.y===6&&c.z===0&&MATERIALS.some(b=>b.x===c.x)))&&value<0)throw Error('資源數量不能小於 0。');
   put(m,c,value,label);
  }
- function transaction(m,fn,label){if(m.inTransaction){const previous=m.currentOperation;if(label&&!previous){m.operationCounter=(m.operationCounter||0)+1;m.currentOperation=`${m.operationCounter}：${label}`;}try{return fn();}finally{m.currentOperation=previous;} }const before=new Map(m.changes);m.inTransaction=true;if(label){m.operationCounter=(m.operationCounter||0)+1;m.currentOperation=`${m.operationCounter}：${label}`;}try{fn();}catch(e){m.changes=before;throw e;}finally{m.currentOperation=null;m.inTransaction=false;}if(JSON.stringify([...before])!==JSON.stringify([...m.changes])){m.history.push(before);if(m.history.length>100)m.history.shift();}}
- function undo(m){if(m.history.length)m.changes=m.history.pop();}
- function restore(m,c){transaction(m,()=>{const change=m.changes.get(key(c)),group=change?.group,op=change?.operation;if(group)for(const [k,v]of m.changes){if(v.group===group)m.changes.delete(k);}else if(op)for(const [k,v]of m.changes){if(v.operation===op)m.changes.delete(k);}else m.changes.delete(key(c));});}
+ // Transaction state includes the cumulative skill dependency mode, even after cap tokens return to baseline.
+ const skillGrowthModes=new WeakMap(),historyStates=new WeakMap(),batchStages=new WeakSet();
+ const skillModes=m=>skillGrowthModes.get(m)||new Set();
+ function activateSkillGroup(m,characterId){
+  const modes=new Set(skillModes(m));modes.add(characterId);skillGrowthModes.set(m,modes);
+  for(const [k,v]of m.changes)if(v.x===characterId&&v.z===2&&v.y>=22&&v.y<=48)m.changes.set(k,{...v,group:`skill-growth:${characterId}`});
+ }
+ function transaction(m,fn,label){
+  // Private batch staging already checkpoints each fixed target and discards the whole model on failure.
+  if(batchStages.has(m))return fn();
+  const nested=!!m.inTransaction,before=new Map(m.changes),modes=new Set(skillModes(m)),counter=m.operationCounter,revision=m.revision,operation=m.currentOperation,history=[...m.history];
+  m.inTransaction=true;
+  if(label&&!m.currentOperation){m.operationCounter=(m.operationCounter||0)+1;m.currentOperation=`${m.operationCounter}：${label}`;}
+  let result,changed;
+  try{
+   result=fn();
+   changed=JSON.stringify([...before])!==JSON.stringify([...m.changes])||JSON.stringify([...modes])!==JSON.stringify([...skillModes(m)]);
+  }catch(e){m.changes=before;m.history=history;m.operationCounter=counter;m.revision=revision;skillGrowthModes.set(m,modes);throw e;}
+  finally{m.currentOperation=operation;m.inTransaction=nested;}
+  if(!changed)m.operationCounter=counter;
+  if(changed&&!nested){historyStates.set(before,{modes,counter});m.history.push(before);if(m.history.length>100)m.history.shift();m.revision=(m.revision||0)+1;}
+  return result;
+ }
+ function undo(m){
+  if(!m.history.length)return;
+  const before=m.history.pop(),state=historyStates.get(before);
+  m.changes=before;skillGrowthModes.set(m,new Set(state?.modes||[]));m.operationCounter=state?.counter;m.revision=(m.revision||0)+1;
+ }
+ function restore(m,c){transaction(m,()=>{
+  const change=m.changes.get(key(c)),group=change?.group,op=change?.operation;
+  if(group){for(const [k,v]of m.changes)if(v.group===group)m.changes.delete(k);if(group.startsWith('skill-growth:')){const modes=new Set(skillModes(m));modes.delete(change.x);skillGrowthModes.set(m,modes);}}
+  else if(op){for(const [k,v]of m.changes)if(v.operation===op)m.changes.delete(k);}
+  else m.changes.delete(key(c));
+ });}
+ function restoreAll(m){transaction(m,()=>{m.changes.clear();skillGrowthModes.set(m,new Set());});}
  const experienceNeed={
   character:L=>Math.round(Math.round(2000*Math.pow(L,1.4)+10000*Math.pow(1.057,L)-11570)/1000)*1000,
   skill:L=>Math.round(Math.round(10000*Math.pow(1.05,L-1)+500*(L-1))/500)*500,
@@ -510,7 +647,7 @@
   if(!Number.isFinite(exp)||exp>Number.MAX_SAFE_INTEGER)throw Error('經驗總量超出安全範圍。');
   while(level<info.cap){const need=experienceNeed[kind](level,info.tier);if(!Number.isSafeInteger(need)||need<=0)throw Error('升級公式超出安全範圍。');if(exp<need)break;exp=Math.round((kind==='profession'?Math.trunc(exp):exp)-need);level++;}
   if(level>=info.cap)exp=0;
-  const previousGroup=m.currentGroup;m.currentGroup=`growth:${kind}:${characterId}:${id??0}`;
+  const previousGroup=m.currentGroup;m.currentGroup=kind==='skill'&&skillModes(m).has(characterId)?`skill-growth:${characterId}`:`growth:${kind}:${characterId}:${id??0}`;
   try{transaction(m,()=>{put(m,info.level,level,`${get(m,C(characterId,1,2))}・${info.name}等級`);put(m,info.exp,exp,`${get(m,C(characterId,1,2))}・${info.name}經驗餘額`);},`${get(m,C(characterId,1,2))}・增加${info.name}經驗 ${amount}`);}finally{m.currentGroup=previousGroup;}
   return {level,experience:exp,levelsGained:level-info.currentLevel,cap:info.cap};
  }
@@ -558,9 +695,9 @@
  }
  const batchPreviews=new WeakMap();
  const batchClock=()=>globalThis.performance?.now()??Date.now();
- function batchSnapshot(m){return {original:m.original,text:m.text,changes:new Map(m.changes),history:[...m.history],counter:m.operationCounter,gates:JSON.stringify(KNOWLEDGE.verification)};}
+ function batchSnapshot(m){return {original:m.original,text:m.text,changes:new Map(m.changes),history:[...m.history],counter:m.operationCounter,revision:m.revision,skillModes:JSON.stringify([...skillModes(m)]),gates:JSON.stringify(KNOWLEDGE.verification)};}
  function assertBatchCurrent(m,snapshot){
-  if(m.original!==snapshot.original||m.text!==snapshot.text||m.operationCounter!==snapshot.counter||m.changes.size!==snapshot.changes.size||[...snapshot.changes].some(([k,v])=>m.changes.get(k)!==v)||m.history.length!==snapshot.history.length||m.history.some((v,i)=>v!==snapshot.history[i])||JSON.stringify(KNOWLEDGE.verification)!==snapshot.gates)throw Error('存檔或驗證狀態已改變，請重新預覽批次。');
+  if(m.revision!==snapshot.revision||JSON.stringify([...skillModes(m)])!==snapshot.skillModes||m.original!==snapshot.original||m.text!==snapshot.text||m.operationCounter!==snapshot.counter||m.changes.size!==snapshot.changes.size||[...snapshot.changes].some(([k,v])=>m.changes.get(k)!==v)||m.history.length!==snapshot.history.length||m.history.some((v,i)=>v!==snapshot.history[i])||JSON.stringify(KNOWLEDGE.verification)!==snapshot.gates)throw Error('存檔或驗證狀態已改變，請重新預覽批次。');
  }
  async function runBatch(m,request,{signal,onProgress,preview}={},commit=false){
   if(m.inTransaction)throw Error('批次不能在同步交易內執行。');
@@ -569,6 +706,7 @@
   const snapshot=batchSnapshot(m),spec=batchTargets(m,request),operation=`${(m.operationCounter||0)+1}：批次・${spec.label}`;
   // Only this private model stays inside a transaction across yields. No callback in transaction() is async.
   const staged={...m,changes:new Map(m.changes),history:[],inTransaction:true,currentOperation:operation,currentGroup:null},rows=[];
+  skillGrowthModes.set(staged,new Set(skillModes(m)));batchStages.add(staged);
   const check=()=>{if(signal?.aborted)throw Error('已取消批次，沒有套用任何修改。');if(JSON.stringify(request)!==requestKey)throw Error('批次參數已改變，請重新預覽。');assertBatchCurrent(m,snapshot);};
   const progress=done=>onProgress?.({done,total:spec.targets.length});
   check();progress(0);await new Promise(resolve=>setTimeout(resolve,0));check();
@@ -586,7 +724,7 @@
   if(commit){
    if(summary.blocked)throw Error(`整批未套用：${summary.blocked} 個目標不合格。${rows.find(r=>r.status==='blocked').name}：${rows.find(r=>r.status==='blocked').reason}`);
    if(!summary.targets)throw Error('沒有可操作的目標，整批未套用。');
-   if(result.canApply){transaction(m,()=>{m.changes=staged.changes;},`批次・${spec.label}`);}
+   if(result.canApply){transaction(m,()=>{m.changes=staged.changes;skillGrowthModes.set(m,new Set(skillModes(staged)));},`批次・${spec.label}`);}
   }else batchPreviews.set(result,{model:m,snapshot,requestKey});
   return result;
  }
@@ -613,5 +751,5 @@
   if(patches.length!==m.changes.size)throw Error('部分修改座標未能定位，已停止匯出。');
   const parts=[];let previous=0;for(const p of patches){parts.push(m.text.slice(previous,p.start),p.value);previous=p.end;}parts.push(m.text.slice(previous));return parts.join('');
  }
- globalThis.SaveCore={recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,labelFor,diff,serialize,previewBatch,applyBatch};
+ globalThis.SaveCore={randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
 })();

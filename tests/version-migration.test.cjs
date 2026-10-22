@@ -144,7 +144,7 @@ test('representative scenarios replay on the base save and together cover every 
   const followupCopy = byName['advanced-followup'].scenario;
   assert.deepEqual(followupCopy.followup, {equipment: {id: 3, slot: followupCopy.followup.equipment.slot}, character: 2, profession: 3, technology: 31, drillGround: 12, academy: 4});
   assert.deepEqual([level(byName['advanced-followup'], 2, 1, 4), level(byName['advanced-followup'], 2, 1, 5), level(byName['advanced-followup'], 2, 6, 2)], [4, 4499, 1]);
-  assert.deepEqual(copies.filter(c => c.lifecycle).map(c => c.name), ['advanced-followup', 'batch2', 'affix-replacement', 'equipment-workflow', 'quality-7-Upgrade', 'quality-7-Downgrade', 'quality-9-Upgrade', 'quality-9-Downgrade', 'random-growth-lifecycle']);
+  assert.deepEqual(copies.filter(c => c.lifecycle).map(c => c.name), ['advanced-followup', 'batch2', 'affix-replacement', 'equipment-workflow', 'quality-7-Upgrade', 'quality-7-Downgrade', 'quality-9-Upgrade', 'quality-9-Downgrade', 'random-skill-caps-representative', 'random-growth-lifecycle']);
   assert.deepEqual(byName['batch2'].scenario.pills.map(p => p.aptitude), [1, 2, 3]);
   assert.deepEqual(byName['batch2'].scenario.operations.filter(o => o.method === 'setEquipmentAffixCoefficient').map(o => o.options.coefficient), [10.01, 80, 10, 80, 50, 120, 50, 119.99]);
   assert.deepEqual(byName['equipment-workflow'].scenario.operations.filter(o => o.options.selectUnwashedSlot).map(o => o.options.plane), [7, 9]);
@@ -200,7 +200,7 @@ test('migration runner replays each copy in order, stops on failure and derives 
     const proof = JSON.parse(fs.readFileSync(path.join(root, 'knowledge/verification.json'), 'utf8'));
     const digests = {selectionUi: proof.equipmentWorkflow.groups.equipmentAffixInitialSelection.uiEvidence.eventDigest, qualityUi: 'f'.repeat(64)};
     const digest = (gameDir, sids) => sids === R.uiEvents.selectionUi ? digests.selectionUi : digests.qualityUi;
-    const copies = () => Object.keys(S.families).map(family => ({name: family, family, oracleArgs: [], lifecycle: family !== 'growth', cases: 1, scenario: family === 'growth' ? null : {items: []}}));
+    const copies = () => Object.keys(S.families).filter(f=>!S.families[f].pendingReason).map(family => ({name: family, family, oracleArgs: [], lifecycle: family !== 'growth', cases: 1, scenario: family === 'growth' ? null : {items: []}}));
     const calls = [], sleeps = [];
     let failLoads = 2;
     const exec = (script, args) => {
@@ -212,7 +212,7 @@ test('migration runner replays each copy in order, stops on failure and derives 
     let removed = [];
     const remove = target => removed.push(path.relative(dir, target));
     const run = await M.runMigration({catalog, proof, copies: copies(), runDir: dir, setupArgs: ['--source', 's'], exec, sleep, log: quiet, digest, remove});
-    const families = Object.keys(S.families).length;
+    const families = Object.values(S.families).filter(f=>!f.pendingReason).length;
     assert.equal(removed.filter(p => p === 'game').length, families);
     assert.equal(removed.filter(p => p === 'profile').length, families);
     assert.deepEqual(removed.slice(-2), ['BANDIT Editor Test.app', 'BANDIT Editor Test.source.json']);
@@ -220,7 +220,7 @@ test('migration runner replays each copy in order, stops on failure and derives 
     assert.deepEqual(sleeps, [5000, 5000]);
     assert.equal(run.ui.selectionUi.source, 'native');
     assert.equal(run.ui.qualityUi.source, 'pending');
-    for (const group of Object.keys(catalog.verification)) for (const [check, ok] of Object.entries(run.checks[group])) assert.equal(ok, check !== 'qualityUi', group + ': ' + check);
+    for (const group of Object.keys(catalog.verification)) for (const [check, ok] of Object.entries(run.checks[group]||{})) assert.equal(ok, check !== 'qualityUi', group + ': ' + check);
     assert.ok(JSON.parse(fs.readFileSync(path.join(dir, 'results.json'), 'utf8')).completed);
     assert.ok(!JSON.stringify(run).includes(statePath));
 
@@ -273,7 +273,7 @@ test('write-back opens proven groups on a new build, compares on the proven buil
 
     const written = M.writeBack({dir, catalog: next, proof, results: results('V9.9.9'), steamBuild: '26200000'});
     assert.equal(written.action, 'written', written.reason);
-    assert.deepEqual(written.closed.sort(), R.sections.equipmentQuality.groups.slice().sort());
+    assert.deepEqual(written.closed.sort(), [...R.sections.equipmentQuality.groups,'randomCharacterSkillCaps'].sort());
     const gated = JSON.parse(fs.readFileSync(files[0], 'utf8')), saved = JSON.parse(fs.readFileSync(files[1], 'utf8'));
     assert.equal(gated.verification.equipmentAffixInitialSelection, true);
     assert.equal(gated.verification.equipmentQualityUpgrade, false);

@@ -64481,7 +64481,8 @@
     "professionTrainingCapAdvanced": true,
     "advancedTechnologyLevel": true,
     "advancedTechnologyLevelAdvanced": true,
-    "randomCharacterBaseAptitudes": true
+    "randomCharacterBaseAptitudes": true,
+    "randomCharacterSkillCaps": false
   },
   "randomCharacterGrowth": {
     "version": 1,
@@ -64590,5 +64591,808 @@
       358500068340403,
       778369382997146
     ]
+  },
+  "randomCharacterSkillCaps": {
+    "version": 1,
+    "policy": "fixed-aptitudes-and-talents",
+    "ranges": [
+      {
+        "base": [
+          4,
+          14
+        ],
+        "primary": [
+          18,
+          38
+        ],
+        "secondary": [
+          9,
+          27
+        ]
+      },
+      {
+        "base": [
+          7,
+          17
+        ],
+        "primary": [
+          28,
+          48
+        ],
+        "secondary": [
+          17,
+          35
+        ]
+      },
+      {
+        "base": [
+          10,
+          20
+        ],
+        "primary": [
+          38,
+          58
+        ],
+        "secondary": [
+          25,
+          43
+        ]
+      },
+      {
+        "base": [
+          13,
+          23
+        ],
+        "primary": [
+          48,
+          68
+        ],
+        "secondary": [
+          33,
+          51
+        ]
+      },
+      {
+        "base": [
+          16,
+          26
+        ],
+        "primary": [
+          58,
+          78
+        ],
+        "secondary": [
+          41,
+          59
+        ]
+      },
+      {
+        "base": [
+          19,
+          29
+        ],
+        "primary": [
+          68,
+          88
+        ],
+        "secondary": [
+          49,
+          67
+        ]
+      }
+    ],
+    "totals": [
+      [
+        90,
+        120
+      ],
+      [
+        120,
+        150
+      ],
+      [
+        150,
+        180
+      ],
+      [
+        180,
+        210
+      ],
+      [
+        210,
+        240
+      ],
+      [
+        240,
+        300
+      ]
+    ],
+    "weights": [
+      [
+        [
+          70,
+          90
+        ],
+        [
+          50,
+          70
+        ],
+        [
+          50,
+          70
+        ]
+      ],
+      [
+        [
+          50,
+          70
+        ],
+        [
+          70,
+          90
+        ],
+        [
+          50,
+          70
+        ]
+      ],
+      [
+        [
+          50,
+          70
+        ],
+        [
+          50,
+          70
+        ],
+        [
+          70,
+          90
+        ]
+      ],
+      [
+        [
+          50,
+          80
+        ],
+        [
+          50,
+          80
+        ],
+        [
+          50,
+          80
+        ]
+      ]
+    ],
+    "upperWeightExclusive": true,
+    "orientations": [
+      "力量",
+      "敏捷",
+      "智力",
+      "生产"
+    ],
+    "talentLevels": [
+      [
+        1,
+        2
+      ],
+      [
+        1,
+        2,
+        3
+      ],
+      [
+        2,
+        3,
+        4
+      ],
+      [
+        3,
+        4,
+        5
+      ],
+      [
+        4,
+        5
+      ],
+      [
+        5
+      ]
+    ],
+    "talents": {
+      "1": {
+        "category": "通用",
+        "orientation": "力量",
+        "excludedPrimary": []
+      },
+      "2": {
+        "category": "通用",
+        "orientation": "敏捷",
+        "excludedPrimary": []
+      },
+      "3": {
+        "category": "通用",
+        "orientation": "智力",
+        "excludedPrimary": []
+      },
+      "4": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "5": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "6": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "7": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "8": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "9": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "10": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "11": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "12": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "13": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "14": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "15": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "16": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "17": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "18": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "19": {
+        "category": "战斗",
+        "orientation": "力量",
+        "excludedPrimary": []
+      },
+      "20": {
+        "category": "战斗",
+        "orientation": "敏捷",
+        "excludedPrimary": []
+      },
+      "21": {
+        "category": "战斗",
+        "orientation": "智力",
+        "excludedPrimary": []
+      },
+      "22": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "23": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "24": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "25": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          7,
+          8,
+          9
+        ]
+      },
+      "26": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "27": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "28": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "29": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "30": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "31": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          4,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "32": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          8,
+          9
+        ]
+      },
+      "33": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          9
+        ]
+      },
+      "34": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          9
+        ]
+      },
+      "35": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      "36": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "37": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "38": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "39": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "40": {
+        "category": "通用",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "41": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "42": {
+        "category": "通用",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "43": {
+        "category": "通用",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "44": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "45": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "46": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "47": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "48": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "49": {
+        "category": "战斗",
+        "orientation": "力量",
+        "excludedPrimary": []
+      },
+      "50": {
+        "category": "战斗",
+        "orientation": "敏捷",
+        "excludedPrimary": []
+      },
+      "51": {
+        "category": "战斗",
+        "orientation": "智力",
+        "excludedPrimary": []
+      },
+      "52": {
+        "category": "战斗",
+        "orientation": "力量",
+        "excludedPrimary": []
+      },
+      "53": {
+        "category": "战斗",
+        "orientation": "敏捷",
+        "excludedPrimary": []
+      },
+      "54": {
+        "category": "战斗",
+        "orientation": "智力",
+        "excludedPrimary": []
+      },
+      "55": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "56": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "57": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "58": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "59": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "60": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "61": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          4,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "62": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          8,
+          9
+        ]
+      },
+      "63": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          9
+        ]
+      },
+      "64": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          9
+        ]
+      },
+      "65": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      "66": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "67": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          7,
+          8,
+          9
+        ]
+      },
+      "68": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "69": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "70": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "71": {
+        "category": "生产",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "72": {
+        "category": "通用",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "73": {
+        "category": "通用",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "74": {
+        "category": "战斗",
+        "orientation": "通用",
+        "excludedPrimary": []
+      },
+      "75": {
+        "category": "通用",
+        "orientation": "通用",
+        "excludedPrimary": []
+      }
+    },
+    "sourceSids": [
+      390673545485827,
+      907064845535449,
+      890068128550912,
+      360229107749216,
+      858555530911324,
+      884525457994003,
+      940056460112238,
+      180031394399295,
+      748584357810010,
+      176292127127652
+    ],
+    "sourceDigest": "1754eb477c345e31ef8251bc2f405b6299e0b780355bff57fbc526fa312e52d0"
   }
 }

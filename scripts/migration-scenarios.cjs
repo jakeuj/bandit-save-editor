@@ -206,6 +206,7 @@ function buildScenarios({catalog, saveText}) {
     copies.push({name: `quality-${plane}-${direction}`, family: 'equipmentQuality', oracleArgs: [], lifecycle: true, cases: scenario.items.length, scenario, groups: [(plane === 7 ? 'backpackEquipmentQuality' : 'equipmentQuality') + direction]});
   }
   // The initial release suite uses the full matrix. Later migrations select two representative qualities.
+  copies.push(...require('./random-character-skill-caps-scenarios.cjs').buildSkillCapScenarios({catalog,saveText}));
   copies.push(...require('./random-character-growth-scenarios.cjs').buildGrowthScenarios({catalog,saveText,representative:true}));
   return copies;
 }

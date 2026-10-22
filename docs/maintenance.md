@@ -274,10 +274,18 @@ options可帶`signal`取消與`onProgress({done,total})`；套用可帶`preview`
 
 資質與丹藥具名操作共用`aptitude:角色ID`六欄累計還原群組，包括有名角色既有丹藥操作的三欄還原；寫入值域維持原限制。復原一步仍按交易，失敗不留下變更。下調資質使現有B超出新C就阻擋，不默改B或依目前持有丹藥猜測歷史來源。
 
-生成器`random-character-growth-data.cjs`核對招募SID與公式後建立`catalog.randomCharacterGrowth`；來源／規則／資質資料變動關閉新旗標。`randomCharacterBaseAptitudes`有獨立section、family、代表情境與逐項checks，建置核對15來源、規則及天賦／裝備必要資料SHA、核心資質／穿戴檢查計算區段SHA。新增欄位仍由三份驗證需求／清單／遷移情境及版本遷移測試共同覆蓋，現在共23群組。
+生成器`random-character-growth-data.cjs`核對招募SID與公式後建立`catalog.randomCharacterGrowth`；來源／規則／資質資料變動關閉新旗標。`randomCharacterBaseAptitudes`有獨立section、family、代表情境與逐項checks，建置核對15來源、規則及天賦／裝備必要資料SHA、核心資質／穿戴檢查計算區段SHA。新增欄位仍由三份驗證需求／清單／遷移情境及版本遷移測試共同覆蓋，v2.7共23個已開放群組；v2.8 A另增1個關閉的候選群組。
 
 初次驗證用`verify-random-character-suite.cjs`，參數沿用`--source`、`--runtime`、`--save-file`、`--artifacts`與Mac的`--package`；未帶`--record`只驗證，全部成功後帶此參數才合併新section與旗標，保留原有22群組完整證明。`verify-random-character-growth.cjs`比對原生A／B／C；`verify-random-character-lifecycle.cjs`每階段原生存檔、停止、新PID讀回，另有`--compare`重查最後結果。新群組首次完整矩陣24角色及2角色生命週期；未來版本遷移採Q1／Q6代表子集，同指紋仍只比較。
 
 2026-10-22本機Mac實測已完成24角色六品質／升降／天賦加成、原版IO及新PID讀回；生命週期另涵蓋數值更新、三項服藥、單次自然經驗達轉職門檻、下獄／召回、重生及解雇，各階段皆再次存讀。15來源與原始存檔雜湊未變，自己的程序已停止，副本背景隱藏／靜音／非全螢幕。沒有新增遊戲UI或真實Cloud／成就驗證。
 
 桌面、390px、PWA斷網及一般Edge直接file開啟獨立HTML均已用2501×60×22合成檔完成新功能編輯、預覽及實際下載，逐字符合獨立token預期；桌面、390px與Edge file流程另完成群組還原及復原。直接file結果只涵蓋本版新功能，不代替`sdd/save-knowledge`其他歷史待辦；網路模擬與viewport測後恢復。2026-10-22依使用者授權，與v2.6一併以`5d5c55b`推送並完成[Pages正式發布驗證](research/random-character-growth.md#v27-正式發布驗證)；兩案SDD均保留原位置。
+
+## v2.8 A：技藝上限核心，尚未開放
+
+詳見[研究與A／B界線](research/random-character-skill-caps.md)及[SDD任務](../sdd/random-character-skill-caps/tasks.md)。`randomCharacterSkillCapsInfo(model,{characterId})`查資格；`previewCharacterSkillCaps(model,{characterId,caps})`接受九個安全整數，回九列C／L／E、共同生成見證及差異；`setCharacterSkillCaps(model,request,{preview})`要求同模型、同請求且未過期的核心預覽，重驗後一次提交。同值不新增歷史；降低到有餘額的目前等級時阻擋。預覽物件的changes不具執行權限。
+
+第一次有效cap調整後，該角色全部技藝cap／L／E累計一起還原；之前及之後的單項／九項經驗都納入。`restoreAll(model)`清除差異及私有群組模式；勿再直接clear changes來實作還原全部。undo回上一筆交易，含群組模式。已知z2 y22–48在未啟用列也維持唯讀，舊set／自訂座標不能繞過。
+
+生成器新增`random-character-skill-caps-data.cjs`，獨立群組`randomCharacterSkillCaps`保持false；沒有randomCharacterTalents寫入群組。proof綁15來源、最小規則／天賦選取資料及整份未嵌入知識的core摘要。原生family尚有pendingReason；oracle／lifecycle與初次merge入口明確拒絕，不能當作已完成runner。所有既有23組證明保持原檔；包含候選群組的全套遷移尚無法完成，選取已就緒副本則可重驗舊群組，寫回保持新群組關閉。同指紋仍只比較。B完成UI及獨立證明前不改玩家版號／更新紀錄。

@@ -37,7 +37,7 @@
   $('reviewPageInfo').textContent=`第 ${reviewPage+1} / ${Math.max(1,Math.ceil(list.length/size))} 頁 · ${list.length} 個欄位`;$('reviewPrev').disabled=reviewPage===0;$('reviewNext').disabled=start+size>=list.length;$('reviewDownloadBtn').disabled=!list.length||loading;
  }
  $('reviewPrev').onclick=()=>{reviewPage--;renderReview();};$('reviewNext').onclick=()=>{reviewPage++;renderReview();};
- $('reviewBtn').onclick=()=>{reviewPage=0;renderReview();$('reviewDialog').showModal();};$('resetBtn').onclick=()=>{if(loading)return;perform(()=>model.changes.clear());$('reviewDialog').close();toast('所有修改已還原。');};
+ $('reviewBtn').onclick=()=>{reviewPage=0;renderReview();$('reviewDialog').showModal();};$('resetBtn').onclick=()=>{if(loading)return;perform(()=>C.restoreAll(model));$('reviewDialog').close();toast('所有修改已還原。');};
  async function save(){if(!model?.changes.size||loading)return;await busy(async()=>{const text=C.serialize(model);download(text,outputName(model.name,'.modified'));exportedRevision=revision;toast(`已匯出 ${model.changes.size} 個變更。請結束遊戲後將副本改回原檔名。`);});}
  $('downloadBtn').onclick=$('reviewDownloadBtn').onclick=save;
  $('mobileHelpBtn').onclick=$('helpBtn').onclick=()=>$('helpDialog').showModal();

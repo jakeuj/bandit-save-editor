@@ -107,6 +107,7 @@ node scripts/build-editor.cjs
 | 需求 | 文件 |
 | --- | --- |
 | 後續可寫功能的新增順序與依據 | [功能路線圖](docs/research/feature-roadmap.md) |
+| v2.8 技藝上限核心開發狀態（尚未開放） | [A階段研究與B待辦](docs/research/random-character-skill-caps.md) |
 | 一般隨機角色基礎資質、招募值域與獨立驗證 | [v2.7研究](docs/research/random-character-growth.md) |
 | 第二批詞條係數、丹藥增量與後續候選 | [可行範圍與驗證計畫](docs/research/advanced-editing-batch2.md) |
 | v2.1 候選、公式、來源 SID 與實測 | [進階修改研究](docs/research/advanced-editing.md) |
