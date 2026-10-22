@@ -88,7 +88,15 @@ function buildScenarios({catalog, saveText}) {
       const t = template(templates, {tier: 1, maxSlot: 4});
       place(3, 9, equipment(t, {quality: 2, level: 3, owner: 1})); equip(3, t.slot);
       const drillGround = requireBuilding(save.data, 6, '校場', put), academy = requireBuilding(save.data, 5, '書院', put);
-      if (mode === 'followup') extra.followup = {equipment: {id: 3, slot: t.slot}, profession: 3, technology: 31, drillGround, academy};
+      if (mode === 'followup') {
+        // A second character one experience point short of the prerequisite level: one native call must level it.
+        const character = save.data.findIndex((row, x) => x > 1 && x < 50 && row[0][2] === x);
+        if (character < 0) throw Error('基準存檔需要第二名角色');
+        for (const [y, value] of [[6, 1], [59, 0]]) put(character, y, 2, value);
+        for (const [y, value] of [[1, 4], [3, 0]]) put(character, y, 4, value);
+        put(character, 1, 5, C.experienceNeed.profession(4, 1) - 1); put(character, 3, 5, 0);
+        extra.followup = {equipment: {id: 3, slot: t.slot}, character, profession: 3, technology: 31, drillGround, academy};
+      }
     },
     act(model, {apply, observe}) {
       const advanced = mode === 'overcap';

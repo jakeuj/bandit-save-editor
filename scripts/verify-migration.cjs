@@ -28,7 +28,7 @@ function steps(copy, setupArgs) {
     const scripts = family.lifecycle || [];
     list.push(...scripts.map(script => ({step: 'lifecycle', script, args: ['--state', '{state}', ...scenario]})));
     list.push({...game('lifecycle', '--save')}, game('lifecycle', '--assert', '--quiet'), ...restart('lifecycle'));
-    list.push(...scripts.filter(script => comparable.has(script)).map(script => ({step: 'lifecycle', script, args: ['--state', '{state}', '--compare']})));
+    list.push(...scripts.filter(script => comparable.has(script)).map(script => ({step: 'lifecycle', script, args: ['--state', '{state}', ...scenario, '--compare']})));
   }
   list.push(game('stop', '--stop'));
   return list;

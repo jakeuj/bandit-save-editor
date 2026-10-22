@@ -12,7 +12,7 @@ const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
 const selectFacility = (template, building) => `const start=global('主地图编号起始').GetValue();const sprite=r.GetObjectClassByName('地图建筑').GetInstances().find(i=>{const x=i.GetInstanceVariableValue(4),y=i.GetInstanceVariableValue(5),f=a.At(x-start+150,y-start,6);return f>0&&a.At(f,0,21)===f&&a.At(f,1,21)===${template}&&a.At(f,2,21)===${building};});if(!sprite)throw Error('No idle facility ${template} in building ${building}');const X=sprite.GetInstanceVariableValue(4),Y=sprite.GetInstanceVariableValue(5),f=a.At(X-start+150,Y-start,6);if(a.At(f,3,21)!==0)throw Error('Facility ${template} is busy');global('选中地块X').SetValue(X);global('选中地块Y').SetValue(Y);`;
 
 async function followup(state, s) {
-  const {equipment: {id, slot}, profession, technology, academy, drillGround} = s.followup;
+  const {equipment: {id, slot}, character, profession, technology, academy, drillGround} = s.followup;
   const before = await evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);if(a.At(1,${15 + slot},2)!==${id})throw Error('Expected equipped follow-up item');const v=record(${id},9);call('卸下装备',${slot},${id},1,false,false);return v;})()`);
   await pause(500);
   const bag = await evaluate(state, `(()=>{${prefix}if(a.At(1,${15 + slot},2)!==0)throw Error('Unequip failed');for(let id=1;id<a.GetWidth();id++)if(a.At(id,0,7)===${before[0]}&&a.At(id,1,7)===${before[1]}&&a.At(id,6,7)===${before[6]})return id;throw Error('Unequipped record missing');})()`);
@@ -22,12 +22,13 @@ async function followup(state, s) {
   for (let y = 0; y < 50; y++) if (y !== 7) assert.equal(worn.record[y], before[y], 'Equip cycle field ' + y);
   assert.equal(worn.record[7], 1);
 
-  // Natural experience ignores the amount argument: each call grants about ten work intervals, levelling at most one
-  // step up to the training cap. Stop when nothing changes so a stalled formula fails instead of spinning.
-  const career = await evaluate(state, `(()=>{${prefix}const from=a.At(1,6,2),cap=a.At(${profession},5,0);let calls=0,idle=0;while(a.At(1,from,4)<5&&calls<5000&&idle<50){const progress=a.At(1,from,4)*1e9+a.At(1,from,5);call('获得职业经验',1,0,'工作',from,0,0);calls++;idle=a.At(1,from,4)*1e9+a.At(1,from,5)===progress?idle+1:0;}
-    const prerequisite=a.At(1,from,4),eligible=call('转职条件判断',1,${profession},0,0);if(eligible!==1)throw Error('Transfer not eligible at prerequisite level '+prerequisite);
-    call('转职',1,${profession},true);const job=a.At(1,6,2),before=[a.At(1,${profession},4),a.At(1,${profession},5)];call('获得职业经验',1,0,'工作',${profession},0,0);
-    return {from,calls,prerequisite,job,before,after:[a.At(1,${profession},4),a.At(1,${profession},5)],capBefore:cap,capAfter:a.At(${profession},5,0)};})()`);
+  // The scenario leaves the character one point short of the prerequisite level, so a single natural experience call
+  // must level it; the amount argument is ignored and each call grants about ten work intervals.
+  const career = await evaluate(state, `(()=>{${prefix}const c=${character},from=a.At(c,6,2),cap=a.At(${profession},5,0),start=[a.At(c,from,4),a.At(c,from,5)];call('获得职业经验',c,0,'工作',from,0,0);
+    const prerequisite=a.At(c,from,4);if(prerequisite!==start[0]+1)throw Error('Natural experience did not level up: '+JSON.stringify([start,[prerequisite,a.At(c,from,5)]]));
+    const eligible=call('转职条件判断',c,${profession},0,0);if(eligible!==1)throw Error('Transfer not eligible at prerequisite level '+prerequisite);
+    call('转职',c,${profession},true);const job=a.At(c,6,2),before=[a.At(c,${profession},4),a.At(c,${profession},5)];call('获得职业经验',c,0,'工作',${profession},0,0);
+    return {character:c,from,start,prerequisite,job,before,after:[a.At(c,${profession},4),a.At(c,${profession},5)],capBefore:cap,capAfter:a.At(${profession},5,0)};})()`);
   assert.equal(career.job, profession, 'Transfer did not change the current profession');
   assert.ok(career.after[0] > career.before[0] || career.after[1] > career.before[1], 'No natural experience after transfer');
   assert.equal(career.capAfter, career.capBefore, 'Training cap changed by natural growth');
@@ -40,7 +41,7 @@ async function followup(state, s) {
   assert.deepEqual(training.stopped, [0, 0], 'Training did not stop');
 
   for (let y = 0; y < 50; y++) state.cells.push([worn.id, y, 9]);
-  state.cells.push([1, 15 + slot, 2], [1, 6, 2], [1, career.from, 4], [1, career.from, 5], [1, profession, 4], [1, profession, 5], [profession, 5, 0], [profession, 15, 0], [technology, 13, 0], [research.f, 3, 21], [training.f, 3, 21]);
+  state.cells.push([1, 15 + slot, 2], [character, 6, 2], [character, career.from, 4], [character, career.from, 5], [character, profession, 4], [character, profession, 5], [profession, 5, 0], [profession, 15, 0], [technology, 13, 0], [research.f, 3, 21], [training.f, 3, 21]);
   return {before, worn, career, research, training};
 }
 

@@ -130,6 +130,7 @@ test('representative scenarios replay on the base save and together cover every 
   for (const y of [10, 11, 12]) data[1][y][2] = 50;
   // A placed academy (5) and drill ground (6) that have not finished their first build.
   for (const [x, template] of [[4, 5], [12, 6]]) { data[x][0][1] = x; data[x][1][1] = template; }
+  data[2][0][2] = 2;
   const saveText = JSON.stringify({c2array: true, size: [2501, 60, 22], data});
   const copies = buildScenarios({catalog, saveText});
   const covered = copies.flatMap(c => c.groups || S.families[c.family].groups);
@@ -140,7 +141,9 @@ test('representative scenarios replay on the base save and together cover every 
   assert.equal(level(byName['advanced-normal'], 12, 5, 1), 1);
   assert.deepEqual(byName['advanced-normal'].scenario.operations.find(o => o.method === 'setAdvancedTechnologyLevel').options, {technologyId: 31, level: 119, advanced: false});
   assert.equal(byName['advanced-overcap'].scenario.operations.find(o => o.options.technologyId === 33).options.level, 299);
-  assert.deepEqual(byName['advanced-followup'].scenario.followup, {equipment: {id: 3, slot: byName['advanced-followup'].scenario.followup.equipment.slot}, profession: 3, technology: 31, drillGround: 12, academy: 4});
+  const followupCopy = byName['advanced-followup'].scenario;
+  assert.deepEqual(followupCopy.followup, {equipment: {id: 3, slot: followupCopy.followup.equipment.slot}, character: 2, profession: 3, technology: 31, drillGround: 12, academy: 4});
+  assert.deepEqual([level(byName['advanced-followup'], 2, 1, 4), level(byName['advanced-followup'], 2, 1, 5), level(byName['advanced-followup'], 2, 6, 2)], [4, 4499, 1]);
   assert.deepEqual(copies.filter(c => c.lifecycle).map(c => c.name), ['advanced-followup', 'batch2', 'affix-replacement', 'equipment-workflow', 'quality-7-Upgrade', 'quality-7-Downgrade', 'quality-9-Upgrade', 'quality-9-Downgrade']);
   assert.deepEqual(byName['batch2'].scenario.pills.map(p => p.aptitude), [1, 2, 3]);
   assert.deepEqual(byName['batch2'].scenario.operations.filter(o => o.method === 'setEquipmentAffixCoefficient').map(o => o.options.coefficient), [10.01, 80, 10, 80, 50, 120, 50, 119.99]);
@@ -159,9 +162,9 @@ test('native follow-up actions send compilable page code and check each native r
   try{
     const {followup, pillsAndRebirth} = require(lifecyclePath);
     const record = Array.from({length: 50}, (_, y) => y === 7 ? 1 : y + 100);
-    const state = {cells: []}, scenario = {followup: {equipment: {id: 3, slot: 2}, profession: 3, technology: 31, academy: 4, drillGround: 12}, pills: [{aptitude: 1, pillId: 64}, {aptitude: 2, pillId: 70}, {aptitude: 3, pillId: 76}]};
+    const state = {cells: []}, scenario = {followup: {equipment: {id: 3, slot: 2}, character: 2, profession: 3, technology: 31, academy: 4, drillGround: 12}, pills: [{aptitude: 1, pillId: 64}, {aptitude: 2, pillId: 70}, {aptitude: 3, pillId: 76}]};
     answers.push(() => record, () => 9, () => true, () => ({id: 5, record}),
-      () => ({from: 1, calls: 2, prerequisite: 5, job: 3, before: [1, 0], after: [1, 10], capBefore: 10, capAfter: 10}),
+      () => ({character: 2, from: 1, start: [4, 4499], prerequisite: 5, job: 3, before: [1, 0], after: [1, 10], capBefore: 10, capAfter: 10}),
       () => ({f: 1, started: [1, 31], stopped: [0, 0]}), () => ({f: 5, started: [1, 3], stopped: [0, 0]}));
     await followup(state, scenario);
     assert.ok(sent[5].includes("call('科技研究',31,a.At(4,5,1))") && sent[6].includes("call('职业操练',3,a.At(12,5,1))"));
@@ -180,14 +183,14 @@ test('every suite oracle and lifecycle script exists and marked copies run each 
   for (const [name, family] of Object.entries(S.families)) for (const script of [family.oracle, ...(family.lifecycle || [])].filter(Boolean)) assert.ok(fs.existsSync(path.join(root, 'scripts', script)), name + ': ' + script);
   const generator = fs.readFileSync(path.join(root, 'scripts/migration-scenarios.cjs'), 'utf8');
   assert.match(generator, /lifecycle: mode === 'followup'/);
-  assert.match(generator, /extra\.followup = \{equipment: \{id: 3, slot: t\.slot\}, profession: 3, technology: 31, drillGround, academy\}/);
+  assert.match(generator, /extra\.followup = \{equipment: \{id: 3, slot: t\.slot\}, character, profession: 3, technology: 31, drillGround, academy\}/);
 });
 
 test('migration runner replays each copy in order, stops on failure and derives proven checks',async()=>{
   const os = require('node:os'), M = require('../scripts/verify-migration.cjs'), R = require('../scripts/verification-requirements.cjs'), S = require('../scripts/verification-suite.cjs');
   const workflow = M.steps({name: 'w', family: 'equipmentWorkflow', oracleArgs: [], lifecycle: true, scenarioFile: '/x/w.json'}, ['--source', 's']);
   assert.deepEqual(workflow.map(s => s.step), ['setup', 'load', 'oracle', 'save', 'assert', 'stop', 'restart', 'restartLoad', 'reload', 'oracleCompare', 'lifecycle', 'lifecycle', 'lifecycle', 'stop', 'restart', 'restartLoad', 'lifecycle', 'lifecycle', 'stop']);
-  assert.deepEqual(workflow.at(-2).args, ['--state', '{state}', '--compare']);
+  assert.deepEqual(workflow.at(-2).args, ['--state', '{state}', '--scenario', '/x/w.json', '--compare']);
   assert.deepEqual(M.steps({name: 'b', family: 'batch2', oracleArgs: ['--character', '1'], lifecycle: true, scenarioFile: '/x/b.json'}, []).filter(s => s.step === 'lifecycle' && s.script !== 'verify-game.cjs').map(s => s.script), ['verify-affix-lifecycle.cjs', 'verify-native-lifecycle.cjs']);
   assert.deepEqual(M.steps({name: 'g', family: 'growth', oracleArgs: [], lifecycle: false}, []).map(s => s.step), ['setup', 'load', 'save', 'assert', 'stop', 'restart', 'restartLoad', 'reload', 'stop']);
 

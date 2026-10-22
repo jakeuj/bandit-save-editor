@@ -70,8 +70,11 @@ async function setup(){
  let runtime;
  if(process.platform==='darwin'){
   const app=path.join(dir,'BANDIT Editor Test.app');execFileSync('ditto',[path.resolve(originalRuntime,'../../..'),app]);
-  execFileSync('plutil',['-replace','CFBundleIdentifier','-string','com.jakeuj.bandit.editor-test.'+path.basename(dir).split('-').at(-1),path.join(app,'Contents/Info.plist')]);
+  // One stable test identity, so macOS asks for local-network access once instead of once per copy.
+  execFileSync('plutil',['-replace','CFBundleIdentifier','-string','com.jakeuj.bandit.editor-test',path.join(app,'Contents/Info.plist')]);
   execFileSync('plutil',['-replace','CFBundleName','-string','BANDIT Editor Test',path.join(app,'Contents/Info.plist')]);
+  // Agent app: no Dock icon and no activation, so isolated runs never take over the user's screen.
+  execFileSync('plutil',['-replace','LSUIElement','-bool','true',path.join(app,'Contents/Info.plist')]);
   runtime=path.join(app,'Contents/MacOS/nwjs');
  }else if(process.platform==='win32')runtime=path.join(game,path.basename(originalRuntime));
  else throw Error('Validation setup supports Windows and macOS');
@@ -85,6 +88,17 @@ async function setup(){
   manifest.name='com.jakeuj.bandit.validation.'+path.basename(dir);manifest.window={...manifest.window,show:false};
   manifest['chromium-args']=(manifest['chromium-args']||'').replace('--disable-devtools','')+' --disable-background-timer-throttling';
   fs.writeFileSync(manifestPath,JSON.stringify(manifest,null,2));
+ }else{
+  // Keep the copy hidden like on Windows; hidden Chromium windows must not be throttled or the game stops ticking.
+  const manifestPath=path.join(game,'package.json'),manifest=JSON.parse(fs.readFileSync(manifestPath,'utf8'));
+  manifest.window={...manifest.window,show:false,fullscreen:false,kiosk:false};
+  manifest['chromium-args']=(manifest['chromium-args']||'')+' --disable-background-timer-throttling --disable-renderer-backgrounding --disable-backgrounding-occluded-windows';
+  fs.writeFileSync(manifestPath,JSON.stringify(manifest,null,2));
+  // Without sys\\sys.dat the game defaults to fullscreen with sound. Windowed and silent settings keep the copy out of
+  // the way; the Mac path patch leaves this separator alone, so the backslash file name is the one the game reads.
+  const settings=JSON.stringify({c2dictionary:true,data:{'音乐':0,'音效':0,'音乐值':0,'音效值':0,'全屏':0,'语言':'简体中文','分辨率模式':5}});
+  fs.mkdirSync(path.join(game,'sys'),{recursive:true});
+  for(const file of [path.join(game,'sys','sys.dat'),path.join(game,'sys\\sys.dat')])fs.writeFileSync(file,settings);
  }
  const saveFile=path.resolve(opt('--save-file',path.join(source,'savedir/ea3save.dat'))),before={};
  for(const folder of ['save','savedir','backup']){
