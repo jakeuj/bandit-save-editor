@@ -913,6 +913,357 @@
     ],
     "sourceDigest": "752f9932ac9f233524c7af09a8e91e3c88f09a555090bdcb2692f43e72c42cc3"
   },
+  "randomCharacterTalents": {
+    "version": 1,
+    "policy": "level-only",
+    "talentLevels": [
+      [
+        1,
+        2
+      ],
+      [
+        1,
+        2,
+        3
+      ],
+      [
+        2,
+        3,
+        4
+      ],
+      [
+        3,
+        4,
+        5
+      ],
+      [
+        4,
+        5
+      ],
+      [
+        5
+      ]
+    ],
+    "attributes": {
+      "10": {
+        "unit": "小数",
+        "formula": "regeneration"
+      },
+      "11": {
+        "unit": "整数",
+        "formula": "coefficientTimesLevel"
+      },
+      "12": {
+        "unit": "百分比",
+        "formula": "coefficientPlusTwoLevels"
+      },
+      "13": {
+        "unit": "百分比",
+        "formula": "coefficientTimesLevel"
+      },
+      "15": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "17": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "18": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "19": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "20": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "21": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "23": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "24": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "25": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "26": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "27": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "28": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "29": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "30": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "31": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "32": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "33": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "34": {
+        "unit": "百分比",
+        "formula": "coefficientPlusTwoLevels"
+      },
+      "35": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "36": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "37": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "38": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "51": {
+        "unit": "百分比",
+        "formula": "coefficientPlusTwoLevels"
+      },
+      "52": {
+        "unit": "百分比",
+        "formula": "coefficientTimesLevel"
+      },
+      "53": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "54": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "55": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "56": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "57": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "58": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "59": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "60": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "61": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "62": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "63": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "64": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "68": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "70": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "71": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "72": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "73": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "74": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "75": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "77": {
+        "unit": "倍率",
+        "formula": "multiplier"
+      },
+      "78": {
+        "unit": "倍率",
+        "formula": "multiplier"
+      },
+      "79": {
+        "unit": "倍率",
+        "formula": "multiplier"
+      },
+      "81": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "82": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "83": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "84": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "85": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "86": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "87": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "88": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "89": {
+        "unit": "百分比",
+        "formula": "growth"
+      },
+      "90": {
+        "unit": "倍率",
+        "formula": "multiplier"
+      },
+      "91": {
+        "unit": "倍率",
+        "formula": "multiplier"
+      },
+      "92": {
+        "unit": "倍率",
+        "formula": "multiplier"
+      },
+      "93": {
+        "unit": "倍率",
+        "formula": "multiplier"
+      },
+      "94": {
+        "unit": "倍率",
+        "formula": "multiplier"
+      },
+      "95": {
+        "unit": "倍率",
+        "formula": "multiplier"
+      },
+      "96": {
+        "unit": "倍率",
+        "formula": "multiplier"
+      },
+      "97": {
+        "unit": "倍率",
+        "formula": "multiplier"
+      },
+      "98": {
+        "unit": "倍率",
+        "formula": "multiplier"
+      },
+      "99": {
+        "unit": "倍率",
+        "formula": "multiplier"
+      },
+      "100": {
+        "unit": "倍率",
+        "formula": "multiplier"
+      },
+      "101": {
+        "unit": "倍率",
+        "formula": "multiplier"
+      },
+      "102": {
+        "unit": "倍率",
+        "formula": "multiplier"
+      },
+      "103": {
+        "unit": "倍率",
+        "formula": "multiplier"
+      },
+      "104": {
+        "unit": "小数",
+        "formula": "levelTenth"
+      },
+      "105": {
+        "unit": "小数",
+        "formula": "levelTenth"
+      },
+      "106": {
+        "unit": "小数",
+        "formula": "levelTenth"
+      }
+    },
+    "sourceSids": [
+      390673545485827,
+      822838674776648,
+      768713561163211,
+      298590518650410,
+      884525457994003,
+      501010543923483,
+      699833323210652,
+      778369382997146,
+      211049884056972,
+      176292127127652
+    ],
+    "sourceDigest": "f6710c95560744a06e8c7ada0511ef1a3b4c72336d034a4c5ef2f45c771e6e80"
+  },
   "equipmentQuality": {
     "version": 1,
     "items": {
@@ -65413,6 +65764,7 @@
     }
   },
   "verification": {
+    "randomCharacterTalents": false,
     "randomCharacterSkillCaps": true,
     "randomCharacterBaseAptitudes": true,
     "backpackEquipmentQualityUpgrade": true,

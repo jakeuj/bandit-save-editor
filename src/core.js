@@ -390,6 +390,90 @@
   return checked;
  }
  // Skill cap rules end.
+ // Talent level rules. Ids, empty slots and quality stay as recruited; only pooled levels change.
+ function talentEffect(attributeId,coefficient,level){
+  const rule=KNOWLEDGE.randomCharacterTalents?.attributes[attributeId],c=coefficient,L=level;
+  if(!rule||typeof c!=='number'||!Number.isSafeInteger(L)||L<1)return null;
+  // Same operand order as the native 天赋属性 branches.
+  return {levelTenth:()=>L*(c/10),coefficientPlusTwoLevels:()=>c+2*L,coefficientTimesLevel:()=>c*L,regeneration:()=>Math.round(100*L*c)/10000,multiplier:()=>Math.floor(c*Math.pow(1.79,L-1))/100,growth:()=>Math.floor(c*Math.pow(1.8,L-1))}[rule.formula]?.()??null;
+ }
+ function talentSlotEffects(id,level){
+  const talent=KNOWLEDGE.batch2Data.talents[id];
+  return talent.attributes.flatMap((attributeId,k)=>attributeId?[{attributeId,name:catalogName('attributes',attributeId),unit:KNOWLEDGE.randomCharacterTalents.attributes[attributeId]?.unit||'',value:talentEffect(attributeId,talent.coefficients[k],level)}]:[]);
+ }
+ function randomCharacterTalentsInfo(m,{characterId}){
+  const reasons=[],rules=KNOWLEDGE.randomCharacterTalents,verified=!!KNOWLEDGE.verification.randomCharacterTalents,info={characterId,verified,eligible:false,reasons,slots:[]};
+  try{
+   if(!rules)throw Error('天賦規則尚未載入。');
+   if(!activeCharacter(m,characterId)||get(m,C(characterId,0,2))!==characterId)throw Error('找不到有效的已招募角色。');
+   if(get(m,C(characterId,2,2))!==0)throw Error('有名角色載入／數值更新會依範本回填天賦；只支援範本 0。');
+   if(get(m,C(characterId,55,2))!==0)throw Error('目前只支援非在監的已招募角色。');
+   if(get(m,C(characterId,50,2))!==0||Array.from({length:16},(_,i)=>get(m,C(characterId,i+1,16))).some(v=>v!==0))throw Error('目前只支援無結丹及重生階段紀錄的角色。');
+   info.quality=get(m,C(characterId,49,2));
+   if(!Number.isSafeInteger(info.quality)||info.quality<1||info.quality>6)throw Error('角色品質須為原版 1–6。');
+   info.levelPool=rules.talentLevels[info.quality-1];
+   const ids=[1,2,3].map(y=>get(m,C(characterId,y,12))),levels=[21,22,23].map(y=>get(m,C(characterId,y,12)));
+   if(ids.some(id=>!Number.isSafeInteger(id)||id<=0||!KNOWLEDGE.batch2Data.talents[id])||new Set(ids).size!==3)throw Error('三槽天賦須為互不重複的已知 ID；空槽或重複資料保持唯讀。');
+   if(levels.some(level=>!Number.isSafeInteger(level)||!info.levelPool.includes(level)))throw Error('現有天賦等級不在此品質的原版等級池內，保持唯讀。');
+   info.slots=ids.map((id,i)=>({slot:i+1,id,name:catalogName('talents',id),level:levels[i],aptitude:KNOWLEDGE.batch2Data.talents[id].attributes.some(a=>a>=104&&a<=106),effects:talentSlotEffects(id,levels[i])}));
+   info.eligible=true;
+  }catch(e){reasons.push(e.message);}
+  return info;
+ }
+ // Base aptitude after replacing talent levels, in the same accumulation order as characterAptitudeSource.
+ function talentAptitudeBase(m,characterId,aptitude,levels){
+  let base=get(m,C(characterId,9+aptitude,2))/10;
+  for(let i=0;i<3;i++){const talent=KNOWLEDGE.batch2Data.talents[get(m,C(characterId,1+i,12))];for(let k=0;k<3;k++)if(talent.attributes[k]===103+aptitude)base+=levels[i]*talent.coefficients[k]/10;}
+  return base;
+ }
+ const talentPreviews=new WeakMap();
+ function talentPreviewState(m,characterId){
+  const row=Number.isSafeInteger(characterId)&&characterId>0&&characterId<m.original.size[0]?m.original.data[characterId]:null;
+  return JSON.stringify([KNOWLEDGE.randomCharacterTalents,KNOWLEDGE.batch2Data.talents,row?.map(v=>[v[2],v[12],v[16]]),[...m.changes],m.revision]);
+ }
+ function previewCharacterTalents(m,options){
+  const {characterId,levels}=options,info=randomCharacterTalentsInfo(m,{characterId}),reasons=[...info.reasons];
+  if(Object.keys(options).some(k=>!['characterId','levels'].includes(k)))reasons.push('天賦只接受角色編號與三槽等級；不能更換天賦 ID。');
+  if(!Array.isArray(levels)||levels.length!==3||Array.from(levels).some(v=>!Number.isSafeInteger(v)))reasons.push('請輸入三槽天賦等級安全整數。');
+  let changes=[],aptitudes=[];
+  if(info.eligible&&!reasons.length){
+   info.slots.forEach((s,i)=>{if(!info.levelPool.includes(levels[i]))reasons.push(`${s.name}等級須為此品質原版等級 ${info.levelPool.join('、')} 之一。`);});
+   if(!reasons.length){
+    changes=info.slots.filter((s,i)=>s.level!==levels[i]).map(s=>({slot:s.slot,id:s.id,name:s.name,before:s.level,after:levels[s.slot-1],aptitude:s.aptitude,effects:talentSlotEffects(s.id,levels[s.slot-1])}));
+    // Aptitude talents move the pill cap; an existing bonus above the new cap blocks instead of being clipped.
+    const touched=[1,2,3].filter(a=>changes.some(c=>KNOWLEDGE.batch2Data.talents[c.id].attributes.includes(103+a)));
+    try{
+     aptitudes=touched.map(aptitude=>{
+      const before=characterAptitudeSource(m,characterId,aptitude).base,base=talentAptitudeBase(m,characterId,aptitude,levels),bonus=get(m,C(characterId,12+aptitude,2));
+      if(!Number.isSafeInteger(bonus)||bonus<0)throw Error('丹藥增量須為非負整數；既有小數增量保持唯讀。');
+      const cap=Math.round(100*base*1.5)/100,total=Math.round(100*(base+bonus/10))/100,name=aptitudeNames[aptitude-1];
+      if(total>cap)reasons.push(`${name}丹藥增量 ${bonus} 使新總資質 ${total} 超過上限 ${cap}；請先降低丹藥增量。`);
+      return {aptitude,name,before:{base:before,cap:Math.round(100*before*1.5)/100},after:{base,bonus,total,cap}};
+     });
+    }catch(e){reasons.push(e.message);}
+   }
+  }
+  const result={...info,levels,changes,aptitudes,reasons,unchanged:info.eligible&&!reasons.length&&!changes.length,canApply:info.verified&&!reasons.length&&!!changes.length,restoreScope:'此角色三槽天賦等級、三項基礎資質與丹藥增量會一起還原'};
+  talentPreviews.set(result,{model:m,request:JSON.stringify(options),snapshot:batchSnapshot(m),state:talentPreviewState(m,characterId)});
+  return result;
+ }
+ function setCharacterTalents(m,options,{preview}={}){
+  const prior=preview&&talentPreviews.get(preview);
+  if(!prior||prior.model!==m||prior.request!==JSON.stringify(options))throw Error('天賦等級預覽不相符，請重新預覽。');
+  assertBatchCurrent(m,prior.snapshot);
+  if(prior.state!==talentPreviewState(m,options.characterId))throw Error('天賦輸入、模型或規則已改變，請重新預覽。');
+  const checked=previewCharacterTalents(m,options);
+  if(checked.reasons.length)throw Error(checked.reasons.join('；'));
+  if(!checked.verified)throw Error('一般隨機角色天賦等級尚未完成獨立隔離驗證。');
+  if(!checked.unchanged){
+   // Shares the v2.7 aptitude group: talent levels, base aptitudes and pill bonuses restore together.
+   const previous=m.currentGroup;m.currentGroup=`aptitude:${options.characterId}`;
+   try{transaction(m,()=>{for(const change of checked.changes)put(m,C(options.characterId,20+change.slot,12),change.after,`${get(m,C(options.characterId,1,2))}・${change.name}等級`);},'三槽天賦等級調整');}finally{m.currentGroup=previous;}
+  }
+  talentPreviews.delete(preview);
+  return checked;
+ }
+ // Talent level rules end.
  // Exact recruitment feasibility. Rationals keep strict random/round upper bounds distinct.
  const rational=(n,d=1n)=>{n=BigInt(n);d=BigInt(d);return d<0n?{n:-n,d:-d}:{n,d};};
  const rationalCompare=(a,b)=>a.n*b.d-b.n*a.d;
@@ -528,6 +612,7 @@
    const labels={0:'角色序號',1:'角色名稱',2:'角色範本',3:'角色等級',4:'角色經驗餘額',6:'目前職業',10:'力量資質',11:'敏捷資質',12:'智力資質',50:'重生階段',51:'性別',56:'共用池購買等級已花經驗',59:'自動轉職預設'};
    if(labels[y])named(labels[y],y===1?{type:'string',maxLength:6,verification:'names',editable:!!KNOWLEDGE.verification.names,reason:'名稱群組尚待遊戲驗證'}:{});
   }else if([4,5].includes(z)&&activeCharacter(m,x)&&catalogMaps.professions.has(y))named(z===4?'職業等級':'職業經驗餘額',{entity:`${get(m,C(x,1,2))}・${catalogName('professions',y)}`,type:z===5?'decimal':'integer'});
+  else if(z===12&&[1,2,3,21,22,23].includes(y)){const k=y>20?y-20:y;named(`天賦 #${k}${y>20?'等級':'編號'}`,{entity:activeCharacter(m,x)?get(m,C(x,1,2)):`角色 #${x}`,type:'integer',reason:y>20?'請由角色養成的天賦等級具名預覽操作修改；有名角色依範本回填':'天賦 ID 依原版招募固定，不能更換',related:[1,2,3,21,22,23].map(y=>C(x,y,12))});}
   else if(z===12){named(`衍生屬性：${catalogName('attributes',y)}`,{entity:activeCharacter(m,x)?get(m,C(x,1,2)):`角色 #${x}`,type:'decimal'});}
   else if([7,9].includes(z)){
    const labels={0:'初始背包列號',1:'物品範本',2:'物品數量／旗標',3:'物品等階',4:'物品狀態',5:'品質',6:'物品等級',7:'裝備歸屬／狀態',8:'主屬性品質係數',23:'取得參數／套裝關聯值',24:'新取得標記',25:'未辨識物品狀態 25',26:'套裝關聯值 26',27:'套裝原物品資訊'};
@@ -550,7 +635,7 @@
   }
   if([4,5].includes(z)&&f.known){f.description='職業必須已習得；依職業等階計算需求，上限為 min(30, 操練上限)。自動轉職啟用時禁止增加。';f.related=[C(x,y,4),C(x,y,5),C(y,5,0),C(x,59,2)];}
   if(f.related.length&&![50,56,59].includes(y)&&((z===2&&[3,4].includes(y))||(z===2&&y>=31&&y<=48)||[4,5].includes(z)))f.reason='請由角色養成增加經驗，等級與餘額一起結算';
-  if(z===12)f.description='屬性與其他角色狀態相關；遊戲另在暫存物件重算數值，第一版不直接寫入。';
+  if(z===12&&![1,2,3,21,22,23].includes(y))f.description='屬性與其他角色狀態相關；遊戲另在暫存物件重算數值，第一版不直接寫入。';
   if([7,9].includes(z)&&f.known)f.description='物品實體的原始資料；詞條、係數、背包位置與穿戴歸屬需一起核實，第一版唯讀。';
   if(z===9&&y===6||z===0&&y===5&&catalogMaps.professions.has(x)||z===0&&y===4&&catalogMaps.technologies.get(x)?.advanced){
    const kind=z===9?'equipment':y===5?'training':'technology';
@@ -753,5 +838,5 @@
   if(patches.length!==m.changes.size)throw Error('部分修改座標未能定位，已停止匯出。');
   const parts=[];let previous=0;for(const p of patches){parts.push(m.text.slice(previous,p.start),p.value);previous=p.end;}parts.push(m.text.slice(previous));return parts.join('');
  }
- globalThis.SaveCore={randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
+ globalThis.SaveCore={randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
 })();

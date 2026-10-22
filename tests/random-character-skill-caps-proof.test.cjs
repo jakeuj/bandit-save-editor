@@ -104,7 +104,7 @@ test('complete native-shaped fixture merges only the new group; partial matrices
  assert.equal(P.problem(merged.catalog,merged.proof,core),null);assert.equal(merged.catalog.verification[P.group],true);
  const retained=structuredClone(merged.proof);delete retained[P.group];retained.groups[P.group]=old.groups[P.group];
  if(!Object.hasOwn(old.groups,P.group))delete retained.groups[P.group];assert.deepEqual(retained,old,'every old group and proof section is retained');
- assert.deepEqual(old,originalProof);assert.deepEqual(k,originalCatalog);assert.equal(Object.hasOwn(merged.catalog.verification,'randomCharacterTalents'),false);
+ assert.deepEqual(old,originalProof);assert.deepEqual(k,originalCatalog);assert.equal(merged.catalog.verification.randomCharacterTalents??false,false);
  assert.throws(()=>mergeProof({catalog:k,proof:old,results,coreSource:core+'\n'}),/摘要/);
  assert.throws(()=>mergeProof({catalog:k,proof:old,results:resultFixture({representative:true}),coreSource:core}),/矩陣/);
  for(const mutate of [

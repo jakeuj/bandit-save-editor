@@ -18,6 +18,7 @@ const dependencies = {
   equipmentWorkflow: {effects:equipment, lifecycle:equipLife, tables:['wp','sx','tf','yx','tz']},
   equipmentQuality: {effects:equipment, lifecycle:equipLife, tables:['wp','sx','tf','yx','tz']},
   randomCharacterGrowth: {effects:['新刷新招募数据','属性计算','角色资质计算','角色资质上限'], lifecycle:[...characterLife,'服用普通丹药','获得职业经验'], tables:['js','tf','wp','sx','zy','yx','tz']},
+  randomCharacterTalents: {effects:['新刷新招募数据','新刷初始角色数据','属性计算','角色资质计算','角色资质上限'], lifecycle:[...characterLife,'服用普通丹药','招募随机角色','招募随机角色2'], tables:['js','tf','wp','sx','zy','yx','tz']},
   randomCharacterSkillCaps: {effects:['新刷新招募数据','数值更新','获得技艺经验','技艺升级经验'], lifecycle:[...characterLife,'招募随机角色2','获得职业经验'], tables:['js','tf','wp','sx','zy','yx','tz']}
 };
 const sharedIo = ['存档','存档备份','读取进度'];
@@ -27,7 +28,8 @@ const regions = {
   advanced:[[0,[31,44],4],[0,'*',5],[9,'*',6]],
   batch2:[[2,'*',[13,15]],[9,'*',[8,20]]], affixReplacement:[[9,'*',[8,33]]],
   equipmentWorkflow:[[7,'*','*'],[9,'*',[24,33]]], equipmentQuality:[[7,'*',[5,33]],[9,'*',[5,33]]],
-  randomCharacterGrowth:[[2,'*',[10,15]],[3,'*',[10,15]]], randomCharacterSkillCaps:[[2,'*',[22,48]],[3,'*',[22,48]]]
+  randomCharacterGrowth:[[2,'*',[10,15]],[3,'*',[10,15]]], randomCharacterSkillCaps:[[2,'*',[22,48]],[3,'*',[22,48]]],
+  randomCharacterTalents:[[12,'*',[1,3]],[12,'*',[21,23]],[2,'*',[10,15]],[3,'*',[51,56]]]
 };
 
 // Version 2 supplements the legacy digest retained by the original, reviewed extraction allowlists.

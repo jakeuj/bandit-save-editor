@@ -12,6 +12,13 @@ const growthChecks = {
 };
 const nativeLifecycleChecks = {load: 'load', save: 'save', restart: 'reload', originalHashes: 'assert', nativeEffects: 'oracleCompare', lifecycle: 'lifecycle'};
 const families = {
+  randomCharacterTalents: {
+    groups:['randomCharacterTalents'],
+    initialProofRequired:true,
+    pendingReason:'A 階段只有規則與核心測試；B 階段原生公式 oracle、角色矩陣及逐階段存讀尚未完成',
+    oracle:'verify-random-character-talents.cjs', lifecycle:['verify-talents-lifecycle.cjs'],
+    checks:{load:'load',save:'save',restart:'reload',originalHashes:'assert',nativeEffects:'oracleCompare',talentFormulas:'oracleCompare',aptitudeCap:'oracleCompare',numericUpdate:'lifecycle',nativeTransfer:'lifecycle',nativePrison:'lifecycle',nativeRebirth:'lifecycle',nativeDismiss:'lifecycle',stageRoundtrips:'lifecycle'}
+  },
   randomCharacterSkillCaps: {
     groups:['randomCharacterSkillCaps'],
     initialProofRequired:true,

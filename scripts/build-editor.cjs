@@ -30,6 +30,7 @@ if(Object.values(knowledge.verification).some(Boolean)){
     if(!c||!R.requiredChecks(group).every(k=>c.checks?.[k]===true)||JSON.stringify(p.fingerprints)!==JSON.stringify({...knowledge.fingerprints,...knowledge.batch2Fingerprints})||JSON.stringify(p.limits)!==JSON.stringify(knowledge.equipmentWorkflowLimits)||p.dataHash!==createHash('sha256').update(JSON.stringify({rules:knowledge.equipmentWorkflowLimits,items:knowledge.batch2Data.items,formulas:knowledge.affixReplacement})).digest('hex'))throw Error('裝備操作缺少相符的獨立驗證：'+group);
     const ui=R.uiEvidenceProblem(group,c,knowledge.gameVersion);if(ui)throw Error(ui+'：'+group);
   }
+  if(knowledge.verification.randomCharacterTalents){const P=require('./random-character-talents-proof.cjs'),problem=P.problem(knowledge,proof,fs.readFileSync(path.join(root,'src/core.js'),'utf8'));if(problem)throw Error(problem);P.requireNativeRunner();}
   if(knowledge.verification.randomCharacterSkillCaps){const P=require('./random-character-skill-caps-proof.cjs'),problem=P.problem(knowledge,proof,fs.readFileSync(path.join(root,'src/core.js'),'utf8'));if(problem)throw Error(problem);P.requireNativeRunner();}
   if(knowledge.verification.randomCharacterBaseAptitudes){const problem=require('./random-character-growth-proof.cjs').problem(knowledge,proof,fs.readFileSync(path.join(root,'src/core.js'),'utf8'));if(problem)throw Error(problem);}
   for(const [group,enabled]of Object.entries(knowledge.verification))if(enabled&&proof.groups[group]!==true)throw Error('驗證未涵蓋寫入群組：'+group);

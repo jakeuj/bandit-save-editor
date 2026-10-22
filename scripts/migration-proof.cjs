@@ -15,7 +15,8 @@ function dataHash(k,group) {
     equipmentWorkflow:[k.equipmentWorkflowLimits,k.affixReplacement,k.batch2Data?.items],
     equipmentQuality:[k.equipmentQuality,k.equipmentWorkflowLimits,k.batch2Data?.items],
     randomCharacterGrowth:[k.randomCharacterGrowth,k.batch2Data?.talents,k.batch2Data?.items],
-    randomCharacterSkillCaps:[k.randomCharacterSkillCaps]
+    randomCharacterSkillCaps:[k.randomCharacterSkillCaps],
+    randomCharacterTalents:[k.randomCharacterTalents,k.batch2Data?.talents]
   }[family];
   if (!data) throw Error('Unknown evidence family: '+family);
   return A.sha(clean(data));
