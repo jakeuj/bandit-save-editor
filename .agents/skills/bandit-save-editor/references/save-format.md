@@ -16,7 +16,7 @@
 
 瀏覽器讀取存檔與比對檔須保留 UTF-8 BOM；沿用 `arrayBuffer()` 配合 `TextDecoder` 的 `ignoreBOM:true`，避免 `File.text()` 在核心 parser 前消去字元。驗收應逐字比較瀏覽器匯出與預期 token 替換結果，不能只比 JSON 值；詳細案例見 repo 的 v2.1 研究。
 
-v2.2 的既有詞條係數走 `affixInfo`／`setEquipmentAffixCoefficient`，丹藥增量走 `pillInfo`／`setPillAptitudeBonus`。只開已驗證一般範圍，完整限制見 `docs/research/advanced-editing-batch2.md`；品質、詞條ID與超限另案。係數含小數，丹藥儲存單位不等於顯示點數；原生截限也可能產生目前不支援編輯的小數增量，保留唯讀。範本0隨機角色不可誤當缺失範本，有名角色才有載入回填檢查。
+v2.2 的既有詞條係數走 `affixInfo`／`setEquipmentAffixCoefficient`，丹藥增量走 `pillInfo`／`setPillAptitudeBonus`。只開已驗證一般範圍，完整限制見 `docs/research/advanced-editing-batch2.md`；品質與詞條 ID 已分別由 v2.5／v2.3 的獨立操作處理，超限另案。係數含小數，丹藥儲存單位不等於顯示點數；原生截限也可能產生目前不支援編輯的小數增量，保留唯讀。範本0隨機角色不可誤當缺失範本，有名角色才有載入回填檢查。
 
 第二批使用原有13指紋加上獨立的 `batch2Fingerprints`，建置還比對規則資料雜湊與值域。新增表不能自動沿用舊驗證。原生後續操作用實際物品裝備格與完整參數，確認真實狀態變更；不要將驗證腳本假設錯誤當作遊戲結論。`scripts/verify-batch2.cjs` 的結果與完整生命週期證據仍留repo外。
 
@@ -39,7 +39,7 @@ node scripts/build-editor.cjs
 
 依維護指引追查初始化、讀取、計算、寫入及刪除，記錄型別、值域、關聯與 SID。先用合成資料驗證非法值、跨級、上限、交易回滾、累計群組還原及精確 token 輸出。
 
-隔離遊戲工具為 `scripts/verify-game.cjs`，支援 Windows／macOS，需要 Node.js 22+、解包遊戲、同平台 NW.js runtime 與 Steam；先讀 `--help` 與維護指引。Windows 傳入安裝目錄的 `game.exe`，由工具複製 runtime；候選 catalog、來源存檔及 repo 外輸出目錄可用參數指定。驗證依序涵蓋真實遊戲載入、原版寫檔、停止測試程序、重新啟動與讀回；核對全部 13 個來源指紋與原始存檔雜湊。其狀態檔含玩家資料與本機路徑，存放於 repo 外。
+隔離遊戲工具為 `scripts/verify-game.cjs`，支援 Windows／macOS，需要 Node.js 22+、解包遊戲、同平台 NW.js runtime 與 Steam；先讀 `--help` 與維護指引。Windows 開發優先沿用 `docs/maintenance/migration.md` 記錄的完整來源與獨立 runtime，由工具複製到隔離副本；安裝目錄 `game.exe` 亦是可接受來源，須核對版本配對；候選 catalog、來源存檔及 repo 外輸出目錄可用參數指定。驗證依序涵蓋真實遊戲載入、原版寫檔、停止測試程序、重新啟動與讀回；核對完整 15 個來源指紋（13 個基礎＋yx／tz）與原始存檔雜湊。其狀態檔含玩家資料與本機路徑，存放於 repo 外。
 
 完成真實遊戲載入、原版寫檔、停止該測試程序後重啟讀回，以及來源存檔雜湊核對；保留授權初始化，將 Steam 寫入導向測試鏡像。去識別結果寫入 `knowledge/verification.json`，與 catalog 的完整來源指紋及群組覆蓋吻合後才開閘門。Windows 與 Mac 的 runtime 可能不同，不能直接搬用不匹配的證明。
 
@@ -63,8 +63,8 @@ z9 y0 為初始背包列號，搬移後可不等於目前列號且可重複；�
 
 UI 與 computer use 驗證先讀 repo `docs/game-ui-testing.md`：換檔前區分已匯出與待匯出；選檔逾時先檢查 JavaScript confirm 及非同步載入完成標記。遊戲操作導覽必須由實際畫面建立，未提供原生控制時只報原生函式／IO 證據，不冒稱遊戲 UI 通過。
 
-## v2.4 裝備操作候選
+## v2.4 裝備操作
 
 裝備操作增加plane=9，位置參數式查詢在最後傳7／9；還原依庫別＋列號分組。z7歸屬必須0、數量1，不以z9同列號的角色指標判錯。y24的0／1是新取得標記，修改時保留；原生出處及細節以repo `docs/research/equipment-workflow.md`為準。
 
-首次選槽透過preview／setEquipmentAffix的selectUnwashedSlot明確選擇，ID／係數／目標旗標同筆交易；已有選槽不接受再次首次選槽。新寫入分別驗證，初次選槽依本次已確認提案另需原生選槽UI證據，不能只靠原生存檔IO開放。候選已有隔離矩陣與後續行為證據，瀏覽器／原生UI工具初始化失敗，仍待畫面驗收與發布；接續先讀SDD任務，不沿用舊版UI通過記錄。
+首次選槽透過preview／setEquipmentAffix的selectUnwashedSlot明確選擇，ID／係數／目標旗標同筆交易；已有選槽不接受再次首次選槽。新寫入分別驗證，初次選槽依本次已確認提案另需原生選槽UI證據，不能只靠原生存檔IO開放。早期工具初始化失敗的限制保留在研究紀錄；其後 v2.4 已補齊選槽 UI、隔離 IO／重啟及瀏覽器證據並發布，見 `docs/research/equipment-workflow.md` 與 `sdd/equipment-workflow/tasks.md`。直接 file:// 新流程仍有獨立待驗範圍，不以 PWA 離線證據代替。

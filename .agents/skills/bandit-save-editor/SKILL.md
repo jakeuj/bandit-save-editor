@@ -36,7 +36,7 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 | 使用者明確要求遊戲 UI | `docs/game-ui-testing.md` 快速開始與目標路徑，再讀當次 computer-use 技能 |
 | Mac／CrossOver／Steam／存檔位置 | [Mac 參考](references/macos.md)、`launcher/README.md`、`docs/research/macos-runtime-investigation.md` |
 
-日常推送只檢查建置同步；純文件推送成功即結束。完整驗收與部署追蹤條件依發布指引，新增寫入的首次證明要求不變。任何 core 變動先核對技藝上限的整份 core 摘要，依 `docs/maintenance/talents.md` 重開，不在旗標關閉狀態推送。
+日常推送只檢查建置同步；純文件推送成功即結束。完整驗收與部署追蹤條件依發布指引，新增寫入的首次證明要求不變。任何 core 變動先核對技藝上限的整份 core 摘要，依 `docs/maintenance/talents.md` 核對受影響群組後重開；既有已開放群組因本次變更失效時，不以關閉旗標的狀態推送。新增候選群組在首次證明前則維持關閉。
 
 ## 編輯來源
 

@@ -25,11 +25,11 @@ node scripts/verify-talents-suite.cjs --merge-results OUTSIDE_REPO/random-talent
 
 ### v2.9 的技藝上限重開
 
-v2.9 改了 core，所以 `randomCharacterSkillCaps` 只重開一次，以凍結的 core 為準。只有技藝上限綁整份 core；其他群組的證明只綁未變的片段或資料，不需重跑。做法比照 v2.8.1：
+以下保留 v2.9 當次的重開方式：以凍結的 core 為準，只重開 `randomCharacterSkillCaps`；當次其他既有群組綁定的片段與資料未變，因此沿用證明。後續修改必須先核對每個群組的來源、資料及公式相依；只有確認其他群組皆未受影響時，才能沿用「只跑技藝上限兩份」的方式。有其他相依改變時，依[版本遷移](migration.md#相依與證據)補驗相應群組，不直接套用這次的排除結論。當次指令如下：
 
 ```sh
 node scripts/verify-migration.cjs --package STEAM_GAME_DIR --artifacts OUTSIDE_REPO --plan
 node scripts/verify-migration.cjs --package STEAM_GAME_DIR --source FULL_SOURCE --runtime NWJS --save-file BASE.dat --artifacts OUTSIDE_REPO --copies random-skill-caps-representative,random-skill-caps-lifecycle --keep-copies
 ```
 
-`--plan` 因 core 雜湊改變會選全部 15 份副本，這是預期結果；`--copies` 只跑技藝上限兩份且不寫回。隨後以 repo 外維護程式呼叫 `Caps.validateResults(...,{initial:false})` 重算，再用 `Caps.record` 只替換 `verification.json` 中的 `randomCharacterSkillCaps` 物件，保留首次 108＋2 `initialVerification` 與其他 section 原 bytes。全部證明寫回後再以 `--baseline` 重建 `knowledge/migration-baseline.json`。
+v2.9 當次 `--plan` 因 core 雜湊改變選全部 15 份副本；副本數與選跑原因須以當前工具輸出為準。`--copies` 只跑技藝上限兩份且不寫回。隨後以 repo 外維護程式呼叫 `Caps.validateResults(...,{initial:false})` 重算，再用 `Caps.record` 只替換 `verification.json` 中的 `randomCharacterSkillCaps` 物件，保留首次 108＋2 `initialVerification` 與其他 section 原 bytes。全部證明寫回後再以 `--baseline` 重建 `knowledge/migration-baseline.json`。

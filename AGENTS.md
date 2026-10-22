@@ -3,7 +3,7 @@
 使用繁體中文。此 repo 包含山寨帳房靜態存檔修改器與《塔防山賊模擬器》的實驗性 macOS ARM64 啟動器。
 
 - 查詢架構與跨檔關係時，若有 `graphify-out/graph.json` 先查圖譜並核對目前來源；圖譜建立、更新與完整性限制見 `docs/research/repository-graph.md`。
-- 維護存檔讀寫時，先讀 `README.md`、`src/core.js` 與 `docs/research/save-knowledge.md`。`src/` 與 `knowledge/catalog.json` 是來源，執行 `node scripts/build-editor.cjs` 同步 `index.html` 的內嵌程式；單檔 HTML 供線上及離線使用。驗證：`node --test tests/*.test.cjs`、`node scripts/build-editor.cjs --check`。
+- 維護存檔讀寫時，先讀 `README.md`、`src/core.js` 與 `docs/research/save-knowledge.md`。`src/` 與 `knowledge/catalog.json` 是來源，執行 `node scripts/build-editor.cjs` 同步 `index.html` 的內嵌程式；單檔 HTML 供線上及離線使用。開發驗證依 `docs/testing.md` 選相關測試；`node --test tests/*.test.cjs` 是完整 Node 入口，不是每次修改或推送的必跑步驟。提交前檢查 `node scripts/build-editor.cjs --check`；新增功能保留已核准的首次驗收要求。
 - 依任務選讀維護文件：核心 API／首次開放讀 `docs/maintenance/core.md`，發布讀 `docs/maintenance/release.md`，PWA／離線讀 `docs/maintenance/pwa.md`；其他功能由 `docs/maintenance.md` 索引進入，不預設載入全部文件；公式與實測證據維護在研究筆記，避免在技能複製完整規則。文件區分離線相依性檢查與直接開檔 UI 實測，依實際結果更新 `sdd/save-knowledge/tasks.md`。
 - 日常推送採快速流程：只檢查建置同步、提交及推送，不重跑全套 Node／瀏覽器／遊戲測試。純技能、文件或忽略規則更新，推送成功即結束，回報提交連結；即使自動觸發 Pages，也不查詢或等待部署。只有影響網站產物、發布設定，或使用者明確要求時，才追蹤對應 SHA 的部署結果並回報部署連結；明確要求確認線上版本時，才額外 GET 首頁。Pages CI 只檢查建置同步並發布；完整驗收保留 `npm run verify:release`，使用者要求或具體故障需要時才執行。失敗才讀詳細日誌及擴大檢查。開發測試入口及隔離見 `docs/testing.md`；新增可寫群組的首次證明要求不變。
 - 實際遊戲 UI／computer use 測試時，先讀 `docs/game-ui-testing.md` 的「快速開始」及目標操作路徑；沿用完成標記與隔離測試資料，座標依當次畫面重新辨識。工具 API 以當次可用的 computer-use 技能為準。

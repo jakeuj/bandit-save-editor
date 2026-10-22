@@ -17,14 +17,13 @@
 | HTML 結構、樣式、使用說明與 SEO | `index.html`；其中 `save-core`、`save-ui`、`save-pwa` 區塊由建置工具同步 |
 | PWA 安裝、離線狀態及快取 | `src/pwa.js`、`src/service-worker.js`、`manifest.webmanifest`；建置產生 `sw.js` |
 
-開發環境與測試分工見[程式化測試指引](../testing.md)。日常推送只做建置同步檢查，Pages CI 快速發布，不重跑完整驗收。需要同步產物時執行第一個命令；第二個命令僅在使用者要求或具體故障需要完整驗收時執行：
+開發環境與測試分工見[程式化測試指引](../testing.md)。日常推送只做建置同步檢查，Pages CI 快速發布，不重跑完整驗收。需要同步產物時執行建置：
 
 ```sh
 node scripts/build-editor.cjs
-npm run verify:release
 ```
 
-第一個命令更新內嵌程式與 `sw.js`，保留 HTML 結構與樣式。修改來源後一併提交產生的 `index.html` 及 `sw.js`；只修改產生區塊會在下次建置時被覆蓋。使用者下載的單一 HTML 已內嵌執行程式與知識，不需 Node.js 或遊戲資料表。
+建置命令更新內嵌程式與 `sw.js`，保留 HTML 結構與樣式。修改來源後一併提交產生的 `index.html` 及 `sw.js`；只修改產生區塊會在下次建置時被覆蓋。使用者下載的單一 HTML 已內嵌執行程式與知識，不需 Node.js 或遊戲資料表。
 
 ## Repo 知識圖譜
 
@@ -62,13 +61,13 @@ npm run verify:release
 
 等級與經驗餘額由 `addExperience` 一起結算，不能透過 `setField` 或自訂座標單獨寫入。直接增加經驗不扣取得成本，也不改共用池投入／退款基數。欄位設定仍沿用 `version: 1`、`game: 'szmnqea'` 與 `fields` 格式；設定格式相容不代表可以繞過已知欄位限制。
 
-三項進階修改的 `advanced` 預設 false，一般／進階各有獨立驗證群組。公開值域由 catalog 的 `editingLimits` 與 verification 完全比對，目前上限1000、科技33另限299。自訂座標及舊 `set` 保持唯讀，只能使用具名操作；相同目標的累計修改整組還原。來源、公式及本輪實測見 [v2.1 研究](../research/advanced-editing.md)。瀏覽器讀取存檔使用 `TextDecoder` 的 `ignoreBOM:true` 保留 BOM，避免 `File.text()` 消去原字元。
+三項進階修改的 `advanced` 預設 false，一般／進階各有獨立驗證群組。公開值域由 catalog 的 `editingLimits` 與 verification 完全比對，目前上限1000、科技33另限299。這三類進階修改的已知欄位經自訂座標及舊 `set` 仍保持唯讀，只能使用具名操作；相同目標的累計修改整組還原。來源、公式及本輪實測見 [v2.1 研究](../research/advanced-editing.md)。瀏覽器讀取存檔使用 `TextDecoder` 的 `ignoreBOM:true` 保留 BOM，避免 `File.text()` 消去原字元。
 
 玩家名稱與其他存檔字串進入 HTML 時使用文字節點或 HTML 跳脫；序列化則使用 JSON 字串跳脫，兩者用途不同。預覽、比對及唯讀檢視也要保留這項處理。
 
 ## 重建知識與開放寫入
 
-遊戲更新資訊以 [Steam 最新消息](https://store.steampowered.com/news/app/4267800)為入口，核對公告日期、版本及正式／測試／相容分支，並在研究筆記保留當次公告的永久連結。頁面無法取得正文時可用 [Steam 官方新聞 API](https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=4267800&count=5&maxlength=0&feeds=steam_community_announcements)。本機安裝版本另核對 `appmanifest_4267800.acf` 的 `buildid` 及來源指紋，包內個別版本文字可能落後；公告與靜態分析不能代替隔離遊戲讀寫驗證。
+遊戲更新資訊以 [Steam 最新消息](https://store.steampowered.com/news/app/4267800)為入口，核對公告日期、版本及正式／測試／相容分支，並在研究筆記保留當次公告的永久連結。頁面無法取得正文時可用 [Steam 官方新聞 API](https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=4267800&count=5&maxlength=0&feeds=steam_community_announcements)。本機安裝版本另核對 `appmanifest_4267800.acf` 的 `buildid` 及來源指紋，包內個別版本文字可能落後；公告與靜態分析不能作為新增群組的首次隔離遊戲證明；既有群組則可依[版本遷移規則](migration.md#相依與證據)合法沿用原始證據，並明示本版未重新實測。
 
 ```sh
 node scripts/extract-game.cjs --source /path/to/unpacked/game --audit /tmp/bandit-audit.json

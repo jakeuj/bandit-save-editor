@@ -48,7 +48,7 @@ node scripts/build-editor.cjs --check
 
 建置將 `src/` 與 catalog 內嵌進 `index.html`，也會核對開放寫入的完整來源指紋與驗證證明。提交程式來源／知識時一併提交同步後的 HTML；單純改 SEO 時保留內嵌程式。網站使用者仍只需要單一 HTML，沒有外部程式或知識相依。
 
-遊戲知識版本只取 `knowledge/catalog.json` 的 `gameVersion`。新增或調整畫面上的知識版本時，沿用 `<span data-knowledge-version>…</span>`，由建置工具做 HTML 跳脫並填入；欄位圖鑑摘要則讀取內嵌的 `K.gameVersion`。標記涵蓋側欄遊戲版本、職業圖鑑標籤、職業資料來源、欄位圖鑑標籤、使用說明及更新紀錄開頭；實際數量以來源與測試為準。改動標示數量時一併調整測試；建置後同步提交 `index.html` 與 `sw.js`。編輯器自身版本及 Mac runtime 的相容版本各自維護。詳細實作入口見 repo `docs/maintenance/release.md` 的「知識版本標示同步」。
+遊戲知識版本標記、修改器版號與建置同步依 repo `docs/maintenance/release.md`「知識版本標示同步」。修改標記時一併核對來源與測試，不在技能維護另一份標記數量或版本常數。
 
 若 `--check` 失敗，先辨別來源不同步與 checkout 行尾差異。`.gitattributes` 已固定 JavaScript 與 Manifest 為 LF；確認屬性生效，必要時從提交的 Git blob 建立隔離副本執行檢查。PWA 指紋須對應真正發布的 bytes，不能只讓 Windows 工作目錄的建置通過。
 

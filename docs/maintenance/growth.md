@@ -8,7 +8,7 @@
 
 `randomCharacterGrowthInfo(model,{characterId})`回資格／原因及三項來源；`previewCharacterBaseAptitudes(model,{characterId,baseRaw})`接受三項原始安全整數，回canApply、差異、前後A／B／總值／C及原因；`setCharacterBaseAptitudes`重跑相同檢查、原子寫三欄。一般模式要求同品質任一原生傾向可生成，三欄不能獨立套範圍。預覽及套用不接受任意方法／座標或超限；自訂座標維持唯讀。
 
-資質與丹藥具名操作共用`aptitude:角色ID`六欄累計還原群組，包括有名角色既有丹藥操作的三欄還原；寫入值域維持原限制。復原一步仍按交易，失敗不留下變更。下調資質使現有B超出新C就阻擋，不默改B或依目前持有丹藥猜測歷史來源。
+v2.7 首次交付時，資質與丹藥共用 `aptitude:角色ID` 六欄累計還原群組。v2.9 加入天賦後，一般隨機角色的天賦、基礎資質與丹藥改為同一 12 欄累計群組，現行互動依[天賦維護](talents.md#v29-一般隨機角色天賦等級)；有名角色仍只允許既有丹藥操作的三欄還原，寫入值域維持原限制。復原一步仍按交易，失敗不留下變更。下調資質使現有B超出新C就阻擋，不默改B或依目前持有丹藥猜測歷史來源。
 
 生成器`random-character-growth-data.cjs`核對招募SID與公式後建立`catalog.randomCharacterGrowth`；來源／規則／資質資料變動關閉新旗標。`randomCharacterBaseAptitudes`有獨立section、family、代表情境與逐項checks，建置核對15來源、規則及天賦／裝備必要資料SHA、核心資質／穿戴檢查計算區段SHA。新增欄位仍由三份驗證需求／清單／遷移情境及版本遷移測試共同覆蓋，v2.7共23個已開放群組；v2.8 A另增1個候選群組，B取得完整獨立證明後合併為第24個。
 
