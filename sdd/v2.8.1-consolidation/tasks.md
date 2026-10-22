@@ -1,6 +1,6 @@
 # v2.8.1 鞏固版任務
 
-狀態：**2026-10-23 實作與本機驗收完成；使用者已授權提交與推送，發布核對進行中。** 每條 30–60 分鐘；細節與證據見[後續版本實作計畫](../../docs/research/next-version-plan.md)第 4 節。
+狀態：**2026-10-23 實作與本機驗收完成；已提交、推送並完成 Pages 與線上 blob 核對。** 每條 30–60 分鐘；細節與證據見[後續版本實作計畫](../../docs/research/next-version-plan.md)第 4 節。
 
 - [x] 1. `git status` 確認乾淨（selective-migration 未提交變更存在時停下回報）；在 `src/core.js` `editingInfo` 的 plane 9 分支加入 `kind==='普通'` 且 `setLink===0` 檢查，錯誤訊息含「套裝」；不碰 `ordinaryEquipment`、`qualityAttributeEffect` 與 v2.7 證明綁定切片。
 - [x] 2. `tests/advanced-editing.test.cjs` 新增 z9／z7 套裝拒絕、普通不變、寶物／內丹仍拒絕案例；`tests/equipment-ui.test.cjs` 新增選到 z9 套裝顯示唯讀原因；跑 `node --test tests/*.test.cjs`，並直接比對 `randomCharacterGrowth.formulaHash` 與 `equipmentQuality.formulaHash` 不變（`--check` 預期只因技藝上限失敗）。凍結 `src/core.js`。
@@ -37,7 +37,7 @@
 
 - 套裝等級仍缺獨立遊戲證明，z7／z9 保持唯讀；不新增群組。
 - 新版 Mac 啟動／Steam 清單／存讀／重啟未重驗，歷史 file 人工待辦未擴大驗收。
-- 本版尚未部署，待授權後才做對應提交的 Pages／線上 blob 核對。
+- 發布已完成；本輪正式驗收限部署與 index.html／sw.js blob 核對，未擴大重跑正式瀏覽器或 Mac 測試。
 - 其他工作在執行期間新增本機來源快取指引（AGENTS、gitignore、技能及維護文件）；保留其變更，這些不屬本次 v2.8.1 實作。
 
 ## 發布授權（2026-10-23）
@@ -47,3 +47,7 @@
 ### 發布行尾修正
 
 首個發布提交 `9167e3f` 的 Pages run 39825686263 在 SW 同步檢查失敗：Windows 工作目錄 HTML／核心為 CRLF，Git 發布 blob 為 LF，SW 原先雜湊了轉換前 HTML。從該提交 Git archive 的原始 bytes 重現失敗，依同一份來源重建 SW 後隔離 `--check` 通過；只修正 SW 產物。工作目錄行尾回復成已提交的 canonical LF，核心沒有 Git 差異、規範化 formulaHash 及所有證明不變，本機 `--check` 亦通過。未重跑已通過的整套測試或遊戲。
+
+### v2.8.1 正式發布完成
+
+2026-10-23：功能提交 `9167e3f`，發布行尾修正提交 `8a5ae32080f93080baac2e514efc5f2310133794`。[Pages run 39825947955](https://github.com/jakeuj/bandit-save-editor/actions/runs/39825947955) build／deploy 成功。以 no-cache GET 核對線上 index.html／sw.js，bytes 與該提交 Git blob 完全相符；首頁側欄為 v2.8.1／2026.10.23，知識 V1.0.11.2。AGENTS 與技能發布規則已核對，本案不需調整通用規則；其他研究檔案保留未提交。此發布紀錄為純文件補記，推送後不再追蹤其自動部署。
