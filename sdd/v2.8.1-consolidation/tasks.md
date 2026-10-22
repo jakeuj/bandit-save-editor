@@ -43,3 +43,7 @@
 ## 發布授權（2026-10-23）
 
 使用者已明確授權提交並推送 v2.8.1。沿用已通過的完整驗收，本次只檢查建置同步；只提交本案變更，保留其他研究文件。推送後核對對應 SHA 的 Pages 結果及原計畫要求的 index.html／sw.js blob，再補發布紀錄。
+
+### 發布行尾修正
+
+首個發布提交 `9167e3f` 的 Pages run 39825686263 在 SW 同步檢查失敗：Windows 工作目錄 HTML／核心為 CRLF，Git 發布 blob 為 LF，SW 原先雜湊了轉換前 HTML。從該提交 Git archive 的原始 bytes 重現失敗，依同一份來源重建 SW 後隔離 `--check` 通過；只修正 SW 產物。工作目錄行尾回復成已提交的 canonical LF，核心沒有 Git 差異、規範化 formulaHash 及所有證明不變，本機 `--check` 亦通過。未重跑已通過的整套測試或遊戲。
