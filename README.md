@@ -6,6 +6,12 @@
 
 [Wiki 首頁](https://github.com/jakeuj/bandit-save-editor/wiki) · [操作教學](https://github.com/jakeuj/bandit-save-editor/wiki/操作教學) · [常見問題](https://github.com/jakeuj/bandit-save-editor/wiki/常見問題)
 
+## 專案進度
+
+[山寨帳房 Project](https://github.com/users/jakeuj/projects/3) 依現有規劃與 SDD 追蹤功能開發、驗收缺口及候選評估，分為「待辦」、「進行中」與「已完成」。目前為私人專案，需具存取權限才能查看。
+
+公開規劃請參閱[目前進度與後續候選](docs/research/next-version-plan.md)，詳細任務與驗收依據見 [SDD](sdd/)；已發布功能及限制見[各版紀錄](docs/releases.md)。候選項目不代表已排定版本或正式開放。
+
 ## 功能
 
 - v2.9 一般隨機角色天賦等級（遊戲 V1.0.11.2）：在品質的原版等級池內調整三槽天賦等級，預覽每槽效果；天賦 ID 不可更換或清空，品質 6 無可調整值。資質天賦連動丹藥上限，超過即整筆阻擋；同角色天賦、基礎資質與丹藥共 12 欄一起還原。詳見[本版說明](docs/releases.md#v29-一般隨機角色天賦等級)。
