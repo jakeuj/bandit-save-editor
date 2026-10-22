@@ -1,27 +1,77 @@
-const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
-function setup(){
- const elements=new Map(),events={},windowEvents={},downloads=[],prompts=[];
- const element=()=>({value:'',innerHTML:'',textContent:'',dataset:{},classList:{toggle(){},add(){},remove(){}},setAttribute(){},removeAttribute(){},addEventListener(){},click(){downloads.push(this.download);},close(){this.open=false;},showModal(){this.open=true;}});
- const $=id=>{if(!elements.has(id))elements.set(id,element());return elements.get(id);};
- const ctx={TextDecoder,Blob,URL:{createObjectURL:()=> 'blob:test',revokeObjectURL(){}},localStorage:{getItem:()=>null},setTimeout:(fn,ms)=>{if(ms===30)queueMicrotask(fn);return 0;},clearTimeout(){},confirm:message=>{prompts.push(message);return false;},document:{getElementById:$,querySelectorAll:()=>[],addEventListener:(n,f)=>events[n]=f,createElement:element},window:{addEventListener:(n,f)=>windowEvents[n]=f}};
- vm.runInNewContext(fs.readFileSync('src/core.js','utf8').replace('/*__KNOWLEDGE__*/null',fs.readFileSync('knowledge/catalog.json','utf8')),ctx);
- vm.runInNewContext(fs.readFileSync('src/ui.js','utf8').replace('/*__KNOWLEDGE_UI__*/','const editingState={};function renderKnowledgeTab(){}'),ctx);
- const data=Array.from({length:221},()=>Array.from({length:60},()=>Array(22).fill(0)));data[0][0][1]='szmnqea';data[1][1][0]='測試山寨';
- const bytes=Buffer.from(JSON.stringify({c2array:true,size:[221,60,22],data}));
- const load=name=>$('fileInput').onchange({target:{files:[{name,size:bytes.length,arrayBuffer:async()=>bytes}]}});
- const edit=value=>events.change({target:{dataset:{field:'1,2,0'},value:String(value)}});
- const unload=()=>{let prevented=false;windowEvents.beforeunload({preventDefault(){prevented=true;}});return prevented;};
- return {$,load,edit,unload,prompts,downloads};
+'use strict';
+const {test} = require('node:test');
+const assert = require('node:assert/strict');
+const {setup} = require('./helpers/ui-harness.cjs');
+
+async function assertDownload(h, name, raw) {
+  const download = h.downloads.at(-1);
+  assert.equal(download.name, name);
+  assert.equal(download.blob.type, 'application/octet-stream');
+  const bytes = Buffer.from(await download.blob.arrayBuffer());
+  assert.deepEqual(bytes, Buffer.from(raw));
+  assert.deepEqual([...bytes.subarray(0, 3)], [0xef, 0xbb, 0xbf]);
+  assert.ok(bytes.includes(Buffer.from('987654321098765432109876543210')));
+  assert.ok(bytes.includes(Buffer.from('1e+03')));
 }
-for(const button of ['downloadBtn','reviewDownloadBtn'])test(`${button}: exported changes reload without confirmation; subsequent edits remain protected`,async()=>{
- const h=setup();await h.load('first.dat');h.edit(10);assert.equal(h.unload(),true);
- await h.load('blocked.dat');assert.equal(h.prompts.length,1);assert.equal(h.$('fileName').textContent,'first.dat');
- await h.$(button).onclick();assert.equal(h.downloads.at(-1),'first.modified.dat');assert.equal(h.unload(),false);
- await h.load('second.dat');assert.equal(h.prompts.length,1);assert.equal(h.$('fileName').textContent,'second.dat');
- h.edit(20);await h.$(button).onclick();h.edit(21);assert.equal(h.unload(),true);
- await h.load('blocked-again.dat');assert.equal(h.prompts.length,2);assert.equal(h.$('fileName').textContent,'second.dat');
+
+for (const button of ['downloadBtn', 'reviewDownloadBtn']) {
+  test(`${button}: real Blob bytes and export revision survive reload and later edits`, async () => {
+    const h = setup(); await h.load('first.dat'); h.edit(10);
+    assert.equal(h.unload(), true);
+    await h.load('blocked.dat');
+    assert.equal(h.prompts.length, 1); assert.equal(h.$('fileName').textContent, 'first.dat');
+    await h.$(button).onclick();
+    await assertDownload(h, 'first.modified.dat', h.fixture.expected([[1, 2, 0, 10]]));
+    assert.equal(h.unload(), false);
+    h.expireDownloads(); assert.equal(h.revoked.length, 1);
+    await h.load('second.dat'); assert.equal(h.prompts.length, 1);
+    assert.equal(h.$('fileName').textContent, 'second.dat');
+    h.edit(20); await h.$(button).onclick(); h.edit(21);
+    assert.equal(h.unload(), true);
+    await h.load('blocked-again.dat'); assert.equal(h.prompts.length, 2);
+    assert.equal(h.$('fileName').textContent, 'second.dat');
+  });
+}
+
+test('backup preserves original bytes and does not mark edits exported; restore and undo are real UI events', async () => {
+  const h = setup(); await h.load('original.dat'); h.edit(10);
+  h.$('backupBtn').onclick();
+  await assertDownload(h, 'original.original-backup.dat', h.fixture.raw);
+  await h.load('blocked.dat'); assert.equal(h.prompts.length, 1);
+  h.restore(); assert.equal(h.unload(), false); assert.equal(h.$('pendingCount').textContent, 0);
+  h.$('undoBtn').onclick(); assert.equal(h.unload(), true);
+  await h.$('downloadBtn').onclick();
+  await assertDownload(h, 'original.modified.dat', h.fixture.expected([[1, 2, 0, 10]]));
+  h.$('resetBtn').onclick(); assert.equal(h.unload(), false);
+  await h.load('restored.dat'); assert.equal(h.prompts.length, 1);
+  assert.equal(h.$('fileName').textContent, 'restored.dat');
 });
-test('original backup does not mark changes exported; full restore removes confirmation',async()=>{
- const h=setup();await h.load('first.dat');h.edit(10);h.$('backupBtn').onclick();await h.load('blocked.dat');assert.equal(h.prompts.length,1);
- h.$('resetBtn').onclick();await h.load('restored.dat');assert.equal(h.prompts.length,1);assert.equal(h.$('fileName').textContent,'restored.dat');
+
+test('malformed JSON, invalid UTF-8, read failure and oversized files preserve the current model', async () => {
+  const h = setup(); await h.load('valid.dat'); h.edit(7); h.confirm(true);
+  for (const bytes of [Buffer.from('{invalid'), Buffer.from([0xc3, 0x28])]) {
+    await h.load('invalid.dat', bytes);
+    assert.equal(h.$('fileName').textContent, 'valid.dat');
+    assert.equal(h.$('pendingCount').textContent, 1); assert.equal(h.unload(), true);
+    assert.equal(h.$('openBtn').disabled, false);
+  }
+  await h.$('fileInput').onchange({target: {files: [{name: 'unreadable.dat', size: 10, arrayBuffer: async () => { throw Error('read failed'); }}]}});
+  assert.equal(h.$('toast').textContent, 'read failed');
+  await h.$('fileInput').onchange({target: {files: [{name: 'large.dat', size: 50 * 1024 * 1024 + 1, arrayBuffer: () => { throw Error('must not read'); }}]}});
+  assert.match(h.$('toast').textContent, /50 MB/);
+  await h.$('fileInput').onchange({target: {files: []}});
+  assert.equal(h.$('fileName').textContent, 'valid.dat');
+  await h.$('downloadBtn').onclick();
+  await assertDownload(h, 'valid.modified.dat', h.fixture.expected([[1, 2, 0, 7]]));
+});
+
+test('confirmed replacement and drop input use the same decoder and reset export state', async () => {
+  const h = setup(); await h.load('first.dat'); h.edit(9); h.confirm(true);
+  await h.load('confirmed.dat');
+  assert.equal(h.$('fileName').textContent, 'confirmed.dat'); assert.equal(h.unload(), false);
+  h.$('dropZone').ondrop({preventDefault() {}, dataTransfer: {files: [h.file('drop.dat')]}});
+  // load() schedules its busy callback as a microtask, then awaits arrayBuffer().
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(h.$('fileName').textContent, 'drop.dat');
+  h.$('backupBtn').onclick(); await assertDownload(h, 'drop.original-backup.dat', h.fixture.raw);
 });

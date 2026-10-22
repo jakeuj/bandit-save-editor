@@ -1,6 +1,7 @@
 'use strict';
 const fs=require('node:fs'),vm=require('node:vm');
 const {performance}=require('node:perf_hooks');
+const {renderSave}=require('./save-fixture.cjs');
 function setup(nx=450,count=2){
  const k=JSON.parse(fs.readFileSync('knowledge/catalog.json','utf8')),ctx={setTimeout,performance};
  vm.runInNewContext(fs.readFileSync('src/core.js','utf8').replace('/*__KNOWLEDGE__*/null',JSON.stringify(k)),ctx);
@@ -18,9 +19,7 @@ function setup(nx=450,count=2){
   if(owner)a[owner][15+item.slot][2]=x;
  }
  equipment(3);equipment(5);equipment(6,7);
- // The independent expected renderer uses fixture coordinates, not SaveCore.serialize or its change map.
- const token=(x,y,z)=>` ${JSON.stringify(a[x][y][z])} `;
- function rawWith(patches=[]){const replace=new Map(patches.map(([x,y,z,v])=>[`${x},${y},${z}`,v]));return '\ufeff{ "unrelated":987654321098765432109876543210,"exponent":1e+03,\n"c2array":true,"size":['+nx+',60,22],"data":['+a.map((row,x)=>'['+row.map((cell,y)=>'['+cell.map((v,z)=>replace.has(`${x},${y},${z}`)?' '+JSON.stringify(replace.get(`${x},${y},${z}`))+' ':token(x,y,z)).join(',')+']').join(',')+']').join(',')+']}\n';}
+ const rawWith=(patches=[])=>renderSave(a,patches);
  const raw=rawWith(),m=C.parse(raw);
  return {C,m,k,a,equipment,raw,rawWith,reparse:()=>C.parse(rawWith())};
 }

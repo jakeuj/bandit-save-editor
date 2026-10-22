@@ -76,15 +76,18 @@ v2.1 新功能採正安全整數，進階驗證上限為 1000，招募科技 #33
 
 ## 本機開發與驗證
 
-網站沒有套件相依或後端，直接開啟 `index.html` 即可使用。維護來源時使用 Node.js 18 或更新版本：
+網站執行不需套件或後端，直接開啟 `index.html` 即可使用。開發測試使用 Node.js 22 以上及鎖定的 Playwright 開發依賴：
 
 ```sh
+npm ci --ignore-scripts
+npx playwright install --only-shell chromium
 node scripts/build-editor.cjs
-node scripts/build-editor.cjs --check
-node --test tests/*.test.cjs
+npm run verify:release
 ```
 
 `src/core.js`、`src/ui.js`、`src/knowledge-ui.js`、`src/profession-ui.js`、`src/pwa.js`、`knowledge/catalog.json` 與 `knowledge/profession-guide.json` 會內嵌至 HTML。建置也依 HTML、必要資產及 Worker 來源的 SHA-256 產生 `sw.js`；修改圖示、Manifest 或首頁後同樣需重建。測試使用合成資料，包含實際的 2501 × 60 × 22 尺寸、字串轉義、小數、跨級、上限、原文保留與整組復原，以及 PWA 快取範圍、失敗回復和版本同步。
+
+日常優先使用`npm run test:ui`及`npm run test:browser`，獨立無視窗測試會自行準備暫存檔、下載與本機HTTP伺服器。測試分工、file／PWA證據及必要時才使用computer use的規則見[程式化測試指引](docs/testing.md)。
 
 PWA 開發需以 HTTP localhost 或 HTTPS 提供完整目錄，例如在 repo 執行 `python3 -m http.server 8000`，開啟 `http://localhost:8000/`。`file://` 只使用單檔編輯功能，不註冊 Service Worker。
 
@@ -119,7 +122,7 @@ node scripts/build-editor.cjs
 
 ## GitHub Pages
 
-GitHub Pages 使用 `.github/workflows/pages.yml` 發布。推送 `main` 後，流程會先驗證核心讀寫功能及 PWA 來源同步，再將 `index.html`、`mac.html`、`manifest.webmanifest`、`sw.js`、`sitemap.xml`、`robots.txt`、`.nojekyll`、`assets/` 與 `launcher/prepare-macos.py` 打包部署；也可從 Actions 手動執行。網站不需要 Jekyll 或其他建置工具。
+GitHub Pages 使用 `.github/workflows/pages.yml` 發布。推送 `main` 後，流程會先執行完整Node測試、PWA來源同步及獨立headless整合測試，再將 `index.html`、`mac.html`、`manifest.webmanifest`、`sw.js`、`sitemap.xml`、`robots.txt`、`.nojekyll`、`assets/` 與 `launcher/prepare-macos.py` 打包部署；也可從 Actions 手動執行。網站不需要 Jekyll 或其他建置工具。
 
 網站入口為 `index.html`。搜尋與分享資訊設定在 HTML `<head>`，可編輯的分享圖片來源為 `assets/social-card.svg`，對外提供 `assets/share-card-v3.png`。
 

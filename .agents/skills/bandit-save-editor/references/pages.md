@@ -72,7 +72,7 @@ node --test tests/*.test.cjs
 2. 實際 GET 正式首頁、`mac.html`、`sitemap.xml`、`robots.txt`、metadata 指向的分享圖及本次修改的公開資產。確認 HTTPS、HTTP 200、內容與 MIME；需要時檢查舊入口／HTTP 的轉址終點，不能只測可連線。
 3. 核對正式兩頁的 canonical 與 `og:url`，sitemap 只列正式 URL，robots 指向正式 sitemap，分享圖可讀且尺寸正確，HTTP `X-Robots-Tag` 與 HTML 都沒有意外 `noindex`。首頁與 `index.html` 離線下載入口、Mac 準備工具也需能取得預期內容。
 4. 靜態內容以該次提交的 Git blob 比對，可比較回應 bytes 或 SHA-256。用 `git show SHA:PATH` 取得預期 bytes；Python 使用 `subprocess.check_output`，避免 shell 文字轉碼。Windows 工作目錄可能有 CRLF，直接拿工作目錄檔案雜湊比對會誤判，這次 `launcher/prepare-macos.py` 就有此情況。
-5. 以瀏覽器開啟正式欄位圖鑑，同時核對標籤與索引摘要的版本；V1.0.10.2 曾出現摘要已更新、寫死的標籤仍為舊版。若 PWA 提示新版已備妥，先讓使用者匯出未保存的修改，再關閉所有同站帳房分頁與 App 視窗後重開；測試自己建立的空白分頁可直接關閉。重新整理仍可能使用舊 Worker。保留版本畫面截圖於 repo 外，記錄更新前後結果。
+5. 優先用獨立headless context開啟正式欄位圖鑑，同時核對標籤與索引摘要的版本；V1.0.10.2 曾出現摘要已更新、寫死的標籤仍為舊版。例行PWA等待／交接優先跑repo `docs/testing.md`的暫存建置案例；只有使用者特定環境需要補證時才操作其瀏覽器。若該環境PWA提示新版已備妥，先讓使用者匯出未保存的修改，再關閉所有同站帳房分頁與 App 視窗後重開；測試自己建立的空白分頁可直接關閉。重新整理仍可能使用舊 Worker。保留版本畫面截圖於 repo 外，記錄更新前後結果。
 6. 讀回 GitHub repo 的網站連結，確認與 Pages 正式入口一致；回報提交、對應 run、正式 URL 與實際完成的驗證範圍。HTTP 下載成功不代表直接開檔 UI 已驗收，部署成功也不代表 Google 已收錄或社群舊貼文已刷新。
 
 `queued` 是待決，不是程式失敗。狀態與日誌不一致時交叉確認 job、deployment 與實際 HTTP；只針對明確錯誤修正或重試。若 CDN 尚未更新，間隔重查受影響檔案，不能用舊內容宣稱本次完成；沒有可處理原因就回報待決與 run 連結，保留現有部署設定。

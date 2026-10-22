@@ -5,6 +5,7 @@
 - 查詢架構與跨檔關係時，若有 `graphify-out/graph.json` 先查圖譜並核對目前來源；圖譜建立、更新與完整性限制見 `docs/research/repository-graph.md`。
 - 維護存檔讀寫時，先讀 `README.md`、`src/core.js` 與 `docs/research/save-knowledge.md`。`src/` 與 `knowledge/catalog.json` 是來源，執行 `node scripts/build-editor.cjs` 同步 `index.html` 的內嵌程式；單檔 HTML 供線上及離線使用。驗證：`node --test tests/*.test.cjs`、`node scripts/build-editor.cjs --check`。
 - 更新核心 API、知識重建流程、驗證或發布說明時，讀 `docs/maintenance.md`；公式與實測證據維護在研究筆記，避免在技能複製完整規則。文件區分離線相依性檢查與直接開檔 UI 實測，依實際結果更新 `sdd/save-knowledge/tasks.md`。
+- 驗證優先順序：相關Node測試 → 獨立headless整合測試 → 有具體證據缺口才computer use，遊戲與編輯器都適用；入口、隔離及輸出規則見 `docs/testing.md`。交付前執行 `npm run verify:release`；原生視窗或使用者瀏覽器問題先說明缺口，只測最小案例。
 - 實際遊戲 UI／computer use 測試時，先讀 `docs/game-ui-testing.md` 的「快速開始」及目標操作路徑；沿用完成標記與隔離測試資料，座標依當次畫面重新辨識。工具 API 以當次可用的 computer-use 技能為準。
 - 保留所有未修改原始字元與大型整數 literal；已知唯讀欄位套用統一規則，經驗聯動必須整組可復原。新增寫入需符合 `knowledge/verification.json` 的來源指紋與隔離遊戲實測，才開啟 catalog 閘門。
 - 遊戲改版後重驗既有群組時，用 `scripts/verify-migration.cjs`；代表子集、UI 事件摘要沿用與自動寫回條件見 `docs/maintenance.md`「版本遷移重驗」，同指紋只比較不覆寫。新增可寫群組時，同步更新 `scripts/verification-requirements.cjs`、`scripts/verification-suite.cjs` 與 `scripts/migration-scenarios.cjs`。

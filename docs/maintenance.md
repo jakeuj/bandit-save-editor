@@ -17,12 +17,11 @@
 | HTML 結構、樣式、使用說明與 SEO | `index.html`；其中 `save-core`、`save-ui`、`save-pwa` 區塊由建置工具同步 |
 | PWA 安裝、離線狀態及快取 | `src/pwa.js`、`src/service-worker.js`、`manifest.webmanifest`；建置產生 `sw.js` |
 
-在 repo 根目錄執行：
+開發環境與程式測試優先順序見[程式化測試指引](testing.md)。來源改動後在repo根目錄執行：
 
 ```sh
 node scripts/build-editor.cjs
-node scripts/build-editor.cjs --check
-node --test tests/*.test.cjs
+npm run verify:release
 ```
 
 第一個命令更新內嵌程式與 `sw.js`，保留 HTML 結構與樣式。修改來源後一併提交產生的 `index.html` 及 `sw.js`；只修改產生區塊會在下次建置時被覆蓋。使用者下載的單一 HTML 已內嵌執行程式與知識，不需 Node.js 或遊戲資料表。
@@ -162,9 +161,9 @@ node scripts/verify-migration.cjs --source PREPARED_COPY/game --runtime PREPARED
 
 發布新版修改器時，同步更新側欄的「修改器 vX.Y · 日期」與 `index.html` 的「更新紀錄」對話框：在最上方加一筆，寫發布日期、對應遊戲版本，以及玩家看得懂的新增功能與限制。側欄版本文字與「更新紀錄」按鈕都會開啟這個對話框；`tests/changelog.test.cjs` 會核對第一筆與側欄版本、日期一致。手機版隱藏側欄底部，v2.6在主內容上方提供使用說明／更新紀錄入口，未載入存檔也能開啟；頁尾保留復原一步。
 
-推送 `main` 會執行 Pages workflow，先檢查來源同步及核心測試，再以白名單打包靜態檔案。確認對應提交的部署成功，核對正式首頁、離線下載內容及修改過的公開資產。網站異動另驗證桌面／手機流程、主控台錯誤、canonical、分享資訊與 sitemap；文件變更以連結、指令及描述與實作一致性為主。
+推送 `main` 會執行 Pages workflow，先檢查來源同步、全部Node與headless整合測試，再以白名單打包靜態檔案。確認對應提交的部署成功，核對正式首頁、離線下載內容及修改過的公開資產。網站異動另驗證桌面／手機流程、主控台錯誤、canonical、分享資訊與 sitemap；文件變更以連結、指令及描述與實作一致性為主。
 
-正式驗收以本次提交的 SHA 找到相同 `headSha` 的 run，確認 build／deploy 都成功；HTTP 內容以 `git show SHA:PATH` 的原始 bytes 比對，避免 Windows checkout 行尾轉換造成誤判。接著用瀏覽器開啟正式欄位圖鑑，同時確認版本標籤與索引摘要。若 PWA 顯示「新版已備妥」，先匯出尚未保存的修改，再關閉所有同站帳房分頁與 App 視窗後重開；重新整理可能仍由舊 Worker 提供內容。保留可看見版本的截圖於 repo 外，HTTP 成功與瀏覽器結果分別記錄。
+正式驗收以本次提交的 SHA 找到相同 `headSha` 的 run，確認 build／deploy 都成功；HTTP 內容以 `git show SHA:PATH` 的原始 bytes 比對，避免 Windows checkout 行尾轉換造成誤判。需要正式DOM證據時，以獨立headless context開啟正式欄位圖鑑，同時確認版本標籤與索引摘要；例行PWA交接由暫存建置測試，使用者特定快取問題才採以下人工流程。若 PWA 顯示「新版已備妥」，先匯出尚未保存的修改，再關閉所有同站帳房分頁與 App 視窗後重開；重新整理可能仍由舊 Worker 提供內容。保留可看見版本的截圖於 repo 外，HTTP 成功與瀏覽器結果分別記錄。
 
 2026-10-21 的 V1.0.10.2 正式發布已驗證至提交 `7adcb01f9f0ddef749c1474850877df79ad78dd9`；對應部署、資產比對、畫面結果及驗收範圍集中於 [V1.0.10.2 正式發布紀錄](research/v1.0.10.2-audit.md#正式發布驗證)。後續版本以自己的提交重做核對。
 
@@ -204,7 +203,7 @@ v2.3 已以功能提交 `a912466` 通過 [Pages 正式發布驗證](research/pre
 
 ## Computer use 操作與確認框
 
-遊戲驗證以合成測試、隔離原生函式、原版存檔與新程序重啟讀回為主；來源核對與寫入閘門要求不變。只有顯示／快取異常、選單或按鈕資格、輸入／視窗問題，或使用者明確要求時，才補做相關遊戲 UI 測試，不預設補齊全套操作路徑與截圖。詳細範圍與按需流程見[操作手冊](game-ui-testing.md)。編輯器網頁／PWA 的互動驗收仍依變更執行，不能以原生函式驗證取代。已匯出後換檔的誤提示修正為與離頁相同的 revision 判斷；下載原檔備份不解除未匯出保護。不要把模態確認框造成的選檔逾時直接歸因於工具故障。
+遊戲驗證以合成測試、隔離原生函式、原版存檔與新程序重啟讀回為主；來源核對與寫入閘門要求不變。只有顯示／快取異常、選單或按鈕資格、輸入／視窗問題，或使用者明確要求時，才補做相關遊戲 UI 測試，不預設補齊全套操作路徑與截圖。詳細範圍與按需流程見[操作手冊](game-ui-testing.md)。編輯器網頁／PWA的互動驗收依變更優先由Node UI及獨立headless執行，依[程式化測試指引](testing.md)決定是否補computer use；遊戲原生函式證據不取代網頁驗收。已匯出後換檔的誤提示修正為與離頁相同的 revision 判斷；下載原檔備份不解除未匯出保護。不要把模態確認框造成的選檔逾時直接歸因於工具故障。
 
 隔離驗證啟動器固定帶 `--mute-audio`，新建及重啟皆靜音；不動玩家音量、其他遊戲或 Discord。手動啟動副本也遵守此預設，只有使用者明確要求音訊驗收時才安排有聲測試，詳見[測試音量](game-ui-testing.md#測試音量)。
 
