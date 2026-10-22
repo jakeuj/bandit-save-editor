@@ -117,7 +117,7 @@ v2.8具名操作以九項為一組，僅支援已招募、範本0、非在監、
 
 首次獨立證明已合併，現共24群組，僅新增九項技藝上限群組；原有23群組及各自證明區段保持原樣，天賦仍關閉。完整結果綁定15來源、必要資料／規則及完整core摘要；同指紋遷移只比較，不覆寫證明。
 
-本機發布驗證已完成：`npm run verify:release`通過138項Node與12項headless，沒有失敗或略過。新增5個九上限案例以正式開放的建置通過HTTP1280px／390px、直接file、PWA離線根路徑／index.html及兩頁waiting更新交接；每案核對實際下載bytes與重載，保留完整2501×60×22、BOM、空白、指數、大型整數literal及未修改token。提交與正式部署仍待核對。詳細原始紀錄留repo外，正式結果見[B任務](../../sdd/random-character-skill-caps-b/tasks.md)。
+本機發布驗證已完成：`npm run verify:release`通過138項Node與12項headless，沒有失敗或略過。新增5個九上限案例以正式開放的建置通過HTTP1280px／390px、直接file、PWA離線根路徑／index.html及兩頁waiting更新交接；每案核對實際下載bytes與重載，保留完整2501×60×22、BOM、空白、指數、大型整數literal及未修改token。功能提交`023b4f4`已完成Pages部署及16個公開網址Git blob比對；正式桌面／390px九上限下載重載亦通過。詳細原始紀錄留repo外，正式結果見[B任務](../../sdd/random-character-skill-caps-b/tasks.md)。
 
 ## 驗證及限制
 

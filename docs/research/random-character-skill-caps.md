@@ -54,4 +54,14 @@ A的靜態追查推論「剛升到cap可能保留餘額，下次已封頂呼叫�
 
 正式proof合併後，`npm run verify:release`通過138項Node及12項獨立headless，沒有失敗或略過。新增5案在真正開啟的正式建置測試HTTP1280／390px、直接file、PWA離線兩入口與兩頁waiting交接，涵蓋九項預覽、資格／餘額／共同見證阻擋、過期、交錯單項／批次經驗、27欄還原、全部還原、undo、下載實際bytes及重載。2501×60×22合成檔保留BOM、空白、指數、大型整數及全部未改token；獨立renderer核對匯出，沒有偽造瀏覽器旗標。
 
-HTTP版面另有1280／390px自動截圖與無水平溢位檢查；這些結果屬獨立headless Chromium，不擴張為Safari、原生選檔或所有手機的驗收。封閉gate的早期預覽測試與上述成功寫入結果分開記錄。發布日期為2026-10-22，側欄與置頂紀錄已同步v2.8；相符提交的推送／線上部署證據另補於此。
+HTTP版面另有1280／390px自動截圖與無水平溢位檢查；這些結果屬獨立headless Chromium，不擴張為Safari、原生選檔或所有手機的驗收。封閉gate的早期預覽測試與上述成功寫入結果分開記錄。發布日期為2026-10-22，側欄與置頂紀錄已同步v2.8；相符提交的推送／線上部署證據見下節。
+
+## v2.8 正式發布驗證
+
+2026-10-22功能提交`023b4f4e40419e4ea4c7f5fe6877e414cb686e3d`已推送main，[Pages run 39775101500](https://github.com/jakeuj/bandit-save-editor/actions/runs/39775101500)的build／deploy均成功。Ubuntu／Node24的CI再次通過138 Node（94.8秒）與12 headless（69.8秒），沒有失敗或略過。
+
+[正式站](https://bandit.jakeuj.com/)共16個網址（首頁與index下載、Mac指南、manifest、sw、sitemap、robots、準備工具及全部assets）皆HTTP200、與此提交Git blob逐byte相同。首頁HTML SHA-256為`a6a76e096719abd9c20b922fe6efdec931bda58a8e69addb4efd6e91c2e39bfd`。兩頁canonical／og:url、分享圖、sitemap與robots均指向正式網域，沒有意外noindex；分享PNG為1200×630，repo homepage與Pages設定一致。
+
+獨立headless Chromium在正式站1280／390px各確認v2.8、圖鑑V1.0.10.2、PWA可離線使用及無水平溢位。完整合成檔的九項預覽／明確套用、下載實際bytes及重載通過，只有目標上限token改變；下載13,588,329 bytes、SHA-256 `1c6c9c45ce1c0af39ecffcf2a09bfaba57471130e74a0069e217599cf6b02822`。Mac指南兩寬度也無溢位，無pageerror。自動截圖與合成下載留repo外，個人瀏覽器與Downloads未參與。
+
+此次正式DOM腳本初跑未等待非同步讀檔完成就切換角色，造成操作逾時；補上與repo既有測試相同的檔名／載入完成等待後重跑全部通過，產品程式與發布bytes沒有修改。PWA斷網與waiting交接以本版暫存正式建置的完整案例為證，沒有把正式站的「可離線使用」提示單獨當作那些流程的證明。

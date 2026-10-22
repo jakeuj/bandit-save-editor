@@ -1,6 +1,6 @@
 # v2.8 B 任務
 
-狀態：2026-10-22已獲實作及推送授權；A已提交於13ec0a9。保持A與B的SDD原位置。規格見[proposal](proposal.md)，A成果見[原任務](../random-character-skill-caps/tasks.md)。每條約30–60分鐘，相關工作可分工但依相依完成驗收。
+狀態：2026-10-22 B全部10條已完成，功能提交023b4f4已推送及部署；A已提交於13ec0a9。保持A與B的SDD原位置。規格見[proposal](proposal.md)，A成果見[原任務](../random-character-skill-caps/tasks.md)。每條約30–60分鐘，相關工作可分工但依相依完成驗收。
 
 - [x] 1. 核對Git、A來源、圖譜限制、既有證明與骨架，保存B規格、完整矩陣及驗收界線。
 - [x] 2. 新增九項上限資格／原因、輸入、C/L/E完整預覽與明確套用，輸入／模型變更失效，390px及鍵盤標籤。
@@ -11,7 +11,7 @@
 - [x] 7. 實作原生封頂三階段、批次相容與完整生命週期，每個有效階段原版存檔／停止／新PID讀回及旁觀欄斷言。
 - [x] 8. 完成proof摘要／完整結果合併／遷移接線及負向測試，保留23舊群組，寫入或建置失敗完整回滾。
 - [x] 9. 核對Steam登入與15來源，執行完整隔離矩陣，核對原檔雜湊，真證明通過才合併開閘門並重跑正式建置新介面驗收。
-- [ ] 10. 更新v2.8實際日期與功能限制、README／維護／研究／路線圖／技能／產物，verify:release與diff檢查、提交推送及相符部署查驗；未通過則記明阻擋與關閉狀態。
+- [x] 10. 更新v2.8實際日期與功能限制、README／維護／研究／路線圖／技能／產物，verify:release與diff檢查、提交推送及相符部署查驗；未通過則記明阻擋與關閉狀態。
 
 ## 驗收條件
 
@@ -39,3 +39,5 @@
 
 - 第4／5／9條完成：正式catalog開啟後的`npm run verify:release`通過138項Node與12項headless（43.5秒），無失敗／略過。新增5案為HTTP1280／390px完整交錯與阻擋流程、直接file、PWA離線root／index及兩頁waiting交接；全部走真實開閘成功分支、實際下載bytes及重載。完整2501×60×22、BOM／空白／指數／大整數／未改token保留；成功暫存由工具清理。
 - 第10條本機部分：側欄與置頂更新紀錄已為v2.8／2026.10.22，記明V1.0.10.2及新版未驗；README、維護、測試、研究、路線圖、技能入口、HTML與sw已同步。A／B的SDD維持原處，沒有歸檔。提交／部署核對另記。
+
+- 第10條發布完成：功能提交`023b4f4e40419e4ea4c7f5fe6877e414cb686e3d`已推送main，[Pages run 39775101500](https://github.com/jakeuj/bandit-save-editor/actions/runs/39775101500)的build／deploy成功；CI為138 Node／12 headless全過。正式16個網址皆200且Git blob bytes相符，metadata／分享圖／sitemap／robots及repo homepage核對通過；正式1280／390px九上限預覽／套用／實際下載／重載、圖鑑版本、PWA備妥、Mac指南版寬與無pageerror皆通過。詳細SHA與驗收範圍見[正式發布紀錄](../../docs/research/random-character-skill-caps.md#v28-正式發布驗證)。這份紀錄補交只更新文件，發布資產保持相同。

@@ -179,4 +179,4 @@ GitHub Pages 使用 `.github/workflows/pages.yml` 發布。推送 `main` 後，�
 
 正式隔離 suite 已通過完整 108 角色矩陣、批次後原生成長及 13 階段生命週期，每個必要階段均有原版存檔與新 PID 重啟讀回；來源及基準原檔雜湊保持不變。實測確認剛達上限保留餘額，下一次已封頂取得經驗才清零；提高上限保留當時等級與餘額。
 
-獨立證明已合併，九項上限已開放；原有 23 群組證明完整保留，現共 24 群組，天賦維持唯讀。`npm run verify:release` 通過 138 項 Node、12 項 headless，沒有失敗或略過；新增 5 案以正式開放的建置驗證桌面／390px、直接 file、PWA 離線與更新交接，實際下載 bytes 及重載均通過。完整驗收紀錄見 [B 階段任務](sdd/random-character-skill-caps-b/tasks.md)。本機發布驗證完成，提交與正式部署仍待核對。
+獨立證明已合併，九項上限已開放；原有 23 群組證明完整保留，現共 24 群組，天賦維持唯讀。`npm run verify:release` 通過 138 項 Node、12 項 headless，沒有失敗或略過；新增 5 案以正式開放的建置驗證桌面／390px、直接 file、PWA 離線與更新交接，實際下載 bytes 及重載均通過。完整驗收紀錄見 [B 階段任務](sdd/random-character-skill-caps-b/tasks.md)。功能提交`023b4f4`已完成Pages部署與正式站核對，詳見[發布證據](docs/research/random-character-skill-caps.md#v28-正式發布驗證)。
