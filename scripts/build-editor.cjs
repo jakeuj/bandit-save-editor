@@ -23,6 +23,7 @@ if(Object.values(knowledge.verification).some(Boolean)){
   for(const group of R.sections.equipmentWorkflow.groups)if(knowledge.verification[group]){
     const p=proof.equipmentWorkflow,c=p?.groups?.[group];
     if(!c||!R.requiredChecks(group).every(k=>c.checks?.[k]===true)||JSON.stringify(p.fingerprints)!==JSON.stringify({...knowledge.fingerprints,...knowledge.batch2Fingerprints})||JSON.stringify(p.limits)!==JSON.stringify(knowledge.equipmentWorkflowLimits)||p.dataHash!==createHash('sha256').update(JSON.stringify({rules:knowledge.equipmentWorkflowLimits,items:knowledge.batch2Data.items,formulas:knowledge.affixReplacement})).digest('hex'))throw Error('裝備操作缺少相符的獨立驗證：'+group);
+    const ui=R.uiEvidenceProblem(group,c,knowledge.gameVersion);if(ui)throw Error(ui+'：'+group);
   }
   for(const [group,enabled]of Object.entries(knowledge.verification))if(enabled&&proof.groups[group]!==true)throw Error('驗證未涵蓋寫入群組：'+group);
   for(const group of R.sections.equipmentQuality.groups)if(knowledge.verification[group]){
@@ -30,6 +31,7 @@ if(Object.values(knowledge.verification).some(Boolean)){
     const formula=fs.readFileSync(path.join(root,'src/core.js'),'utf8').match(/ function qualityAttributeEffect\([\s\S]*?(?= function previewEquipmentQualityChange)/)?.[0].replace(/\r\n/g,'\n');
     if(!formula||p?.formulaHash!==createHash('sha256').update(formula).digest('hex'))throw Error('品質升降公式缺少相符的獨立驗證：'+group);
     if(!c||!R.requiredChecks(group).every(k=>c.checks?.[k]===true)||JSON.stringify(p.fingerprints)!==JSON.stringify({...knowledge.fingerprints,...knowledge.batch2Fingerprints})||p.dataHash!==createHash('sha256').update(JSON.stringify({quality:knowledge.equipmentQuality,items:knowledge.batch2Data.items,workflow:knowledge.equipmentWorkflowLimits})).digest('hex'))throw Error('品質升降缺少相符的獨立驗證：'+group);
+    const ui=R.uiEvidenceProblem(group,c,knowledge.gameVersion);if(ui)throw Error(ui+'：'+group);
   }
   if(['equipmentLevel','professionTrainingCap','advancedTechnologyLevel'].some(group=>knowledge.verification[group]||knowledge.verification[group+'Advanced'])&&JSON.stringify(proof.editingLimits)!==JSON.stringify(knowledge.editingLimits))throw Error('進階修改範圍與遊戲驗證紀錄不相符');
 }

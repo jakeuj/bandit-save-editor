@@ -33,6 +33,21 @@ const uiChecks = {
   equipmentQualityUpgrade: 'qualityUi',
   equipmentQualityDowngrade: 'qualityUi'
 };
+// Event functions that render the UI each check observed. A later build may carry the UI proof forward only when
+// the digest of exactly these events is unchanged; called functions outside the list are not covered.
+const uiEvents = {
+  selectionUi: [780562691790658, 619743323262026],
+  qualityUi: [680719446639986, 538305116886112, 589712995086958, 910195347276964, 713681756866045, 780562691790658, 619743323262026]
+};
+// Problem with a group's recorded UI evidence for the given game version, or null when it is acceptable.
+function uiEvidenceProblem(group, record, gameVersion) {
+  const check = uiChecks[group], e = record?.uiEvidence;
+  if (!check) return null;
+  if (!e || e.gameVersion !== gameVersion || JSON.stringify(e.eventSids) !== JSON.stringify(uiEvents[check]) || !/^[0-9a-f]{64}$/.test(e.eventDigest || '')) return 'UI 證據缺少相符的事件摘要';
+  if (e.source === 'native') return null;
+  if (e.source === 'carried' && e.carriedFrom?.eventDigest === e.eventDigest && e.carriedFrom.gameVersion && e.carriedFrom.gameVersion !== gameVersion) return null;
+  return 'UI 證據來源無效';
+}
 const sectionOf = group => Object.keys(sections).find(name => sections[name].groups.includes(group));
 function requiredChecks(group) {
   const section = sections[sectionOf(group)];
@@ -40,4 +55,4 @@ function requiredChecks(group) {
   return uiChecks[group] ? [...section.checks, uiChecks[group]] : section.checks;
 }
 
-module.exports = {sections, uiChecks, sectionOf, requiredChecks};
+module.exports = {sections, uiChecks, uiEvents, uiEvidenceProblem, sectionOf, requiredChecks};

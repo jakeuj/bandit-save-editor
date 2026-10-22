@@ -648,6 +648,15 @@
           "saveRestart": true,
           "originalHashes": true,
           "evidence": "docs/research/equipment-workflow.md"
+        },
+        "uiEvidence": {
+          "source": "native",
+          "gameVersion": "V1.0.10.2",
+          "eventSids": [
+            780562691790658,
+            619743323262026
+          ],
+          "eventDigest": "0f790e3d8f9de3a1c536400264139f9c9d12c5d29d07d63431b62ea84623ac1f"
         }
       }
     },
@@ -705,7 +714,21 @@
           51640,
           51640,
           47540
-        ]
+        ],
+        "uiEvidence": {
+          "source": "native",
+          "gameVersion": "V1.0.10.2",
+          "eventSids": [
+            680719446639986,
+            538305116886112,
+            589712995086958,
+            910195347276964,
+            713681756866045,
+            780562691790658,
+            619743323262026
+          ],
+          "eventDigest": "a2b56478d96ae3ecd0623117479f5d465aa0f84f9cf1ead5b5528a0f975d2707"
+        }
       },
       "backpackEquipmentQualityDowngrade": {
         "checks": {
@@ -726,7 +749,21 @@
           36584,
           36584,
           47036
-        ]
+        ],
+        "uiEvidence": {
+          "source": "native",
+          "gameVersion": "V1.0.10.2",
+          "eventSids": [
+            680719446639986,
+            538305116886112,
+            589712995086958,
+            910195347276964,
+            713681756866045,
+            780562691790658,
+            619743323262026
+          ],
+          "eventDigest": "a2b56478d96ae3ecd0623117479f5d465aa0f84f9cf1ead5b5528a0f975d2707"
+        }
       },
       "equipmentQualityUpgrade": {
         "checks": {
@@ -747,7 +784,21 @@
           5708,
           5708,
           41768
-        ]
+        ],
+        "uiEvidence": {
+          "source": "native",
+          "gameVersion": "V1.0.10.2",
+          "eventSids": [
+            680719446639986,
+            538305116886112,
+            589712995086958,
+            910195347276964,
+            713681756866045,
+            780562691790658,
+            619743323262026
+          ],
+          "eventDigest": "a2b56478d96ae3ecd0623117479f5d465aa0f84f9cf1ead5b5528a0f975d2707"
+        }
       },
       "equipmentQualityDowngrade": {
         "checks": {
@@ -768,7 +819,21 @@
           36336,
           36336,
           19256
-        ]
+        ],
+        "uiEvidence": {
+          "source": "native",
+          "gameVersion": "V1.0.10.2",
+          "eventSids": [
+            680719446639986,
+            538305116886112,
+            589712995086958,
+            910195347276964,
+            713681756866045,
+            780562691790658,
+            619743323262026
+          ],
+          "eventDigest": "a2b56478d96ae3ecd0623117479f5d465aa0f84f9cf1ead5b5528a0f975d2707"
+        }
       }
     },
     "formulaCases": 6592,

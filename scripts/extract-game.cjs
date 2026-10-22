@@ -88,6 +88,29 @@ function inspectGame(root) {
   return { root, project, expressions, refs, functions, events, operations, reads, fingerprints, constant };
 }
 
+// Version-stable digest of event subtrees. Event positions, expression numbers and variable indices shift between
+// builds, so they are dropped or replaced by expression source and object/ACE names; SIDs and logic are kept.
+function eventDigest(game, sids) {
+  const objects = game.project[3].map(o => o[0]);
+  const isEvent = v => Array.isArray(v) && (v[0] === 0 || v[0] === 4) && Number.isInteger(v[4]) && Array.isArray(v[7]);
+  const isVariable = v => Array.isArray(v) && v[0] === 1 && typeof v[1] === 'string';
+  const expressionNode = n => Array.isArray(n) && n[0] === 1 && Number.isInteger(n[1]) ? [1, objects[n[1]], game.refs[n[2]], ...n.slice(3)] : n;
+  const parameter = p => Array.isArray(p) && Array.isArray(p[1]) && Number.isInteger(p[1][0]) && game.expressions[p[1][0]]
+    ? [p[0], [game.expressions[p[1][0]].toString(), ...p[1].slice(1).map(expressionNode)]] : p;
+  const ace = a => Array.isArray(a) ? [a[0] === -1 ? 'System' : objects[a[0]], game.refs[a[1]], ...a.slice(2, -1), Array.isArray(a.at(-1)) ? a.at(-1).map(parameter) : a.at(-1)] : a;
+  const head = h => Array.isArray(h) ? h.map(x => Array.isArray(x) ? x.map(p => isVariable(p) ? p.slice(0, -1) : p) : x) : h;
+  const node = v => isEvent(v) ? {sid: v[4], type: v[0], head: head(v[1]), flags: [v[2], v[3]], conditions: v[6].map(ace), actions: v[7].map(ace), children: (v[8] || []).map(node)}
+    : isVariable(v) ? v.slice(0, -1) : v;
+  function find(v, sid) {
+    if (!Array.isArray(v)) return null;
+    if (isEvent(v) && v[4] === sid) return v;
+    for (const c of v) { const r = find(c, sid); if (r) return r; }
+    return null;
+  }
+  const tree = sids.map(sid => { const v = find(game.project[6], sid); if (!v) throw Error('事件不存在：' + sid); return node(v); });
+  return crypto.createHash('sha256').update(JSON.stringify(tree)).digest('hex');
+}
+
 const planeNames = ['山寨與全局', '存檔識別與建築', '角色基本資料', '招募候選角色', '角色職業等級', '角色職業經驗', '主地圖格網', '背包物品', '未辨識層 8', '裝備庫與穿戴', '戰鬥地圖格網', '城市商店', '角色衍生屬性', '鍛造佇列', '未辨識層 14', '引導任務', '角色重生／渡劫', '內丹', '靈物背包', '靈物配置', '角色戰鬥位置', '設施進程'];
 const tableSpecs = { materials: ['cl', 1, 3], characters: ['js', 1, null], professions: ['zy', 1, 2], attributes: ['sx', 1, 2], items: ['wp', 1, 5], technologies: ['kj', 1, 2], buildings: ['jz', 1, 3], quests: ['rw', 1, 2], talents: ['tf', 1, 4], facilities: ['ss', 1, 3], relics: ['lw', 1, 3] };
 
@@ -199,4 +222,4 @@ if (require.main === module) {
   writeAudit();
   console.log(JSON.stringify({ ...catalog.counts, planes: catalog.planes.length, catalogRows: Object.values(catalog.catalogs).reduce((n, rows) => n + rows.length, 0) }));
 }
-module.exports = { inspectGame, createCatalog };
+module.exports = { inspectGame, createCatalog, eventDigest };

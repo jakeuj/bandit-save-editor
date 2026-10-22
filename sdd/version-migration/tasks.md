@@ -3,7 +3,7 @@
 - [x] 1. `prepare-macos.py` 支援已核對指紋清單、中文安裝目錄預設及 `--verify-runtime`；以 V1.0.10.2 package 產生 repo 外副本，確認替換次數與重驗結果。
 - [x] 2. `verify-game.cjs` 在 darwin 接受「原始 15 指紋相符＋已核對補丁」的 runtime，state 記錄兩組雜湊；補拒絕情境的合成測試。
 - [x] 3. 抽出共用的群組必要 checks，新增 `verification-suite.cjs` 群組清單，並以測試確保 22 群組全數涵蓋、與 build-editor 一致。
-- [ ] 4. 實作 `eventDigest` 正規化摘要，計算 V1.0.10.2 的 5 個 UI 群組摘要並補記到 verification；build-editor 接受並核對 `ui.source`。
+- [x] 4. 實作 `eventDigest` 正規化摘要，計算 V1.0.10.2 的 5 個 UI 群組摘要並補記到 verification；build-editor 接受並核對 `ui.source`。
 - [ ] 5. 撰寫各家族的代表子集生成器（經驗與名稱、v2.1 進階、v2.2 係數／丹藥、v2.3 替換、v2.4 背包與選槽、v2.5 品質），並在 VM 核心開閘套用驗證。
 - [ ] 6. 實作 `verify-migration.cjs` 的逐副本步驟執行、失敗停止、PID 清理與 repo 外結果輸出。
 - [ ] 7. 實作自動寫回：指紋不同且全部原生 checks 通過才寫，UI 不符的群組寫成關閉；建置失敗即還原，相同指紋只出比較報告。
