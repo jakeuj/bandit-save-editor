@@ -18,8 +18,9 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 - 完整轉職表、職業條件與社群工作圖：讀 repo 的 `src/profession-ui.js`、`knowledge/profession-guide.json`；前置資料由 `extract-game.cjs` 重建，規則與來源界線見研究筆記「職業轉職圖鑑」。
 - PWA 安裝、離線快取與更新：讀 repo 的 `docs/maintenance.md` 的 PWA 維護與驗收；來源為 `src/pwa.js`、`src/service-worker.js`，建置同步 HTML 與 `sw.js`。
 - 存檔、名稱、角色／職業／技藝經驗、圖鑑或知識重建：讀 [references/save-format.md](references/save-format.md)，再讀 repo 的 `src/core.js`、`docs/research/save-knowledge.md`。
-- 裝備等級、職業操練上限、進階科技或超限模式：讀 repo 的 `docs/research/advanced-editing.md` 與 `sdd/advanced-editing/tasks.md`；基礎資質、技藝上限、天賦回填或自然職業30級限制另讀 `sdd/runtime-patch/proposal.md`。
-- 規劃下一個可寫功能或評估候選順序：先讀 repo 的 `docs/research/feature-roadmap.md`，排序、靜態證據與 V1.0.11.0 影響以該文件為準；開閘門仍依維護指引。範本0一般隨機角色的資質、技藝上限與天賦不受載入回填，與補丁提案範圍不同。
+- 裝備等級、職業操練上限、進階科技或超限模式：讀 repo 的 `docs/research/advanced-editing.md` 與 `sdd/advanced-editing/tasks.md`；基礎資質、技藝上限、天賦回填或自然職業30級限制另讀 `sdd/runtime-patch/proposal.md`。已知缺口：`editingInfo` 的裝備庫（z9）分支只排除寶物／內丹，套裝等級可寫但沒有證明，修正排在 `sdd/v2.8.1-consolidation/`；在它落地前不要把 z9 套裝等級當成已驗證功能。
+- 規劃下一版或評估候選順序：先讀 repo 的 `docs/research/next-version-plan.md`（已驗證事實、版本順序、v2.8.1 範圍、天賦與套裝等級研究清單、給新 session 的接續 prompt），需要單項排序理由再讀 `docs/research/feature-roadmap.md`；路線圖的「基準 V1.0.10.2」與 V1.0.11.0 影響段屬歷史敘述。不重做已記錄的盤點；開閘門仍依維護指引。範本0一般隨機角色的資質、技藝上限與天賦不受載入回填，與補丁提案範圍不同。
+- v2.8.1 鞏固版（z9 套裝唯讀、文件對齊 V1.0.11.2、發布核對紀錄）：讀 `sdd/v2.8.1-consolidation/proposal.md` 與 `tasks.md`，草案需使用者核准四項決定才實作。任何 `src/core.js` 位元變動都會讓技藝上限群組的整份 core 摘要失效，改完後依維護指引重開，旗標關閉狀態不推送。
 - 第二批詞條與丹藥資質增量：讀 repo 的 `docs/research/advanced-editing-batch2.md` 與 `sdd/advanced-editing-batch2/`。v2.2 已開放獨立驗證的既有詞條係數與丹藥增量；替換ID見v2.3，品質見v2.5，超限另行驗證。
 - 精準洗練、替換已選槽詞條、單件裝備效果預覽或搬移識別：讀 repo 的 `docs/research/precise-affix-editing.md` 與 `sdd/precise-affix-editing/tasks.md`。v2.3 使用獨立替換驗證群組，不沿用係數證明；原生搬移後 y0 可不同於目前列號，不得據此拒絕合法裝備。
 - 背包裝備、首次洗練選槽或新取得標記：讀 repo `docs/research/equipment-workflow.md` 與 `sdd/equipment-workflow/tasks.md`。v2.4已正式發布並開放首次選槽；具備代表遊戲選槽UI、原版存檔／新PID讀回、桌面／390px精確下載及PWA離線／更新交接證據。詳細範圍與SHA以repo紀錄為準；直接file://新流程仍待人工。
