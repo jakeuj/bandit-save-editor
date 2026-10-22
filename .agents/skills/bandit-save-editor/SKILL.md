@@ -26,7 +26,7 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 - 遊戲驗證先依下方「驗證與交付」選擇方式；只有確定需要操作遊戲UI時，才讀 repo `docs/game-ui-testing.md` 的「快速開始」及目標路徑、完成標記與故障表。工具API以當次computer-use技能為準，座標與視窗ID重新取得；編輯器選檔卡住則讀同檔確認框段落。
 - 核心 API、來源同步、知識驗證或驗收說明：讀 repo 的 `docs/maintenance.md`；待驗收狀態見 `sdd/save-knowledge/tasks.md`。
 - 遊戲知識版本標示同步、SEO、分享預覽、正式網址、GitHub 專案網站連結或 Pages 發布驗證：讀 [references/pages.md](references/pages.md)。
-- Mac 啟動、CrossOver、Steam 或存檔位置：讀 [references/macos.md](references/macos.md)，再讀 repo 的 `launcher/README.md`、`docs/research/macos-runtime-investigation.md`。
+- Mac 啟動、CrossOver、Steam 或存檔位置：讀 [references/macos.md](references/macos.md) 的來源定位與啟動約束，再讀 repo 的 `launcher/README.md`、`docs/research/macos-runtime-investigation.md`。
 
 ## 版本更新入口
 

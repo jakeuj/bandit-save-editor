@@ -2,6 +2,22 @@
 
 處理 repo 的 Mac 準備工具、CrossOver 啟動問題、Steam 或 Mac 存檔位置時，先讀 `launcher/README.md` 與 `docs/research/macos-runtime-investigation.md`；寫入實測另讀 `docs/research/save-knowledge.md`。
 
+## 定位新版遊戲來源
+
+2026-10-22 使用者提供的 Mac／CrossOver 新版來源已確認存在，Steam 安裝目錄名稱為簡體 `塔防山贼模拟器`，封裝相對位置為：
+
+```text
+<CrossOver bottle>/drive_c/Program Files (x86)/Steam/steamapps/common/塔防山贼模拟器/package.nw
+```
+
+以當次使用者指定的實際路徑為準。`launcher/prepare-macos.py` 目前仍預設舊的 `common/bandit`，研究筆記中的舊路徑也屬歷史來源；新版任務先確認這個中文安裝目錄。`--source` 接受包含 `package.nw` 的遊戲目錄，不是封裝檔本身：
+
+```sh
+python3 launcher/prepare-macos.py --source "<SteamLibrary>/steamapps/common/塔防山贼模拟器"
+```
+
+路徑含空白時保留引號。公開技能只記錄可重用的相對結構；私人絕對路徑留在本機。來源存在與封裝可讀不代表新版已通過 Mac 相容性驗證，仍須核對 Steam manifest、來源指紋及隔離實測結果。
+
 ## 維持目前的實驗路線
 
 專案以自己的 Steam 遊戲資料搭配 NW.js SDK 0.82.0 osx-arm64，沿用遊戲原附的 universal Greenworks 與 Steam dylib。這是與既有 ABI／指紋核對的 runtime，不能當成追求最新版的版本提示，也不直接套用其他遊戲的 Steam adapter。
