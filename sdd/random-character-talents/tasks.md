@@ -1,6 +1,6 @@
 # v2.9 一般隨機角色天賦等級任務
 
-狀態：**2026-10-23 任務 1–9 完成；`randomCharacterTalents` 已以首次完整證明開放，技藝上限已重開。任務 10（版本與發布）待使用者授權。** 範圍與決策見[提案](proposal.md#已核准決策2026-10-23)，規則與 SID 見[研究筆記](../../docs/research/random-character-talents.md)。每條 30–60 分鐘；單條超時或需要改動 v2.7 證明綁定的 core 區段時，先回報重估，不壓成一條大任務。
+狀態：**2026-10-23 全部 10 條完成；v2.9 已發布（`b645614`，Pages run 39834108404 成功）。** 範圍與決策見[提案](proposal.md#已核准決策2026-10-23)，規則與 SID 見[研究筆記](../../docs/research/random-character-talents.md)。每條 30–60 分鐘；單條超時或需要改動 v2.7 證明綁定的 core 區段時，先回報重估，不壓成一條大任務。
 
 範圍：範本 0、非在監、無結丹／重生紀錄的已招募角色，只改三槽天賦**等級**，等級須在品質池內（Q1 1–2、Q2 1–3、Q3 2–4、Q4 3–5、Q5 4–5、Q6 5）。ID 不可改、不寫 0/0、Q6 唯讀、不提供天賦批次。天賦 6 欄與 v2.7 資質 6 欄合併為 12 欄還原群組。
 
@@ -18,7 +18,7 @@
 - [x] 7. 建立原生 oracle 與矩陣／生命週期 runner：535 個 `天赋属性计算` 值；Q1–Q5×3 槽×升／降 30 角色（覆蓋 6 個公式分支、單／雙屬性）＋ID 1／2／3 資質連動 3 角色；2 角色生命週期（數值更新不回填、轉職、下獄／召回、重生、解雇）。逐階段原版存檔、停止、新 PID 讀回；記錄 talent 欄位實際 token 型別。
 - [x] 8. 在 Windows 隔離副本以相符 15 指紋執行任務 7，合併器重新核算 checks 才寫入 `randomCharacterTalents` 首次證明；其他群組紀錄逐項 deepEqual 保留。
 - [x] 9. 依維護指引重開 `randomCharacterSkillCaps`（v2.9 唯一一次，以任務 5 凍結的 core 為準），其他 23 群組與首次 108＋2 紀錄不變。建置前先在 `index.html` 的 `skillCapsEditor` 後加 `<div class="form-card" id="talentLevelsEditor"></div>`，再同步建置；`--check` 通過，補任務 6 延後的 headless HTTP 1280／390px、直接 file、PWA 天賦案例，`npm run verify:release` 全過。
-- [ ] 10. 版本 v2.9、更新紀錄（只改等級、ID 不可改、Q6 唯讀、12 欄還原）、README／技能／研究筆記同步；經使用者授權提交推送，核對對應 SHA 的 Pages 結果。
+- [x] 10. 版本 v2.9、更新紀錄（只改等級、ID 不可改、Q6 唯讀、12 欄還原）、README／技能／研究筆記同步；經使用者授權提交推送，核對對應 SHA 的 Pages 結果。
 
 ## 驗收條件
 
@@ -47,3 +47,4 @@
 - 驗收：`BANDIT_BROWSER_PORT=8942 npm run verify:release` 全過：建置同步、180 Node、16 headless（含天賦 HTTP 1280／390px、直接 file、PWA 斷網），0 失敗／略過。25/25 群組開放；`src/core.js` 仍為凍結 SHA-256 `fe01461977c8164b97c8c2101c5f9c4b4a43b816d37f53c06e244c7eb75d9756`。
 - 文件：研究筆記補隔離原生驗證與仍未驗證項目；維護指引新增 v2.9 段（API、12 欄群組、證明綁定、首次開放與代表遷移、技藝上限重開流程）；測試指引補天賦 UI／headless；專案技能更新 v2.9 與技藝上限條目。AGENTS.md 核對後不需調整（無天賦專屬規則，通用規則仍一致）。
 - 未做：渡劫、遊戲畫面名稱／tips、戰鬥／生產實際效果與 macOS 未驗證；版本號、更新紀錄與 README 屬任務 10；沒有提交或推送。
+- 第 10 條：使用者授權後，側欄改為「修改器 v2.9 · 2026.10.23」，更新紀錄首筆 v2.9（遊戲 V1.0.11.2：只改等級、ID 不可更換、品質 6 無可調整值、資質天賦超上限整筆阻擋、12 欄累計還原、獨立隔離原生驗證）；README 新增功能條目、文件入口與「v2.9 一般隨機角色天賦等級」說明；`tests/changelog.test.cjs` 新增 v2.9 條目檢查。重建後 `--check` 通過、181 項 Node 全過（UI 與 headless 自 `2d32026` 起未變，沿用其 16 項 headless 結果）。發布提交 `b645614b374f0a559810fcc1a6479c58262a180d` 推送 main（同時帶上本機 main 既有的 v2.9 A／UI 與其他工作的套裝等級文件提交），[Pages run 39834108404](https://github.com/jakeuj/bandit-save-editor/actions/runs/39834108404) 的 build／deploy 皆成功，headSha 相符。未另 GET 線上首頁核對版本。
