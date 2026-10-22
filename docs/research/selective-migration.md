@@ -1,6 +1,6 @@
 # 高頻遊戲更新的驗證精簡
 
-2026-10-23 使用者核准：按影響選跑，UI 顯示或互動疑慮可以等實際故障再複查，例行 computer use 為零。實作入口與參數見[維護指引](../maintenance.md#版本遷移重驗)，規格及驗收見 [SDD](../../sdd/selective-migration/tasks.md)。
+2026-10-23 使用者核准：按影響選跑，UI 顯示或互動疑慮可以等實際故障再複查，例行 computer use 為零。實作入口與參數見[維護指引](../maintenance/migration.md#版本遷移重驗)，規格及驗收見 [SDD](../../sdd/selective-migration/tasks.md)。
 
 ## 此次完整驗證的成本
 

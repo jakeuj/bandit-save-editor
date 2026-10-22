@@ -1,6 +1,6 @@
 # 一般隨機角色天賦（v2.9 前置研究）
 
-研究日期：2026-10-23（Asia/Taipei）。依[後續版本計畫](next-version-plan.md#5-v29-天賦前置研究清單)第 5 節逐題回答；本文只做靜態追查，**沒有啟動遊戲、沒有修改 `src/`、catalog、verification 或任何旗標**。規格草案見 [SDD proposal](../../sdd/random-character-talents/proposal.md)，尚未建立 tasks。
+研究日期：2026-10-23（Asia/Taipei）。依[後續版本計畫](archive/2026-10-23-next-version-plan.md#5-v29-天賦前置研究清單)第 5 節逐題回答；本文只做靜態追查，**沒有啟動遊戲、沒有修改 `src/`、catalog、verification 或任何旗標**。規格草案見 [SDD proposal](../../sdd/random-character-talents/proposal.md)，尚未建立 tasks。
 
 ## 來源與證據界線
 

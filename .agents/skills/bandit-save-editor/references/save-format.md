@@ -1,6 +1,6 @@
 # 存檔知識、成長與寫入驗證
 
-處理存檔讀寫、資源、名稱、成長或知識擴充時使用。從 repo 讀 `README.md`、`src/core.js`、`docs/research/save-knowledge.md`；API 與重建／驗收步驟讀 `docs/maintenance.md`。公式、座標表、事件 SID 及詳細實測只在這些 repo 文件維護。
+處理存檔讀寫、資源、名稱、成長或知識擴充時使用。從 repo 讀 `README.md`、`src/core.js`、`docs/research/save-knowledge.md`；API 與首次開放步驟讀 `docs/maintenance/core.md`；測試選擇讀 `docs/testing.md`。公式、座標表、事件 SID 及詳細實測只在這些 repo 文件維護。
 
 ## 識別與權限
 
@@ -24,7 +24,7 @@ v2.2 的既有詞條係數走 `affixInfo`／`setEquipmentAffixCoefficient`，丹
 
 來源為使用者合法持有、解包的遊戲副本。`package.nw` 可作 ZIP 分析；原始解析輸出與完整遊戲資料留在 repo 外。
 
-版本遷移先依 repo `docs/maintenance.md` 跑 `verify-migration.cjs --plan`：先選取必要來源，語意未變沿用原始證據，需要才建立原生副本。未知規則再使用 `node scripts/extract-game.cjs --source /outside/repo/unpacked-game --audit-only --audit /outside/repo/audit.json` 取得原始事件／讀寫索引；此模式不修改 catalog、繁中對照或驗證旗標。以 SID 追查規則，expression 編號可能移動；只有受影響功能補相符來源實測，新增寫入保留首次證明。
+版本遷移先依 repo `docs/maintenance/migration.md` 跑 `verify-migration.cjs --plan`：先選取必要來源，語意未變沿用原始證據，需要才建立原生副本。未知規則再使用 `node scripts/extract-game.cjs --source /outside/repo/unpacked-game --audit-only --audit /outside/repo/audit.json` 取得原始事件／讀寫索引；此模式不修改 catalog、繁中對照或驗證旗標。以 SID 追查規則，expression 編號可能移動；只有受影響功能補相符來源實測，新增寫入保留首次證明。
 
 ```sh
 node scripts/extract-game.cjs --source /path/to/unpacked/game --audit /outside/repo/bandit-audit.json
@@ -49,13 +49,13 @@ node scripts/build-editor.cjs
 
 研究筆記已記錄名稱、三類經驗與 v2.1 三項進階修改在隔離遊戲的載入、本機存檔及重啟讀回；這不等於完整選單重播、真實 Cloud 上傳、成就、DLC 獎勵或長時間穩定性。報告引用這些範圍，新增改動另做對應驗證。
 
-桌面／手機、完整尺寸與離線相依性都有各自驗收記錄；直接用 Chrome／Edge 開啟離線 HTML 的完整流程仍以 `docs/maintenance.md` 及 `sdd/save-knowledge/tasks.md` 為準。完成實測前不把相依性檢查當作 UI 通過。
+桌面／手機、完整尺寸與離線相依性都有各自驗收記錄；直接用 Chrome／Edge 開啟離線 HTML 的完整流程仍以 `docs/maintenance/pwa.md` 及 `sdd/save-knowledge/tasks.md` 為準。完成實測前不把相依性檢查當作 UI 通過。
 
 實際存檔先保存固定快照，避免玩家後續遊玩改檔污染預期。Windows 存檔位於 Steam 遊戲庫的 `steamapps/common/塔防山贼模拟器/save/ea2save.dat` 與 `ea3save.dat`；位置與新舊順序每次確認，Mac 另讀 [macos.md](macos.md)。
 
 ## v2.3 精準洗練
 
-核心入口為 `equipmentAffixReplacementInfo`、`previewEquipmentAffixReplacement`、`setEquipmentAffix`，參數與交易見 repo `docs/maintenance.md`。只替換普通裝備唯一已選槽的合法 ID／係數，原版範圍、禁止新增重複、共用整件裝備還原群組；無變更不新增交易。合法池來自生成器，效果預覽只計單件，不推算完整角色面板。
+核心入口為 `equipmentAffixReplacementInfo`、`previewEquipmentAffixReplacement`、`setEquipmentAffix`，參數與交易見 repo `docs/maintenance/equipment.md`。只替換普通裝備唯一已選槽的合法 ID／係數，原版範圍、禁止新增重複、共用整件裝備還原群組；無變更不新增交易。合法池來自生成器，效果預覽只計單件，不推算完整角色面板。
 
 `equipmentAffixReplacement` 首次獨立證明核對 13+2 來源、限制與規則／資料雜湊。原生公式、38 候選／品質2–6 的 380 組比對、76 次後續原生洗練及搬移再編輯證據以 repo `docs/research/precise-affix-editing.md` 為準；後續改版依遷移相依判斷沿用或選跑，不因整包指紋改變重做完整矩陣。
 

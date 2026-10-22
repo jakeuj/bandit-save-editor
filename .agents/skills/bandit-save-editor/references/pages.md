@@ -1,6 +1,6 @@
 # SEO、來源同步與 GitHub Pages
 
-推送、部署、修改正式網址或搜尋／分享資訊時使用，先讀 repo 的 `docs/maintenance.md` 與 `.github/workflows/pages.yml`。本機發布來源為 repo checkout，舊 `outputs/` 的離線快照不代替目前建置產物。
+推送、部署、修改正式網址或搜尋／分享資訊時使用，先讀 repo 的 `docs/maintenance/release.md` 與 `.github/workflows/pages.yml`。本機發布來源為 repo checkout，舊 `outputs/` 的離線快照不代替目前建置產物。
 
 ## 正式網址與遷移
 
@@ -39,7 +39,7 @@ gh repo view jakeuj/bandit-save-editor --json homepageUrl
 
 ## 產物與來源同步
 
-從 repo 根目錄執行來源同步與合成測試：
+需要同步產物時，從 repo 根目錄執行建置與同步檢查（以下不是合成測試）：
 
 ```sh
 node scripts/build-editor.cjs
@@ -48,7 +48,7 @@ node scripts/build-editor.cjs --check
 
 建置將 `src/` 與 catalog 內嵌進 `index.html`，也會核對開放寫入的完整來源指紋與驗證證明。提交程式來源／知識時一併提交同步後的 HTML；單純改 SEO 時保留內嵌程式。網站使用者仍只需要單一 HTML，沒有外部程式或知識相依。
 
-遊戲知識版本只取 `knowledge/catalog.json` 的 `gameVersion`。新增或調整畫面上的知識版本時，沿用 `<span data-knowledge-version>…</span>`，由建置工具做 HTML 跳脫並填入；欄位圖鑑摘要則讀取內嵌的 `K.gameVersion`。目前四個標記涵蓋職業圖鑑標籤、職業資料來源、欄位圖鑑標籤及使用說明，測試核對數量與版本。改動標示數量時一併調整測試；建置後同步提交 `index.html` 與 `sw.js`。編輯器自身版本及 Mac runtime 的相容版本各自維護。詳細實作入口見 repo `docs/maintenance.md` 的「知識版本標示同步」。
+遊戲知識版本只取 `knowledge/catalog.json` 的 `gameVersion`。新增或調整畫面上的知識版本時，沿用 `<span data-knowledge-version>…</span>`，由建置工具做 HTML 跳脫並填入；欄位圖鑑摘要則讀取內嵌的 `K.gameVersion`。標記涵蓋側欄遊戲版本、職業圖鑑標籤、職業資料來源、欄位圖鑑標籤、使用說明及更新紀錄開頭；實際數量以來源與測試為準。改動標示數量時一併調整測試；建置後同步提交 `index.html` 與 `sw.js`。編輯器自身版本及 Mac runtime 的相容版本各自維護。詳細實作入口見 repo `docs/maintenance/release.md` 的「知識版本標示同步」。
 
 若 `--check` 失敗，先辨別來源不同步與 checkout 行尾差異。`.gitattributes` 已固定 JavaScript 與 Manifest 為 LF；確認屬性生效，必要時從提交的 Git blob 建立隔離副本執行檢查。PWA 指紋須對應真正發布的 bytes，不能只讓 Windows 工作目錄的建置通過。
 
@@ -69,7 +69,7 @@ node scripts/build-editor.cjs --check
    gh run list --repo jakeuj/bandit-save-editor --workflow pages.yml --commit $releaseSha --limit 5 --json databaseId,headSha,status,conclusion,url
    ```
 
-   取得 run ID 後，用 `gh run view RUN_ID --repo jakeuj/bandit-save-editor --json headSha,status,conclusion,url` 確認；需要等待時可用 `gh run watch RUN_ID --repo jakeuj/bandit-save-editor --exit-status --interval 10`。`RUN_ID` 替換為此次數字 ID。build 與 deploy 都成功才進行正式站驗證。
+   取得 run ID 後，用 `gh run view RUN_ID --repo jakeuj/bandit-save-editor --json headSha,status,conclusion,url` 確認；需要等待時可用 `gh run watch RUN_ID --repo jakeuj/bandit-save-editor --exit-status --interval 10`。`RUN_ID` 替換為此次數字 ID。build 與 deploy 都成功即完成部署追蹤；只有符合前述條件才再進行正式站驗證。
 2. 實際 GET 正式首頁、`mac.html`、`sitemap.xml`、`robots.txt`、metadata 指向的分享圖及本次修改的公開資產。確認 HTTPS、HTTP 200、內容與 MIME；需要時檢查舊入口／HTTP 的轉址終點，不能只測可連線。
 3. 核對正式兩頁的 canonical 與 `og:url`，sitemap 只列正式 URL，robots 指向正式 sitemap，分享圖可讀且尺寸正確，HTTP `X-Robots-Tag` 與 HTML 都沒有意外 `noindex`。首頁與 `index.html` 離線下載入口、Mac 準備工具也需能取得預期內容。
 4. 靜態內容以該次提交的 Git blob 比對，可比較回應 bytes 或 SHA-256。用 `git show SHA:PATH` 取得預期 bytes；Python 使用 `subprocess.check_output`，避免 shell 文字轉碼。Windows 工作目錄可能有 CRLF，直接拿工作目錄檔案雜湊比對會誤判，這次 `launcher/prepare-macos.py` 就有此情況。
@@ -78,20 +78,8 @@ node scripts/build-editor.cjs --check
 
 `queued` 是待決，不是程式失敗。狀態與日誌不一致時交叉確認 job、deployment 與實際 HTTP；只針對明確錯誤修正或重試。若 CDN 尚未更新，間隔重查受影響檔案，不能用舊內容宣稱本次完成；沒有可處理原因就回報待決與 run 連結，保留現有部署設定。
 
-## 已驗證基準
-
-2026-10-21 v2.1 功能提交 `d98db495110beff15e1b5a5599f6b8804d11d674`，[Pages run 39607900455](https://github.com/jakeuj/bandit-save-editor/actions/runs/39607900455) 成功。正式 v2.1／V1.0.10.2、資產 Git blob 比對、PWA waiting→關閉重開與斷網編輯／精確匯出通過；詳細以 repo `docs/research/advanced-editing.md` 的「v2.1 正式發布驗證」為準。`file://` 的新功能流程仍待人工驗收，不能與 PWA 離線混為一談。
-
-
-2026-10-21 的 V1.0.10.2 最終發布提交為 `7adcb01f9f0ddef749c1474850877df79ad78dd9`，[Pages run 39598503967](https://github.com/jakeuj/bandit-save-editor/actions/runs/39598503967) 成功；正式圖鑑標籤及摘要均確認新版，PWA 關閉後重開套用成功。詳細資產比對、截圖位置及範圍以 repo `docs/research/v1.0.10.2-audit.md` 的「正式發布驗證」為準，後續發布用自己的 SHA 驗證。
-
-2026-10-21 的 SEO 修正提交為 `3c7f51be141d5b20f7f3fb42bbe317d6fe8d2fbe`，[Pages run 39454904155](https://github.com/jakeuj/bandit-save-editor/actions/runs/39454904155) 已成功。正式兩頁、sitemap、robots、v3 PNG、SVG 與 Mac 準備工具的回應內容均與該提交 Git blob 一致，repo 網站連結已改為新網域。此紀錄供回查，後續版本仍以自己的 SHA 重新驗證。
-
 這個專案的正常發布不需要修改帳號根網站或既有網域 DNS。追蹤提醒、Search Console 操作與其他外部變更依使用者實際要求執行。
 
+## 歷史證據
 
-2026-10-21 v2.2 功能提交 `d7f0cedecae6ec1c6fb7f6f8b71015b0a48d6dae`，[Pages run 39615676545](https://github.com/jakeuj/bandit-save-editor/actions/runs/39615676545) 成功。正式 v2.2／V1.0.10.2、Git blob資產比對、舊Worker等待與關閉重開交接、斷網主介面匯出及新分頁讀回通過。詳細範圍與瀏覽器測試限制以repo `docs/research/advanced-editing-batch2.md`「v2.2 正式發布驗證」為準；直接file://新功能仍待人工驗收。
-
-2026-10-21 v2.3 功能提交 `a912466c0607a89f62b5dd1298b8ca3eeee6f977`，[Pages run 39622670935](https://github.com/jakeuj/bandit-save-editor/actions/runs/39622670935) 成功。正式 v2.3／V1.0.10.2、12 個網址 Git blob 比對、舊版關閉重開交接，以及 PWA 斷網精準洗練／兩入口精確匯出／新頁讀回通過。詳細證據與工具逾時後恢復方法以 repo `docs/research/precise-affix-editing.md` 為準；本次未取得 waiting 提示文字，直接 file:// 仍待人工。不能把實際版本交接、提示觀察及離線開檔混寫為同一項。
-
-2026-10-22 v2.4合併提交 `aec00a8bf800ef34583bd969d3c852c040ce4c43`，[Pages run 39642878678](https://github.com/jakeuj/bandit-save-editor/actions/runs/39642878678)成功。正式v2.4／V1.0.10.2、14個網址Git blob比對、實際waiting提示／關閉重開，以及PWA斷網首次選槽／預覽入口精確匯出／讀回通過。遊戲選槽UI、隔離新PID讀回與桌面／390px證據見repo `docs/research/equipment-workflow.md`；直接file://新流程仍待人工，不宣稱Windows獨立App安裝已驗收。
+各次 SHA、run 與驗收限制完整保留在 [Pages 歷史驗證紀錄](pages-history.md)。

@@ -14,7 +14,7 @@
 
 2026-10-22 v2.5品質流程完成桌面／390px及PWA離線升降品、兩入口精確匯出、重讀與v2.4→v2.5等待／關閉重開。直接file://新流程仍待人工；本輪不擴大歷史任務6的直接開檔通過範圍，詳細證據見[品質研究](../../docs/research/equipment-quality.md)。
 
-任務 6 的桌面／手機編輯、匯出、重新載入、完整尺寸及離線相依性檢查已通過。2026-10-21 使用隔離 Chrome 155 另完成 PWA 安裝、獨立視窗、離線啟動、快取重建及多視窗更新；實際下載 HTML 後以 `file://` 直接開啟，也通過完整尺寸資源修改／還原／精確匯出／重新載入。直接開檔的名稱、三類經驗及設定完整流程仍待驗，任務 6 保持未完成。PWA 詳細證據見 `docs/maintenance.md`，其餘實測見 `docs/research/save-knowledge.md`；正式發布以對應 Pages 工作流程及線上資產核對為準。
+任務 6 的桌面／手機編輯、匯出、重新載入、完整尺寸及離線相依性檢查已通過。2026-10-21 使用隔離 Chrome 155 另完成 PWA 安裝、獨立視窗、離線啟動、快取重建及多視窗更新；實際下載 HTML 後以 `file://` 直接開啟，也通過完整尺寸資源修改／還原／精確匯出／重新載入。直接開檔的名稱、三類經驗及設定完整流程仍待驗，任務 6 保持未完成。PWA 詳細證據見 `docs/maintenance/pwa.md`，其餘實測見 `docs/research/save-knowledge.md`；正式發布以對應 Pages 工作流程及線上資產核對為準。
 
 程式提交 `e5487de` 已推送 main，[Pages 部署](https://github.com/jakeuj/bandit-save-editor/actions/runs/39394230752)成功；正式首頁、離線 HTML、Mac 指南、sitemap、分享圖、favicon 與準備工具均回傳 200 且與本機逐 byte 一致。正式圖鑑索引及 390px 版面已確認。BANDIT 技能正本已更新並於本機 `.agents` repo 提交，其他工作的未推送提交保持原狀。
 
@@ -22,7 +22,7 @@
 
 2026-10-21 完成 V1.0.10.2（build 26094666）的靜態來源分析及 Windows 隔離遊戲載入、原版存檔與程序重啟讀回；10 個觀察欄位、13 個來源指紋及原始存檔雜湊核對通過。catalog／verification 與單檔 HTML 已同步新版，屬性 #72 更新為「最終增產」。工具新增 `--audit-only`、Windows 隔離驗證及合成測試。
 
-後續正式發布完成至提交 `7adcb01f9f0ddef749c1474850877df79ad78dd9`，[Pages run 39598503967](https://github.com/jakeuj/bandit-save-editor/actions/runs/39598503967) 的 build／deploy 成功，24 項測試通過。正式首頁、離線 HTML 與其他核對資產均回傳 200 且與提交 Git blob 一致；瀏覽器確認欄位圖鑑標籤與摘要同為 V1.0.10.2、847 處寫入。四處版本標示已改由 catalog 自動產生，PWA 備妥後關閉測試分頁再開啟可套用新版。此次只增加正式版本畫面及更新交接驗收，未重做完整離線編輯、手機或新版 Mac 流程，任務 6 維持未完成。詳細證據見 [新版正式發布紀錄](../../docs/research/v1.0.10.2-audit.md#正式發布驗證)，同步做法見 `docs/maintenance.md`。
+後續正式發布完成至提交 `7adcb01f9f0ddef749c1474850877df79ad78dd9`，[Pages run 39598503967](https://github.com/jakeuj/bandit-save-editor/actions/runs/39598503967) 的 build／deploy 成功，24 項測試通過。正式首頁、離線 HTML 與其他核對資產均回傳 200 且與提交 Git blob 一致；瀏覽器確認欄位圖鑑標籤與摘要同為 V1.0.10.2、847 處寫入。四處版本標示已改由 catalog 自動產生，PWA 備妥後關閉測試分頁再開啟可套用新版。此次只增加正式版本畫面及更新交接驗收，未重做完整離線編輯、手機或新版 Mac 流程，任務 6 維持未完成。詳細證據見 [新版正式發布紀錄](../../docs/research/v1.0.10.2-audit.md#正式發布驗證)，同步做法見 `docs/maintenance/release.md`。
 
 2026-10-21 另加入職業圖鑑：47 個繁中職業、六階 16 條路線、搜尋／系別篩選、角色與名稱索引跳轉及存檔唯讀對照已完成桌面與 390px 驗收。建置同步與 20 項合成測試通過；此次直接開檔因內建瀏覽器禁止 `file://` 未實測。這項補充不將任務 6 的其他待驗項目改為完成；正式發布以對應 Pages 工作流程及線上資產核對為準。
 
