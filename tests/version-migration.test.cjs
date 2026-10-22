@@ -140,10 +140,45 @@ test('representative scenarios replay on the base save and together cover every 
   assert.equal(level(byName['advanced-normal'], 12, 5, 1), 1);
   assert.deepEqual(byName['advanced-normal'].scenario.operations.find(o => o.method === 'setAdvancedTechnologyLevel').options, {technologyId: 31, level: 119, advanced: false});
   assert.equal(byName['advanced-overcap'].scenario.operations.find(o => o.options.technologyId === 33).options.level, 299);
+  assert.deepEqual(byName['advanced-followup'].scenario.followup, {equipment: {id: 3, slot: byName['advanced-followup'].scenario.followup.equipment.slot}, profession: 3, technology: 31, drillGround: 12, academy: 4});
+  assert.deepEqual(copies.filter(c => c.lifecycle).map(c => c.name), ['advanced-followup', 'batch2', 'affix-replacement', 'equipment-workflow', 'quality-7-Upgrade', 'quality-7-Downgrade', 'quality-9-Upgrade', 'quality-9-Downgrade']);
+  assert.deepEqual(byName['batch2'].scenario.pills.map(p => p.aptitude), [1, 2, 3]);
   assert.deepEqual(byName['batch2'].scenario.operations.filter(o => o.method === 'setEquipmentAffixCoefficient').map(o => o.options.coefficient), [10.01, 80, 10, 80, 50, 120, 50, 119.99]);
   assert.deepEqual(byName['equipment-workflow'].scenario.operations.filter(o => o.options.selectUnwashedSlot).map(o => o.options.plane), [7, 9]);
   for (const name of ['quality-7-Upgrade', 'quality-9-Downgrade']) assert.ok(byName[name].scenario.items.some(i => i.options.quality === 2), name);
   for (const c of copies.filter(c => c.scenario)) assert.ok(c.scenario.operations.length > 0 && c.scenario.observe.length >= 10, c.name);
   data[12][1][1] = 7;
   assert.throws(() => buildScenarios({catalog, saveText: JSON.stringify({c2array: true, size: [2501, 60, 22], data})}), /基準存檔需要已放置的校場/);
+});
+
+test('native follow-up actions send compilable page code and check each native result',async()=>{
+  const gamePath = require.resolve('../scripts/verify-game.cjs'), lifecyclePath = require.resolve('../scripts/verify-native-lifecycle.cjs');
+  const real = require(gamePath), sent = [], answers = [];
+  const fake = {...real, waitMain: async () => {}, evaluate: async (state, expression) => { new Function('return ' + expression); sent.push(expression); return answers.shift()(expression); }};
+  delete require.cache[lifecyclePath]; require.cache[gamePath] = {...require.cache[gamePath], exports: fake};
+  try{
+    const {followup, pillsAndRebirth} = require(lifecyclePath);
+    const record = Array.from({length: 50}, (_, y) => y === 7 ? 1 : y + 100);
+    const state = {cells: []}, scenario = {followup: {equipment: {id: 3, slot: 2}, profession: 3, technology: 31, academy: 4, drillGround: 12}, pills: [{aptitude: 1, pillId: 64}, {aptitude: 2, pillId: 70}, {aptitude: 3, pillId: 76}]};
+    answers.push(() => record, () => 9, () => true, () => ({id: 5, record}),
+      () => ({from: 1, calls: 2, prerequisite: 5, job: 3, before: [1, 0], after: [1, 10], capBefore: 10, capAfter: 10}),
+      () => ({f: 1, started: [1, 31], stopped: [0, 0]}), () => ({f: 5, started: [1, 3], stopped: [0, 0]}));
+    await followup(state, scenario);
+    assert.ok(sent[5].includes("call('科技研究',31,a.At(4,5,1))") && sent[6].includes("call('职业操练',3,a.At(12,5,1))"));
+    assert.ok(state.cells.some(([x, y, z]) => x === 31 && y === 13 && z === 0));
+    answers.push(() => [{aptitude: 1, pillId: 64, count: [5, 5], bonus: [80, 80]}, {aptitude: 2, pillId: 70, count: [5, 4], bonus: [1, 33]}, {aptitude: 3, pillId: 76, count: [5, 4], bonus: [0, 32]}], () => true, () => [0, 0, 0]);
+    await pillsAndRebirth(state, scenario);
+    answers.push(() => [{aptitude: 1, pillId: 64, count: [5, 5], bonus: [80, 80]}, {aptitude: 2, pillId: 70, count: [5, 5], bonus: [1, 1]}, {aptitude: 3, pillId: 76, count: [5, 4], bonus: [0, 32]}]);
+    await assert.rejects(pillsAndRebirth(state, scenario), /Pill not consumed/);
+    answers.push(() => record, () => 9, () => true, () => ({id: 5, record: record.map((v, y) => y === 6 ? 1 : v)}));
+    await assert.rejects(followup(state, scenario), /Equip cycle field 6/);
+  }finally{require.cache[gamePath].exports = real; delete require.cache[lifecyclePath];}
+});
+
+test('every suite oracle and lifecycle script exists and marked copies run each family lifecycle',()=>{
+  const S = require('../scripts/verification-suite.cjs');
+  for (const [name, family] of Object.entries(S.families)) for (const script of [family.oracle, ...(family.lifecycle || [])].filter(Boolean)) assert.ok(fs.existsSync(path.join(root, 'scripts', script)), name + ': ' + script);
+  const generator = fs.readFileSync(path.join(root, 'scripts/migration-scenarios.cjs'), 'utf8');
+  assert.match(generator, /lifecycle: mode === 'followup'/);
+  assert.match(generator, /extra\.followup = \{equipment: \{id: 3, slot: t\.slot\}, profession: 3, technology: 31, drillGround, academy\}/);
 });

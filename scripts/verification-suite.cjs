@@ -2,7 +2,8 @@
 // Migration re-verification plan: which family regenerates each write group and which runner step proves each required check.
 const R = require('./verification-requirements.cjs');
 
-// Runner steps in order. A check is proven only when its step passes on every copy of the family.
+// Runner steps in order. A check is proven only when its step passes on every copy of the family that runs it;
+// lifecycle scripts run in the listed order on copies the scenario generator marks for follow-up actions.
 const steps = ['load', 'oracle', 'save', 'assert', 'reload', 'oracleCompare', 'lifecycle', 'ui'];
 const growthChecks = {
   loadedIntoMainLayout: 'load', nativeSaveWritten: 'save', processRestartedAndReloaded: 'reload', allTenObservedCellsMatch: 'assert',
@@ -18,7 +19,7 @@ const families = {
   advanced: {
     groups: ['equipmentLevel', 'equipmentLevelAdvanced', 'professionTrainingCap', 'professionTrainingCapAdvanced', 'advancedTechnologyLevel', 'advancedTechnologyLevelAdvanced'],
     oracle: 'verify-advanced.cjs',
-    lifecycle: 'verify-native-lifecycle.cjs',
+    lifecycle: ['verify-native-lifecycle.cjs'],
     checks: {
       ...growthChecks, advancedNormalAndOvercapNativeRoundtrip: 'reload', nativeEquipmentAndTechnologyEffectsFinite: 'oracleCompare',
       nativeEquipmentUnequipReequip: 'lifecycle', subsequentProfessionTransferAndExperience: 'lifecycle', subsequentResearchAndTrainingStartStop: 'lifecycle'
@@ -27,7 +28,8 @@ const families = {
   batch2: {
     groups: ['equipmentAffixCoefficient', 'pillAptitudeBonus'],
     oracle: 'verify-batch2.cjs',
-    lifecycle: 'verify-native-lifecycle.cjs',
+    // Rewash and the equip cycle reuse the replacement script; pills and rebirth follow in the native script.
+    lifecycle: ['verify-affix-lifecycle.cjs', 'verify-native-lifecycle.cjs'],
     checks: {
       nativeLoad: 'load', nativeSave: 'save', stopAndRestart: 'reload', originalHashesUnchanged: 'assert', nativeEffects: 'oracleCompare',
       coreNativeAptitudeAgreement: 'oracle', nativeRewash: 'lifecycle', unequipReequip: 'lifecycle', nativePillConsumption: 'lifecycle', rebirthClears: 'lifecycle'
@@ -36,19 +38,19 @@ const families = {
   affixReplacement: {
     groups: ['equipmentAffixReplacement'],
     oracle: 'verify-affixes.cjs',
-    lifecycle: 'verify-affix-lifecycle.cjs',
+    lifecycle: ['verify-affix-lifecycle.cjs'],
     checks: {nativeEffects: 'oracleCompare', load: 'load', save: 'save', restart: 'reload', originalHashes: 'assert', equipmentCycle: 'lifecycle', nativeWash: 'lifecycle'}
   },
   equipmentWorkflow: {
     groups: ['backpackEquipmentLevel', 'backpackEquipmentAffixCoefficient', 'backpackEquipmentAffixReplacement', 'equipmentAffixInitialSelection', 'equipmentNewItemMarker'],
     oracle: 'verify-affixes.cjs',
-    lifecycle: 'verify-equipment-workflow.cjs',
+    lifecycle: ['verify-equipment-workflow.cjs'],
     checks: {...nativeLifecycleChecks, selectionUi: 'ui'}
   },
   equipmentQuality: {
     groups: ['backpackEquipmentQualityUpgrade', 'backpackEquipmentQualityDowngrade', 'equipmentQualityUpgrade', 'equipmentQualityDowngrade'],
     oracle: 'verify-quality.cjs',
-    lifecycle: 'verify-quality-lifecycle.cjs',
+    lifecycle: ['verify-quality-lifecycle.cjs'],
     checks: {...nativeLifecycleChecks, qualityUi: 'ui'}
   }
 };

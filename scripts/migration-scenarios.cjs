@@ -28,7 +28,7 @@ function equipment(t, {quality, level = 1, owner = 0, selected = 0, marker = 0})
 }
 
 // Builds one disposable copy: synthetic baseline first, then each operation validated and previewed on the edited save.
-function copy(C, k, saveText, size, {name, family, oracleArgs = [], prepare, act}) {
+function copy(C, k, saveText, size, {name, family, oracleArgs = [], lifecycle = true, prepare, act}) {
   const baseline = [], observe = defaultCells.map(cell => [...cell]), items = [], operations = [], extra = {};
   for (let x = 1; x < size[0]; x++) { for (const z of [7, 9]) for (let y = 0; y < 60; y++) baseline.push([x, y, z, 0]); if (x < 50) for (let y = 16; y <= 21; y++) baseline.push([x, y, 2, 0]); }
   baseline.push([3, 2, 0, SOULS]);
@@ -55,7 +55,7 @@ function copy(C, k, saveText, size, {name, family, oracleArgs = [], prepare, act
   act?.(model, {...ctx, apply});
   const scenario = {baseline, operations, observe, items, ...extra};
   if (C.serialize(editSave(C, saveText, scenario)) !== C.serialize(model)) throw Error('情境重播結果不同：' + name);
-  return {name, family, oracleArgs, cases: operations.length, scenario};
+  return {name, family, oracleArgs, lifecycle, cases: operations.length, scenario};
 }
 
 function buildings(saveData, templateId) {
@@ -66,36 +66,41 @@ function buildings(saveData, templateId) {
 // Training and research need a completed academy and drill ground. A placed level-0 building with no remaining work
 // is raised to level 1 in the disposable copy, the same state the native completion event writes.
 function requireBuilding(saveData, templateId, label, put) {
-  const all = buildings(saveData, templateId);
-  if (all.some(b => b.level >= 1)) return;
+  const all = buildings(saveData, templateId), completed = all.find(b => b.level >= 1);
+  if (completed) return completed.x;
   const placed = all.find(b => b.level === 0 && b.work === 0 && b.upgrading === 0);
   if (!placed) throw Error(`基準存檔需要已放置的${label}`);
   put(placed.x, 5, 1, 1, false);
+  return placed.x;
 }
 
 function buildScenarios({catalog, saveText}) {
   const k = JSON.parse(JSON.stringify(catalog)), C = loadCore(JSON.parse(JSON.stringify(catalog)));
-  const save = JSON.parse(saveText.replace(/^﻿/, '')), size = save.size, templates = ordinaryTemplates(k);
+  const save = JSON.parse(saveText.replace(/^\uFEFF/, '')), size = save.size, templates = ordinaryTemplates(k);
   const make = spec => copy(C, k, saveText, size, spec);
-  const copies = [{name: 'growth', family: 'growth', oracleArgs: [], cases: 4, scenario: null}];
+  const copies = [{name: 'growth', family: 'growth', oracleArgs: [], lifecycle: false, cases: 4, scenario: null}];
 
-  for (const advanced of [false, true]) copies.push(make({
-    name: advanced ? 'advanced-overcap' : 'advanced-normal', family: 'advanced', oracleArgs: ['--item', '3'],
+  // Boundary copies prove the normal and over-cap ranges; the follow-up copy keeps values below building limits so
+  // native research and training can still start after editing, as in the original follow-up case.
+  for (const mode of ['normal', 'overcap', 'followup']) copies.push(make({
+    name: 'advanced-' + mode, family: 'advanced', oracleArgs: ['--item', '3'], lifecycle: mode === 'followup',
     prepare({place, equip, put, extra}) {
       const t = template(templates, {tier: 1, maxSlot: 4});
       place(3, 9, equipment(t, {quality: 2, level: 3, owner: 1})); equip(3, t.slot);
-      requireBuilding(save.data, 6, '校場', put); requireBuilding(save.data, 5, '書院', put);
-      extra.equipment = {id: 3, slot: t.slot}; extra.profession = 3;
+      const drillGround = requireBuilding(save.data, 6, '校場', put), academy = requireBuilding(save.data, 5, '書院', put);
+      if (mode === 'followup') extra.followup = {equipment: {id: 3, slot: t.slot}, profession: 3, technology: 31, drillGround, academy};
     },
     act(model, {apply, observe}) {
+      const advanced = mode === 'overcap';
       const pick = info => {
-        const value = advanced ? info.advancedMax : info.current === info.normalMax ? info.normalMax - 1 : info.normalMax;
-        if (value < info.min || value === info.current) throw Error(`${info.name} 沒有可驗證的${advanced ? '進階' : '一般'}目標值`);
+        const value = advanced ? info.advancedMax : mode === 'followup' ? Math.min(info.current + 1, info.normalMax) : info.current === info.normalMax ? info.normalMax - 1 : info.normalMax;
+        if (value < info.min || value === info.current) throw Error(`${info.name} 沒有可驗證的${mode}目標值`);
         return value;
       };
       apply('setEquipmentLevel', {itemId: 3, level: pick(C.editingInfo(model, 'equipment', 3)), advanced});
-      apply('setProfessionTrainingCap', {professionId: 3, cap: pick(C.editingInfo(model, 'training', 3)), advanced}); observe.push([3, 5, 0]);
-      for (let id = 31; id <= 44; id++) { apply('setAdvancedTechnologyLevel', {technologyId: id, level: pick(C.editingInfo(model, 'technology', id)), advanced}); observe.push([id, 4, 0]); }
+      const training = C.editingInfo(model, 'training', 3);
+      apply('setProfessionTrainingCap', {professionId: 3, cap: mode === 'followup' ? (training.current === 10 ? 9 : 10) : pick(training), advanced}); observe.push([3, 5, 0]);
+      for (let id = 31; id <= (mode === 'followup' ? 31 : 44); id++) { apply('setAdvancedTechnologyLevel', {technologyId: id, level: pick(C.editingInfo(model, 'technology', id)), advanced}); observe.push([id, 4, 0]); }
     }
   }));
 
@@ -190,7 +195,7 @@ function buildScenarios({catalog, saveText}) {
   for (const plane of [7, 9]) for (const direction of ['Upgrade', 'Downgrade']) {
     const scenario = qualityScenario(C, k, plane, direction, {representative: true});
     editSave(C, saveText, scenario);
-    copies.push({name: `quality-${plane}-${direction}`, family: 'equipmentQuality', oracleArgs: [], cases: scenario.items.length, scenario, groups: [(plane === 7 ? 'backpackEquipmentQuality' : 'equipmentQuality') + direction]});
+    copies.push({name: `quality-${plane}-${direction}`, family: 'equipmentQuality', oracleArgs: [], lifecycle: true, cases: scenario.items.length, scenario, groups: [(plane === 7 ? 'backpackEquipmentQuality' : 'equipmentQuality') + direction]});
   }
   return copies;
 }
