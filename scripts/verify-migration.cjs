@@ -16,7 +16,8 @@ const comparable = new Set(['verify-equipment-workflow.cjs', 'verify-quality-lif
 function steps(copy, setupArgs) {
   const family = S.families[copy.family], scenario = copy.scenarioFile ? ['--scenario', copy.scenarioFile] : [];
   const game = (step, ...args) => ({step, script: 'verify-game.cjs', args: ['--state', '{state}', ...args]});
-  const restart = tag => [game('stop', '--stop'), game('restart', '--restart'), {...game('restartLoad', '--load', '--mode', '存档'), retry: true}, game(tag, '--assert', '--quiet')];
+  // --stop only signals the process; --restart refuses until it has exited, so it is retried like boot-time loads.
+  const restart = tag => [game('stop', '--stop'), {...game('restart', '--restart'), retry: true}, {...game('restartLoad', '--load', '--mode', '存档'), retry: true}, game(tag, '--assert', '--quiet')];
   const oracle = compare => family.oracle ? [{step: compare ? 'oracleCompare' : 'oracle', script: family.oracle, args: ['--state', '{state}', ...scenario, ...copy.oracleArgs, ...(compare ? ['--compare'] : [])]}] : [];
   const list = [
     {step: 'setup', script: 'verify-game.cjs', args: ['--setup', ...setupArgs, ...scenario]},
@@ -70,7 +71,7 @@ async function runCopy(copy, setupArgs, {exec, sleep, log}) {
     }
     const ok = result.status === 0, entry = {step: step.step, script: step.script, args: args.filter(a => a !== state).filter(a => !String(a).startsWith(os.homedir())), ok, seconds: Math.round((Date.now() - started) / 1000)};
     if (step.step === 'setup' && ok) state = /STATE (.+)/.exec(result.stdout)?.[1]?.trim();
-    if (!ok) entry.error = String(result.stderr || result.error || '').trim().split('\n').slice(-3).join(' ').slice(0, 400);
+    if (!ok) entry.error = String(result.stderr || result.error || '').split('\n').map(line => line.trim()).filter(line => line && !line.startsWith('at ')).slice(-3).join(' ').slice(0, 400);
     record.steps.push(entry);
     log(`${copy.name} ${step.step} ${path.basename(step.script)} ${ok ? 'ok' : 'FAILED'}`);
     if (!ok) {
