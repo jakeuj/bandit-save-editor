@@ -44,7 +44,6 @@ gh repo view jakeuj/bandit-save-editor --json homepageUrl
 ```sh
 node scripts/build-editor.cjs
 node scripts/build-editor.cjs --check
-node --test tests/*.test.cjs
 ```
 
 建置將 `src/` 與 catalog 內嵌進 `index.html`，也會核對開放寫入的完整來源指紋與驗證證明。提交程式來源／知識時一併提交同步後的 HTML；單純改 SEO 時保留內嵌程式。網站使用者仍只需要單一 HTML，沒有外部程式或知識相依。
@@ -55,9 +54,11 @@ node --test tests/*.test.cjs
 
 本機 HTTP 曾被 AdGuard 插入 CSP／腳本，造成回應與 Worker 預期 SHA-256 不同。先比對實際回應與 Git blob，定位代理／擴充套件改寫；保留 Worker 拒絕錯版快取的行為，不以放寬 CSP 或略過雜湊核對排除症狀。若需測試網址例外，先取得使用者授權，記錄範圍及測後還原或保留的決定；例外不屬於網站必要設定。瀏覽器離線模擬完成後還原網路。
 
-現有 workflow 推送 `main` 時先檢查來源同步與所有測試，再按白名單打包 `index.html`、`mac.html`、`manifest.webmanifest`、`sw.js`、`sitemap.xml`、`robots.txt`、`.nojekyll`、`assets/` 與 `launcher/prepare-macos.py`。新增公開檔案需一併更新打包規則，避免漏掉 PWA 資產、robots 或下載工具；私人 state、遊戲檔與原始 log 留在 repo 外。
+現有 workflow 推送 `main` 時只檢查來源同步，不安裝測試相依或瀏覽器；完整驗收可手動執行 workflow 並勾選 `full_verify`（預設關閉）。之後按白名單打包 `index.html`、`mac.html`、`manifest.webmanifest`、`sw.js`、`sitemap.xml`、`robots.txt`、`.nojekyll`、`assets/` 與 `launcher/prepare-macos.py`。新增公開檔案需一併更新打包規則，避免漏掉 PWA 資產、robots 或下載工具；私人 state、遊戲檔與原始 log 留在 repo 外。
 
 ## 部署完成條件
+
+例行發布只查本次 SHA 的部署結果，使用者要求確認線上版本時再 GET 首頁核對；以下多頁資產、SEO、headless 與 PWA 檢查僅於使用者要求完整驗收，或相關故障需要時執行。避免每次推送重跑、逐檔比對或建立驗收報告；成功簡短回報，失敗再查詳細日誌。
 
 延續對話中已有的提交／推送授權，不重複確認。技能更新本身不授權發布、修改 DNS 或提交 Search Console。
 

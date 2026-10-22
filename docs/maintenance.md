@@ -17,7 +17,7 @@
 | HTML 結構、樣式、使用說明與 SEO | `index.html`；其中 `save-core`、`save-ui`、`save-pwa` 區塊由建置工具同步 |
 | PWA 安裝、離線狀態及快取 | `src/pwa.js`、`src/service-worker.js`、`manifest.webmanifest`；建置產生 `sw.js` |
 
-開發環境與程式測試優先順序見[程式化測試指引](testing.md)。來源改動後在repo根目錄執行：
+開發環境與測試分工見[程式化測試指引](testing.md)。日常推送只做建置同步檢查，Pages CI 快速發布，不重跑完整驗收。需要同步產物時執行第一個命令；第二個命令僅在使用者要求或具體故障需要完整驗收時執行：
 
 ```sh
 node scripts/build-editor.cjs

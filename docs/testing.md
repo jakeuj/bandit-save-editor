@@ -1,6 +1,6 @@
 # 程式化測試與按需人工驗收
 
-遊戲與編輯器都優先使用可重複的程式驗證。日常修改先跑相關Node測試，再跑需要的獨立headless案例；交付前跑完整檢查。Computer use留給原生視窗、安裝、特定使用者環境或程式無法回答的視覺／互動問題；開始前說明證據缺口，只跑最小案例。自動測試失敗時先讀摘要、trace與截圖並修正，不自動改用使用者瀏覽器重走全部流程。
+遊戲與編輯器都優先使用可重複的程式驗證。日常開發按變更跑相關測試。日常推送採快速流程：只檢查建置同步、提交及推送，不重跑全套 Node／瀏覽器／遊戲測試。Pages CI 只檢查建置同步並發布；完整驗收保留 `npm run verify:release`，使用者要求或具體故障需要時才執行。發布後只查對應 SHA 的部署結果；明確要求確認線上版本時，額外 GET 首頁核對版本。成功僅回報提交與部署連結，失敗才讀詳細日誌及擴大檢查。
 
 ## 安裝與入口
 
@@ -18,7 +18,7 @@ Linux CI另加`--with-deps`安裝系統函式庫。Playwright版本由package與
 | `npm run test:ui` | 快速UI事件、實際Blob bytes、匯出revision及既有裝備介面／更新紀錄 |
 | `npm test` | 全部Node測試，含公式、資格、交易、精確token、完整尺寸與驗證閘門 |
 | `npm run test:browser` | 建置同步預檢＋全部獨立headless整合案例 |
-| `npm run verify:release` | 建置同步＋全部Node＋全部headless；CI部署前使用 |
+| `npm run verify:release` | 建置同步＋全部Node＋全部headless；按需手動使用 |
 
 來源異動先執行`node scripts/build-editor.cjs`；驗證入口只檢查同步，不自動修改發布產物。日常可加Playwright篩選，例如`npm run test:browser -- --grep 'HTTP 390px'`。排版異動使用`npm run test:browser -- --visual --grep 'base aptitude'`產生兩種寬度的完整頁面截圖，再按需要檢視。
 

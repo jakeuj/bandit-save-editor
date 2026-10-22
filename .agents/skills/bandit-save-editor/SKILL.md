@@ -58,7 +58,7 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 
 ## 驗證與交付
 
-先讀repo `docs/testing.md`：遊戲與編輯器都依Node → 獨立headless → 必要computer use的順序驗證。日常跑相關測試，交付前用`npm run verify:release`；選檔、下載、file與PWA例行流程已有程式入口，先讀摘要，失敗才檢視trace／截圖。
+日常推送採快速流程：只檢查建置同步、提交及推送，不重跑全套 Node／瀏覽器／遊戲測試。Pages CI 只檢查建置同步並發布；完整驗收保留 `npm run verify:release`，使用者要求或具體故障需要時才執行。發布後只查對應 SHA 的部署結果；明確要求確認線上版本時，額外 GET 首頁核對版本。成功僅回報提交與部署連結，失敗才讀詳細日誌及擴大檢查。 開發測試分工見 `docs/testing.md`。
 
 存檔修改預設以合成測試、隔離遊戲原生函式、原版存檔及停止／新 PID 重啟讀回為主，保留完整來源與原始存檔雜湊核對。一般功能驗證沿用上述流程及仍相符的既有證據。
 
@@ -66,7 +66,7 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 
 隔離遊戲測試一律預設靜音，沿用 `scripts/verify-game.cjs` 共用啟動器的 `--mute-audio`；既有副本重啟及手動啟動也須保留。不要調整 Windows 主音量、玩家遊戲或 Discord，也不要自行開聲音驗收；音訊測試須由使用者明確要求。
 
-來源異動後從 repo 根目錄執行：
+需要同步產物時從 repo 根目錄執行建置；完整驗收僅按上方條件執行：
 
 ```sh
 node scripts/build-editor.cjs
