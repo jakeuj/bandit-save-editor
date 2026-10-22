@@ -17,7 +17,7 @@
     "yx.json": "58b8eb984cf8190f52ed4e53d044079733cf82096224dd7014ec36e1da2b45bc",
     "tz.json": "a4b008981f39abc371b5673abe4c780bef5c91229a5ae3a42d2e8fef4e780c74"
   },
-  "coreHash": "7fd6dcfed8d66a2b12b450450222a613b2a9e3c42f24ef5e41004aade6ed0b45",
+  "coreHash": "fe01461977c8164b97c8c2101c5f9c4b4a43b816d37f53c06e244c7eb75d9756",
   "roles": {
     "growth": {
       "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
@@ -54,6 +54,11 @@
       "effects": "126c36497fcd20588543019f0608d001a3c4347f35fc83250b57b7f4b26f7adb",
       "lifecycle": "47082f2f30dcb77b7f3a053e595b98244a33f783c8e36ec0cd558155c52ef079"
     },
+    "randomCharacterTalents": {
+      "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
+      "effects": "84e4be5981d8982cfe58cb001144986639f12c2a2523918d2b4f99652de0bccf",
+      "lifecycle": "0a90d761961b72f09fcd071b76388312edc05f75615cc265388ada402b957ff9"
+    },
     "randomCharacterSkillCaps": {
       "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
       "effects": "97a26ff7d4e4ba2ced054fb9bc1b625b994c694b91ac72b31cb2f7bf15ec2ca3",
@@ -65,6 +70,7 @@
   "unknown": [],
   "gameVersion": "V1.0.11.2",
   "dataHashes": {
+    "randomCharacterTalents": "9147a7b6687005b9d9309cec340537cd3cc3316bc3db3f73cc00fd4f40fedc27",
     "randomCharacterSkillCaps": "24690926687b1bc8130cfc789ef8152d650b42dbb0c92c558b5cb20c88f39398",
     "randomCharacterBaseAptitudes": "3a5f3d21fc65d09694aebd302f32813f5dc82723fd87f16d795329306431fd76",
     "backpackEquipmentQualityUpgrade": "50a6f076ae9c0c739cf7acfb488c5a036290440c6ea9f6ab259e730e555ca4c1",
@@ -90,5 +96,5 @@
     "advancedTechnologyLevel": "9cfc45ae4559b614a2453173e26df0cc5ff6299902f468bb07488acb4d91fe2b",
     "advancedTechnologyLevelAdvanced": "9cfc45ae4559b614a2453173e26df0cc5ff6299902f468bb07488acb4d91fe2b"
   },
-  "proofHash": "1dc7bd20c2db0e6a46b4578df544ad6ef29f9cf7baf384a127cbe9a2c937d2e0"
+  "proofHash": "c2cba76a6c3d0ed99bf3352becde5e6f8243ad5573fb5b0283efb4d4eac11f73"
 }

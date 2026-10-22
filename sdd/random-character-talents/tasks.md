@@ -1,6 +1,6 @@
 # v2.9 一般隨機角色天賦等級任務
 
-狀態：**2026-10-23 A 階段（任務 1–5）與 B 任務 6 完成，`src/core.js` 已凍結；任務 7–10 未開始，`randomCharacterTalents` 保持關閉。** 範圍與決策見[提案](proposal.md#已核准決策2026-10-23)，規則與 SID 見[研究筆記](../../docs/research/random-character-talents.md)。每條 30–60 分鐘；單條超時或需要改動 v2.7 證明綁定的 core 區段時，先回報重估，不壓成一條大任務。
+狀態：**2026-10-23 任務 1–9 完成；`randomCharacterTalents` 已以首次完整證明開放，技藝上限已重開。任務 10（版本與發布）待使用者授權。** 範圍與決策見[提案](proposal.md#已核准決策2026-10-23)，規則與 SID 見[研究筆記](../../docs/research/random-character-talents.md)。每條 30–60 分鐘；單條超時或需要改動 v2.7 證明綁定的 core 區段時，先回報重估，不壓成一條大任務。
 
 範圍：範本 0、非在監、無結丹／重生紀錄的已招募角色，只改三槽天賦**等級**，等級須在品質池內（Q1 1–2、Q2 1–3、Q3 2–4、Q4 3–5、Q5 4–5、Q6 5）。ID 不可改、不寫 0/0、Q6 唯讀、不提供天賦批次。天賦 6 欄與 v2.7 資質 6 欄合併為 12 欄還原群組。
 
@@ -15,9 +15,9 @@
 **B：介面、原生證明與發布（任務 6–10，不得再改 `src/core.js`）**
 
 - [x] 6. 角色養成頁加三槽等級編輯器（顯示 ID／名稱／品質池、資質上限連動與 12 欄還原說明），預覽後明確套用；Node UI 事件與 headless HTTP 1280／390px、直接 file、PWA 案例。（headless 與頁面容器因建置拒絕延到任務 9，見執行紀錄）
-- [ ] 7. 建立原生 oracle 與矩陣／生命週期 runner：535 個 `天赋属性计算` 值；Q1–Q5×3 槽×升／降 30 角色（覆蓋 6 個公式分支、單／雙屬性）＋ID 1／2／3 資質連動 3 角色；2 角色生命週期（數值更新不回填、轉職、下獄／召回、重生、解雇）。逐階段原版存檔、停止、新 PID 讀回；記錄 talent 欄位實際 token 型別。
-- [ ] 8. 在 Windows 隔離副本以相符 15 指紋執行任務 7，合併器重新核算 checks 才寫入 `randomCharacterTalents` 首次證明；其他群組紀錄逐項 deepEqual 保留。
-- [ ] 9. 依維護指引重開 `randomCharacterSkillCaps`（v2.9 唯一一次，以任務 5 凍結的 core 為準），其他 23 群組與首次 108＋2 紀錄不變。建置前先在 `index.html` 的 `skillCapsEditor` 後加 `<div class="form-card" id="talentLevelsEditor"></div>`，再同步建置；`--check` 通過，補任務 6 延後的 headless HTTP 1280／390px、直接 file、PWA 天賦案例，`npm run verify:release` 全過。
+- [x] 7. 建立原生 oracle 與矩陣／生命週期 runner：535 個 `天赋属性计算` 值；Q1–Q5×3 槽×升／降 30 角色（覆蓋 6 個公式分支、單／雙屬性）＋ID 1／2／3 資質連動 3 角色；2 角色生命週期（數值更新不回填、轉職、下獄／召回、重生、解雇）。逐階段原版存檔、停止、新 PID 讀回；記錄 talent 欄位實際 token 型別。
+- [x] 8. 在 Windows 隔離副本以相符 15 指紋執行任務 7，合併器重新核算 checks 才寫入 `randomCharacterTalents` 首次證明；其他群組紀錄逐項 deepEqual 保留。
+- [x] 9. 依維護指引重開 `randomCharacterSkillCaps`（v2.9 唯一一次，以任務 5 凍結的 core 為準），其他 23 群組與首次 108＋2 紀錄不變。建置前先在 `index.html` 的 `skillCapsEditor` 後加 `<div class="form-card" id="talentLevelsEditor"></div>`，再同步建置；`--check` 通過，補任務 6 延後的 headless HTTP 1280／390px、直接 file、PWA 天賦案例，`npm run verify:release` 全過。
 - [ ] 10. 版本 v2.9、更新紀錄（只改等級、ID 不可改、Q6 唯讀、12 欄還原）、README／技能／研究筆記同步；經使用者授權提交推送，核對對應 SHA 的 Pages 結果。
 
 ## 驗收條件
@@ -41,3 +41,9 @@
 - 第 6 條：`src/knowledge-ui.js` 新增 `renderTalentLevels`（比照技藝上限），角色養成頁顯示三槽 #ID／名稱、品質等級池下拉、目前效果，預覽表列等級與效果前後值；改到資質天賦時另列來源 A、丹藥 B、總資質與上限 C，並說明 12 欄一起還原與 ID 不能更換。只經 `previewCharacterTalents` 預覽、`setCharacterTalents` 明確套用；輸入、角色、模型 revision、undo、還原與換檔都使預覽失效。`src/ui.js` 變更檢視對 `aptitude:` 群組加註 12 欄還原。新增 `tests/talent-levels-ui.test.cjs` 5 案：關閉閘門可預覽不可寫、6 種唯讀原因與 Q6 單一等級、僅變更等級 token、丹藥超過新上限阻擋、失效情境、下載 bytes（BOM、大型整數、指數）與重載。核心未改，SHA 仍為 `fe014619…9756`。
 - 第 6 條缺口：`index.html` 加容器會改變 PWA 快取釘選的頁面 bytes，而建置拒絕前無法同步 `sw.js`，曾因此多出 5 項 PWA 測試失敗，所以本輪還原 `index.html`、把容器列入任務 9；`renderTalentLevels` 在容器不存在時直接略過，舊頁不會壞。headless HTTP 1280／390px、直接 file、PWA 案例同樣延到任務 9 建置恢復後補跑。
 - 第 6 條驗收：175 項 Node 中 170 通過，失敗仍只有技藝上限整檔摘要失效的同 5 項；`git diff --check` 通過。沒有提交、推送或啟動遊戲。
+- 第 7 條：`random-character-talents-scenarios.cjs` 產生首次矩陣（Q1–Q5×3 槽×升／降 30 角色，10 組互異非資質三元組使每個位置各被改一次，涵蓋 6 個公式分支與單／雙屬性；另 3 個 Q3 角色改 ID 1／2／3）、代表遷移 3 角色與 2 角色生命週期。`verify-random-character-talents.cjs` 讀原生 z12 與 `天赋属性计算(角色,屬性,0,0)` 總和、資質角色的 `属性计算`／`角色资质上限`／`角色资质计算`，並以 `天赋属性(屬性,係數,等級)` 跑 535 值；重啟後比對並讀遊戲寫出存檔的原始 token。`verify-talents-lifecycle.cjs` 依序數值更新、轉職、下獄、召回、重生、解雇，每階段沿用 v2.7 checkpoint（原版存檔、停止、新 PID、載入、斷言）。`random-character-talents-proof.cjs` 的 `validateResults` 重讀副本 JSON 證據，以 catalog＋目前 core 獨立重算矩陣、535 值與 A／C，不採用傳入 checks；首次證明保存 `initialVerification`。移除 `pendingReason`；`verify-migration.cjs` 讓代表遷移只能沿用首次證明（schema 2 另存 `talentInitialVerification`），`runCopy` 附上天賦證據，新增 `random-talents-lifecycle` 副本。新增 `verify-talents-suite.cjs`（`--record`／`--merge-results`）與 `tests/talents-native.test.cjs`（偽造全 true、竄改公式／token／PID／事件、代表子集首次開放、core 變更皆失敗）。
+- 第 8 條：V1.0.11.2／build 26126719，Windows win32-x64，完整開發快取＋獨立 runtime，隱藏靜音、真實 Steam 初始化，基準存檔為 repo 外副本（SHA-256 `ebb0a4a2…84c5`），computer use 0。`random-talents-matrix` 11 步、`random-talents-lifecycle` 19 步全部通過、無警告；535 值與核心逐一完全相等，33×6 個天賦 token 皆整數，生命週期 9 個不同 PID。13 項 checks 由合併器重算全成立。證據 `e7b433bd…24cf2`、manifest `686c4d45…387d`；原始輸出在 repo 外 `v2.9-talents-20261023/random-talents-QUlgMN`。首次證明以 `--merge-results --record` 只在原 bytes 插入本 section 與旗標（formulaHash 前綴 `66b8a442053a9cd2`、dataHash `286c9d4e…`），其他 section 不變；在任務 9 的技藝上限合併之後寫入，因此建置與 `--check` 當場通過。
+- 第 9 條：`verify-migration.cjs --plan` 確認安裝 build 26126719、15 指紋相符、無未知相依；因 core 雜湊改變 auto 會選全部 15 份，但只有技藝上限綁整份 core，故以 `--copies` 只跑 `random-skill-caps-representative`（11 步）與 `random-skill-caps-lifecycle`（19 步），全部通過。repo 外 `merge-skill-caps.cjs` 以 `Caps.validateResults(...,{initial:false})` 重算後只替換 `randomCharacterSkillCaps` 物件：僅 formulaHash（改為凍結 core `fe014619…9756`）與證據雜湊兩行變動，首次 108＋2 `initialVerification` 與其他 section 原 bytes 不變。`--baseline` 重建 `knowledge/migration-baseline.json`。`index.html` 加 `talentLevelsEditor` 容器並同步建置；新增 `tests/browser/talent-levels.spec.cjs`。首次 `verify:release` 在 HTTP 390px 抓到天賦編輯器使頁面溢出（任務 6 的 UI 缺陷），改為讓既有 `.tablewrap` 溢出／`min-width:0`／toolbar 換行規則也套用 `#talentLevelsEditor`（只改 CSS）後重跑通過。
+- 驗收：`BANDIT_BROWSER_PORT=8942 npm run verify:release` 全過：建置同步、180 Node、16 headless（含天賦 HTTP 1280／390px、直接 file、PWA 斷網），0 失敗／略過。25/25 群組開放；`src/core.js` 仍為凍結 SHA-256 `fe01461977c8164b97c8c2101c5f9c4b4a43b816d37f53c06e244c7eb75d9756`。
+- 文件：研究筆記補隔離原生驗證與仍未驗證項目；維護指引新增 v2.9 段（API、12 欄群組、證明綁定、首次開放與代表遷移、技藝上限重開流程）；測試指引補天賦 UI／headless；專案技能更新 v2.9 與技藝上限條目。AGENTS.md 核對後不需調整（無天賦專屬規則，通用規則仍一致）。
+- 未做：渡劫、遊戲畫面名稱／tips、戰鬥／生產實際效果與 macOS 未驗證；版本號、更新紀錄與 README 屬任務 10；沒有提交或推送。

@@ -65764,7 +65764,7 @@
     }
   },
   "verification": {
-    "randomCharacterTalents": false,
+    "randomCharacterTalents": true,
     "randomCharacterSkillCaps": true,
     "randomCharacterBaseAptitudes": true,
     "backpackEquipmentQualityUpgrade": true,

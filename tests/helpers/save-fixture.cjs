@@ -46,4 +46,16 @@ function skillCapsFixture({size = 2501, characters = 2500, exclusions = true, ne
   return {data, raw: renderSave(data), expected: patches => renderSave(data, patches)};
 }
 
-module.exports = {renderSave, saveFixture, skillCapsFixture};
+// Q1 characters with an aptitude, a single- and a two-attribute talent at the bottom of the [1,2] level pool.
+function talentLevelsFixture({size = 2501, characters = 2500} = {}) {
+  const {data} = saveFixture({size, characters});
+  for (let id = 1; id <= characters; id++) [[1, 1], [4, 1], [52, 1]].forEach(([talent, level], i) => { data[id][1 + i][12] = talent; data[id][21 + i][12] = level; });
+  data[1][2][2] = 1;
+  data[2][55][2] = 2;
+  data[3][50][2] = 1;
+  // Q6 has a single level, so nothing can be previewed.
+  data[4][49][2] = 6; for (let i = 0; i < 3; i++) data[4][21 + i][12] = 5;
+  return {data, raw: renderSave(data), expected: patches => renderSave(data, patches)};
+}
+
+module.exports = {renderSave, saveFixture, skillCapsFixture, talentLevelsFixture};

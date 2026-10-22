@@ -9,9 +9,12 @@ const {spawnSync} = require('node:child_process');
 const S = require('./verification-suite.cjs');
 const R = require('./verification-requirements.cjs');
 const Caps = require('./random-character-skill-caps-proof.cjs');
+const Talents = require('./random-character-talents-proof.cjs');
+// First-opening proofs that representative migrations may carry forward but never create.
+const initialProblemOf = group => group === Caps.group ? Caps.initialProblem : group === Talents.group ? Talents.initialProblem : () => '缺少首次證明檢查';
 const root = path.resolve(__dirname, '..');
 // Lifecycle scripts that can re-read their results after the new-PID restart.
-const comparable = new Set(['verify-skill-caps-lifecycle.cjs','verify-random-character-lifecycle.cjs', 'verify-equipment-workflow.cjs', 'verify-quality-lifecycle.cjs']);
+const comparable = new Set(['verify-talents-lifecycle.cjs','verify-skill-caps-lifecycle.cjs','verify-random-character-lifecycle.cjs', 'verify-equipment-workflow.cjs', 'verify-quality-lifecycle.cjs']);
 
 // Ordered CLI steps for one copy. '{state}' is replaced by the state path that setup prints.
 function steps(copy, setupArgs) {
@@ -103,6 +106,10 @@ async function runCopy(copy, setupArgs, {exec, sleep, log, skillCapsBinding, cat
   }
   record.ok = record.steps.every(s => s.ok) && record.steps.length === steps(copy, setupArgs).length;
   record.state = state;
+  if (copy.family === Talents.group && record.ok) {
+    try { record.evidence = Talents.readEvidence(state); }
+    catch (error) { record.ok = false; record.steps.push({step: 'evidence', ok: false, error: error.message}); log(`${copy.name} evidence FAILED: ${error.message}`); }
+  }
   if (copy.family === Caps.group && record.ok) {
     try {
       const s = JSON.parse(fs.readFileSync(state, 'utf8')), read = name => JSON.parse(fs.readFileSync(path.join(s.dir, name), 'utf8'));
@@ -192,7 +199,8 @@ const sameFingerprints = (left, right) => !!left && !!right && Object.keys(left)
 function buildProof({catalog, results, coreSource, steamBuild, previous}) {
   const date = results.date.slice(0, 10), all = {...catalog.fingerprints, ...catalog.batch2Fingerprints}, checks = results.checks;
   const caps = !Caps.initialProblem(previous[Caps.group]?.initialVerification) ? Caps.validateResults(catalog, coreSource, results, {initial: false}) : null;
-  const opened = group => (group !== Caps.group || !!caps) && !S.families[S.familyOf(group)].pendingReason && R.requiredChecks(group).every(c=>checks[group]?.[c]===true);
+  const talents = !Talents.initialProblem(previous[Talents.group]?.initialVerification) ? (() => { try { return Talents.validateResults(catalog, coreSource, results, {initial: false}); } catch { return null; } })() : null;
+  const opened = group => (group !== Caps.group || !!caps) && (group !== Talents.group || !!talents) && !S.families[S.familyOf(group)].pendingReason && R.requiredChecks(group).every(c=>checks[group]?.[c]===true);
   const coverage = family => ({coverage: 'representative', copies: results.copies.filter(c => c.family === family).map(c => ({name: c.name, operations: c.cases}))});
   const formulasPassed = results.copies.some(c => c.family === 'equipmentQuality' && c.steps.some(s => s.step === 'formulas' && s.ok));
   const uiRecord = group => R.uiChecks[group] ? {uiEvidence: results.ui[R.uiChecks[group]]} : {};
@@ -214,6 +222,7 @@ function buildProof({catalog, results, coreSource, steamBuild, previous}) {
     affixReplacement: {date, gameVersion: catalog.gameVersion, fingerprints: all, limits: catalog.affixReplacementLimits, dataHash: sha({rules: catalog.affixReplacement, items}), checks: checks.equipmentAffixReplacement, ...coverage('affixReplacement')},
     equipmentWorkflow: {date, platform: results.platform, gameVersion: catalog.gameVersion, fingerprints: all, limits: catalog.equipmentWorkflowLimits, dataHash: sha({rules: catalog.equipmentWorkflowLimits, items, formulas: catalog.affixReplacement}), groups: perGroup('equipmentWorkflow'), ...coverage('equipmentWorkflow')},
     ...(caps ? {randomCharacterSkillCaps:Caps.record(catalog,coreSource,{date,platform:results.platform,...caps,initialVerification:previous[Caps.group].initialVerification,...coverage(Caps.group)})} : {}),
+    ...(talents ? {randomCharacterTalents:Talents.record(catalog,coreSource,{date,platform:results.platform,...talents,initialVerification:previous[Talents.group].initialVerification,coverage:'representative'})} : {}),
     randomCharacterGrowth: require('./random-character-growth-proof.cjs').record(catalog,coreSource,{date,platform:results.platform,checks:checks.randomCharacterBaseAptitudes,...coverage('randomCharacterGrowth')}),
     equipmentQuality: {date, gameVersion: catalog.gameVersion, fingerprints: all, dataHash: sha({quality: catalog.equipmentQuality, items, workflow: catalog.equipmentWorkflowLimits}), ...(formulasPassed ? {formulaHash: sha(qualityFormula(coreSource)), formulaCases: Object.keys(catalog.equipmentQuality.items).length * 24 + Object.keys(catalog.affixReplacement.attributes).length * 20} : {}), groups: perGroup('equipmentQuality'), ...coverage('equipmentQuality')}
   };
@@ -222,12 +231,13 @@ function buildProof({catalog, results, coreSource, steamBuild, previous}) {
 // Writes the new proof and gates only when every native check passed on a build the current proof does not cover;
 // a build failure restores every touched file. On the proven build it only compares, keeping the existing proof.
 function writeBack({dir = root, catalog, proof, results, steamBuild, exec = (script, args) => spawnSync(process.execPath, [path.join(dir, 'scripts', script), ...args], {cwd: dir, encoding: 'utf8'})}) {
-  const needsInitial = group => S.families[S.familyOf(group)]?.initialProofRequired && Caps.initialProblem(proof[group]?.initialVerification);
+  const needsInitial = group => S.families[S.familyOf(group)]?.initialProofRequired && initialProblemOf(group)(proof[group]?.initialVerification);
   const allGroups=Object.keys(catalog.verification),groups=allGroups.filter(g=>!S.families[S.familyOf(g)]?.pendingReason&&!needsInitial(g));
   if(allGroups.some(g=>S.families[S.familyOf(g)]?.pendingReason&&catalog.verification[g]))return {action:'skipped',reason:'未完成的原生群組不可開啟'};
   if(allGroups.some(g=>needsInitial(g)&&catalog.verification[g]))return {action:'skipped',reason:'缺少首次完整矩陣證明；代表遷移不可首次開放'};
   if (!results.completed || groups.some(group => !results.checks[group])) return {action: 'skipped', reason: '流水線未完成或未涵蓋全部群組'};
   const failing = groups.filter(group => R.requiredChecks(group).some(check => results.checks[group]?.[check] !== true && check !== R.uiChecks[group]));
+  if(groups.includes(Talents.group))try{Talents.validateResults(catalog,fs.readFileSync(path.join(dir,'src/core.js'),'utf8'),results,{initial:false});}catch(error){if(!failing.includes(Talents.group))failing.push(Talents.group);}
   if(groups.includes(Caps.group))try{Caps.validateResults(catalog,fs.readFileSync(path.join(dir,'src/core.js'),'utf8'),results,{initial:false});}catch(error){if(!failing.includes(Caps.group))failing.push(Caps.group);}
   const comparison = allGroups.map(group => ({group, existing: Object.values(recordedChecks(proof, group)).every(Boolean) && catalog.verification[group] === true, migrated: !needsInitial(group) && !failing.includes(group) && !S.families[S.familyOf(group)]?.pendingReason && R.requiredChecks(group).every(check=>results.checks[group]?.[check]===true), ...(S.families[S.familyOf(group)]?.pendingReason?{pending:S.families[S.familyOf(group)].pendingReason}:needsInitial(group)?{pending:'首次完整矩陣須以獨立證明合併'}:{})}));
   if (sameFingerprints(proof.fingerprints, catalog.fingerprints) && sameFingerprints(proof.batch2?.fingerprints, catalog.batch2Fingerprints))

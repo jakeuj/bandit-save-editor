@@ -144,7 +144,7 @@ test('representative scenarios replay on the base save and together cover every 
   const followupCopy = byName['advanced-followup'].scenario;
   assert.deepEqual(followupCopy.followup, {equipment: {id: 3, slot: followupCopy.followup.equipment.slot}, character: 2, profession: 3, technology: 31, drillGround: 12, academy: 4});
   assert.deepEqual([level(byName['advanced-followup'], 2, 1, 4), level(byName['advanced-followup'], 2, 1, 5), level(byName['advanced-followup'], 2, 6, 2)], [4, 4499, 1]);
-  assert.deepEqual(copies.filter(c => c.lifecycle).map(c => c.name), ['advanced-followup', 'batch2', 'affix-replacement', 'equipment-workflow', 'quality-7-Upgrade', 'quality-7-Downgrade', 'quality-9-Upgrade', 'quality-9-Downgrade', 'random-talents-representative', 'random-skill-caps-lifecycle', 'random-growth-lifecycle']);
+  assert.deepEqual(copies.filter(c => c.lifecycle).map(c => c.name), ['advanced-followup', 'batch2', 'affix-replacement', 'equipment-workflow', 'quality-7-Upgrade', 'quality-7-Downgrade', 'quality-9-Upgrade', 'quality-9-Downgrade', 'random-talents-lifecycle', 'random-skill-caps-lifecycle', 'random-growth-lifecycle']);
   assert.deepEqual(byName['batch2'].scenario.pills.map(p => p.aptitude), [1, 2, 3]);
   assert.deepEqual(byName['batch2'].scenario.operations.filter(o => o.method === 'setEquipmentAffixCoefficient').map(o => o.options.coefficient), [10.01, 80, 10, 80, 50, 120, 50, 119.99]);
   assert.deepEqual(byName['equipment-workflow'].scenario.operations.filter(o => o.options.selectUnwashedSlot).map(o => o.options.plane), [7, 9]);
@@ -252,13 +252,13 @@ test('write-back opens proven groups on a new build, compares on the proven buil
   const os = require('node:os'), M = require('../scripts/verify-migration.cjs'), R = require('../scripts/verification-requirements.cjs'), S = require('../scripts/verification-suite.cjs');
   // This generic suite fixture has no cap observations. First-opening and cap migration use their own raw fixtures.
   const catalog = JSON.parse(fs.readFileSync(path.join(root, 'knowledge/catalog.json'), 'utf8'));
-  catalog.verification.randomCharacterSkillCaps = false;
+  catalog.verification.randomCharacterSkillCaps = false; catalog.verification.randomCharacterTalents = false;
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'bandit-writeback-'));
   try{
     fs.cpSync(root, dir, {recursive: true, filter: source => !/[\\/](\.git|graphify-out|node_modules)([\\/]|$)/.test(source)});
     const files = ['knowledge/catalog.json', 'knowledge/verification.json', 'index.html', 'sw.js'].map(f => path.join(dir, f)), snapshot = () => files.map(f => fs.readFileSync(f, 'utf8'));
     const proof = JSON.parse(fs.readFileSync(files[1], 'utf8')), selection = proof.equipmentWorkflow.groups.equipmentAffixInitialSelection.uiEvidence;
-    delete proof.randomCharacterSkillCaps; delete proof.groups.randomCharacterSkillCaps;
+    delete proof.randomCharacterSkillCaps; delete proof.groups.randomCharacterSkillCaps; delete proof.randomCharacterTalents; delete proof.groups.randomCharacterTalents;
     const results = (version, overrides = {}) => ({
       date: '2026-11-01T00:00:00.000Z', platform: 'darwin-arm64', completed: true, gameVersion: version,
       copies: Object.keys(S.families).map(family => ({name: family, family, cases: 1, ok: true, steps: [{step: 'formulas', ok: true}]})),

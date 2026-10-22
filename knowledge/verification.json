@@ -38,6 +38,7 @@
     "subsequentResearchAndTrainingStartStop": true
   },
   "groups": {
+    "randomCharacterTalents": true,
     "randomCharacterSkillCaps": true,
     "randomCharacterBaseAptitudes": true,
     "backpackEquipmentQualityUpgrade": true,
@@ -404,7 +405,7 @@
       "tz.json": "a4b008981f39abc371b5673abe4c780bef5c91229a5ae3a42d2e8fef4e780c74"
     },
     "dataHash": "19e3275ac145966065ea4bcc88cdc48b7c1763b14a5e57bfd3725946cd2168f8",
-    "formulaHash": "7fd6dcfed8d66a2b12b450450222a613b2a9e3c42f24ef5e41004aade6ed0b45",
+    "formulaHash": "fe01461977c8164b97c8c2101c5f9c4b4a43b816d37f53c06e244c7eb75d9756",
     "coverage": "representative",
     "copies": [
       {
@@ -422,7 +423,7 @@
       "matrixCases": 2,
       "lifecycleCases": 2,
       "manifestHash": "92597c232e57c2ca14f7fe68f4835877a909cba2007310963e4e3b6bcdd37f8f",
-      "evidenceHash": "6b78d635ab5c9075044797f7091e3fec3803eb9dbb602fe2d9b899c998a2460a"
+      "evidenceHash": "ec557b187bbf77b743861ed7e6df5ac6c7236e40b72bcf51f178937c8027b796"
     },
     "initialVerification": {
       "coverage": "initial-matrix",
@@ -684,5 +685,96 @@
         "operations": 13
       }
     ]
+  },
+  "randomCharacterTalents": {
+    "date": "2026-10-23",
+    "platform": "win32-x64",
+    "gameVersion": "V1.0.11.2",
+    "fingerprints": {
+      "data.json": "aac06ce18a840ae221d7683fba21182b0dcf4bb7ae1caf3431199264a1c5f62e",
+      "scripts/c3runtime.js": "3e0febeb8342138ed47d9e8499e3646f4e8ddc2ce89a9faa0bebbad9ba83280e",
+      "cl.json": "c121cf702eb6a4edb184d7180ad83d41aa90efca4a1e5e21e652dd1ff24f47b7",
+      "js.json": "5c360c93cd1248fe96d0373428ddae4649698574d032b333432e4b777fcc0ee4",
+      "zy.json": "97d59a029aefbfbba315c9cec7b83a168571def79282eec2be9edbfeb3759188",
+      "sx.json": "6a24e20ad0a70d5ad17a0310f0a9e7619dda5c4718d536a3df51d385abd748e7",
+      "wp.json": "14516d34cedf209c497fca10699e179c26c43558c2a3253bc87c8b33493a82c4",
+      "kj.json": "b051136f1366eb1c990004a4fa8a2d8f90339c7defbc10eb90c68c2ff36e5309",
+      "jz.json": "cf4d691dc7f6814db5ba1e0e28ac206d7a15c58ddccba55a473975461841b0bf",
+      "rw.json": "705f541917d9a62cff9ef5805032fd29496fdc98b03a7f065ff3fc6fab937b4b",
+      "tf.json": "c8a3005201d8f17a0899584baf7e0286b073aa84d4697807edcd44e00902fa1f",
+      "ss.json": "4350cb979c4026ce0d8dc25e7807fde3d29a1d42fbd2e499673614a4f67e1bc7",
+      "lw.json": "7a4f5a5bfd5967f3a74e36aa9a0c2cda132619b2908bdc39b1406da4b346bde6",
+      "yx.json": "58b8eb984cf8190f52ed4e53d044079733cf82096224dd7014ec36e1da2b45bc",
+      "tz.json": "a4b008981f39abc371b5673abe4c780bef5c91229a5ae3a42d2e8fef4e780c74"
+    },
+    "dataHash": "286c9d4e21153a0fc57a1437cbbb8b8d6968e20ea328b859602e93d888e2a22d",
+    "formulaHash": "66b8a442053a9cd2fce18370861edc2cafd9e72eb9d047a3c5f55647db609e2b",
+    "coverage": "initial-matrix",
+    "copies": [
+      {
+        "name": "random-talents-matrix",
+        "operations": 33
+      },
+      {
+        "name": "random-talents-lifecycle",
+        "operations": 2
+      }
+    ],
+    "validation": {
+      "version": 1,
+      "evidenceHash": "e7b433bd5c4951a0b910e15d14be18eb0b1b08c21664b9b16b7279a802324cf2",
+      "manifestHash": "686c4d45acb995d15c53a253f255ecc36e90b8ddd3abf1f2a6aa5093cab6387d",
+      "matrixCases": 33,
+      "lifecycleCases": 2,
+      "formulaCases": 535
+    },
+    "initialVerification": {
+      "coverage": "initial-matrix",
+      "gameVersion": "V1.0.11.2",
+      "fingerprints": {
+        "data.json": "aac06ce18a840ae221d7683fba21182b0dcf4bb7ae1caf3431199264a1c5f62e",
+        "scripts/c3runtime.js": "3e0febeb8342138ed47d9e8499e3646f4e8ddc2ce89a9faa0bebbad9ba83280e",
+        "cl.json": "c121cf702eb6a4edb184d7180ad83d41aa90efca4a1e5e21e652dd1ff24f47b7",
+        "js.json": "5c360c93cd1248fe96d0373428ddae4649698574d032b333432e4b777fcc0ee4",
+        "zy.json": "97d59a029aefbfbba315c9cec7b83a168571def79282eec2be9edbfeb3759188",
+        "sx.json": "6a24e20ad0a70d5ad17a0310f0a9e7619dda5c4718d536a3df51d385abd748e7",
+        "wp.json": "14516d34cedf209c497fca10699e179c26c43558c2a3253bc87c8b33493a82c4",
+        "kj.json": "b051136f1366eb1c990004a4fa8a2d8f90339c7defbc10eb90c68c2ff36e5309",
+        "jz.json": "cf4d691dc7f6814db5ba1e0e28ac206d7a15c58ddccba55a473975461841b0bf",
+        "rw.json": "705f541917d9a62cff9ef5805032fd29496fdc98b03a7f065ff3fc6fab937b4b",
+        "tf.json": "c8a3005201d8f17a0899584baf7e0286b073aa84d4697807edcd44e00902fa1f",
+        "ss.json": "4350cb979c4026ce0d8dc25e7807fde3d29a1d42fbd2e499673614a4f67e1bc7",
+        "lw.json": "7a4f5a5bfd5967f3a74e36aa9a0c2cda132619b2908bdc39b1406da4b346bde6",
+        "yx.json": "58b8eb984cf8190f52ed4e53d044079733cf82096224dd7014ec36e1da2b45bc",
+        "tz.json": "a4b008981f39abc371b5673abe4c780bef5c91229a5ae3a42d2e8fef4e780c74"
+      },
+      "dataHash": "286c9d4e21153a0fc57a1437cbbb8b8d6968e20ea328b859602e93d888e2a22d",
+      "formulaHash": "66b8a442053a9cd2fce18370861edc2cafd9e72eb9d047a3c5f55647db609e2b",
+      "version": 1,
+      "evidenceHash": "e7b433bd5c4951a0b910e15d14be18eb0b1b08c21664b9b16b7279a802324cf2",
+      "manifestHash": "686c4d45acb995d15c53a253f255ecc36e90b8ddd3abf1f2a6aa5093cab6387d",
+      "matrixCases": 33,
+      "lifecycleCases": 2,
+      "formulaCases": 535
+    },
+    "groups": {
+      "randomCharacterTalents": {
+        "checks": {
+          "load": true,
+          "save": true,
+          "restart": true,
+          "originalHashes": true,
+          "nativeEffects": true,
+          "talentFormulas": true,
+          "aptitudeCap": true,
+          "numericUpdate": true,
+          "nativeTransfer": true,
+          "nativePrison": true,
+          "nativeRebirth": true,
+          "nativeDismiss": true,
+          "stageRoundtrips": true
+        }
+      }
+    }
   }
 }

@@ -35,6 +35,8 @@ Linux CI另加`--with-deps`安裝系統函式庫。Playwright版本由package與
 
 九項技藝上限另有 `tests/skill-caps-ui.test.cjs` 與 `tests/browser/skill-caps.spec.cjs`。UI事件用測試VM中的單一候選旗標覆蓋成功及關閉分支；它不是原生開放證明。Headless讀真正建置與catalog：關閉時只驗預覽／停用；相符獨立proof開放後才驗實際套用、交錯經驗、27欄還原／復原、下載及重載。兩種結果須分開記錄，不能把關閉分支通過宣稱發布完成。新增合法fixture保留舊全50上限fixture的原用途；HTTP兩寬度、直接file、PWA離線與兩頁waiting交接各自有案例。
 
+天賦等級另有 `tests/talent-levels-ui.test.cjs` 與 `tests/browser/talent-levels.spec.cjs`（`talentLevelsFixture`）：HTTP 1280／390px 驗排除原因、Q6 無可調整值、資質天賦的 A／C 預覽、輸入變更使預覽失效、與基礎資質同群組還原／復原、實際下載與重載；直接 file 與 PWA 斷網兩入口驗預覽與套用下載。閘門關閉時同樣只驗預覽與停用。
+
 ## 隔離、輸出與清理
 
 預設單worker、headless及每案獨立context，所有輸入都是合成檔。測試以setInputFiles指定暫存檔，等待真實download事件並saveAs到暫存目錄；實際檔案bytes對照獨立預期，重載也使用該下載檔。正式程式沒有測試後門或被替換的SaveCore API。

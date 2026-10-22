@@ -60,8 +60,8 @@ test('formula changes select their native family without unchanged lifecycle; sh
   const changed=P.selection(base,f.snap(),f.groups);
   assert.deepEqual(CLI.selectNames(changed),['growth']);assert.equal(changed.families.growth.lifecycle,false);
   f.set('存档');const global=P.selection(base,f.snap(),f.groups);
-  assert.equal(CLI.selectNames(global).length,15);
-  const full=P.selection(base,base,f.groups,{mode:'full'});assert.equal(CLI.selectNames(full).length,15);assert.equal(full.families.equipmentQuality.formulas,true);
+  assert.equal(CLI.selectNames(global).length,17);
+  const full=P.selection(base,base,f.groups,{mode:'full'});assert.equal(CLI.selectNames(full).length,17);assert.equal(full.families.equipmentQuality.formulas,true);
 });
 
 test('missing events, unknown references, changed variable defaults and incomplete dependency records cannot silently carry',t=>{
