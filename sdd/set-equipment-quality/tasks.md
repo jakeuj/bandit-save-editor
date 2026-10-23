@@ -1,13 +1,13 @@
 # 套裝品質任務索引
 
-狀態：**候選文件已拆分，A／B 全部未執行**。本次只改文件並依授權提交推送；沒有程式、遊戲執行或功能開閘。[完整規格](proposal.md)及原驗收條件保留；逐項勾選只在子 SDD 維護。
+狀態：**A 已完成（A1–A10，2026-10-23）；B 未開始，且需逐段明確授權**。A 階段沒有原生執行、沒有原生通過，四品質群組旗標皆為 false。[完整規格](proposal.md)及原驗收條件保留；逐項勾選只在子 SDD 維護。
 
-2026-10-23 起為目前主線（見[進度入口](../../docs/research/next-version-plan.md)）；A1–A2 已授權，其餘逐段明確授權。
+2026-10-23 起為目前主線（見[進度入口](../../docs/research/next-version-plan.md)）；B 每段都要使用者另外授權。
 
 | 子案 | 範圍與依賴 | 第一個未完成項 |
 | --- | --- | --- |
-| [A 提案](../set-equipment-quality-a/proposal.md)／[任務](../set-equipment-quality-a/tasks.md) | 靜態候選與準備；正式等級資格不擴權、四品質群組關閉 | A1 來源與重用工具盤點 |
-| [B 提案](../set-equipment-quality-b/proposal.md)／[任務](../set-equipment-quality-b/tasks.md) | A 完成後，原生補證、介面及整合；依當次明確授權 | B1 原生基準與缺案補取得 |
+| [A 提案](../set-equipment-quality-a/proposal.md)／[任務](../set-equipment-quality-a/tasks.md) | 靜態候選與準備；正式等級資格不擴權、四品質群組關閉 | —（已完成） |
+| [B 提案](../set-equipment-quality-b/proposal.md)／[任務](../set-equipment-quality-b/tasks.md) | A 完成後，原生補證、介面及整合；依當次明確授權（未授權前不開始） | B1 原生基準與缺案補取得 |
 
 原任務對照：1→A1–A2；2→A3；3→A4–A6；4→A7–A8；5→A9–A10；6→B1–B2；7→B3、B9；8→B4–B5；9→B6–B7；10→B8–B10。拆分沒有刪除矩陣或驗收要求。
 

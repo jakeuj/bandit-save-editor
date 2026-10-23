@@ -1,6 +1,6 @@
 # 套裝品質 A 任務
 
-狀態：目前主線；A1–A10 已授權並完成（2026-10-23），A 階段交接（Haiku）待執行；B 階段需逐段明確授權。[子提案](proposal.md)／[母規格與全案驗收](../set-equipment-quality/tasks.md)／[進度入口](../../docs/research/next-version-plan.md)。
+狀態：A 階段完成（A1–A10，2026-10-23）；B 待使用者逐段明確授權。[子提案](proposal.md)／[母規格與全案驗收](../set-equipment-quality/tasks.md)／[進度入口](../../docs/research/next-version-plan.md)。
 
 每項工程操作目標 30–60 分鐘；超時先再拆子 SDD。自動矩陣執行另記分片／checkpoint，完成全部分母才可勾選。
 
@@ -117,4 +117,12 @@
 4. 待實作：`verify-set-equipment-quality.cjs` 與 `verify-set-equipment-quality-migration-lifecycle.cjs` 現為失敗占位；B2／B4 換成真 runner。A10 契約要求逐案 `{id,caseHash,passed,nativeCompared:true}`、兩輪 IO、UI 五項與兩支 oracle 雜湊。
 5. 開閘前：補 `setEquipmentQuality` family 的 core 切片基準；核對最終 core 對既有已開放群組（含技藝上限與套裝等級）的相依，只重證切片改變者（B7）；B3 正式入口與 UI 另有 core／UI 變更時重跑切片報告。
 6. 界線：任一群組缺完整分母或 IO／UI 證據就保持關閉；代表遷移與 checks=true 不能首次開放；不得縮分母或只換摘要。
+
+### A 階段收尾（2026-10-23）
+
+- 提交對照（`git log --oneline` 核對，皆在 `origin/main`）：A1–A2 `5ecdaca`、A3 `a10975c`、A4 `a7d48fa`、A5 `3d01f56`、A6 `0e49269`、A7 `77deb38`、A8 `ea32f80`、A9 `1af87a0`、A10 `5392fda`。
+- 四品質群組（`setEquipmentQuality` 的升／降、z7／z9）旗標皆為 `false`；`verification` 未開任何品質群組。
+- 沒有原生執行，也沒有原生通過；所有 W1–W7 生成／洗練見證與缺案維持 pending-native。
+- `src/core.js` 的 core 切片未變（A9／A10 收尾時 `node scripts/core-slice-report.cjs` 紀錄為「未變」；新的 `setEquipmentQuality` family 基準待 B 開閘前補）。
+- B 階段未開始；每段須使用者明確授權，B5 另需 computer use 授權。B 準備清單見上文，B1 起點見[B 任務](../set-equipment-quality-b/tasks.md)。
 
