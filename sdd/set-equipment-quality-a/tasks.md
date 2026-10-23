@@ -12,7 +12,7 @@
 - [ ] A6. 實作候選降品與整件還原：刪尾槽確認、刪已選槽／目標超 cap 拒絕；品質→等級→品質、undo、累計還原與無變更合成案例通過。
 - [x] A7. 建立獨立交易與生成可達性預期：不讀被測 core 預覽，明列來源生成規則與原生見證待辦；不杜撰原生升品函式或偽造生成結果。
 - [x] A8. 建立獨立效果及生命週期預期：涵蓋攻擊 L×Q、取整、主副重疊、舊效果移除、S／N，列兩輪 IO、搬移 50 欄及尾十欄斷言。
-- [ ] A9. 固定 manifest 與分片契約：列 19,440 基礎案、至少 864 組效果及母規格全部額外維度，拆四群組分母、合法／拒絕／未知／不適用，checkpoint 綁精確輸入。
+- [x] A9. 固定 manifest 與分片契約：列 19,440 基礎案、至少 864 組效果及母規格全部額外維度，拆四群組分母、合法／拒絕／未知／不適用，checkpoint 綁精確輸入。
 - [ ] A10. 接線拒絕未證明的 proof 流程：requirements／suite／migration／摘要綁定測試拒絕漏案、重複、錯方向、過期、缺 IO／UI 及僅代表遷移；四群組關閉，交付 B 準備清單。
 
 ## 分派
@@ -79,3 +79,11 @@
 - 新增 `scripts/set-equipment-quality-effects-oracle.cjs`：不讀被測 core、預覽或原生觀測；單件效果沿用獨立的套裝等級 oracle，品質規則（Q1 主／副係數區間與槽數、Q2 等級上限）、平移、尾槽與 S／N 不變式在本檔另寫。涵蓋 `transition`（主係數 +30·ΔQ、保留槽 +10·ΔQ 以百分之一整數運算、升品明選連續尾槽且旗標 0、降品需確認、拒絕刪已選槽／超目標 cap／新增重複／超範圍或超過兩位小數係數／品質外槽資料）、攻擊 L×Q、取整、主副重疊累加、移除槽的舊效果消失，以及 `assertSetInvariant`（y1／y23、S、N、部位數與額外套裝效果不隨品質或槽內容變動）。
 - 生命週期預期：`ioRounds` 列兩輪 IO（編輯後載入→存原格式→停止→重啟→新 PID 讀回；搬移週期後同樣一輪），`validateIO` 檢查兩輪皆為不同 PID 且讀回相同、首輪等於預期；`validateCycle` 斷言搬移 y0–49（owner 依階段）與來源清除，`validateTail`／`monitorTail` 斷言尾十欄 y50–59 留在來源、不進目的列；`lifecycleStarts` 列 3 狀態×升降 6 類起點，加 T1／T9、Q1↔Q6、Q5↔Q6、池、選槽與兩種原位合成路徑等額外軸（實際副本數留 A9）。
 - 新增 `tests/set-equipment-quality-effects.test.cjs`（合成紀錄，含正反案例）。這些都是預期值與驗證器，**沒有原生執行，不宣稱原生通過**；原生生成／洗練見證仍待 B。與 A7 的 `set-equipment-quality-oracle` 互不重疊（A7 管交易／可達性，本段管效果／生命週期，檔名加 `-effects`）。未改 src、catalog、index.html、sw.js、verification。
+
+### A9（2026-10-23）
+
+- 新增 `scripts/set-equipment-quality-scenarios.cjs`：固定 manifest（80,110 案）。分類四種：`legal`／`policy-rejection`／`unknown-native`／`not-applicable`（附理由，不計入可執行也不計通過）；目前 63,756 未知原生、4,015 政策拒絕、12,339 不適用，沒有任何案例標為原生通過。
+- 維度：基礎 19,440（216 範本 × 30 轉換 × 3 狀態；z7 升／降各 3,240、z9 升／降各 6,480，z9 含未穿戴與穿戴各半）；套裝效果 864 可執行（54 套 × 1–4 部位 × 同／混積分 × 升／降）另列 432 筆五／六件不適用，不造假自然六件；係數端點 630、等級 cap 邊界 270（降品超目標 cap 為拒絕）；雙池 × 選槽 58,320（依 1,458 列真實同階同部位原裝備，缺少專有／交集 ID 的組合列不適用）；生命週期 50（A8 的 6 類起點加 11 個額外軸 × 四群組）；等級回歸 16（兩個既有等級群組的跨池補證，不計入品質群組）；拒絕 88（22 種 × 四群組，升降專屬者在另一方向列不適用）。
+- 四群組分母（總數／可執行）：z7 升 18,004／15,053、z7 降 18,004／15,039、z9 升 22,043／18,846、z9 降 22,043／18,817；`denominators` 逐群組逐類型逐分類可對帳，`dimensions` 對應母規格矩陣層次且每層至少一個可執行案例。
+- 分片 `shard`（預設只含可執行，依群組／類型過濾，輪流分配且併集恰好一次）、`checkpoint`／`validateCheckpoint`（綁 manifest 摘要、輸入綁定、分片條件與案例 ID 清單）、`emptyProgress`／`recordResult`／`validateProgress`／`summary`（只收合成結果，拒絕原生標示、重複、未知、不適用、改標；摘要逐群組回報且 `nativeComplete`、四群組 `opened` 皆 false）。binding 綁 15 指紋、品質／等級規則摘要、核心雜湊、資料腳本、兩個 oracle 與本腳本、基準與 runtime 雜湊。
+- 新增 `tests/set-equipment-quality-scenarios.test.cjs`（11 項）。未新增 requirements／suite／migration 註冊（A10）；未改 src／catalog／index.html／sw.js／verification，沒有原生執行。
