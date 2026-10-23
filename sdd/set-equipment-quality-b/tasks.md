@@ -9,7 +9,7 @@
 - [x] B3. 完成候選介面與停用驗收：預覽庫別／方向、雙池、增刪槽、效果及確認重設，驗拒絕與未證明方向停用；隔離候選測試不計為正式可用驗收。
 - [x] B4. 執行首次矩陣與生命週期分片：交易／效果、成本、洗練舊效果移除、穿卸／搬移／排序、兩輪 IO／新 PID 全部對帳；完整 manifest 結束才勾選，未命中與失敗不縮分母。
 - [ ] B5. 完成必要原版 UI 證據：依當次明確授權驗品質顯示、槽數與已選槽停用／洗練；未授權或失敗保留缺口，不開相關群組。
-- [ ] B6. 補既有套裝等級兩庫跨池證明：各自獨立原生證明與原池回歸，驗合法等級、cap、效果、IO 及品質交錯 undo／還原；此時正式入口仍不擴權。
+- [x] B6. 補既有套裝等級兩庫跨池證明：各自獨立原生證明與原池回歸，驗合法等級、cap、效果、IO 及品質交錯 undo／還原；此時正式入口仍不擴權。
 - [ ] B7. 核對最終 core 相依並重驗：完成技藝上限及其他受影響既有群組重驗，保留未受影響證據；不得只換摘要或關閉既有功能。後續核心若再變須重新核對。
 - [ ] B8. 在隔離待交付快照合併證明：從原始結果重算四群組覆蓋；B4–B7 證據齊備才接入相應品質方向及已補證等級資格，固定快照供 B9，尚不交付開閘產物。
 - [ ] B9. 驗正式入口可用流程：在 B8 快照驗已證明方向套用、未證明方向拒絕、下載 bytes／重載、undo／還原、桌面／390px、file、PWA 離線／交接；失敗撤回候選開閘，不能沿用 B3 結果。
@@ -108,3 +108,15 @@
 - 只重跑 82 個 `reject` 案（新分片 `shard-0-of-1-*`，綁新工具摘要；67,635 筆其他矩陣結果與 38 份生命週期沿用，其工具摘要未變的部分不重算）：82／82 通過，失敗、未命中、未知 0；`emit` 讓較新的重跑取代舊行，舊分片檔不改。遊戲程序已停止、鎖檔已清，固定存檔、玩家原檔、等級基準與快取雜湊前後相同。
 - 更新後逐案列 `a10-results.json` `1cc22b2ed0bfcf97cd25e217e8702f0ec2de1baf28870c77ea10439642c253e2`：67,755 筆全為 `{id,caseHash,passed,nativeCompared:true}`，各群組可執行數＝通過數（z7 升 15,053、z7 降 15,039、z9 升 18,846、z9 降 18,817），不通過 0、契約僅 0。新 `binding.json` `07457ab263f7dfa969a6e7643238737b821667347039ea264b3947e48f49c3e6`（舊矩陣長跑版另存 `binding-matrix-run.json` `7609bcab…`）；新重跑分片 `results.jsonl` `816989185e6e489f05cb52a5f91f95e6767381f907b96c9a421f317920867a57`；其餘 40 個舊分片串接雜湊仍為 `0ce4366c…`。生命週期結果檔雜湊不變。
 - 各群組仍少 `level-regression` 各 8 案（屬 B6，照舊註明）；A10 的 `validateResults` 對本段可驗項目已無缺口。B4 勾選。驗證：`npm test` 374／374；`node scripts/core-slice-report.cjs`：core 切片未變。
+
+### B6（2026-10-23）
+
+- 新 runner `scripts/verify-set-equipment-level-cross-pool.cjs`（未給 `--output` 拒絕且不產生結果）：範圍＝A9 manifest 的 `level-regression` 16 案（z7 `backpackSetEquipmentLevel`、z9 `setEquipmentLevel` 各 8 案：`refined-set-only-id`、`level-up`、`level-down`、`at-cap`、`wear-effect`、`io-two-rounds`、`quality-level-quality-undo`、`accumulated-restore`）。分母 16，不縮減。
+- 候選等級政策只存在 VM 副本：在 `setEquipmentLevelInfo` 的槽檢查唯一一處，讓「旗標 1 的唯一已選槽」也可用 P套 ID（與品質候選共同資格相同），其他檢查不動；字串必須剛好命中一處，否則拒絕執行。出貨 `src/core.js` 未改，正式入口（`setEquipmentLevelInfo`／`editingInfo`／`setEquipmentLevel`／`set`／`setField`）對每個跨池起點與每份存檔 bytes 都驗證會拒絕且不留變更。品質旗標只在隔離知識副本開啟。
+- 起點：等級 B 原生基準（Q3、積分 3，z7 範本 41（T1，原裝備 10）、z9 範本 473（T9，原裝備 274），P套 專有 ID 比例最高者），由隔離遊戲在各自庫別對槽 1 原生 `词条洗练`，各 1 次命中 P套 專有 ID（z7 61、z9 51；魂魄 100），全部案例共用此列。注入：無（`injected` 皆空；z9 穿戴只放 owner／指標）。
+- 原生比對：洗練見證（只動該槽三欄、P套、係數在區間、旗標 1）與 A7 資格；誤放未選槽或拿掉旗標的 P套 ID 在候選等級也被拒絕。升 1→12、降 18→6（高點由原生 `升级装备` 產生）：只改 y6、原生讀回、單件效果對等級 oracle，原生升級在兩端點之間結果一致，費用＝`money` 合計、魂魄 0（z7 先 `装备库存入`）。cap：L20 接受，21／0／小數拒絕且無變更；原生 L19→20、L20 不再升也不扣費。穿戴效果：z9 穿戴列編輯前後的全角色屬性與套裝摘要，z7 編輯後由原生 `穿戴装备`／`卸下装备`（y0–49、owner、指標、來源清除）。兩輪 IO：B2 `playCopy`／`validateCopy`（讀回→存檔→新 PID→讀回；洗練→搬移含尾十欄標記→`装备排序`→存檔→新 PID），z9 為穿戴起點。品質→等級→品質：Q3→Q4→L22→（Q4→Q3 因超 cap 被兩支 oracle 與候選一起拒絕）→L18→Q3，undo 逐筆回到前一狀態；交錯後與兩次 undo 後 bytes 各自原生讀回＋新 PID 讀回，之後原生再洗練，品質與等級候選 API 仍接受並可再改等級。累計還原：L5→Q4→L12→Q5，用等級或品質 token `restore` 整件還原、`restoreAll` 也一樣，還原後 bytes 等於起點；累計與還原 bytes 各自原生讀回＋新 PID 讀回。所有中間狀態另外由原生讀回與單件效果比對。
+- 結果：16／16 通過；失敗、未命中、未知皆 0；沒有反證。逐案 `a10-results.json` 16 筆全是 `{id,caseHash,passed,nativeCompared:true}`（caseHash 為 A10 全零輸入 manifest `629075b8…`，案例摘要與真實輸入版相同）。原生遊戲同一時間只開一份隱藏、靜音的隔離副本（Steam 真實初始化），共 15 次啟動（stage 1 一次、byte 案例各自啟動），未用 computer use。
+- 第一次執行（repo 外 `set-equipment-quality-B6`，作廢）：前 10 案通過後，z7 `io-two-rounds` 被判失敗。原因是 runner 自己多加的檢查把卸下後已清空的 z9 監看列也當成要比對等級的列；B2 驗證本身是通過的，這不是原生反證。修正為只看實際持有該物品的列後，全部 16 案在新目錄重跑，舊結果不沿用。
+- 結果檔（repo 外 `set-equipment-quality-B6-run2`，SHA-256）：`a10-results.json` `4c7a3d4e91d843253c0d20dda57b68e982311d54d5792ef9b1616dfecef83016`、`b6-results.json` `eed7503f03e21de82d7cc8080a5fa1eebb8a15816c3f57a18237477bd0a5f383`（binding：核心 `69b462a0…`、runner `5cb007b0…`、driver `5019bfa5…`、候選槽檢查 `60246936…`、manifest `629075b8…`）。固定存檔 `ebb0a4a2…84c5`、玩家原檔 `9497ca27…6e1a`、等級基準 `090290ff…48327` 與兩份快取 manifest 在前後都相同。
+- 缺口與界線：每庫只用一個範本、一個選槽位置（槽 1），也只驗 Q3 起點；Q4／Q5 則經由品質交易覆蓋。正式等級入口仍不擴權，要到 B8 合併才接入跨池資格，屆時 B7／B8 必須核對最終 core 是否等同這裡的候選政策。沒有合併任何證明，沒有改旗標、`reproof-ledger.json` 或進度入口。
+- 驗證：新增 `tests/set-equipment-level-cross-pool.test.cjs`（9 項，合成資料）；`npm test` 383／383；`node scripts/core-slice-report.cjs`：core 切片未變。
