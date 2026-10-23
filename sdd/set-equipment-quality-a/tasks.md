@@ -17,7 +17,7 @@
 
 ## 分派
 
-依[任務分派與下一步 prompt](../../docs/maintenance/dispatch.md)產出各段 prompt。思考程度未註明即為「中」。
+由主 session 依[任務分派與子 session](../../docs/maintenance/dispatch.md)開各段子 session。思考程度未註明即為「中」。
 
 | 段 | 任務 | 模型 | 思考 | 前置 | 可同時跑 | 改動範圍 |
 | --- | --- | --- | --- | --- | --- | --- |

@@ -12,7 +12,7 @@
 | 目前主線 | 套裝品質／詞條：[母規格](../../sdd/set-equipment-quality/proposal.md)、[A 任務](../../sdd/set-equipment-quality-a/tasks.md)、[B 任務](../../sdd/set-equipment-quality-b/tasks.md)。A 為候選資格、交易、oracle、manifest 與 proof 接線（不跑原生、四品質群組關閉）；B 為原生證明、合併與正式入口 |
 | 下一步 | A 階段交接（Haiku，只更新文件）：核對 A1–A10 紀錄與[B 準備清單](../../sdd/set-equipment-quality-a/tasks.md#b-準備清單a-階段交接用)，確認進度入口與 B 任務一致；B 階段原生證明需使用者另外授權 |
 | 授權 | A1–A10 已授權並完成；B 階段逐段明確授權 |
-| 分派 | 依 [A 任務的分派表](../../sdd/set-equipment-quality-a/tasks.md#分派)：A 階段交接用 Haiku、思考程度低（A10 已完成）。各段 prompt 與交棒規則見[任務分派](../maintenance/dispatch.md) |
+| 分派 | 依 [A 任務的分派表](../../sdd/set-equipment-quality-a/tasks.md#分派)：A 階段交接用 Haiku、思考程度低（A10 已完成，已核對 `5392fda`）。主 session 開子 session 與續派的規則見[任務分派](../maintenance/dispatch.md) |
 | 開放狀態 | 以目前 catalog／verification 為準；四個品質群組已註冊但旗標為 false（`initialProofRequired`），未證明的群組維持關閉 |
 
 ### 其他候選
