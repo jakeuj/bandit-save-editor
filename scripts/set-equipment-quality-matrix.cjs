@@ -68,7 +68,7 @@ function needs(c,k){
    if(c.pool.endsWith('set-only')&&c.pool.startsWith('selected'))out.push({type:'refine',t:c.templateId,o:c.originId,q:c.from,slot:c.pool==='selected-tail-set-only'&&c.direction==='down'?c.from-1:1});
    return out;
   }
-  case 'reject':return c.rejection==='stale-proof'||c.rejection==='incomplete-proof'?[]:[n(28,c.direction==='up'?3:4,3)];
+  case 'reject':return [n(28,c.direction==='up'?3:4,3)];
  }
  throw Error('未知案例類型 '+c.kind);
 }
@@ -174,7 +174,7 @@ function buildReject(c,k,sc,get,gen){
   case 'remove-selected':r[8+n]=pools.setOnly[0]??r[8+n];r[27+n]=1;break;
   case 'downgrade-over-cap':r[6]=O.cap(to)+1;break;
   case 'permission-bypass-coordinate':case 'permission-bypass-legacy-set':case 'permission-bypass-batch':case 'atomic-rollback':break;
-  case 'stale-proof':case 'incomplete-proof':sc.pieces=[];sc.contractOnly=true;break;
+  case 'stale-proof':case 'incomplete-proof':sc.contract=true;break;
   default:throw Error('未知拒絕案例 '+c.rejection);
  }
  sc.expect='reject';return sc;
@@ -199,7 +199,7 @@ function finish(c,k,sc){
 // ---- offline candidate-core run, compared with the oracle -----------------------------------------------------------------
 function runCore(C,m,sc){
  place(m,sc.pieces,sc.plane);const before=sc.pieces.map((_,i)=>rowAt(C,m,i+1,sc.plane)),errors=[];
- if(sc.kind==='reject'&&sc.rejection&&!['stale-proof','incomplete-proof'].includes(sc.rejection))return runReject(C,m,sc,before);
+ if(sc.kind==='reject'&&sc.rejection)return runReject(C,m,sc,before);
  sc.pieces.forEach((p,i)=>{
   try{C.applySetEquipmentQualityCandidate(m,{itemId:i+1,plane:sc.plane,quality:sc.target,addedAffixes:asTail(p.tail||[]),confirmRemovedAffixes:sc.confirm});}
   catch(e){errors.push(e.message);}
@@ -233,6 +233,9 @@ function runReject(C,m,sc,before){
    const pending=C.previewBatch(m,{kind:'equipmentMax',plane:sc.plane,quality:q}).then(()=>{throw Error('批次應拒絕品質參數');},e=>{assert.match(e.message,/批次只接受/,'批次應拒絕品質參數');unchanged();return e.message;});
    return {errors:[],rejected:true,pending};
   }
+  case 'stale-proof':case 'incomplete-proof':
+   // The contract itself is checked by the caller (runContract); here the legal native start must stay untouched.
+   message='contract';unchanged();break;
   case 'atomic-rollback':{
    const text=C.serialize(m);message=expectThrow(()=>C.transaction(m,()=>{
     C.applySetEquipmentQualityCandidate(m,{itemId:id,plane:sc.plane,quality:q,addedAffixes:asTail(p.tail||[]),confirmRemovedAffixes:sc.confirm});throw Error('外層失敗');
@@ -345,7 +348,7 @@ function validate(C,m,k,sc,obs){
   ok(()=>obs.beforeSingles.forEach((s,i)=>checkSingles(s,before[i],rules,'編輯前')));
   if(obs.beforeCharacter)ok(()=>checkCharacter(obs.beforeCharacter,before,rules,'編輯前'));
  }
- const summary={outcome:sc.expect,startNative:true};
+ const summary={outcome:sc.expect,startNative:true};if(sc.contractMessage)summary.contract=sc.contractMessage;
  if(sc.expect==='apply'){
   ok(()=>rowsEqual(obs.edited,sc.after,'原生讀回與 oracle 結果不符'));
   ok(()=>obs.afterSingles.forEach((s,i)=>checkSingles(s,sc.after[i],rules,'編輯後')));

@@ -29,7 +29,6 @@ test('every matrix kind builds scenarios whose candidate-core result equals both
  let applied=0,rejected=0;
  for(const kind of X.matrixKinds){
   for(const c of sample(kind,60)){
-   if(c.kind==='reject'&&['stale-proof','incomplete-proof'].includes(c.rejection))continue;
    const sc=X.build(c,k,supply),core=X.runCore(C,m,sc);if(core.pending)await core.pending;
    if(sc.expect==='apply')applied++;else rejected++;
    assert.equal(core.rejected,sc.expect==='reject',c.id);
@@ -105,10 +104,17 @@ test('level-cap cases check the native cap, the removal of a replaced slot and r
  const gone=Object.keys(change).find(id=>change[id].removed&&removed.includes(+id));
  if(gone){const row=o2.afterSingles[0].find(v=>String(v[0])===gone);row[1]=7;assert.throws(()=>X.validate(C,m,k,ds,o2),X.Refutation);}
 });
-test('contract-only rejections are checked without the game and never claim a native comparison',()=>{
+test('proof-contract rejections now start from a legal native row, check the contract, and read the start back from the game',async()=>{
  for(const rejection of ['stale-proof','incomplete-proof']){
-  const c=manifest.cases.find(v=>v.kind==='reject'&&v.rejection===rejection&&v.classification!==M.classes.na);assert.ok(c);
-  assert.deepEqual(X.needs(c,k),[]);assert.ok(X.runContract(c,k,source).message);
+  for(const c of manifest.cases.filter(v=>v.kind==='reject'&&v.rejection===rejection&&v.classification!==M.classes.na)){
+   assert.equal(X.needs(c,k).length,1);
+   const sc=X.build(c,k,supply);assert.equal(sc.pieces.length,1);assert.ok(sc.contract);
+   const core=X.runCore(C,m,sc);assert.ok(core.rejected);
+   sc.contractMessage=X.runContract(c,k,source).message;assert.ok(sc.contractMessage);
+   const [obs]=await drive({op:'cases',items:[X.nativeItem(sc,k)]});
+   const summary=X.validate(C,m,k,sc,obs);assert.equal(summary.outcome,'reject');assert.equal(summary.contract,sc.contractMessage);
+   const bad=structuredClone(obs);bad.loaded[0][5]+=1;assert.throws(()=>X.validate(C,m,k,sc,bad),X.Refutation);
+  }
  }
 });
 
@@ -228,11 +234,24 @@ test('emit lists passed native rows in the A10 shape and every other outcome exp
 });
 
 test('every rejection case validates against a perfect game, even when its start record is not a legal set item',async()=>{
- const cases=manifest.cases.filter(c=>c.kind==='reject'&&c.classification!==M.classes.na&&!['stale-proof','incomplete-proof'].includes(c.rejection));
- assert.ok(cases.length>=70);
+ const cases=manifest.cases.filter(c=>c.kind==='reject'&&c.classification!==M.classes.na&&true);
+ assert.ok(cases.length>=82);
  for(const c of cases){
   const sc=X.build(c,k,supply),core=X.runCore(C,m,sc);if(core.pending)await core.pending;
   assert.equal(X.validate(C,m,k,sc,perfect(sc)).outcome,'reject',c.id);
   const [obs]=await drive({op:'cases',items:[X.nativeItem(sc,k)]});assert.equal(X.validate(C,m,k,sc,obs).outcome,'reject',c.id);
  }
+});
+
+test('emit lets a later re-run of the same case supersede the earlier line without touching the earlier file',()=>{
+ const os=require('node:os'),dir=fs.mkdtempSync(path.join(os.tmpdir(),'b4-emit2-'));
+ try{
+  const c=manifest.cases.find(v=>v.rejection==='stale-proof'&&v.classification!==M.classes.na),a=path.join(dir,'shard-0-of-40-aaaaaaaa'),b=path.join(dir,'shard-0-of-1-bbbbbbbb');
+  fs.mkdirSync(a);fs.mkdirSync(b);
+  fs.writeFileSync(path.join(a,'results.jsonl'),JSON.stringify(line(c,'passed',{nativeCompared:false}))+'\n');
+  const t=Date.now()/1000;fs.utimesSync(path.join(a,'results.jsonl'),t-100,t-100);
+  fs.writeFileSync(path.join(b,'results.jsonl'),JSON.stringify(line(c,'passed',{nativeCompared:true}))+'\n');
+  const out=R.emit(dir,manifest,manifest,{tools:X.toolBinding(source)},['reject']);
+  assert.deepEqual(out.cases.map(v=>v.id),[c.id]);assert.deepEqual(out.contractOnly,[]);
+ }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });

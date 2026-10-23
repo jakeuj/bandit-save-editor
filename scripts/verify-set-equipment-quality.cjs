@@ -53,8 +53,9 @@ const missingNeeds=(cases,k,supply)=>{const out=new Map();for(const c of cases)f
 
 // ---- one case offline / native ----------------------------------------------------------------------------------------------
 async function offline(C,m,k,c,supply,source){
- if(c.kind==='reject'&&['stale-proof','incomplete-proof'].includes(c.rejection))return {contract:true,sc:{pieces:[],contractOnly:true,id:c.id,kind:'reject',expect:'reject',injected:[],target:c.to,plane:0,state:null}};
- const sc=X.build(c,k,supply),core=X.runCore(C,m,sc);if(core.pending)core.message=await core.pending;return {sc,core};
+ const sc=X.build(c,k,supply),core=X.runCore(C,m,sc);if(core.pending)core.message=await core.pending;
+ if(c.kind==='reject'&&sc.contract)sc.contractMessage=X.runContract(c,k,source).message;
+ return {sc,core};
 }
 
 // ---- game session -----------------------------------------------------------------------------------------------------------
@@ -84,7 +85,10 @@ function acquireLock(out){
 // ---- A10-shaped output ------------------------------------------------------------------------------------------------------
 // Everything stored under DIR as one file: the per-case rows for what passed natively, plus explicit lists for what did not. Not a merge.
 function emit(out,manifest,a10Manifest,binding,kinds=X.matrixKinds){
- const all=[];for(const d of fs.readdirSync(out).sort())if(d.startsWith('shard-'))all.push(...lines(path.join(out,d,'results.jsonl')));
+ const byId=new Map(),dirs=fs.readdirSync(out).filter(d=>d.startsWith('shard-')).map(d=>[d,fs.statSync(path.join(out,d,'results.jsonl')).mtimeMs]).sort((x,y)=>x[1]-y[1]||(x[0]<y[0]?-1:1));
+ // A later re-run of the same case (e.g. the rejection re-run) supersedes the earlier line; the earlier shard files stay untouched.
+ for(const [d] of dirs)for(const l of lines(path.join(out,d,'results.jsonl')))byId.set(l.id,l);
+ const all=[...byId.values()];
  const life=path.join(out,'lifecycle','lifecycle-results.json'),lifeReport=path.join(out,'lifecycle','b4-lifecycle-report.json');
  const lifeLines=[];
  if(fs.existsSync(life)&&fs.existsSync(lifeReport)){
@@ -167,7 +171,6 @@ async function run(argv=process.argv.slice(2)){
        continue;
       }
       const r=await offline(C,m,k,c,supply,source);
-      if(r.contract){const info=X.runContract(c,k,source);outLines.push({...base,status:'passed',passed:true,nativeCompared:false,observation:{outcome:'reject',contractOnly:true,message:info.message}});continue;}
       live.push({c,sc:r.sc,core:r.core,base});
      }catch(e){outLines.push({...base,status:'failed',passed:false,nativeCompared:false,stage:'offline',observation:{error:e.message}});}
     }
