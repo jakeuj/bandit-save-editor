@@ -10,9 +10,9 @@
 | --- | --- |
 | 剛完成 | v2.11 寶物等級：只改等級、不扣魂魄、不提供經驗修改；SDD 十項完成並[歸檔](../../sdd/archive/2026-10-23-treasure-level/tasks.md)，研究見[寶物等級研究](treasure-level.md)，發布說明見[各版紀錄](../releases.md#v211-寶物等級) |
 | 目前主線 | 套裝品質／詞條：[母規格](../../sdd/set-equipment-quality/proposal.md)、[A 任務](../../sdd/set-equipment-quality-a/tasks.md)、[B 任務](../../sdd/set-equipment-quality-b/tasks.md)。A 為候選資格、交易、oracle、manifest 與 proof 接線（不跑原生、四品質群組關閉）；B 為原生證明、合併與正式入口 |
-| 下一步 | B4、B6、B7 已完成（[B 任務](../../sdd/set-equipment-quality-b/tasks.md)）：品質矩陣 67,755 案、等級跨池 16 案原生全過；B7 依方案 A 把跨池等級資格寫進 core，由兩個預設關閉的跨池群組把關，21 份代表重證全過。**待使用者決定**：B4 跑在 B7 前的舊 core，`setEquipmentQuality` family 切片已變、品質證明綁整份 core 摘要，需決定依最終 core 重跑 B4（可續跑長跑），或沿用並記錄等價核對。另 **B5** 原版 UI 證據需 computer use 授權。兩者都用遊戲，不可同時跑；B4 處置與 B5 完成後才進 B8 合併證明（Opus 高） |
+| 下一步 | B4、B6、B7 已完成（[B 任務](../../sdd/set-equipment-quality-b/tasks.md)）：品質矩陣 67,755 案、等級跨池 16 案原生全過；B7 依方案 A 把跨池等級資格寫進 core，由兩個預設關閉的跨池群組把關，21 份代表重證全過。使用者決定 B4 沿用舊 core 結果，由 B8 記錄等價核對後合併（不重跑）。剩 **B5** 原版 UI 證據（Opus，需 computer use 授權；未授權就保留缺口、不開相關群組）與 **B8** 合併證明（Opus 高，需授權） |
 | 授權 | A 階段已完成；B1、B2（含隔離遊戲）、B3 已授權並完成，B4、B6、B7 已授權並完成；其餘 B 段逐段明確授權，原生遊戲另需授權，B5 另需 computer use 授權 |
-| 分派 | 依 [B 任務的分派表](../../sdd/set-equipment-quality-b/tasks.md#分派)：B4 重跑與否、B5 待授權，兩者不可同時跑；原生遊戲同時只能一段。主 session 開子 session 與續派的規則見[任務分派](../maintenance/dispatch.md) |
+| 分派 | 依 [B 任務的分派表](../../sdd/set-equipment-quality-b/tasks.md#分派)：B5、B8 待授權；原生遊戲同時只能一段。主 session 開子 session 與續派的規則見[任務分派](../maintenance/dispatch.md) |
 | 開放狀態 | 以目前 catalog／verification 為準；四個品質群組已註冊但旗標為 false（`initialProofRequired`），未證明的群組維持關閉 |
 
 ### 其他候選
