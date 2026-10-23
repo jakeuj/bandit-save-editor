@@ -1,19 +1,19 @@
 # 下一步與目前進度
 
-更新基準：2026-10-23 的已記錄交付。實際開放狀態仍須核對目前 catalog／verification；工作樹中的開發檔案不代表已通過驗證或發布。
+更新基準：2026-10-24 的已記錄交付。實際開放狀態仍須核對目前 catalog／verification；工作樹中的開發檔案不代表已通過驗證或發布。
 
 ## 現在接哪一案
 
-**目前主線：套裝品質／詞條。階段：A1–A10 已完成（來源核對、最小資料、獨立候選資格／預覽／升降品交易入口 `setEquipmentQualityCandidateInfo`、`previewSetEquipmentQualityCandidate`、`applySetEquipmentQualityCandidate`，獨立交易／可達性、效果／生命週期 oracle 與 manifest 分片契約，並已把四群組接進 requirements／suite／migration／proof，旗標一律 false；core 切片未變）；A 階段已交接完成（`210351d`）；B1 原生基準（`ba3d733`）、B3 候選介面（`26721bc`）、B2 生命週期副本與 runner 校正（`6e770a9`，六類各 1 件原生通過）已完成並核對，四群組旗標仍為 false。** 2026-10-23 由使用者選定；寶物等級已作為 v2.11 發布，背包與裝備庫（含穿戴）兩庫的首次證明已合併並開啟。更新日期：2026-10-23。
+**目前沒有功能主線。** 套裝品質已於 v2.12 發布；2026-10-24 起改採[輕量開發流程](../maintenance/lightweight.md)，下一步是簡化建置閘門。
 
 | 要知道什麼 | 目前答案 |
 | --- | --- |
-| 剛完成 | v2.11 寶物等級：只改等級、不扣魂魄、不提供經驗修改；SDD 十項完成並[歸檔](../../sdd/archive/2026-10-23-treasure-level/tasks.md)，研究見[寶物等級研究](treasure-level.md)，發布說明見[各版紀錄](../releases.md#v211-寶物等級) |
-| 目前主線 | 套裝品質／詞條：[母規格](../../sdd/set-equipment-quality/proposal.md)、[A 任務](../../sdd/set-equipment-quality-a/tasks.md)、[B 任務](../../sdd/set-equipment-quality-b/tasks.md)。A 為候選資格、交易、oracle、manifest 與 proof 接線（不跑原生、四品質群組關閉）；B 為原生證明、合併與正式入口 |
-| 下一步 | B1–B7 全部完成（[B 任務](../../sdd/set-equipment-quality-b/tasks.md)）：品質矩陣 67,755 案、等級跨池 16 案原生全過；B7 跨池等級資格寫入 core（兩個跨池群組預設關閉）、21 份代表重證全過；B5 原版 UI 四品質群組皆有證據（缺口：z9 未穿戴件的 UI 顯示未觀察，兩個已選 P套 槽為注入）。下一步 **B8** 合併證明（Opus 高，需授權）：B4 沿用舊 core 結果並記錄等價核對，並判定 B5 缺口是否影響開閘 |
-| 授權 | A 階段已完成；B1、B2（含隔離遊戲）、B3 已授權並完成，B4–B7 已授權並完成；其餘 B 段逐段明確授權，原生遊戲另需授權，B5 另需 computer use 授權 |
-| 分派 | 依 [B 任務的分派表](../../sdd/set-equipment-quality-b/tasks.md#分派)：B8 待授權；原生遊戲同時只能一段。主 session 開子 session 與續派的規則見[任務分派](../maintenance/dispatch.md) |
-| 開放狀態 | 以目前 catalog／verification 為準；四個品質群組已註冊但旗標為 false（`initialProofRequired`），未證明的群組維持關閉 |
+| 剛完成 | v2.12 套裝品質（2026-10-24，`fb8d290`）：背包、裝備庫及穿戴中的套裝裝備可升降品質，已洗出套裝詞條的唯一已選槽保留並可調套裝等級；四個品質群組與兩個跨池等級群組開放。紀錄見[B 任務](../../sdd/set-equipment-quality-b/tasks.md)與[各版紀錄](../releases.md#v212-套裝品質) |
+| 目前主線 | 無功能主線。2026-10-24 起改採[輕量開發流程](../maintenance/lightweight.md) |
+| 下一步 | 簡化建置閘門：目前每個已開放群組的證明都綁整份 core 摘要，改 `src/core.js` 任何一處都會讓建置失敗。要改成「旗標＋輕量紀錄」，才能照輕量流程開發下一個功能。之後的新功能候選見 roadmap |
+| 授權 | 套裝品質已完成並發布。閘門簡化與下一個功能待使用者確認 |
+| 分派 | 預設在同一個 session 做完；必要時才依[任務分派](../maintenance/dispatch.md)開子 session |
+| 開放狀態 | 以目前 catalog／verification 為準；四個品質群組與兩個跨池等級群組已開放 |
 
 ### 其他候選
 

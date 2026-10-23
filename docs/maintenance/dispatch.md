@@ -2,6 +2,8 @@
 
 [維護索引](../maintenance.md) · [承接流程](planning.md) · [下一步與目前進度](../research/next-version-plan.md)
 
+> 2026-10-24 起預設在同一個 session 做完（見[輕量開發流程](lightweight.md)）。本頁只在工作真的能並行或很長，或使用者要求時適用。
+
 使用者只對一個**主 session** 溝通。主 session 讀 SDD 分派表，依各段建議的模型與思考程度自動開**子 session** 執行，收到子 session 回報後核對結果、再開下一批已解鎖段落，直到遇到停點才回到使用者。本頁規定主 session 怎麼拆段、開子 session、核對與交棒。
 
 ## 主 session 的角色

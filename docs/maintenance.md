@@ -134,4 +134,6 @@ Mac 啟動與存檔位置讀 [launcher 說明](../launcher/README.md)；規劃�
 
 ## 進度與續做
 
-問目前進度、下一步或繼續實作時，先看[下一步與目前進度](research/next-version-plan.md)，再依[承接流程](maintenance/planning.md)讀當前 SDD，由主 session 依[任務分派](maintenance/dispatch.md)自動開各模型的子 session；不要從歷史排序重開已完成工作。
+- [輕量開發流程](maintenance/lightweight.md)：2026-10-24 起的新功能、改 core 與遊戲改版驗證方式，與舊規則衝突時以它為準。
+
+問目前進度、下一步或繼續實作時，先看[下一步與目前進度](research/next-version-plan.md)，再依[承接流程](maintenance/planning.md)讀當前 SDD，依[輕量開發流程](maintenance/lightweight.md)在同一個 session 實作；不要從歷史排序重開已完成工作。

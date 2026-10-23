@@ -67,6 +67,8 @@ node scripts/build-editor.cjs
 
 ## 新功能的 core 開發規範
 
+> 2026-10-24 起依[輕量開發流程](lightweight.md)：下列獨立入口原則保留（好維護），但改 core 不再重證全部代表副本，第 6 點的切片報告只當參考。
+
 既有群組的原生證據依 family 的 core 切片綁定（見[切片綁定](../research/core-ast-proof.md#第二階段功能切片)）。只有修改落在少數 family 專屬函式時才省得到選跑；碰到共用樞紐就等同整份 core 變動，全部重證。新功能依下列規範設計：
 
 1. 以**獨立具名入口**提供資格、預覽與交易（例如 `xxxInfo`／`previewXxx`／`setXxx`），UI 直接呼叫該入口；不在 `editingInfo`、`setEditingValue`、`resolveField` 等樞紐新增分支。寶物等級（v2.11）接入 `editingInfo`／`setEditingValue`，因此付了全部 19 份重證，是反例。
