@@ -5,7 +5,7 @@
 每項工程操作目標 30–60 分鐘；超時先再拆子 SDD。自動矩陣執行另記分片／checkpoint，完成全部分母才可勾選。
 
 - [x] B1. 核對並補取得原生基準：只補缺 Q／池／材料與洗練見證，保存生成／合成履歷；至少有套裝池專有 ID，未抽到維持缺案，原檔／快取雜湊不變。
-- [ ] B2. 固定生命週期副本與執行接線：建立三狀態×升降至少六類起點及覆蓋表，沿用 runner 接兩輪 IO／新 PID；不足則加副本，不編造 metadata。
+- [x] B2. 固定生命週期副本與執行接線：建立三狀態×升降至少六類起點及覆蓋表，沿用 runner 接兩輪 IO／新 PID；不足則加副本，不編造 metadata。
 - [x] B3. 完成候選介面與停用驗收：預覽庫別／方向、雙池、增刪槽、效果及確認重設，驗拒絕與未證明方向停用；隔離候選測試不計為正式可用驗收。
 - [ ] B4. 執行首次矩陣與生命週期分片：交易／效果、成本、洗練舊效果移除、穿卸／搬移／排序、兩輪 IO／新 PID 全部對帳；完整 manifest 結束才勾選，未命中與失敗不縮分母。
 - [ ] B5. 完成必要原版 UI 證據：依當次明確授權驗品質顯示、槽數與已選槽停用／洗練；未授權或失敗保留缺口，不開相關群組。
@@ -66,3 +66,14 @@
 - 新增 UI 卡片 `setQualityEditor`（`src/knowledge-ui.js` `renderSetQuality`、`index.html`）：只列套裝裝備；顯示庫別／方向／群組與驗證狀態、P原／P套 詞條池與每槽來源、新增尾槽的 P原 選擇與係數、刪尾槽確認、主係數與 cap、效果前後；旗標為 false 的方向停用「套用」並顯示原因；拒絕（超 cap、刪已選槽、重複、池外、係數越界、未明選）顯示 core 訊息；「重設選項與確認」清除輸入與確認。普通裝備品質卡與套裝等級介面未改動。
 - 測試：`tests/set-equipment-quality-ui.test.cjs`（9 項，真實 widget 搭 DOM adapter；旗標只在隔離知識副本開啟）與 `tests/browser/set-equipment-quality.spec.cjs`（桌面／390px，出貨旗標下可預覽、套用停用、無橫向溢位）。既有 preview／proof 測試的名稱清單同步加入新入口。`node scripts/core-slice-report.cjs`：切片未變。`npm test` 336／336、`npm run test:browser` 27／27。
 - 範圍：四群組旗標維持 false，未改 verification／catalog 旗標與進度入口；未跑原生。隔離候選測試只算 B3 候選驗收，不算正式可用驗收（B9）。
+
+### B2（2026-10-23）
+
+- 新 runner `scripts/verify-set-equipment-quality-migration-lifecycle.cjs`（取代失敗占位；未給 `--output` 仍拒絕且不產生結果）。起點：固定基準存檔清空後只放一件，經候選 `applySetEquipmentQualityCandidate`（品質旗標只在隔離知識副本開啟，`knowledge/` 與 catalog 不動）寫成 bytes，並與 A7／A8 兩支 oracle 對拍；原生載入該 bytes。`planCopies` 依 B1 引用的等級基準（1,944 份）選範本，`--per-class 2` 可加第二份。
+- 六類起點（各 1 件，不同範本，T1／T9 交替）：背包升 Q2→3、背包降 Q4→3、未穿戴升 Q2→3、未穿戴降 Q4→3、穿戴升 Q2→3、穿戴降 Q4→3，各對到 A9 `lifecycle:<state>-<direction>` 基礎案。覆蓋表（`coverage`，產物 `b2-report.json`）逐 A9 生命週期案列狀態：基礎 6 案由六類各自通過；另 `tier-1`／`tier-9` 軸依副本階數在對應群組計入。四群組可執行生命週期案 9／9／10／10，已通過 1／1／2／2，其餘 32 案維持待 B4（Q 轉換軸、池／選槽軸、合成路徑軸、跨群組額外軸），不適用 12 案不計。覆蓋表只計副本實際通過者。
+- 流程（原生、隱藏靜音、同時一份隔離副本，Steam 真實初始化；未用 computer use、未開原版桌面 UI）：第一輪＝載入編輯 bytes→逐欄讀回等於編輯結果（含角色指標）→原版存檔→停止→新 PID→讀取存档→讀回相同；第二輪＝原生同槽洗練（`词条洗练`，魂魄成本 100／次）→穿卸／搬移（背包起點 equip→unequip，裝備庫起點 takeout→equip→unequip）→原生 `装备排序`→再存讀；兩輪 PID 皆不同。監看 y0–59 與角色指標六格；每次搬移前在來源列種下 y50–59 標記。
+- 原生觀察（與規格一致，無反證）：搬移只複製 y0–49，來源 y0–49 清零、y50–59 保留，標記沒有進入目的列；目的列沿用自己原有的 y50–59（`unequip` 回到原背包列時看到的是前次種下的標記，屬該列殘留而非複製，故標記改為每步各自種下）。洗練只改該槽 ID／係數／旗標三欄，結果在 P套、係數在目前 Q 區間、旗標 1；`装备排序` 對資料列無位置或內容變動（背包另放一件佔位裝備），之後以身分找回唯一一件。穿戴者洗練後搬移與新 PID 讀回通過。背包起點 5／4 次洗出套裝池專有 ID，其餘四類該範本套裝池無專有 ID，洗 1 次、記為未命中而非失敗。
+- 校正結果：六類各 1 件全部通過，逐案輸出 `{id,caseHash,passed,nativeCompared:true}` 六筆（caseHash 為目前 A9 manifest 的案例摘要：backpack-up `0beadb7d…`、backpack-down `5b78cc91…`、stored-up `6afc56b0…`、stored-down `9def2605…`、equipped-up `c7a727b3…`、equipped-down `a60c6826…`）。這只是 runner 校正，不是 B4 完整矩陣，不合併任何證明，四群組仍 false、缺 UI 證據。
+- 綁定與雜湊（SHA-256）：manifest `240c8b5c…e09679cd`、runner `3be470c4…c82af6505`、核心 `69b462a0…40bf1d6d5`、結果檔 `4df28e3f…bcfa47f33e`、固定基準存檔 `ebb0a4a2…84c5`（外部輸入四雜湊沿用 B1）。原始結果、起點存檔與 log 在 repo 外 `set-equipment-quality-B2`；執行前後固定存檔、玩家原檔、等級基準與兩份快取 manifest 雜湊相同。第一次嘗試誤把「回到原列的目的列有標記」當成複製而失敗，改為每步各自種下標記後重跑，舊結果收入 `superseded`，最終以此 runner 重跑六類。
+- B4 可直接開跑的條件：沿用同一 runner 的 `playCopy`／`lifecycleDriver`／`validateCopy`，`--per-class 2` 可加副本；其餘 32 個生命週期軸需 B4 擴充 `planCopies` 的起點；runner 尚無依 A9 完整案例清單的分片排程與續跑（B4 需補）。
+- 驗證：新增 `tests/set-equipment-quality-lifecycle.test.cjs`（8 項，合成資料與記憶體引擎驅動真 driver：規劃、bytes 對拍、六類報告、尾十欄／清除／PID／洗練／排序拒絕、覆蓋表與逐案格式、不可合併證明）；A10 占位測試改為「未給 --output 拒絕」。`npm test` 351／351；`node scripts/core-slice-report.cjs`：core 切片未變。未改 src、index.html、sw.js、knowledge、旗標與進度入口。

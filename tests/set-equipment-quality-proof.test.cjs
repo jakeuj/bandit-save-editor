@@ -28,9 +28,9 @@ test('the four quality groups are registered everywhere but stay closed',()=>{
  assert.ok(A.dependencies.setEquipmentQuality&&A.regions.setEquipmentQuality);
  assert.equal(P.problem(k,proof,source),null);
 });
-test('the placeholder native runners refuse to report any result',()=>{
+test('the placeholder native runner and the artifact-less lifecycle runner refuse to report any result',()=>{
  const {spawnSync}=require('node:child_process');
- for(const f of ['verify-set-equipment-quality.cjs','verify-set-equipment-quality-migration-lifecycle.cjs']){const r=spawnSync(process.execPath,[path.join(__dirname,'../scripts',f)],{encoding:'utf8'});assert.equal(r.status,1);assert.match(r.stderr,/尚未實作/);assert.equal(r.stdout,'');}
+ for(const f of ['verify-set-equipment-quality.cjs','verify-set-equipment-quality-migration-lifecycle.cjs']){const r=spawnSync(process.execPath,[path.join(__dirname,'../scripts',f)],{encoding:'utf8'});assert.equal(r.status,1);assert.match(r.stderr,f==='verify-set-equipment-quality.cjs'?/尚未實作/:/需要 --output/);assert.equal(r.stdout,'');}
  assert.throws(()=>P.validateMigrationCopy(),/代表遷移/);
 });
 test('a complete synthetic result set builds a record that matches the current sources',()=>{
