@@ -1,4 +1,4 @@
 interface:
   display_name: "山寨帳房 Repo 維護"
   short_description: "承接山寨帳房目前進度、下一版規劃與實作，維護存檔知識及發布"
-  default_prompt: "使用 $bandit-save-editor，先讀下一步與目前進度及當前 SDD，回報現在做到哪，或依我的實作指示接續第一個未完成任務；區分研究、驗證與發布。"
+  default_prompt: "使用 $bandit-save-editor，先讀下一步與目前進度，回報現在做到哪，或依我的實作指示接續下一步；區分研究、驗證與發布。"

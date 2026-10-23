@@ -35,7 +35,7 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 | --- | --- |
 | 架構與跨檔關係 | 若有 `graphify-out/graph.json` 先查圖譜並核對目前來源；建立、更新與完整性限制見 `docs/research/repository-graph.md` |
 | 存檔讀寫、名稱、經驗、知識重建 | [存檔參考](references/save-format.md)、`src/core.js`、`docs/research/save-knowledge.md`、`docs/maintenance/core.md` |
-| 裝備、丹藥、資質、技藝上限、天賦、批次或職業圖鑑 | [功能導覽](references/feature-guide.md) 的對應條目，接著讀該功能研究及 SDD |
+| 裝備、丹藥、資質、技藝上限、天賦、批次或職業圖鑑 | [功能導覽](references/feature-guide.md) 的對應條目，接著讀該功能研究（舊功能另有 `sdd/` 歷史紀錄；新功能不建 SDD） |
 | 遊戲改版、來源快取、原生驗證 | `docs/maintenance/migration.md`、[操作補充](references/operations.md) 的版本更新入口 |
 | 開發測試與驗收 | `docs/testing.md`；新增功能依 `docs/maintenance/lightweight.md`，隱藏原生測試先讀 `docs/maintenance/migration.md`「本機開發快取」並核對 `.local/game-sources.json` 的 `preferredDevelopmentSourceId` |
 | PWA、直接開檔、離線驗收 | `docs/maintenance/pwa.md`、`docs/testing.md` |

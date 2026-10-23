@@ -53,7 +53,7 @@
 
 ## 專案進度
 
-**要看目前做到哪、下一步做什麼，統一看[下一步與目前進度](docs/research/next-version-plan.md)。** 該頁列出目前主線、階段、下一個任務及對應 SDD；[功能路線圖](docs/research/feature-roadmap.md)保留候選排序與研究理由。候選項目不代表已排定版本或正式開放。
+**要看目前做到哪、下一步做什麼，統一看[下一步與目前進度](docs/research/next-version-plan.md)。** 該頁列出目前主線、階段與下一步；[功能路線圖](docs/research/feature-roadmap.md)保留候選排序與研究理由。候選項目不代表已排定版本或正式開放。
 
 [山寨帳房 Project](https://github.com/users/jakeuj/projects/3) 以「待辦」、「進行中」、「已完成」追蹤開發與驗收；目前為私人專案，需具存取權限才能查看。
 

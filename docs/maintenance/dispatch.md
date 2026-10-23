@@ -4,7 +4,7 @@
 
 > 2026-10-24 起預設在同一個 session 做完（見[輕量開發流程](lightweight.md)）。本頁只在工作真的能並行或很長，或使用者要求時適用。
 
-使用者只對一個**主 session** 溝通。主 session 讀 SDD 分派表，依各段建議的模型與思考程度自動開**子 session** 執行，收到子 session 回報後核對結果、再開下一批已解鎖段落，直到遇到停點才回到使用者。本頁規定主 session 怎麼拆段、開子 session、核對與交棒。
+使用者只對一個**主 session** 溝通。主 session 讀分派表，依各段建議的模型與思考程度自動開**子 session** 執行，收到子 session 回報後核對結果、再開下一批已解鎖段落，直到遇到停點才回到使用者。本頁規定主 session 怎麼拆段、開子 session、核對與交棒。
 
 ## 主 session 的角色
 
@@ -17,7 +17,7 @@
 - 「下一步做什麼」：回報進度並附分派計畫（下方格式），不開子 session。
 - 「繼續實作下一版功能」：先核對工作樹、最近提交與分派表，然後把所有已解鎖段落各開一個子 session（`start_session`，initiation `user_asked`，context `fresh`，指定 `model`／`effort`）；可並行的段落同時開。開完回報一行開了哪些段，等子 session 回報。
 - 使用者指名某一段（例如「做 A4」）：只開該段；使用者要求在主 session 直接做時照做。
-- 分派計畫以目前 SDD 任務檔的「分派」表為準；表不存在或過時，主 session 先依本頁規則補表並寫回 SDD，再開子 session。
+- 新功能不建 SDD；需要分派時，主 session 先依本頁規則把簡短分派表寫進[目前進度](../research/next-version-plan.md)，再開子 session。舊 SDD 任務檔裡的分派表只是歷史紀錄。
 - 執行環境沒有開 session 的工具時，退回舊做法：交出分派計畫與完整 prompt，由使用者另開 session。
 
 ## 選模型
@@ -65,7 +65,7 @@
 可同時跑：段 2、3（不同檔案）
 ```
 
-接著寫：要做的任務與 SDD 連結、只讀哪些文件、界線（不改哪些檔、旗標與證明）、驗證（測試、`node scripts/core-slice-report.cjs` 的預期結果）、收尾（照 `docs/maintenance/release.md` 最短流程；不改進度入口）、回報格式（下一節）。`background` 寫目前主線、已完成段落與其提交、這段在整體中的位置。
+接著寫：要做的任務與相關研究連結、只讀哪些文件、界線（不改哪些檔、旗標與證明）、驗證（測試、`node scripts/core-slice-report.cjs` 的預期結果）、收尾（照 `docs/maintenance/release.md` 最短流程；不改進度入口）、回報格式（下一節）。`background` 寫目前主線、已完成段落與其提交、這段在整體中的位置。
 
 ## 子 session 收尾回報
 

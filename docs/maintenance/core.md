@@ -76,7 +76,7 @@ node scripts/build-editor.cjs
 3. 新功能的唯讀保護若必須進入 `resolveField`（例如自訂座標不可繞過），先排在一次本來就要全跑的時點（遊戲改版或發布前），把分類改成資料驅動；不在開發中修改樞紐。
 4. 共用工具（座標、格存取、`put`、`transaction`、`parse`／`serialize`）只在發布前批次修改；新功能需要的輔助函式放在自己的區塊。
 5. 新 family 必須在 `scripts/migration-analysis.cjs` 的 `coreRoots` 宣告其原生情境與驗證腳本使用的 `SaveCore` 方法；`tests/core-slice-roots.test.cjs` 會核對漏列。
-6. 每次修改 core 後先跑 `node scripts/core-slice-report.cjs`（純靜態、秒級），看本次修改會讓哪些 family 的切片改變；在 SDD 停點記錄結果。
+6. 每次修改 core 後先跑 `node scripts/core-slice-report.cjs`（純靜態、秒級），看本次修改會讓哪些 family 的切片改變；結果只當參考，不決定重證（見[輕量開發流程](lightweight.md#改-core-與遊戲改版)）。
 
 ## 重建知識與開放寫入
 

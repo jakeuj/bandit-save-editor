@@ -15,7 +15,7 @@
 | 已發布 | v2.10 套裝等級，z7／z9 兩庫各自完成首次證明 | [套裝任務](../../sdd/archive/2026-10-23-set-equipment-level/tasks.md) |
 | 已發布（v2.11） | 寶物等級（經驗編輯 no-go） | [研究](treasure-level.md)、[SDD](../../sdd/archive/2026-10-23-treasure-level/tasks.md) |
 | 已發布（v2.12） | 套裝品質升降（兩庫 × 升／降），已洗套裝詞條的唯一已選槽保留並可調套裝等級 | [各版紀錄](../releases.md#v212-套裝品質)、[B 任務](../../sdd/set-equipment-quality-b/tasks.md) |
-| 待評估 | 丹藥擴充、靈物、內丹與渡劫、城市與城牆、超限、建築與基礎科技 | 下方研究排序；開工前重新核對來源、優先順序與 SDD |
+| 待評估 | 丹藥擴充、靈物、內丹與渡劫、城市與城牆、超限、建築與基礎科技 | 下方研究排序；開工前重新核對來源與優先順序，依[輕量開發流程](../maintenance/lightweight.md)實作 |
 | 另線候選 | 有名角色與自然職業上限 runtime 補丁 | [提案](../../sdd/runtime-patch/proposal.md)，尚未實作交付 |
 | 待補驗 | 名稱／經驗／設定及 v2.1–v2.5 的直接 file 流程、新版 Mac 啟動與存讀／重啟 | 各 SDD 與[目前規劃](next-version-plan.md) |
 
