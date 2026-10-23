@@ -1,6 +1,8 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('fs'),vm=require('vm');
 function setup(){
  const K=JSON.parse(fs.readFileSync('knowledge/catalog.json'));K.verification.equipmentAffixCoefficient=K.verification.pillAptitudeBonus=true;
+ // Integer pill path; the decimal flag is covered by pill-decimal.test.cjs.
+ K.verification.pillAptitudeBonusDecimal=false;
  const ctx={};vm.runInNewContext(fs.readFileSync('src/core.js','utf8').replace('/*__KNOWLEDGE__*/null',JSON.stringify(K)),ctx);const C=ctx.SaveCore;
  const data=Array.from({length:221},()=>Array.from({length:60},()=>Array(22).fill(0)));data[0][0][1]='szmnqea';data[1][0][2]=1;data[1][1][2]='測試甲';data[1][2][2]=1;
  const template=K.batch2Data.characters[1];for(let i=0;i<3;i++){data[1][10+i][2]=template.base[i];data[1][1+i][12]=template.talents[i];data[1][21+i][12]=template.talentLevels[i];}

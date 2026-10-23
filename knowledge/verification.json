@@ -50,6 +50,7 @@
     "equipmentAffixReplacement": true,
     "equipmentAffixCoefficient": true,
     "pillAptitudeBonus": true,
+    "pillAptitudeBonusDecimal": true,
     "names": true,
     "characterExperience": true,
     "professionExperience": true,
@@ -60,6 +61,22 @@
     "professionTrainingCapAdvanced": true,
     "advancedTechnologyLevel": true,
     "advancedTechnologyLevelAdvanced": true
+  },
+  "lightweight": {
+    "pillAptitudeBonusDecimal": {
+      "date": "2026-10-24",
+      "gameVersion": "V1.0.11.2",
+      "flow": "docs/maintenance/lightweight.md",
+      "smoke": "verify-game.cjs + verify-native-lifecycle.cjs（隔離副本、雲存檔載入、原版存檔、新 PID 讀回、原生服藥與重生）",
+      "cases": [
+        "角色 1（範本 0、無結丹）力量 21.5 端點／敏捷 7.3／智力 12.4",
+        "角色 8 原生 B=17.5 填回不寫入（token 保留），敏捷 16→15.5",
+        "原生服藥：端點不消耗；7.3→16、12.4→15；重生清零"
+      ],
+      "baselineSaveSha256": "ebb0a4a28791218986c594d3b3819a066482bc11ff75aac99f8498c4ce4b84c5",
+      "resultSha256": "81ea17df5dcde1363a35be72262f6e8d2c2884085042b7b540668c0fc2d9a4fc",
+      "passed": true
+    }
   },
   "method": "按功能相依選跑；原生、沿用與 UI 未重驗分開記錄",
   "migration": {

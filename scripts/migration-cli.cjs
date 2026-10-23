@@ -76,7 +76,7 @@ async function main(M) {
     const oldGame=require('./extract-game.cjs').inspectGame(opt('--previous-source'));
     base={...A.snapshot(oldGame,core),gameVersion:'previous-source',dataHashes:current.dataHashes};
   }
-  const groups=Object.keys(previous.groups).filter(g=>previous.groups[g]),plan=P.selection(base,current,groups,{mode});
+  const groups=Object.keys(previous.groups).filter(g=>previous.groups[g]&&P.composite(previous,g)),plan=P.selection(base,current,groups,{mode});
   const names=only||selectNames(plan);
   fs.writeFileSync(reportFile,JSON.stringify({gameVersion:catalog.gameVersion,announcement:opt('--announcement')||null,plan,copies:names,previous:base,current},null,2));
   console.log(JSON.stringify({mode,sameSource:plan.sameSource,blocked:plan.blocked,copies:names,formulaMatrices:Object.values(plan.families).filter(f=>f.formulas).length,computerUse:false,report:reportFile}));

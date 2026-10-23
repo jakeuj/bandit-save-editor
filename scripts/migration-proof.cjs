@@ -22,6 +22,9 @@ function dataHash(k,group) {
   if (!data) throw Error('Unknown evidence family: '+family);
   return A.sha(clean(data));
 }
+// Groups opened by the lightweight flow (docs/maintenance/lightweight.md) carry a smoke record in proof.lightweight instead of
+// composite native evidence. The composite proof skips them; a version migration closes them until they are smoked again.
+const composite=(proof,group)=>!proof?.lightweight?.[group];
 function baseline(catalog,proof,snapshot) {
   if (snapshot.unknown.length || !A.same(snapshot.fingerprints,allSources(catalog)) || !A.same(proof.fingerprints,catalog.fingerprints)) throw Error('語意基準必須來自已驗證的相符來源');
   return {...snapshot,gameVersion:catalog.gameVersion,proofHash:A.sha(proof),dataHashes:Object.fromEntries(Object.keys(catalog.verification).map(g=>[g,dataHash(catalog,g)]))};
@@ -32,7 +35,7 @@ function imported(previous,base) {
     return {anchors:{...previous.migration.anchors},evidence:previous.migration.evidence,initialVerification:previous.migration.initialVerification,talentInitialVerification:previous.migration.talentInitialVerification,setInitialVerification:previous.migration.setInitialVerification,treasureInitialVerification:previous.migration.treasureInitialVerification,qualityInitialVerification:previous.migration.qualityInitialVerification,crossPoolInitialVerification:previous.migration.crossPoolInitialVerification};
   }
   if (base.proofHash!==A.sha(previous)) throw Error('語意基準不屬於既有原生證明');
-  const checks = {}, evidence = {}, groups = Object.keys(previous.groups).filter(g=>previous.groups[g]);
+  const checks = {}, evidence = {}, groups = Object.keys(previous.groups).filter(g=>previous.groups[g]&&composite(previous,g));
   for (const group of groups) checks[group] = R.requiredChecks(group).filter(c=>c!==R.uiChecks[group]&&recordedChecks(previous,group)?.[c]===true);
   const anchor = {kind:'legacy-native',gameVersion:base.gameVersion,fingerprints:base.fingerprints,snapshot:base,proofHash:base.proofHash,checks};
   const id = A.sha(anchor);
@@ -62,7 +65,7 @@ function selection(previous,current,groups,options) {
 function compose({catalog,previous,base,current,plan,results,steamBuild}) {
   if (plan.blocked || !results.completed) throw Error('選跑尚未完成，不可寫回');
   const importedProof = imported(previous,base), {anchors} = importedProof, evidence = {};
-  const groups = Object.keys(previous.groups).filter(g=>previous.groups[g]&&Object.hasOwn(catalog.verification,g));
+  const groups = Object.keys(previous.groups).filter(g=>previous.groups[g]&&composite(previous,g)&&Object.hasOwn(catalog.verification,g));
   const checks = Object.fromEntries(groups.map(g=>[g,R.requiredChecks(g).filter(c=>c!==R.uiChecks[g]&&results.checks?.[g]?.[c]===true)]));
   const native = {kind:'native',gameVersion:catalog.gameVersion,fingerprints:current.fingerprints,snapshot:current,checks,evidenceHash:A.sha(results.copies),copies:results.copies.map(c=>c.name)};
   const nativeId=A.sha(native); anchors[nativeId]=native;
@@ -111,18 +114,18 @@ function mergeInitial(catalog,proof,group,record,results,source) {
 }
 // The source must match the snapshot on every family that owns a check of an open group: by slice when both sides can be
 // sliced, otherwise by the full core. Code no open family reaches may change without a new native run.
-function coreMatches(source,snapshot,k,onlyGroup) {
+function coreMatches(source,snapshot,k,onlyGroup,proof) {
   const table=A.sliceTable(snapshot),current=table&&Core.slices(source,A.coreRoots);
   if(!table||!current||current.algorithm!==table.algorithm)return Core.matches(source,snapshot.coreHash,snapshot.coreHashAlgorithm);
-  const groups=onlyGroup?[onlyGroup]:Object.keys(k.verification).filter(g=>k.verification[g]);
+  const groups=onlyGroup?[onlyGroup]:Object.keys(k.verification).filter(g=>k.verification[g]&&composite(proof,g));
   const families=[...new Set(groups.flatMap(g=>R.requiredChecks(g).filter(c=>c!==R.uiChecks[g]).flatMap(c=>A.owners(g,c))))];
   return families.every(f=>/^[a-f0-9]{64}$/.test(table.hashes[f]||'')&&table.hashes[f]===current.hashes[f]);
 }
 function problem(k,proof,source,onlyGroup,opts={}) {
   try {
     const m=proof.migration;
-    if(proof.schemaVersion!==2||m?.version!==2||m.policy!=='selective-existing-v1'||proof.gameVersion!==k.gameVersion||Object.keys(allSources(k)).length!==15||!Object.values(allSources(k)).every(h=>hashPattern.test(h))||!A.same(allSources(k),m.snapshot?.fingerprints)||!A.same(proof.fingerprints,k.fingerprints)||!A.same(proof.batch2Fingerprints,k.batch2Fingerprints)||!coreMatches(source,m.snapshot,k,onlyGroup)||!Array.isArray(m.snapshot.unknown)||m.snapshot.unknown.length) throw Error('複合證明與來源或程式不相符');
-    const groups=onlyGroup?[onlyGroup]:Object.keys(k.verification).filter(g=>k.verification[g]);
+    if(proof.schemaVersion!==2||m?.version!==2||m.policy!=='selective-existing-v1'||proof.gameVersion!==k.gameVersion||Object.keys(allSources(k)).length!==15||!Object.values(allSources(k)).every(h=>hashPattern.test(h))||!A.same(allSources(k),m.snapshot?.fingerprints)||!A.same(proof.fingerprints,k.fingerprints)||!A.same(proof.batch2Fingerprints,k.batch2Fingerprints)||!coreMatches(source,m.snapshot,k,onlyGroup,proof)||!Array.isArray(m.snapshot.unknown)||m.snapshot.unknown.length) throw Error('複合證明與來源或程式不相符');
+    const groups=(onlyGroup?[onlyGroup]:Object.keys(k.verification).filter(g=>k.verification[g])).filter(g=>composite(proof,g));
     for(const group of groups) {
       if(!proof.groups[group]||!m.enabledBefore.includes(group)||m.snapshot.dataHashes?.[group]!==dataHash(k,group))throw Error('缺少既有群組或規則證據：'+group);
       if(group==='randomCharacterSkillCaps'&&require('./random-character-skill-caps-proof.cjs').initialProblem(m.initialVerification))throw Error('首次完整矩陣證明缺失');
@@ -142,4 +145,4 @@ function problem(k,proof,source,onlyGroup,opts={}) {
     return null;
   } catch(e) { return e.message; }
 }
-module.exports={allSources,recordedChecks,dataHash,baseline,digest,selection,compose,mergeInitial,problem};
+module.exports={composite,allSources,recordedChecks,dataHash,baseline,digest,selection,compose,mergeInitial,problem};

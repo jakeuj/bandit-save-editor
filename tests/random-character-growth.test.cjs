@@ -7,6 +7,8 @@ function setup(nx=450,count=2){
  const pills=[1,2,3].map(a=>Number(Object.keys(f.k.batch2Data.pills).find(id=>f.k.batch2Data.pills[id].aptitude===a&&f.k.batch2Data.pills[id].cap>=40)));
  pills.forEach(id=>f.a[id][6][0]=10);
  f.C.KNOWLEDGE.verification.randomCharacterBaseAptitudes=true;f.C.KNOWLEDGE.verification.pillAptitudeBonus=true;
+ // Integer pill path; decimal B with the decimal flag is covered by pill-decimal.test.cjs.
+ f.C.KNOWLEDGE.verification.pillAptitudeBonusDecimal=false;
  return {...f,pills,m:f.reparse(),raw:f.rawWith()};
 }
 const coord=(x,y,z=2)=>({x,y,z});

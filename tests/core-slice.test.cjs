@@ -47,7 +47,7 @@ test('constructs that defeat name-based reachability make the whole core unslice
 });
 test('a family-private edit selects only that family; a hub edit or an unsliceable core selects all',()=>{
  // The baseline is the current core, not the proven snapshot: since the lightweight flow core edits do not re-bind old proofs.
- const previous={...proof.migration.snapshot,coreHash:Core.hash(core),coreHashAlgorithm:Core.algorithm,coreSlices:Core.slices(core,A.coreRoots)},groups=Object.keys(proof.groups).filter(g=>proof.groups[g]);
+ const previous={...proof.migration.snapshot,coreHash:Core.hash(core),coreHashAlgorithm:Core.algorithm,coreSlices:Core.slices(core,A.coreRoots)},groups=Object.keys(proof.groups).filter(g=>proof.groups[g]&&P.composite(proof,g));
  const next=src=>({...previous,coreHash:Core.hash(src),coreHashAlgorithm:Core.algorithm,coreSlices:Core.slices(src,A.coreRoots)||undefined});
  const families=src=>Object.keys(P.selection(previous,next(src),groups).families).sort();
  assert.deepEqual(families(core),[]);

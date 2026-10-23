@@ -90,3 +90,10 @@ test('custom coordinates and advanced mode cannot bypass the decimal flag',()=>{
  C.KNOWLEDGE.verification.pillAptitudeBonus=false;assert.throws(()=>C.setPillAptitudeBonus(m,{characterId:2,aptitude:1,pillId:high[0],bonus:1.5}),/驗證/);
  assert.equal(m.changes.size,0);
 });
+
+test('the shipped flag has a lightweight smoke record and stays out of the composite migration proof',()=>{
+ const k=require('../knowledge/catalog.json'),proof=require('../knowledge/verification.json'),P=require('../scripts/migration-proof.cjs');
+ assert.equal(k.verification.pillAptitudeBonusDecimal,true);assert.equal(proof.groups.pillAptitudeBonusDecimal,true);
+ const rec=proof.lightweight.pillAptitudeBonusDecimal;assert.equal(rec.passed,true);assert.equal(rec.gameVersion,k.gameVersion);
+ assert.equal(P.composite(proof,'pillAptitudeBonusDecimal'),false);assert.equal(P.composite(proof,'pillAptitudeBonus'),true);
+});
