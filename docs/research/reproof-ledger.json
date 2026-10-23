@@ -8,7 +8,8 @@
  },
  "suggestion": {
   "candidate": "降低原生重證成本 C：並行副本",
-  "status": "pending"
+  "status": "declined",
+  "at": "2026-10-23"
  },
  "runs": [
   {
@@ -18,6 +19,27 @@
    "total": 19,
    "minutes": 12,
    "note": "v2.11 寶物等級接入共用樞紐，全部代表副本重證；分鐘數依當時 10–13 分鐘實測估計"
+  },
+  {
+   "date": "2026-10-23",
+   "trigger": "core-change",
+   "copies": 21,
+   "total": 21,
+   "minutes": 14,
+   "families": [
+    "advanced",
+    "affixReplacement",
+    "batch2",
+    "equipmentQuality",
+    "equipmentWorkflow",
+    "growth",
+    "randomCharacterGrowth",
+    "randomCharacterSkillCaps",
+    "randomCharacterTalents",
+    "setEquipmentLevel",
+    "treasureLevel"
+   ],
+   "note": "套裝品質 B7：跨池等級資格寫入 setEquipmentLevelInfo（共用樞紐），21 份代表副本全部重證；第 19 份 oracleCompare 遇 Node libuv 斷言崩潰，--resume 重跑該份後全過；約 14 分鐘含續跑"
   }
  ]
 }

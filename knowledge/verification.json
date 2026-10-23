@@ -29,6 +29,12 @@
     "setEquipmentLevel": true,
     "backpackTreasureLevel": true,
     "treasureLevel": true,
+    "backpackSetEquipmentQualityUpgrade": false,
+    "backpackSetEquipmentQualityDowngrade": false,
+    "setEquipmentQualityUpgrade": false,
+    "setEquipmentQualityDowngrade": false,
+    "backpackSetEquipmentLevelCrossPool": false,
+    "setEquipmentLevelCrossPool": false,
     "randomCharacterTalents": true,
     "randomCharacterSkillCaps": true,
     "randomCharacterBaseAptitudes": true,
@@ -61,8 +67,10 @@
     "policy": "selective-existing-v1",
     "previousGameVersion": "V1.0.11.2",
     "enabledBefore": [
-      "setEquipmentLevel",
       "backpackSetEquipmentLevel",
+      "setEquipmentLevel",
+      "backpackTreasureLevel",
+      "treasureLevel",
       "randomCharacterTalents",
       "randomCharacterSkillCaps",
       "randomCharacterBaseAptitudes",
@@ -87,9 +95,7 @@
       "professionTrainingCap",
       "professionTrainingCapAdvanced",
       "advancedTechnologyLevel",
-      "advancedTechnologyLevelAdvanced",
-      "backpackTreasureLevel",
-      "treasureLevel"
+      "advancedTechnologyLevelAdvanced"
     ],
     "snapshot": {
       "version": 2,
@@ -110,8 +116,25 @@
         "yx.json": "58b8eb984cf8190f52ed4e53d044079733cf82096224dd7014ec36e1da2b45bc",
         "tz.json": "a4b008981f39abc371b5673abe4c780bef5c91229a5ae3a42d2e8fef4e780c74"
       },
-      "coreHash": "ae4bbdb76cdf419c2b93d634b1945c5001165020fe72e97ab9c8671bde1faf9d",
+      "coreHash": "5469069385845eb011e0f63fe8e7edd2b29eb1350098d1e7649b85cbac73f46a",
       "coreHashAlgorithm": "core-estree-acorn-8.15.0-es2024-v1",
+      "coreSlices": {
+        "algorithm": "core-slice-acorn-8.15.0-es2024-v1",
+        "hashes": {
+          "advanced": "ade4a30b8293f079d1ec1c8d2c2dd6e707958c9f5654ae0fd4bbf2ae72d71c51",
+          "affixReplacement": "1ca7d4d31829e4bfd8f6948e3728c7f47761f42b1dafc341a89ceec747beab01",
+          "batch2": "451e2a1cc5ed1c5329b46baa721e87860242b73c54f5b201084abb1ffb15e7d3",
+          "equipmentQuality": "c8e4b37e0fed169d9d5977bc8211674dc0f70f968fd03fa3279633023d7d8b0f",
+          "equipmentWorkflow": "5ed8faf14e9cb2472195aa8a0ca7cf1c880e85b072ef827c02b66ada8829c7cc",
+          "growth": "0e05141ca78210e048d87229fb0043d76d10912f6e9694f58e301d485933beae",
+          "randomCharacterGrowth": "9a99e88a684e9ffdd708a8d818ff89bec74cdff9b3b3ea3afb18a09ef4e3c1c7",
+          "randomCharacterSkillCaps": "faf2a9184331ba67607ca09e313cfc08e50f91752d66d157e5f3c1d57d69ba2b",
+          "randomCharacterTalents": "36182f3bd5f04e1d6a69f57478682bbd4d0d6d2d4bc352b81a689c4a629f2520",
+          "setEquipmentLevel": "cb888574ec37d15f123b780d766c7b3b7be2d1cf306575d54a3bd5825219b045",
+          "setEquipmentQuality": "7439f1e4e804c3f9268df4638dd43b5da2194fd413947d0bd27a37e503300781",
+          "treasureLevel": "cb888574ec37d15f123b780d766c7b3b7be2d1cf306575d54a3bd5825219b045"
+        }
+      },
       "roles": {
         "setEquipmentLevel": {
           "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
@@ -122,6 +145,11 @@
           "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
           "effects": "14078bdd865fdd091c315e334b814eb2fd9790c010fb3d671e36949182b264f1",
           "lifecycle": "aec1c9fa52f79c28a926e78c8c7419cfe933ffd02753fb1bbcbd2012a8c6ac1f"
+        },
+        "setEquipmentQuality": {
+          "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
+          "effects": "d8862b26ecb874781c9f67b6a3de0b0550146c5eca435457978d37e748e3b02b",
+          "lifecycle": "911011749f6213ad461d434de6cf8e1c3047258cb83f4d53eb0eabbd3431af62"
         },
         "growth": {
           "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
@@ -178,6 +206,12 @@
         "setEquipmentLevel": "86831316f3112d4ae6f6785cc85235ee735286844bb7cffa39727a024f8531a9",
         "backpackTreasureLevel": "f5351ba416120f3dda660ce6e9321dbd04eb3391a292cc4c6c80d02f9f0312e1",
         "treasureLevel": "f5351ba416120f3dda660ce6e9321dbd04eb3391a292cc4c6c80d02f9f0312e1",
+        "backpackSetEquipmentQualityUpgrade": "cb5e1f951505369f91bf877a92a8257a049aaa7ae0aac54ef807aebe411ceabc",
+        "backpackSetEquipmentQualityDowngrade": "cb5e1f951505369f91bf877a92a8257a049aaa7ae0aac54ef807aebe411ceabc",
+        "setEquipmentQualityUpgrade": "cb5e1f951505369f91bf877a92a8257a049aaa7ae0aac54ef807aebe411ceabc",
+        "setEquipmentQualityDowngrade": "cb5e1f951505369f91bf877a92a8257a049aaa7ae0aac54ef807aebe411ceabc",
+        "backpackSetEquipmentLevelCrossPool": "cb5e1f951505369f91bf877a92a8257a049aaa7ae0aac54ef807aebe411ceabc",
+        "setEquipmentLevelCrossPool": "cb5e1f951505369f91bf877a92a8257a049aaa7ae0aac54ef807aebe411ceabc",
         "randomCharacterTalents": "9147a7b6687005b9d9309cec340537cd3cc3316bc3db3f73cc00fd4f40fedc27",
         "randomCharacterSkillCaps": "24690926687b1bc8130cfc789ef8152d650b42dbb0c92c558b5cb20c88f39398",
         "randomCharacterBaseAptitudes": "3a5f3d21fc65d09694aebd302f32813f5dc82723fd87f16d795329306431fd76",
@@ -206,7 +240,7 @@
       }
     },
     "anchors": {
-      "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b": {
+      "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348": {
         "kind": "native",
         "gameVersion": "V1.0.11.2",
         "fingerprints": {
@@ -245,8 +279,25 @@
             "yx.json": "58b8eb984cf8190f52ed4e53d044079733cf82096224dd7014ec36e1da2b45bc",
             "tz.json": "a4b008981f39abc371b5673abe4c780bef5c91229a5ae3a42d2e8fef4e780c74"
           },
-          "coreHash": "ae4bbdb76cdf419c2b93d634b1945c5001165020fe72e97ab9c8671bde1faf9d",
+          "coreHash": "5469069385845eb011e0f63fe8e7edd2b29eb1350098d1e7649b85cbac73f46a",
           "coreHashAlgorithm": "core-estree-acorn-8.15.0-es2024-v1",
+          "coreSlices": {
+            "algorithm": "core-slice-acorn-8.15.0-es2024-v1",
+            "hashes": {
+              "advanced": "ade4a30b8293f079d1ec1c8d2c2dd6e707958c9f5654ae0fd4bbf2ae72d71c51",
+              "affixReplacement": "1ca7d4d31829e4bfd8f6948e3728c7f47761f42b1dafc341a89ceec747beab01",
+              "batch2": "451e2a1cc5ed1c5329b46baa721e87860242b73c54f5b201084abb1ffb15e7d3",
+              "equipmentQuality": "c8e4b37e0fed169d9d5977bc8211674dc0f70f968fd03fa3279633023d7d8b0f",
+              "equipmentWorkflow": "5ed8faf14e9cb2472195aa8a0ca7cf1c880e85b072ef827c02b66ada8829c7cc",
+              "growth": "0e05141ca78210e048d87229fb0043d76d10912f6e9694f58e301d485933beae",
+              "randomCharacterGrowth": "9a99e88a684e9ffdd708a8d818ff89bec74cdff9b3b3ea3afb18a09ef4e3c1c7",
+              "randomCharacterSkillCaps": "faf2a9184331ba67607ca09e313cfc08e50f91752d66d157e5f3c1d57d69ba2b",
+              "randomCharacterTalents": "36182f3bd5f04e1d6a69f57478682bbd4d0d6d2d4bc352b81a689c4a629f2520",
+              "setEquipmentLevel": "cb888574ec37d15f123b780d766c7b3b7be2d1cf306575d54a3bd5825219b045",
+              "setEquipmentQuality": "7439f1e4e804c3f9268df4638dd43b5da2194fd413947d0bd27a37e503300781",
+              "treasureLevel": "cb888574ec37d15f123b780d766c7b3b7be2d1cf306575d54a3bd5825219b045"
+            }
+          },
           "roles": {
             "setEquipmentLevel": {
               "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
@@ -257,6 +308,11 @@
               "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
               "effects": "14078bdd865fdd091c315e334b814eb2fd9790c010fb3d671e36949182b264f1",
               "lifecycle": "aec1c9fa52f79c28a926e78c8c7419cfe933ffd02753fb1bbcbd2012a8c6ac1f"
+            },
+            "setEquipmentQuality": {
+              "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
+              "effects": "d8862b26ecb874781c9f67b6a3de0b0550146c5eca435457978d37e748e3b02b",
+              "lifecycle": "911011749f6213ad461d434de6cf8e1c3047258cb83f4d53eb0eabbd3431af62"
             },
             "growth": {
               "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
@@ -313,6 +369,12 @@
             "setEquipmentLevel": "86831316f3112d4ae6f6785cc85235ee735286844bb7cffa39727a024f8531a9",
             "backpackTreasureLevel": "f5351ba416120f3dda660ce6e9321dbd04eb3391a292cc4c6c80d02f9f0312e1",
             "treasureLevel": "f5351ba416120f3dda660ce6e9321dbd04eb3391a292cc4c6c80d02f9f0312e1",
+            "backpackSetEquipmentQualityUpgrade": "cb5e1f951505369f91bf877a92a8257a049aaa7ae0aac54ef807aebe411ceabc",
+            "backpackSetEquipmentQualityDowngrade": "cb5e1f951505369f91bf877a92a8257a049aaa7ae0aac54ef807aebe411ceabc",
+            "setEquipmentQualityUpgrade": "cb5e1f951505369f91bf877a92a8257a049aaa7ae0aac54ef807aebe411ceabc",
+            "setEquipmentQualityDowngrade": "cb5e1f951505369f91bf877a92a8257a049aaa7ae0aac54ef807aebe411ceabc",
+            "backpackSetEquipmentLevelCrossPool": "cb5e1f951505369f91bf877a92a8257a049aaa7ae0aac54ef807aebe411ceabc",
+            "setEquipmentLevelCrossPool": "cb5e1f951505369f91bf877a92a8257a049aaa7ae0aac54ef807aebe411ceabc",
             "randomCharacterTalents": "9147a7b6687005b9d9309cec340537cd3cc3316bc3db3f73cc00fd4f40fedc27",
             "randomCharacterSkillCaps": "24690926687b1bc8130cfc789ef8152d650b42dbb0c92c558b5cb20c88f39398",
             "randomCharacterBaseAptitudes": "3a5f3d21fc65d09694aebd302f32813f5dc82723fd87f16d795329306431fd76",
@@ -341,6 +403,14 @@
           }
         },
         "checks": {
+          "backpackSetEquipmentLevel": [
+            "load",
+            "save",
+            "restart",
+            "originalHashes",
+            "nativeEffects",
+            "lifecycle"
+          ],
           "setEquipmentLevel": [
             "load",
             "save",
@@ -349,7 +419,15 @@
             "nativeEffects",
             "lifecycle"
           ],
-          "backpackSetEquipmentLevel": [
+          "backpackTreasureLevel": [
+            "load",
+            "save",
+            "restart",
+            "originalHashes",
+            "nativeEffects",
+            "lifecycle"
+          ],
+          "treasureLevel": [
             "load",
             "save",
             "restart",
@@ -669,7 +747,7 @@
             "subsequentResearchAndTrainingStartStop"
           ]
         },
-        "evidenceHash": "e673e700ce934e1839e4ed0a6514337943c3a92d87d7a69f04fb0c5b4ce417bc",
+        "evidenceHash": "1d42bc1428197070e6c4b424454103b3ebd53a3b3f9c168a39d1d68a053b6cb7",
         "copies": [
           "growth",
           "advanced-normal",
@@ -689,553 +767,307 @@
           "random-growth-matrix",
           "random-growth-lifecycle",
           "set-level-7-representative",
-          "set-level-9-representative"
-        ]
-      },
-      "cdcc00c860b9dbf656fc7caee143b0e9c349f1324ee23b4d104148f5bea7cd19": {
-        "kind": "native",
-        "gameVersion": "V1.0.11.2",
-        "fingerprints": {
-          "data.json": "aac06ce18a840ae221d7683fba21182b0dcf4bb7ae1caf3431199264a1c5f62e",
-          "scripts/c3runtime.js": "3e0febeb8342138ed47d9e8499e3646f4e8ddc2ce89a9faa0bebbad9ba83280e",
-          "cl.json": "c121cf702eb6a4edb184d7180ad83d41aa90efca4a1e5e21e652dd1ff24f47b7",
-          "js.json": "5c360c93cd1248fe96d0373428ddae4649698574d032b333432e4b777fcc0ee4",
-          "zy.json": "97d59a029aefbfbba315c9cec7b83a168571def79282eec2be9edbfeb3759188",
-          "sx.json": "6a24e20ad0a70d5ad17a0310f0a9e7619dda5c4718d536a3df51d385abd748e7",
-          "wp.json": "14516d34cedf209c497fca10699e179c26c43558c2a3253bc87c8b33493a82c4",
-          "kj.json": "b051136f1366eb1c990004a4fa8a2d8f90339c7defbc10eb90c68c2ff36e5309",
-          "jz.json": "cf4d691dc7f6814db5ba1e0e28ac206d7a15c58ddccba55a473975461841b0bf",
-          "rw.json": "705f541917d9a62cff9ef5805032fd29496fdc98b03a7f065ff3fc6fab937b4b",
-          "tf.json": "c8a3005201d8f17a0899584baf7e0286b073aa84d4697807edcd44e00902fa1f",
-          "ss.json": "4350cb979c4026ce0d8dc25e7807fde3d29a1d42fbd2e499673614a4f67e1bc7",
-          "lw.json": "7a4f5a5bfd5967f3a74e36aa9a0c2cda132619b2908bdc39b1406da4b346bde6",
-          "yx.json": "58b8eb984cf8190f52ed4e53d044079733cf82096224dd7014ec36e1da2b45bc",
-          "tz.json": "a4b008981f39abc371b5673abe4c780bef5c91229a5ae3a42d2e8fef4e780c74"
-        },
-        "snapshot": {
-          "version": 2,
-          "fingerprints": {
-            "data.json": "aac06ce18a840ae221d7683fba21182b0dcf4bb7ae1caf3431199264a1c5f62e",
-            "scripts/c3runtime.js": "3e0febeb8342138ed47d9e8499e3646f4e8ddc2ce89a9faa0bebbad9ba83280e",
-            "cl.json": "c121cf702eb6a4edb184d7180ad83d41aa90efca4a1e5e21e652dd1ff24f47b7",
-            "js.json": "5c360c93cd1248fe96d0373428ddae4649698574d032b333432e4b777fcc0ee4",
-            "zy.json": "97d59a029aefbfbba315c9cec7b83a168571def79282eec2be9edbfeb3759188",
-            "sx.json": "6a24e20ad0a70d5ad17a0310f0a9e7619dda5c4718d536a3df51d385abd748e7",
-            "wp.json": "14516d34cedf209c497fca10699e179c26c43558c2a3253bc87c8b33493a82c4",
-            "kj.json": "b051136f1366eb1c990004a4fa8a2d8f90339c7defbc10eb90c68c2ff36e5309",
-            "jz.json": "cf4d691dc7f6814db5ba1e0e28ac206d7a15c58ddccba55a473975461841b0bf",
-            "rw.json": "705f541917d9a62cff9ef5805032fd29496fdc98b03a7f065ff3fc6fab937b4b",
-            "tf.json": "c8a3005201d8f17a0899584baf7e0286b073aa84d4697807edcd44e00902fa1f",
-            "ss.json": "4350cb979c4026ce0d8dc25e7807fde3d29a1d42fbd2e499673614a4f67e1bc7",
-            "lw.json": "7a4f5a5bfd5967f3a74e36aa9a0c2cda132619b2908bdc39b1406da4b346bde6",
-            "yx.json": "58b8eb984cf8190f52ed4e53d044079733cf82096224dd7014ec36e1da2b45bc",
-            "tz.json": "a4b008981f39abc371b5673abe4c780bef5c91229a5ae3a42d2e8fef4e780c74"
-          },
-          "coreHash": "ae4bbdb76cdf419c2b93d634b1945c5001165020fe72e97ab9c8671bde1faf9d",
-          "coreHashAlgorithm": "core-estree-acorn-8.15.0-es2024-v1",
-          "roles": {
-            "setEquipmentLevel": {
-              "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
-              "effects": "aa1a08538bfeccf16a4c8a3736c4c10bb329d96b2d87477440aaea81f147bf95",
-              "lifecycle": "501fa3441a0be8311b3b40621e6ef11797fe5d01fd9c531a5bef8a6fad0fc76c"
-            },
-            "treasureLevel": {
-              "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
-              "effects": "14078bdd865fdd091c315e334b814eb2fd9790c010fb3d671e36949182b264f1",
-              "lifecycle": "aec1c9fa52f79c28a926e78c8c7419cfe933ffd02753fb1bbcbd2012a8c6ac1f"
-            },
-            "growth": {
-              "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
-              "effects": "484e93232c66abefd5b01ef32d600c4b2dcb0af64fcbaf5a0c50a1443a7849c4",
-              "lifecycle": "d615137ed2a4d590507b87810199f627acf5798a029dbb9f954ad659e577f663"
-            },
-            "advanced": {
-              "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
-              "effects": "09670295fa3b0ed028998afeb80209d3d715199ebfcf2d90779f7c17b9958a22",
-              "lifecycle": "d279edbddcd07e008c47e0dfdd16dc8cbe89f4b5179220314d6b123a5aacc21a"
-            },
-            "batch2": {
-              "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
-              "effects": "6270dc482af4235f1786cbcacbb408baf755dfc910a485851fddb4d889bc7ccf",
-              "lifecycle": "bf39c510eb1db98a0cb27278f0b53cee759c27c19a8e60414c64a0d79516a828"
-            },
-            "affixReplacement": {
-              "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
-              "effects": "2683a407bc00e8ace6d682fa703b6a0c5f39961756beecdfa97de02602f7860b",
-              "lifecycle": "65d4d4a595e30336b7ab375fe661503175f0f8878d4d84c4211599d767cbb022"
-            },
-            "equipmentWorkflow": {
-              "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
-              "effects": "2683a407bc00e8ace6d682fa703b6a0c5f39961756beecdfa97de02602f7860b",
-              "lifecycle": "1fd0d19b0eca063104b1a6a5c44b4e898271b743e930dbe776d6d255872487ea"
-            },
-            "equipmentQuality": {
-              "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
-              "effects": "2683a407bc00e8ace6d682fa703b6a0c5f39961756beecdfa97de02602f7860b",
-              "lifecycle": "7143508a312fa7eaa05bc352f2d71f79ea1bf695bd6fd7ad92094faab0f2699e"
-            },
-            "randomCharacterGrowth": {
-              "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
-              "effects": "126c36497fcd20588543019f0608d001a3c4347f35fc83250b57b7f4b26f7adb",
-              "lifecycle": "47082f2f30dcb77b7f3a053e595b98244a33f783c8e36ec0cd558155c52ef079"
-            },
-            "randomCharacterTalents": {
-              "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
-              "effects": "84e4be5981d8982cfe58cb001144986639f12c2a2523918d2b4f99652de0bccf",
-              "lifecycle": "0a90d761961b72f09fcd071b76388312edc05f75615cc265388ada402b957ff9"
-            },
-            "randomCharacterSkillCaps": {
-              "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
-              "effects": "97a26ff7d4e4ba2ced054fb9bc1b625b994c694b91ac72b31cb2f7bf15ec2ca3",
-              "lifecycle": "79e7a5eced133080639c4dc190e3c49dd0e11b2431775c3300aa364e78fed22b"
-            },
-            "selectionUi": "d82afa4d18abd003fa7f69fca258c8ca2a65caf18361b9bdcbd7d40dc500b2cd",
-            "qualityUi": "da9bda72fe879e8ab98eb11a476cce95500f32fe2676be8d44470171ea2cfa48"
-          },
-          "unknown": [],
-          "gameVersion": "V1.0.11.2",
-          "dataHashes": {
-            "backpackSetEquipmentLevel": "86831316f3112d4ae6f6785cc85235ee735286844bb7cffa39727a024f8531a9",
-            "setEquipmentLevel": "86831316f3112d4ae6f6785cc85235ee735286844bb7cffa39727a024f8531a9",
-            "backpackTreasureLevel": "f5351ba416120f3dda660ce6e9321dbd04eb3391a292cc4c6c80d02f9f0312e1",
-            "treasureLevel": "f5351ba416120f3dda660ce6e9321dbd04eb3391a292cc4c6c80d02f9f0312e1",
-            "randomCharacterTalents": "9147a7b6687005b9d9309cec340537cd3cc3316bc3db3f73cc00fd4f40fedc27",
-            "randomCharacterSkillCaps": "24690926687b1bc8130cfc789ef8152d650b42dbb0c92c558b5cb20c88f39398",
-            "randomCharacterBaseAptitudes": "3a5f3d21fc65d09694aebd302f32813f5dc82723fd87f16d795329306431fd76",
-            "backpackEquipmentQualityUpgrade": "50a6f076ae9c0c739cf7acfb488c5a036290440c6ea9f6ab259e730e555ca4c1",
-            "backpackEquipmentQualityDowngrade": "50a6f076ae9c0c739cf7acfb488c5a036290440c6ea9f6ab259e730e555ca4c1",
-            "equipmentQualityUpgrade": "50a6f076ae9c0c739cf7acfb488c5a036290440c6ea9f6ab259e730e555ca4c1",
-            "equipmentQualityDowngrade": "50a6f076ae9c0c739cf7acfb488c5a036290440c6ea9f6ab259e730e555ca4c1",
-            "backpackEquipmentLevel": "4caafefbdc1a7d626eb6c5ee6bbe2734d0e619ca74f4dba0a54309ff0e87b2c3",
-            "backpackEquipmentAffixCoefficient": "4caafefbdc1a7d626eb6c5ee6bbe2734d0e619ca74f4dba0a54309ff0e87b2c3",
-            "backpackEquipmentAffixReplacement": "4caafefbdc1a7d626eb6c5ee6bbe2734d0e619ca74f4dba0a54309ff0e87b2c3",
-            "equipmentAffixInitialSelection": "4caafefbdc1a7d626eb6c5ee6bbe2734d0e619ca74f4dba0a54309ff0e87b2c3",
-            "equipmentNewItemMarker": "4caafefbdc1a7d626eb6c5ee6bbe2734d0e619ca74f4dba0a54309ff0e87b2c3",
-            "equipmentAffixReplacement": "d5cbd5a08eeaff7749416dd5065ceffc1843052c4f14ff6ae6fd368772fc47e8",
-            "equipmentAffixCoefficient": "49ea41b8e8134213d58e463a2d382f0de2cae8d4adb012deefe4d2024c300aa0",
-            "pillAptitudeBonus": "49ea41b8e8134213d58e463a2d382f0de2cae8d4adb012deefe4d2024c300aa0",
-            "names": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-            "characterExperience": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-            "professionExperience": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-            "skillExperience": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-            "equipmentLevel": "9cfc45ae4559b614a2453173e26df0cc5ff6299902f468bb07488acb4d91fe2b",
-            "equipmentLevelAdvanced": "9cfc45ae4559b614a2453173e26df0cc5ff6299902f468bb07488acb4d91fe2b",
-            "professionTrainingCap": "9cfc45ae4559b614a2453173e26df0cc5ff6299902f468bb07488acb4d91fe2b",
-            "professionTrainingCapAdvanced": "9cfc45ae4559b614a2453173e26df0cc5ff6299902f468bb07488acb4d91fe2b",
-            "advancedTechnologyLevel": "9cfc45ae4559b614a2453173e26df0cc5ff6299902f468bb07488acb4d91fe2b",
-            "advancedTechnologyLevelAdvanced": "9cfc45ae4559b614a2453173e26df0cc5ff6299902f468bb07488acb4d91fe2b"
-          }
-        },
-        "checks": {
-          "backpackTreasureLevel": [
-            "load",
-            "save",
-            "restart",
-            "originalHashes",
-            "nativeEffects",
-            "lifecycle"
-          ]
-        },
-        "evidenceHash": "31dcae539207dbd9d2465677fe3a66db54bc489647797d9aa6c06c82b629c906",
-        "initialProofHash": "aebd3b08d539ff69bf2465227a023a8f6a824d4d46b6eef7f983b6cb1e0ce917",
-        "copies": [
-          "treasure-initial-matrix"
-        ]
-      },
-      "f60af21349a7507938c985ba2393aafe12986390e0d9d7a775d1d657b6ac1499": {
-        "kind": "native",
-        "gameVersion": "V1.0.11.2",
-        "fingerprints": {
-          "data.json": "aac06ce18a840ae221d7683fba21182b0dcf4bb7ae1caf3431199264a1c5f62e",
-          "scripts/c3runtime.js": "3e0febeb8342138ed47d9e8499e3646f4e8ddc2ce89a9faa0bebbad9ba83280e",
-          "cl.json": "c121cf702eb6a4edb184d7180ad83d41aa90efca4a1e5e21e652dd1ff24f47b7",
-          "js.json": "5c360c93cd1248fe96d0373428ddae4649698574d032b333432e4b777fcc0ee4",
-          "zy.json": "97d59a029aefbfbba315c9cec7b83a168571def79282eec2be9edbfeb3759188",
-          "sx.json": "6a24e20ad0a70d5ad17a0310f0a9e7619dda5c4718d536a3df51d385abd748e7",
-          "wp.json": "14516d34cedf209c497fca10699e179c26c43558c2a3253bc87c8b33493a82c4",
-          "kj.json": "b051136f1366eb1c990004a4fa8a2d8f90339c7defbc10eb90c68c2ff36e5309",
-          "jz.json": "cf4d691dc7f6814db5ba1e0e28ac206d7a15c58ddccba55a473975461841b0bf",
-          "rw.json": "705f541917d9a62cff9ef5805032fd29496fdc98b03a7f065ff3fc6fab937b4b",
-          "tf.json": "c8a3005201d8f17a0899584baf7e0286b073aa84d4697807edcd44e00902fa1f",
-          "ss.json": "4350cb979c4026ce0d8dc25e7807fde3d29a1d42fbd2e499673614a4f67e1bc7",
-          "lw.json": "7a4f5a5bfd5967f3a74e36aa9a0c2cda132619b2908bdc39b1406da4b346bde6",
-          "yx.json": "58b8eb984cf8190f52ed4e53d044079733cf82096224dd7014ec36e1da2b45bc",
-          "tz.json": "a4b008981f39abc371b5673abe4c780bef5c91229a5ae3a42d2e8fef4e780c74"
-        },
-        "snapshot": {
-          "version": 2,
-          "fingerprints": {
-            "data.json": "aac06ce18a840ae221d7683fba21182b0dcf4bb7ae1caf3431199264a1c5f62e",
-            "scripts/c3runtime.js": "3e0febeb8342138ed47d9e8499e3646f4e8ddc2ce89a9faa0bebbad9ba83280e",
-            "cl.json": "c121cf702eb6a4edb184d7180ad83d41aa90efca4a1e5e21e652dd1ff24f47b7",
-            "js.json": "5c360c93cd1248fe96d0373428ddae4649698574d032b333432e4b777fcc0ee4",
-            "zy.json": "97d59a029aefbfbba315c9cec7b83a168571def79282eec2be9edbfeb3759188",
-            "sx.json": "6a24e20ad0a70d5ad17a0310f0a9e7619dda5c4718d536a3df51d385abd748e7",
-            "wp.json": "14516d34cedf209c497fca10699e179c26c43558c2a3253bc87c8b33493a82c4",
-            "kj.json": "b051136f1366eb1c990004a4fa8a2d8f90339c7defbc10eb90c68c2ff36e5309",
-            "jz.json": "cf4d691dc7f6814db5ba1e0e28ac206d7a15c58ddccba55a473975461841b0bf",
-            "rw.json": "705f541917d9a62cff9ef5805032fd29496fdc98b03a7f065ff3fc6fab937b4b",
-            "tf.json": "c8a3005201d8f17a0899584baf7e0286b073aa84d4697807edcd44e00902fa1f",
-            "ss.json": "4350cb979c4026ce0d8dc25e7807fde3d29a1d42fbd2e499673614a4f67e1bc7",
-            "lw.json": "7a4f5a5bfd5967f3a74e36aa9a0c2cda132619b2908bdc39b1406da4b346bde6",
-            "yx.json": "58b8eb984cf8190f52ed4e53d044079733cf82096224dd7014ec36e1da2b45bc",
-            "tz.json": "a4b008981f39abc371b5673abe4c780bef5c91229a5ae3a42d2e8fef4e780c74"
-          },
-          "coreHash": "ae4bbdb76cdf419c2b93d634b1945c5001165020fe72e97ab9c8671bde1faf9d",
-          "coreHashAlgorithm": "core-estree-acorn-8.15.0-es2024-v1",
-          "roles": {
-            "setEquipmentLevel": {
-              "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
-              "effects": "aa1a08538bfeccf16a4c8a3736c4c10bb329d96b2d87477440aaea81f147bf95",
-              "lifecycle": "501fa3441a0be8311b3b40621e6ef11797fe5d01fd9c531a5bef8a6fad0fc76c"
-            },
-            "treasureLevel": {
-              "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
-              "effects": "14078bdd865fdd091c315e334b814eb2fd9790c010fb3d671e36949182b264f1",
-              "lifecycle": "aec1c9fa52f79c28a926e78c8c7419cfe933ffd02753fb1bbcbd2012a8c6ac1f"
-            },
-            "growth": {
-              "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
-              "effects": "484e93232c66abefd5b01ef32d600c4b2dcb0af64fcbaf5a0c50a1443a7849c4",
-              "lifecycle": "d615137ed2a4d590507b87810199f627acf5798a029dbb9f954ad659e577f663"
-            },
-            "advanced": {
-              "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
-              "effects": "09670295fa3b0ed028998afeb80209d3d715199ebfcf2d90779f7c17b9958a22",
-              "lifecycle": "d279edbddcd07e008c47e0dfdd16dc8cbe89f4b5179220314d6b123a5aacc21a"
-            },
-            "batch2": {
-              "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
-              "effects": "6270dc482af4235f1786cbcacbb408baf755dfc910a485851fddb4d889bc7ccf",
-              "lifecycle": "bf39c510eb1db98a0cb27278f0b53cee759c27c19a8e60414c64a0d79516a828"
-            },
-            "affixReplacement": {
-              "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
-              "effects": "2683a407bc00e8ace6d682fa703b6a0c5f39961756beecdfa97de02602f7860b",
-              "lifecycle": "65d4d4a595e30336b7ab375fe661503175f0f8878d4d84c4211599d767cbb022"
-            },
-            "equipmentWorkflow": {
-              "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
-              "effects": "2683a407bc00e8ace6d682fa703b6a0c5f39961756beecdfa97de02602f7860b",
-              "lifecycle": "1fd0d19b0eca063104b1a6a5c44b4e898271b743e930dbe776d6d255872487ea"
-            },
-            "equipmentQuality": {
-              "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
-              "effects": "2683a407bc00e8ace6d682fa703b6a0c5f39961756beecdfa97de02602f7860b",
-              "lifecycle": "7143508a312fa7eaa05bc352f2d71f79ea1bf695bd6fd7ad92094faab0f2699e"
-            },
-            "randomCharacterGrowth": {
-              "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
-              "effects": "126c36497fcd20588543019f0608d001a3c4347f35fc83250b57b7f4b26f7adb",
-              "lifecycle": "47082f2f30dcb77b7f3a053e595b98244a33f783c8e36ec0cd558155c52ef079"
-            },
-            "randomCharacterTalents": {
-              "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
-              "effects": "84e4be5981d8982cfe58cb001144986639f12c2a2523918d2b4f99652de0bccf",
-              "lifecycle": "0a90d761961b72f09fcd071b76388312edc05f75615cc265388ada402b957ff9"
-            },
-            "randomCharacterSkillCaps": {
-              "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
-              "effects": "97a26ff7d4e4ba2ced054fb9bc1b625b994c694b91ac72b31cb2f7bf15ec2ca3",
-              "lifecycle": "79e7a5eced133080639c4dc190e3c49dd0e11b2431775c3300aa364e78fed22b"
-            },
-            "selectionUi": "d82afa4d18abd003fa7f69fca258c8ca2a65caf18361b9bdcbd7d40dc500b2cd",
-            "qualityUi": "da9bda72fe879e8ab98eb11a476cce95500f32fe2676be8d44470171ea2cfa48"
-          },
-          "unknown": [],
-          "gameVersion": "V1.0.11.2",
-          "dataHashes": {
-            "backpackSetEquipmentLevel": "86831316f3112d4ae6f6785cc85235ee735286844bb7cffa39727a024f8531a9",
-            "setEquipmentLevel": "86831316f3112d4ae6f6785cc85235ee735286844bb7cffa39727a024f8531a9",
-            "backpackTreasureLevel": "f5351ba416120f3dda660ce6e9321dbd04eb3391a292cc4c6c80d02f9f0312e1",
-            "treasureLevel": "f5351ba416120f3dda660ce6e9321dbd04eb3391a292cc4c6c80d02f9f0312e1",
-            "randomCharacterTalents": "9147a7b6687005b9d9309cec340537cd3cc3316bc3db3f73cc00fd4f40fedc27",
-            "randomCharacterSkillCaps": "24690926687b1bc8130cfc789ef8152d650b42dbb0c92c558b5cb20c88f39398",
-            "randomCharacterBaseAptitudes": "3a5f3d21fc65d09694aebd302f32813f5dc82723fd87f16d795329306431fd76",
-            "backpackEquipmentQualityUpgrade": "50a6f076ae9c0c739cf7acfb488c5a036290440c6ea9f6ab259e730e555ca4c1",
-            "backpackEquipmentQualityDowngrade": "50a6f076ae9c0c739cf7acfb488c5a036290440c6ea9f6ab259e730e555ca4c1",
-            "equipmentQualityUpgrade": "50a6f076ae9c0c739cf7acfb488c5a036290440c6ea9f6ab259e730e555ca4c1",
-            "equipmentQualityDowngrade": "50a6f076ae9c0c739cf7acfb488c5a036290440c6ea9f6ab259e730e555ca4c1",
-            "backpackEquipmentLevel": "4caafefbdc1a7d626eb6c5ee6bbe2734d0e619ca74f4dba0a54309ff0e87b2c3",
-            "backpackEquipmentAffixCoefficient": "4caafefbdc1a7d626eb6c5ee6bbe2734d0e619ca74f4dba0a54309ff0e87b2c3",
-            "backpackEquipmentAffixReplacement": "4caafefbdc1a7d626eb6c5ee6bbe2734d0e619ca74f4dba0a54309ff0e87b2c3",
-            "equipmentAffixInitialSelection": "4caafefbdc1a7d626eb6c5ee6bbe2734d0e619ca74f4dba0a54309ff0e87b2c3",
-            "equipmentNewItemMarker": "4caafefbdc1a7d626eb6c5ee6bbe2734d0e619ca74f4dba0a54309ff0e87b2c3",
-            "equipmentAffixReplacement": "d5cbd5a08eeaff7749416dd5065ceffc1843052c4f14ff6ae6fd368772fc47e8",
-            "equipmentAffixCoefficient": "49ea41b8e8134213d58e463a2d382f0de2cae8d4adb012deefe4d2024c300aa0",
-            "pillAptitudeBonus": "49ea41b8e8134213d58e463a2d382f0de2cae8d4adb012deefe4d2024c300aa0",
-            "names": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-            "characterExperience": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-            "professionExperience": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-            "skillExperience": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-            "equipmentLevel": "9cfc45ae4559b614a2453173e26df0cc5ff6299902f468bb07488acb4d91fe2b",
-            "equipmentLevelAdvanced": "9cfc45ae4559b614a2453173e26df0cc5ff6299902f468bb07488acb4d91fe2b",
-            "professionTrainingCap": "9cfc45ae4559b614a2453173e26df0cc5ff6299902f468bb07488acb4d91fe2b",
-            "professionTrainingCapAdvanced": "9cfc45ae4559b614a2453173e26df0cc5ff6299902f468bb07488acb4d91fe2b",
-            "advancedTechnologyLevel": "9cfc45ae4559b614a2453173e26df0cc5ff6299902f468bb07488acb4d91fe2b",
-            "advancedTechnologyLevelAdvanced": "9cfc45ae4559b614a2453173e26df0cc5ff6299902f468bb07488acb4d91fe2b"
-          }
-        },
-        "checks": {
-          "treasureLevel": [
-            "load",
-            "save",
-            "restart",
-            "originalHashes",
-            "nativeEffects",
-            "lifecycle"
-          ]
-        },
-        "evidenceHash": "31dcae539207dbd9d2465677fe3a66db54bc489647797d9aa6c06c82b629c906",
-        "initialProofHash": "7524be561926dac43df0a2442d6947dd7552b481a23157749075e943bee75069",
-        "copies": [
-          "treasure-initial-matrix"
+          "set-level-9-representative",
+          "treasure-level-7-representative",
+          "treasure-level-9-representative"
         ]
       }
     },
     "evidence": {
-      "setEquipmentLevel": {
-        "load": {
-          "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
-        },
-        "save": {
-          "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
-        },
-        "restart": {
-          "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
-        },
-        "originalHashes": {
-          "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
-        },
-        "nativeEffects": {
-          "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
-        },
-        "lifecycle": {
-          "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
-        }
-      },
       "backpackSetEquipmentLevel": {
         "load": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "save": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "restart": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "originalHashes": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEffects": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "lifecycle": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
+        }
+      },
+      "setEquipmentLevel": {
+        "load": {
+          "source": "native",
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
+        },
+        "save": {
+          "source": "native",
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
+        },
+        "restart": {
+          "source": "native",
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
+        },
+        "originalHashes": {
+          "source": "native",
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
+        },
+        "nativeEffects": {
+          "source": "native",
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
+        },
+        "lifecycle": {
+          "source": "native",
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
+        }
+      },
+      "backpackTreasureLevel": {
+        "load": {
+          "source": "native",
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
+        },
+        "save": {
+          "source": "native",
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
+        },
+        "restart": {
+          "source": "native",
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
+        },
+        "originalHashes": {
+          "source": "native",
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
+        },
+        "nativeEffects": {
+          "source": "native",
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
+        },
+        "lifecycle": {
+          "source": "native",
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
+        }
+      },
+      "treasureLevel": {
+        "load": {
+          "source": "native",
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
+        },
+        "save": {
+          "source": "native",
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
+        },
+        "restart": {
+          "source": "native",
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
+        },
+        "originalHashes": {
+          "source": "native",
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
+        },
+        "nativeEffects": {
+          "source": "native",
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
+        },
+        "lifecycle": {
+          "source": "native",
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         }
       },
       "randomCharacterTalents": {
         "load": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "save": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "restart": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "originalHashes": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEffects": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "talentFormulas": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "aptitudeCap": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "numericUpdate": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeTransfer": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativePrison": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeRebirth": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeDismiss": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "stageRoundtrips": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         }
       },
       "randomCharacterSkillCaps": {
         "load": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "save": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "restart": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "originalHashes": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEffects": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeRecruitment": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "numericUpdate": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeSkillExperience": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "capRemainderTiming": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "batchCompatibility": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeTransfer": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativePrison": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeRebirth": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeDismiss": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "stageRoundtrips": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         }
       },
       "randomCharacterBaseAptitudes": {
         "load": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "save": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "restart": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "originalHashes": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEffects": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "numericUpdate": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativePills": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeTransfer": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativePrison": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeRebirth": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeDismiss": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "stageRoundtrips": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         }
       },
       "backpackEquipmentQualityUpgrade": {
         "load": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "save": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "restart": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "originalHashes": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEffects": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "lifecycle": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "qualityUi": {
           "source": "deferred",
@@ -1247,27 +1079,27 @@
       "backpackEquipmentQualityDowngrade": {
         "load": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "save": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "restart": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "originalHashes": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEffects": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "lifecycle": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "qualityUi": {
           "source": "deferred",
@@ -1279,27 +1111,27 @@
       "equipmentQualityUpgrade": {
         "load": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "save": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "restart": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "originalHashes": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEffects": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "lifecycle": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "qualityUi": {
           "source": "deferred",
@@ -1311,27 +1143,27 @@
       "equipmentQualityDowngrade": {
         "load": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "save": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "restart": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "originalHashes": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEffects": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "lifecycle": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "qualityUi": {
           "source": "deferred",
@@ -1343,105 +1175,105 @@
       "backpackEquipmentLevel": {
         "load": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "save": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "restart": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "originalHashes": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEffects": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "lifecycle": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         }
       },
       "backpackEquipmentAffixCoefficient": {
         "load": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "save": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "restart": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "originalHashes": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEffects": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "lifecycle": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         }
       },
       "backpackEquipmentAffixReplacement": {
         "load": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "save": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "restart": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "originalHashes": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEffects": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "lifecycle": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         }
       },
       "equipmentAffixInitialSelection": {
         "load": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "save": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "restart": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "originalHashes": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEffects": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "lifecycle": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "selectionUi": {
           "source": "deferred",
@@ -1453,773 +1285,721 @@
       "equipmentNewItemMarker": {
         "load": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "save": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "restart": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "originalHashes": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEffects": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "lifecycle": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         }
       },
       "equipmentAffixReplacement": {
         "nativeEffects": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "load": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "save": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "restart": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "originalHashes": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "equipmentCycle": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeWash": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         }
       },
       "equipmentAffixCoefficient": {
         "nativeLoad": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeSave": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "stopAndRestart": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "originalHashesUnchanged": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEffects": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "coreNativeAptitudeAgreement": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeRewash": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "unequipReequip": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativePillConsumption": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "rebirthClears": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         }
       },
       "pillAptitudeBonus": {
         "nativeLoad": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeSave": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "stopAndRestart": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "originalHashesUnchanged": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEffects": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "coreNativeAptitudeAgreement": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeRewash": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "unequipReequip": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativePillConsumption": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "rebirthClears": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         }
       },
       "names": {
         "loadedIntoMainLayout": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeSaveWritten": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "processRestartedAndReloaded": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "allTenObservedCellsMatch": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "originalSaveHashesUnchanged": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "steamMutationsRedirectedToLocalMirror": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "allThirteenTestedSourceHashesMatch": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "realSteamInitialization": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "restartUsesDifferentProcess": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "advancedNormalAndOvercapNativeRoundtrip": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEquipmentAndTechnologyEffectsFinite": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEquipmentUnequipReequip": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "subsequentProfessionTransferAndExperience": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "subsequentResearchAndTrainingStartStop": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         }
       },
       "characterExperience": {
         "loadedIntoMainLayout": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeSaveWritten": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "processRestartedAndReloaded": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "allTenObservedCellsMatch": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "originalSaveHashesUnchanged": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "steamMutationsRedirectedToLocalMirror": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "allThirteenTestedSourceHashesMatch": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "realSteamInitialization": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "restartUsesDifferentProcess": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "advancedNormalAndOvercapNativeRoundtrip": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEquipmentAndTechnologyEffectsFinite": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEquipmentUnequipReequip": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "subsequentProfessionTransferAndExperience": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "subsequentResearchAndTrainingStartStop": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         }
       },
       "professionExperience": {
         "loadedIntoMainLayout": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeSaveWritten": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "processRestartedAndReloaded": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "allTenObservedCellsMatch": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "originalSaveHashesUnchanged": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "steamMutationsRedirectedToLocalMirror": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "allThirteenTestedSourceHashesMatch": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "realSteamInitialization": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "restartUsesDifferentProcess": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "advancedNormalAndOvercapNativeRoundtrip": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEquipmentAndTechnologyEffectsFinite": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEquipmentUnequipReequip": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "subsequentProfessionTransferAndExperience": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "subsequentResearchAndTrainingStartStop": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         }
       },
       "skillExperience": {
         "loadedIntoMainLayout": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeSaveWritten": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "processRestartedAndReloaded": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "allTenObservedCellsMatch": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "originalSaveHashesUnchanged": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "steamMutationsRedirectedToLocalMirror": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "allThirteenTestedSourceHashesMatch": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "realSteamInitialization": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "restartUsesDifferentProcess": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "advancedNormalAndOvercapNativeRoundtrip": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEquipmentAndTechnologyEffectsFinite": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEquipmentUnequipReequip": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "subsequentProfessionTransferAndExperience": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "subsequentResearchAndTrainingStartStop": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         }
       },
       "equipmentLevel": {
         "loadedIntoMainLayout": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeSaveWritten": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "processRestartedAndReloaded": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "allTenObservedCellsMatch": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "originalSaveHashesUnchanged": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "steamMutationsRedirectedToLocalMirror": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "allThirteenTestedSourceHashesMatch": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "realSteamInitialization": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "restartUsesDifferentProcess": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "advancedNormalAndOvercapNativeRoundtrip": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEquipmentAndTechnologyEffectsFinite": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEquipmentUnequipReequip": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "subsequentProfessionTransferAndExperience": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "subsequentResearchAndTrainingStartStop": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         }
       },
       "equipmentLevelAdvanced": {
         "loadedIntoMainLayout": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeSaveWritten": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "processRestartedAndReloaded": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "allTenObservedCellsMatch": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "originalSaveHashesUnchanged": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "steamMutationsRedirectedToLocalMirror": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "allThirteenTestedSourceHashesMatch": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "realSteamInitialization": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "restartUsesDifferentProcess": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "advancedNormalAndOvercapNativeRoundtrip": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEquipmentAndTechnologyEffectsFinite": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEquipmentUnequipReequip": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "subsequentProfessionTransferAndExperience": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "subsequentResearchAndTrainingStartStop": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         }
       },
       "professionTrainingCap": {
         "loadedIntoMainLayout": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeSaveWritten": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "processRestartedAndReloaded": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "allTenObservedCellsMatch": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "originalSaveHashesUnchanged": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "steamMutationsRedirectedToLocalMirror": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "allThirteenTestedSourceHashesMatch": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "realSteamInitialization": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "restartUsesDifferentProcess": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "advancedNormalAndOvercapNativeRoundtrip": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEquipmentAndTechnologyEffectsFinite": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEquipmentUnequipReequip": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "subsequentProfessionTransferAndExperience": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "subsequentResearchAndTrainingStartStop": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         }
       },
       "professionTrainingCapAdvanced": {
         "loadedIntoMainLayout": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeSaveWritten": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "processRestartedAndReloaded": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "allTenObservedCellsMatch": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "originalSaveHashesUnchanged": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "steamMutationsRedirectedToLocalMirror": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "allThirteenTestedSourceHashesMatch": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "realSteamInitialization": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "restartUsesDifferentProcess": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "advancedNormalAndOvercapNativeRoundtrip": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEquipmentAndTechnologyEffectsFinite": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEquipmentUnequipReequip": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "subsequentProfessionTransferAndExperience": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "subsequentResearchAndTrainingStartStop": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         }
       },
       "advancedTechnologyLevel": {
         "loadedIntoMainLayout": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeSaveWritten": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "processRestartedAndReloaded": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "allTenObservedCellsMatch": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "originalSaveHashesUnchanged": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "steamMutationsRedirectedToLocalMirror": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "allThirteenTestedSourceHashesMatch": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "realSteamInitialization": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "restartUsesDifferentProcess": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "advancedNormalAndOvercapNativeRoundtrip": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEquipmentAndTechnologyEffectsFinite": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEquipmentUnequipReequip": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "subsequentProfessionTransferAndExperience": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "subsequentResearchAndTrainingStartStop": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         }
       },
       "advancedTechnologyLevelAdvanced": {
         "loadedIntoMainLayout": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeSaveWritten": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "processRestartedAndReloaded": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "allTenObservedCellsMatch": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "originalSaveHashesUnchanged": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "steamMutationsRedirectedToLocalMirror": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "allThirteenTestedSourceHashesMatch": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "realSteamInitialization": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "restartUsesDifferentProcess": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "advancedNormalAndOvercapNativeRoundtrip": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEquipmentAndTechnologyEffectsFinite": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "nativeEquipmentUnequipReequip": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "subsequentProfessionTransferAndExperience": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         },
         "subsequentResearchAndTrainingStartStop": {
           "source": "native",
-          "anchor": "107ea11b028bf54d6fe60f35aef638ea27b88c503465d9a5cd132686ed278c9b"
-        }
-      },
-      "backpackTreasureLevel": {
-        "load": {
-          "source": "native",
-          "anchor": "cdcc00c860b9dbf656fc7caee143b0e9c349f1324ee23b4d104148f5bea7cd19"
-        },
-        "save": {
-          "source": "native",
-          "anchor": "cdcc00c860b9dbf656fc7caee143b0e9c349f1324ee23b4d104148f5bea7cd19"
-        },
-        "restart": {
-          "source": "native",
-          "anchor": "cdcc00c860b9dbf656fc7caee143b0e9c349f1324ee23b4d104148f5bea7cd19"
-        },
-        "originalHashes": {
-          "source": "native",
-          "anchor": "cdcc00c860b9dbf656fc7caee143b0e9c349f1324ee23b4d104148f5bea7cd19"
-        },
-        "nativeEffects": {
-          "source": "native",
-          "anchor": "cdcc00c860b9dbf656fc7caee143b0e9c349f1324ee23b4d104148f5bea7cd19"
-        },
-        "lifecycle": {
-          "source": "native",
-          "anchor": "cdcc00c860b9dbf656fc7caee143b0e9c349f1324ee23b4d104148f5bea7cd19"
-        }
-      },
-      "treasureLevel": {
-        "load": {
-          "source": "native",
-          "anchor": "f60af21349a7507938c985ba2393aafe12986390e0d9d7a775d1d657b6ac1499"
-        },
-        "save": {
-          "source": "native",
-          "anchor": "f60af21349a7507938c985ba2393aafe12986390e0d9d7a775d1d657b6ac1499"
-        },
-        "restart": {
-          "source": "native",
-          "anchor": "f60af21349a7507938c985ba2393aafe12986390e0d9d7a775d1d657b6ac1499"
-        },
-        "originalHashes": {
-          "source": "native",
-          "anchor": "f60af21349a7507938c985ba2393aafe12986390e0d9d7a775d1d657b6ac1499"
-        },
-        "nativeEffects": {
-          "source": "native",
-          "anchor": "f60af21349a7507938c985ba2393aafe12986390e0d9d7a775d1d657b6ac1499"
-        },
-        "lifecycle": {
-          "source": "native",
-          "anchor": "f60af21349a7507938c985ba2393aafe12986390e0d9d7a775d1d657b6ac1499"
+          "anchor": "ec7a24831c36f1fcd74f1c20786a3eebd87978f8dc7a61a6985f4881d402c348"
         }
       }
     },
@@ -2423,77 +2203,5 @@
   "limits": [
     "例行改版未重驗遊戲 UI；沿用項目的原生實測版本見 anchors",
     "不代表 Mac 啟動、真實 Cloud 或長時間遊玩已驗證"
-  ],
-  "treasureLevel": {
-    "initialVerification": {
-      "backpackTreasureLevel": {
-        "gameVersion": "V1.0.11.2",
-        "fingerprints": {
-          "data.json": "aac06ce18a840ae221d7683fba21182b0dcf4bb7ae1caf3431199264a1c5f62e",
-          "scripts/c3runtime.js": "3e0febeb8342138ed47d9e8499e3646f4e8ddc2ce89a9faa0bebbad9ba83280e",
-          "cl.json": "c121cf702eb6a4edb184d7180ad83d41aa90efca4a1e5e21e652dd1ff24f47b7",
-          "js.json": "5c360c93cd1248fe96d0373428ddae4649698574d032b333432e4b777fcc0ee4",
-          "zy.json": "97d59a029aefbfbba315c9cec7b83a168571def79282eec2be9edbfeb3759188",
-          "sx.json": "6a24e20ad0a70d5ad17a0310f0a9e7619dda5c4718d536a3df51d385abd748e7",
-          "wp.json": "14516d34cedf209c497fca10699e179c26c43558c2a3253bc87c8b33493a82c4",
-          "kj.json": "b051136f1366eb1c990004a4fa8a2d8f90339c7defbc10eb90c68c2ff36e5309",
-          "jz.json": "cf4d691dc7f6814db5ba1e0e28ac206d7a15c58ddccba55a473975461841b0bf",
-          "rw.json": "705f541917d9a62cff9ef5805032fd29496fdc98b03a7f065ff3fc6fab937b4b",
-          "tf.json": "c8a3005201d8f17a0899584baf7e0286b073aa84d4697807edcd44e00902fa1f",
-          "ss.json": "4350cb979c4026ce0d8dc25e7807fde3d29a1d42fbd2e499673614a4f67e1bc7",
-          "lw.json": "7a4f5a5bfd5967f3a74e36aa9a0c2cda132619b2908bdc39b1406da4b346bde6",
-          "yx.json": "58b8eb984cf8190f52ed4e53d044079733cf82096224dd7014ec36e1da2b45bc",
-          "tz.json": "a4b008981f39abc371b5673abe4c780bef5c91229a5ae3a42d2e8fef4e780c74"
-        },
-        "dataHash": "e5167d6feb536fe9a9ce7e76aa5cb1ae40ee505693d0eecf2ea99b3b444ea41b",
-        "coreHash": "ae4bbdb76cdf419c2b93d634b1945c5001165020fe72e97ab9c8671bde1faf9d",
-        "coreHashAlgorithm": "core-estree-acorn-8.15.0-es2024-v1",
-        "oracleHash": "a03a89c1c9fda9175b0b2d2112decc86663083afcbffa4f438a22db0cb20e173",
-        "coverage": "initial-matrix",
-        "group": "backpackTreasureLevel",
-        "matrixCases": 4080,
-        "lifecycleCases": 6,
-        "effectTemplates": 170,
-        "costs": 0,
-        "decomposes": 72,
-        "rejects": 12,
-        "manifestHash": "01f45d199af6c6c036ef79e068d6fc814cf0b3bee0d9183ce237db6342fc6d1e",
-        "evidenceHash": "ec7f5d9d25b7c2f96ba0db33efb7038ccc90eb40cab5c07841632c6b1fb3747c"
-      },
-      "treasureLevel": {
-        "gameVersion": "V1.0.11.2",
-        "fingerprints": {
-          "data.json": "aac06ce18a840ae221d7683fba21182b0dcf4bb7ae1caf3431199264a1c5f62e",
-          "scripts/c3runtime.js": "3e0febeb8342138ed47d9e8499e3646f4e8ddc2ce89a9faa0bebbad9ba83280e",
-          "cl.json": "c121cf702eb6a4edb184d7180ad83d41aa90efca4a1e5e21e652dd1ff24f47b7",
-          "js.json": "5c360c93cd1248fe96d0373428ddae4649698574d032b333432e4b777fcc0ee4",
-          "zy.json": "97d59a029aefbfbba315c9cec7b83a168571def79282eec2be9edbfeb3759188",
-          "sx.json": "6a24e20ad0a70d5ad17a0310f0a9e7619dda5c4718d536a3df51d385abd748e7",
-          "wp.json": "14516d34cedf209c497fca10699e179c26c43558c2a3253bc87c8b33493a82c4",
-          "kj.json": "b051136f1366eb1c990004a4fa8a2d8f90339c7defbc10eb90c68c2ff36e5309",
-          "jz.json": "cf4d691dc7f6814db5ba1e0e28ac206d7a15c58ddccba55a473975461841b0bf",
-          "rw.json": "705f541917d9a62cff9ef5805032fd29496fdc98b03a7f065ff3fc6fab937b4b",
-          "tf.json": "c8a3005201d8f17a0899584baf7e0286b073aa84d4697807edcd44e00902fa1f",
-          "ss.json": "4350cb979c4026ce0d8dc25e7807fde3d29a1d42fbd2e499673614a4f67e1bc7",
-          "lw.json": "7a4f5a5bfd5967f3a74e36aa9a0c2cda132619b2908bdc39b1406da4b346bde6",
-          "yx.json": "58b8eb984cf8190f52ed4e53d044079733cf82096224dd7014ec36e1da2b45bc",
-          "tz.json": "a4b008981f39abc371b5673abe4c780bef5c91229a5ae3a42d2e8fef4e780c74"
-        },
-        "dataHash": "e5167d6feb536fe9a9ce7e76aa5cb1ae40ee505693d0eecf2ea99b3b444ea41b",
-        "coreHash": "ae4bbdb76cdf419c2b93d634b1945c5001165020fe72e97ab9c8671bde1faf9d",
-        "coreHashAlgorithm": "core-estree-acorn-8.15.0-es2024-v1",
-        "oracleHash": "a03a89c1c9fda9175b0b2d2112decc86663083afcbffa4f438a22db0cb20e173",
-        "coverage": "initial-matrix",
-        "group": "treasureLevel",
-        "matrixCases": 8160,
-        "lifecycleCases": 10,
-        "effectTemplates": 170,
-        "costs": 72,
-        "decomposes": 0,
-        "rejects": 24,
-        "manifestHash": "01f45d199af6c6c036ef79e068d6fc814cf0b3bee0d9183ce237db6342fc6d1e",
-        "evidenceHash": "ec7f5d9d25b7c2f96ba0db33efb7038ccc90eb40cab5c07841632c6b1fb3747c"
-      }
-    }
-  }
+  ]
 }

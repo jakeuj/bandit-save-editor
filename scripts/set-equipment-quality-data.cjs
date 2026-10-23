@@ -68,5 +68,7 @@ function classify(rules,setLevel,setId,originId,affixId){
  return o&&s?'both':o?'origin':s?'set':'none';
 }
 const canPreserve=(old,next)=>['fingerprints','batch2Fingerprints','setEquipmentLevel','setEquipmentQuality'].every(k=>hash(old[k]??null)===hash(next[k]??null));
-function requireClosed(k){for(const group of groups)if(k.verification[group]!==undefined&&k.verification[group]!==false)throw Error('套裝品質 A 階段沒有首次證明，群組必須關閉：'+group);}
-module.exports={extract,reviewedRules,reviewedDigests,dependencies,sourceSids,groups,hash,classify,canPreserve,requireClosed};
+// Cross-pool scope of the two existing set-level groups (selected slot in P套); opened only by its own first proof, never by quality proofs.
+const crossPoolGroups=['backpackSetEquipmentLevelCrossPool','setEquipmentLevelCrossPool'];
+function requireClosed(k){for(const group of [...groups,...crossPoolGroups])if(k.verification[group]!==undefined&&k.verification[group]!==false)throw Error('套裝品質 A 階段沒有首次證明，群組必須關閉：'+group);}
+module.exports={extract,reviewedRules,reviewedDigests,dependencies,sourceSids,groups,crossPoolGroups,hash,classify,canPreserve,requireClosed};

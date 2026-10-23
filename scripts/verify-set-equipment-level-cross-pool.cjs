@@ -10,8 +10,8 @@
 //   io-two-rounds         edited bytes → read back → save → new PID; refine → move cycle → sort → save → new PID (B2 playCopy)
 //   quality-level-quality-undo  Q up → level → (Q down refused over cap) → level → Q down, undo step by step; bytes + new PID, native refine
 //   accumulated-restore   level/quality mix, restore one token → whole item back, restoreAll; bytes + new PID
-// The level candidate is an isolated VM copy of core whose set-level eligibility also accepts the selected slot in P套 (the shared candidate
-// policy); the shipped src/core.js is never modified and its formal entry must keep refusing. Results use the A10 per-case shape.
+// The level candidate is the shipped core with its per-plane cross-pool group opened in an isolated knowledge copy (B7 moved the B6 VM
+// patch into src/core.js behind those groups); with the shipped knowledge the formal entry must keep refusing. Results use the A10 per-case shape.
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),vm=require('node:vm'),assert=require('node:assert/strict');
 const O=require('./set-equipment-quality-oracle.cjs'),E=require('./set-equipment-quality-effects-oracle.cjs'),L=require('./set-equipment-level-oracle.cjs'),
  M=require('./set-equipment-quality-scenarios.cjs'),Q=require('./set-equipment-quality-data.cjs'),X=require('./set-equipment-quality-matrix.cjs');
@@ -22,17 +22,13 @@ const startQuality=3,refineMax=400;
 const filler=Object.fromEntries(['baselineHash','runtimeHash','sourceManifestHash','runtimeManifestHash'].map(n=>[n,'0'.repeat(64)]));
 
 // ---- isolated cores ---------------------------------------------------------------------------------------------------------
-// Formal = shipped source and knowledge. Candidate = quality gates open in a knowledge copy, plus the set-level slot check widened to the
-// shared candidate policy (selected slot may hold a P套 id). The patch must hit exactly one place or nothing runs.
-const formalSlotCheck="if(slot<quality){if(!origin.affixIds.includes(id)||";
-const candidateSlotCheck="if(slot<quality){if(!(origin.affixIds.includes(id)||flag===1&&KNOWLEDGE.setEquipmentQuality.pools[record[1]].affixIds.includes(id))||";
-function candidateLevelSource(source){
- const parts=source.split(formalSlotCheck);assert.equal(parts.length,2,'套裝等級槽檢查不是唯一一處，候選政策無法隔離套用');return parts.join(candidateSlotCheck);
-}
+// Formal = shipped source and knowledge (cross-pool groups closed). Candidate = the same source with the quality gates and both cross-pool
+// level groups open in a knowledge copy, so the selected slot may hold a P套 id. Shipped knowledge with an open cross-pool group is refused.
 function loadCore(source,knowledge){const ctx={};vm.runInNewContext(source.replace('/*__KNOWLEDGE__*/null',JSON.stringify(knowledge)),ctx);return ctx.SaveCore;}
 function cores(k,source){
- const candidate=structuredClone(k);for(const g of Q.groups)candidate.verification[g]=true;
- return {C:loadCore(candidateLevelSource(source),candidate),F:loadCore(source,k)};
+ assert.ok(Q.crossPoolGroups.every(g=>k.verification[g]===false),'出貨知識的跨池等級群組必須關閉');
+ const candidate=structuredClone(k);for(const g of [...Q.groups,...Q.crossPoolGroups])candidate.verification[g]=true;
+ return {C:loadCore(source,candidate),F:loadCore(source,k)};
 }
 
 // ---- planning ---------------------------------------------------------------------------------------------------------------
@@ -284,7 +280,7 @@ async function run({out,only,log=console.log}){
  const saveInfo=fs.existsSync(path.join(path.dirname(env.fixedSave),'saveinfo.dat'))?path.join(path.dirname(env.fixedSave),'saveinfo.dat'):null,fixedText=fs.readFileSync(env.fixedSave,'utf8');
  const manifest=M.createManifest(k,source,filler),specs=plan(k,level.results,manifest),{C,F}=cores(k,source),rules=k.setEquipmentLevel;
  const attributes=X.attributesOf(k),effectAttributes=X.effectAttributesOf(k);
- const binding={coreHash:hash(source.replace(/\r\n/g,'\n')),candidatePatch:hash(candidateSlotCheck),runnerHash:hash(fs.readFileSync(__filename,'utf8').replace(/\r\n/g,'\n')),driverHash:hash(crossPoolDriver.toString()),
+ const binding={coreHash:hash(source.replace(/\r\n/g,'\n')),crossPoolGroups:[...Q.crossPoolGroups],runnerHash:hash(fs.readFileSync(__filename,'utf8').replace(/\r\n/g,'\n')),driverHash:hash(crossPoolDriver.toString()),
   matrixHash:hash(fs.readFileSync(path.join(__dirname,'set-equipment-quality-matrix.cjs'),'utf8').replace(/\r\n/g,'\n')),lifecycleHash:hash(fs.readFileSync(path.join(__dirname,'verify-set-equipment-quality-migration-lifecycle.cjs'),'utf8').replace(/\r\n/g,'\n')),
   levelOracleHash:hash(fs.readFileSync(path.join(__dirname,'set-equipment-level-oracle.cjs'),'utf8').replace(/\r\n/g,'\n')),manifestHash:manifest.manifestHash,fingerprints:sources.fingerprints};
  const resultFile=path.join(out,'b6-results.json'),result=fs.existsSync(resultFile)?JSON.parse(fs.readFileSync(resultFile,'utf8')):{binding,starts:{},cases:[]};
@@ -406,7 +402,7 @@ function a10Rows(manifest,cases){
  return {complete:want.every(c=>byId.get(c.id)?.passed===true&&byId.get(c.id).caseHash===hash(c)),
   rows:want.filter(c=>byId.get(c.id)?.passed).map(c=>({id:c.id,caseHash:hash(c),passed:true,nativeCompared:true})),missing:want.filter(c=>!byId.get(c.id)?.passed).map(c=>c.id)};
 }
-module.exports={names,planes,formalSlotCheck,candidateSlotCheck,candidateLevelSource,cores,pickBaseline,plan,levelEdit,qualityEdit,formalRefuses,undoSequence,restoreSequence,startText,byteCases,
+module.exports={names,planes,cores,pickBaseline,plan,levelEdit,qualityEdit,formalRefuses,undoSequence,restoreSequence,startText,byteCases,
  crossPoolDriver,Refutation,checkSingles,checkCharacter,checkRefine,checkUpgrade,a10Rows,run};
 if(require.main===module){
  const argv=process.argv.slice(2),opt=n=>argv.includes(n)?argv[argv.indexOf(n)+1]:undefined;

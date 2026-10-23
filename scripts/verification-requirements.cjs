@@ -4,7 +4,7 @@ const nativeLifecycle = ['load', 'save', 'restart', 'originalHashes', 'nativeEff
 const sections = {
   setEquipmentLevel: {groups:['backpackSetEquipmentLevel','setEquipmentLevel'],perGroup:true,checks:nativeLifecycle},
   treasureLevel: {groups:['backpackTreasureLevel','treasureLevel'],perGroup:true,checks:nativeLifecycle},
-  setEquipmentQuality: {groups:['backpackSetEquipmentQualityUpgrade','backpackSetEquipmentQualityDowngrade','setEquipmentQualityUpgrade','setEquipmentQualityDowngrade'],perGroup:true,checks:nativeLifecycle},
+  setEquipmentQuality: {groups:['backpackSetEquipmentQualityUpgrade','backpackSetEquipmentQualityDowngrade','setEquipmentQualityUpgrade','setEquipmentQualityDowngrade','backpackSetEquipmentLevelCrossPool','setEquipmentLevelCrossPool'],perGroup:true,checks:nativeLifecycle},
   randomCharacterTalents: {
     groups: ['randomCharacterTalents'], perGroup: true,
     checks: ['load','save','restart','originalHashes','nativeEffects','talentFormulas','aptitudeCap','numericUpdate','nativeTransfer','nativePrison','nativeRebirth','nativeDismiss','stageRoundtrips']

@@ -10,8 +10,8 @@
 - [x] B4. 執行首次矩陣與生命週期分片：交易／效果、成本、洗練舊效果移除、穿卸／搬移／排序、兩輪 IO／新 PID 全部對帳；完整 manifest 結束才勾選，未命中與失敗不縮分母。
 - [ ] B5. 完成必要原版 UI 證據：依當次明確授權驗品質顯示、槽數與已選槽停用／洗練；未授權或失敗保留缺口，不開相關群組。
 - [x] B6. 補既有套裝等級兩庫跨池證明：各自獨立原生證明與原池回歸，驗合法等級、cap、效果、IO 及品質交錯 undo／還原；此時正式入口仍不擴權。
-- [ ] B7. 核對最終 core 相依並重驗：完成技藝上限及其他受影響既有群組重驗，保留未受影響證據；不得只換摘要或關閉既有功能。後續核心若再變須重新核對。
-- [ ] B8. 在隔離待交付快照合併證明：從原始結果重算四群組覆蓋；B4–B7 證據齊備才接入相應品質方向及已補證等級資格，固定快照供 B9，尚不交付開閘產物。
+- [x] B7. 核對最終 core 相依並重驗：完成技藝上限及其他受影響既有群組重驗，保留未受影響證據；不得只換摘要或關閉既有功能。後續核心若再變須重新核對。
+- [ ] B8. 在隔離待交付快照合併證明：從原始結果重算四群組覆蓋；B4–B7 證據齊備才開啟相應品質方向及已補證的兩庫跨池等級群組（跨池資格已在 B7 寫入 core、預設關閉，B8 不再改 core），固定快照供 B9，尚不交付開閘產物。
 - [ ] B9. 驗正式入口可用流程：在 B8 快照驗已證明方向套用、未證明方向拒絕、下載 bytes／重載、undo／還原、桌面／390px、file、PWA 離線／交接；失敗撤回候選開閘，不能沿用 B3 結果。
 - [ ] B10. 完成整合交付檢查：B9 通過後同步建置與研究／驗收紀錄，執行相關 Node／proof／遷移檢查，確認無既有功能回歸；記錄每群組狀態及缺口，提交發布依當次授權。
 
@@ -120,3 +120,26 @@
 - 結果檔（repo 外 `set-equipment-quality-B6-run2`，SHA-256）：`a10-results.json` `4c7a3d4e91d843253c0d20dda57b68e982311d54d5792ef9b1616dfecef83016`、`b6-results.json` `eed7503f03e21de82d7cc8080a5fa1eebb8a15816c3f57a18237477bd0a5f383`（binding：核心 `69b462a0…`、runner `5cb007b0…`、driver `5019bfa5…`、候選槽檢查 `60246936…`、manifest `629075b8…`）。固定存檔 `ebb0a4a2…84c5`、玩家原檔 `9497ca27…6e1a`、等級基準 `090290ff…48327` 與兩份快取 manifest 在前後都相同。
 - 缺口與界線：每庫只用一個範本、一個選槽位置（槽 1），也只驗 Q3 起點；Q4／Q5 則經由品質交易覆蓋。正式等級入口仍不擴權，要到 B8 合併才接入跨池資格，屆時 B7／B8 必須核對最終 core 是否等同這裡的候選政策。沒有合併任何證明，沒有改旗標、`reproof-ledger.json` 或進度入口。
 - 驗證：新增 `tests/set-equipment-level-cross-pool.test.cjs`（9 項，合成資料）；`npm test` 383／383；`node scripts/core-slice-report.cjs`：core 切片未變。
+
+### B7（2026-10-23）
+
+- 判斷：文件定不出最終 core（B8／母 tasks 第 14 行寫「跨池等級資格在 B8 接入」，但「最終 core 確定後重證」是 B7）。模擬把 B6 VM 補丁寫進 core：`setEquipmentLevelInfo` 經 `editingInfo`→`resolveField`→共用根 `setField` 進入所有 family 切片，11 個 family、21／21 份代表副本都要重證。另外兩個等級群組已開啟，直接寫入會在 B6 證明合併前擴權。停下回報四個選項，使用者選 **方案 A**：跨池政策寫進 core，由新跨池群組把關、預設關閉，B8 合併 B6 證明時才開。並行副本這次暫緩（`reproof-cost.cjs --decline`）。
+- 最終 core（`src/core.js`，只改 `setEquipmentLevelInfo`）：依庫別讀 `backpackSetEquipmentLevelCrossPool`／`setEquipmentLevelCrossPool`。群組開啟時，旗標 1 的唯一已選槽可用 `KNOWLEDGE.setEquipmentQuality.pools` 的 P套 ID，與 B6 VM 補丁語意相同；群組關閉時就是原本的原池檢查。等級交易仍只改 y6，未選槽、池外、多旗標的檢查不變。共同資格沿用品質候選的同一份 P套 資料；沒有把品質候選的槽檢查抽成共用函式，因為那會改動 B4 已驗的品質候選程式碼，B8 的等價核對會更難。
+- 新群組：兩個 `…CrossPool` 旗標登記為 false，登記處：catalog、`extract-game` 預設、`verification-requirements`／`verification-suite` 的 `setEquipmentQuality` section／family（`initialProofRequired`）、`set-equipment-quality-data.cjs` 的 `crossPoolGroups` 與 `requireClosed`。`verify-migration` 的 `opened` 排除它們，代表遷移不能開；`coreRoots.setEquipmentQuality` 加入 `setEquipmentLevel`／`setEquipmentLevelInfo`。B8 合併時需把它們加進 `mergeInitial` 白名單並建立首次證明紀錄，本段沒有改。
+- 合成測試（`tests/set-equipment-level-cross-pool.test.cjs` 新增 2 項）：
+  - 群組關閉時，正式入口（`setEquipmentLevelInfo`／`editingInfo`／`resolveField`／`set`／`setField`／`setEquipmentLevel`）在跨池、誤放、多旗標、原池、原池帶旗標五種列上的結果、訊息、bytes 與變更數，都和還原後的 B7 前 core 逐一相同。
+  - 群組分庫獨立：只開另一庫的群組仍拒絕；開本庫後可改等級，誤放未選槽、多旗標、池外仍拒絕；等級群組關閉時，開跨池群組也不能寫；`requireClosed` 涵蓋兩個新群組。
+  - B6 runner 改為直接用出貨 core，搭配開啟兩個跨池群組與四品質群組的隔離知識副本，不再用 VM 補丁；出貨知識若開了跨池群組就拒絕執行。版本遷移與切片測試也同步新群組及寫回後的切片基準。
+- B6 對最終 core 原生重跑（repo 外 `set-equipment-quality-B7-b6`；遊戲同時只開一份隱藏、靜音的隔離副本，Steam 真實初始化）：16／16 通過，失敗、未命中、未知皆 0，無反證。core 摘要 `9d2175af…`（B6 時為 `69b462a0…`）。`a10-results.json` `7ec16f6ed17e486510b22fa6b7af0adc8d3bfa6d41ac5055a368b1b197618739`、`b6-results.json` `e082e4790b53214402b5e1831cb9e831fe41325e61b0213f375eae405a7c9e36`。
+- 切片報告：改 core 後為「需重證 11 family（約 21 份）」：advanced、affixReplacement、batch2、equipmentQuality、equipmentWorkflow、growth、randomCharacterGrowth、randomCharacterSkillCaps（技藝上限）、randomCharacterTalents、setEquipmentLevel、treasureLevel。沒有未受影響、可保留的既有 family。寫回後為「core 切片未變」，快照也補上 `setEquipmentQuality` family 的切片基準（A 準備清單第 5 點）。
+- 代表重證（`verify-migration.cjs`，同來源、auto 模式，repo 外 `b7-reproof`）：
+  - 21／21 份全部通過、警告 0。第一次執行到第 19 份 `set-level-9-representative` 的 oracleCompare 時，Node 程序自身觸發 libuv 斷言（`UV_HANDLE_CLOSING`）而崩潰；這是工具崩潰，不是數值不符。之前的 load／save／restart／reload 都已通過，用 `--resume` 重跑該份及剩餘兩份後全過。
+  - 寫回後開啟群組仍為 29 個（與 B7 前相同），四個品質旗標與兩個跨池旗標都是 false；既有首次證明保留，`build-editor --check` 通過。
+  - 結果 `results.json` `43a825bbee2c90d3fe6e49da2d473101027610f48e050145f199f962e56babf8`、`migration-plan.json` `adca0008c462779d8a287b1e58ef7002406fb505d2103a92374f6ec8f197b1e7`、`checkpoint.json` `0eb529404087b4da2b05c6e3be65df19f19f8caf60fcc54ec4dfd58ad8230f54`。
+  - 已記入 `reproof-ledger.json`：core-change 21／21，約 14 分鐘含續跑。
+- 原檔／快取：固定存檔 `ebb0a4a2…84c5`、玩家原檔 `9497ca27…6e1a`、等級基準 `090290ff…48327`、來源 manifest `236b9005…`、runtime manifest `80c05d89…`，在 B6 重跑與代表重證前後都相同。遊戲程序已停止，無殘留鎖檔。
+- 措辭同步：B8 條目與母 tasks 第 14 行改為「跨池資格已在 B7 寫入 core、預設關閉，B8 合併 B6 證明後才開啟」。
+- 缺口與給 B8 的提醒：
+  - B4 的 67,755 案結果在 core `69b462a0…` 上取得。最終 core 只多了跨池群組這一條閘門；群組關閉時行為與舊 core 相同（上述回歸測試），而品質候選路徑沒有改。但品質 proof 綁定整份 core 摘要（`binding.coreHash`），B8 合併前要先決定：沿用 B4 結果並記錄這次等價核對，或依最終 core 重跑。
+  - 兩個跨池群組還沒有首次證明紀錄格式，也沒有合併白名單，屬於 B8。
+- 驗證：`npm test` 385／385；`npm run test:browser` 27／27；`node scripts/core-slice-report.cjs`：core 切片未變。沒改進度入口；沒合併品質或 B6 證明。

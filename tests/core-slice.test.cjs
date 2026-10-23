@@ -47,15 +47,14 @@ test('constructs that defeat name-based reachability make the whole core unslice
 });
 test('the proven core has a recorded slice baseline and the report sees no change',()=>{
  const table=A.sliceTable(proof.migration.snapshot);assert.ok(table,'缺少 v2.11 切片基準');
- // The baseline predates the closed set-equipment-quality family: every recorded family is unchanged and only that family is new.
+ // The B7 re-proof recorded the slices of every family, including the closed set-equipment-quality family: all unchanged, none new.
  const current=Core.slices(core,A.coreRoots).hashes;
- assert.deepEqual(table.hashes,Object.fromEntries(Object.keys(table.hashes).map(f=>[f,current[f]])));
- assert.deepEqual(Object.keys(current).filter(f=>!Object.hasOwn(table.hashes,f)),['setEquipmentQuality']);
+ assert.deepEqual(table.hashes,current);
  const r=Report.report(core,proof.migration.snapshot,catalog);assert.equal(r.mode,'slices');assert.equal(r.unchanged,true);assert.equal(r.copies,0);
 });
 test('a family-private edit selects only that family; a hub edit or an unsliceable core selects all',()=>{
  const previous=proof.migration.snapshot,groups=Object.keys(proof.groups).filter(g=>proof.groups[g]);
- const next=src=>({...previous,coreHash:Core.hash(src),coreHashAlgorithm:Core.algorithm,...(Core.slices(src,A.coreRoots)?{coreSlices:Core.slices(src,A.coreRoots)}:{})});
+ const next=src=>({...previous,coreHash:Core.hash(src),coreHashAlgorithm:Core.algorithm,coreSlices:Core.slices(src,A.coreRoots)||undefined});
  const families=src=>Object.keys(P.selection(previous,next(src),groups).families).sort();
  assert.deepEqual(families(core),[]);
  assert.deepEqual(families(edit('qualityAttributeEffect')),['equipmentQuality']);

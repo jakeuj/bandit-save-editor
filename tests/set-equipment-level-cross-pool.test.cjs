@@ -17,15 +17,55 @@ const results=Object.keys(k.setEquipmentQuality.pools).map(Number).flatMap(t=>[1
 const manifest=M.createManifest(k,source,filler),specs=B6.plan(k,results,manifest),{C,F}=B6.cores(k,source);
 // What a native refine hit looks like: slot 1 holds a P套-only id with the selected flag; nothing else moves.
 function refined(spec){const r=spec.baseline.slice(),p=X.poolsOf(k,spec.templateId,spec.originId);r[9]=p.setOnly[0];r[15]=O.subRange(r[5])[0]+12.34;r[28]=1;return r;}
+const placed=(core,row,plane,slot)=>{const m=X.sandbox(core);X.place(m,[{record:row,slot}],plane);return m;};
+const loadWith=knowledge=>{const ctx={};require('node:vm').runInNewContext(source.replace('/*__KNOWLEDGE__*/null',JSON.stringify(knowledge)),ctx);return ctx.SaveCore;};
 const saveText=()=>{const data=Array.from({length:221},()=>Array.from({length:60},()=>Array(22).fill(0)));data[0][0][1]='szmnqea';data[1][0][2]=1;data[1][1][2]='驗證角色';return JSON.stringify({c2array:true,size:[221,60,22],data});};
 
-test('the candidate level policy lives only in a VM copy: one patched check, shipped core untouched and refusing',()=>{
- assert.equal(source.split(B6.formalSlotCheck).length,2);assert.ok(!source.includes(B6.candidateSlotCheck),'出貨核心不可含候選政策');
- assert.throws(()=>B6.candidateLevelSource(source+B6.formalSlotCheck),/不是唯一/);assert.throws(()=>B6.candidateLevelSource('x'),/不是唯一/);
+test('the cross-pool level policy is gated by its own closed groups: shipped knowledge refuses, an opened copy is the candidate',()=>{
+ for(const g of Q.crossPoolGroups)assert.equal(k.verification[g],false);
+ const opened=structuredClone(k);opened.verification[Q.crossPoolGroups[0]]=true;assert.throws(()=>B6.cores(opened,source),/必須關閉/);
  for(const spec of Object.values(specs)){
   const start=refined(spec);B6.formalRefuses(F,start,spec.plane,spec.slot);
   // Shipped knowledge keeps the four quality groups closed.
   for(const g of Q.groups)assert.notEqual(k.verification[g],true);
+ }
+});
+// B7: the shipped core with both cross-pool groups closed must behave exactly like the pre-B7 core (the original-pool check only).
+const crossPoolLine="  // Cross-pool scope reuses the set-quality pool (P套) for the one selected slot, behind its own per-plane first proof; closed, it is the original-pool check.\n  const crossPool=KNOWLEDGE.verification[plane===7?'backpackSetEquipmentLevelCrossPool':'setEquipmentLevelCrossPool']===true?KNOWLEDGE.setEquipmentQuality?.pools?.[record[1]]:undefined;\n";
+const crossPoolCheck="if(slot<quality){if(!(origin.affixIds.includes(id)||flag===1&&!!crossPool?.affixIds.includes(id))||";
+function preB7Source(){
+ const lf=source.replace(/\r\n/g,'\n');assert.equal(lf.split(crossPoolLine).length,2);assert.equal(lf.split(crossPoolCheck).length,2);
+ return lf.replace(crossPoolLine,'').replace(crossPoolCheck,"if(slot<quality){if(!origin.affixIds.includes(id)||");
+}
+const outcome=fn=>{try{const v=fn();return {ok:true,v:JSON.stringify(v)};}catch(e){return {ok:false,e:e.message};}};
+test('closed cross-pool groups: every formal entry matches the pre-B7 core on cross-pool, misplaced, multi-flag and original-pool rows',()=>{
+ const old=B6.cores(k,preB7Source()).F;
+ for(const spec of Object.values(specs)){
+  const start=refined(spec),misplaced=start.slice(),multi=start.slice(),origin=spec.baseline.slice();
+  misplaced[28]=0;misplaced[29]=1;multi[29]=1;
+  for(const row of [start,misplaced,multi,origin,origin.map((v,y)=>y===28?1:v)]){
+   const run=core=>{const m=placed(core,row,spec.plane,spec.slot),plane=spec.plane;
+    const r=[outcome(()=>core.setEquipmentLevelInfo(m,{itemId:1,plane})),outcome(()=>core.editingInfo(m,'equipment',1,plane)),outcome(()=>core.resolveField(m,{x:1,y:6,z:plane})),
+     outcome(()=>core.set(m,{x:1,y:6,z:plane},2)),outcome(()=>core.setField(m,{x:1,y:6,z:plane},2)),outcome(()=>core.setEquipmentLevel(m,{itemId:1,plane,level:Math.min(row[6]+1,O.cap(row[5]))}))];
+    return {r,bytes:core.serialize(m),changes:m.changes.size};};
+   const a=run(F),b=run(old);assert.deepEqual(a,b,'關閉時與 B7 前核心不同');
+  }
+ }
+});
+test('cross-pool groups are per plane and only widen the selected slot; requireClosed covers them',()=>{
+ for(const spec of Object.values(specs)){
+  const start=refined(spec),other=spec.plane===7?'setEquipmentLevelCrossPool':'backpackSetEquipmentLevelCrossPool',own=spec.plane===7?'backpackSetEquipmentLevelCrossPool':'setEquipmentLevelCrossPool';
+  const onlyOther=structuredClone(k);onlyOther.verification[other]=true;const W=loadWith(onlyOther);
+  assert.throws(()=>W.setEquipmentLevelInfo(placed(W,start,spec.plane,spec.slot),{itemId:1,plane:spec.plane}),/原裝備詞條/);
+  const onlyOwn=structuredClone(k);onlyOwn.verification[own]=true;const V=loadWith(onlyOwn),m=placed(V,start,spec.plane,spec.slot);
+  assert.equal(V.setEquipmentLevelInfo(m,{itemId:1,plane:spec.plane}).verified,true);V.setEquipmentLevel(m,{itemId:1,plane:spec.plane,level:7});assert.equal(m.changes.size,1);
+  const misplaced=start.slice();misplaced[28]=0;misplaced[29]=1;assert.throws(()=>V.setEquipmentLevelInfo(placed(V,misplaced,spec.plane,spec.slot),{itemId:1,plane:spec.plane}),/原裝備詞條/);
+  const multi=start.slice();multi[29]=1;assert.throws(()=>V.setEquipmentLevelInfo(placed(V,multi,spec.plane,spec.slot),{itemId:1,plane:spec.plane}),/多個已選洗練槽/);
+  const outside=start.slice();outside[9]=999999;assert.throws(()=>V.setEquipmentLevelInfo(placed(V,outside,spec.plane,spec.slot),{itemId:1,plane:spec.plane}),/原裝備詞條/);
+  // An opened cross-pool group never bypasses the closed set-level flag of its plane.
+  const noLevel=structuredClone(onlyOwn);noLevel.verification[spec.group]=false;const N=loadWith(noLevel);
+  assert.throws(()=>N.setEquipmentLevel(placed(N,start,spec.plane,spec.slot),{itemId:1,plane:spec.plane,level:7}));
+  const closedCheck=structuredClone(k);Q.requireClosed(closedCheck);closedCheck.verification[own]=true;assert.throws(()=>Q.requireClosed(closedCheck),/首次證明/);
  }
 });
 test('planning maps the 16 level-regression cases onto both existing set-level groups with native-shaped starts',()=>{

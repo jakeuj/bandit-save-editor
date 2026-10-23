@@ -17,8 +17,25 @@
     "yx.json": "58b8eb984cf8190f52ed4e53d044079733cf82096224dd7014ec36e1da2b45bc",
     "tz.json": "a4b008981f39abc371b5673abe4c780bef5c91229a5ae3a42d2e8fef4e780c74"
   },
-  "coreHash": "ae4bbdb76cdf419c2b93d634b1945c5001165020fe72e97ab9c8671bde1faf9d",
+  "coreHash": "5469069385845eb011e0f63fe8e7edd2b29eb1350098d1e7649b85cbac73f46a",
   "coreHashAlgorithm": "core-estree-acorn-8.15.0-es2024-v1",
+  "coreSlices": {
+    "algorithm": "core-slice-acorn-8.15.0-es2024-v1",
+    "hashes": {
+      "advanced": "ade4a30b8293f079d1ec1c8d2c2dd6e707958c9f5654ae0fd4bbf2ae72d71c51",
+      "affixReplacement": "1ca7d4d31829e4bfd8f6948e3728c7f47761f42b1dafc341a89ceec747beab01",
+      "batch2": "451e2a1cc5ed1c5329b46baa721e87860242b73c54f5b201084abb1ffb15e7d3",
+      "equipmentQuality": "c8e4b37e0fed169d9d5977bc8211674dc0f70f968fd03fa3279633023d7d8b0f",
+      "equipmentWorkflow": "5ed8faf14e9cb2472195aa8a0ca7cf1c880e85b072ef827c02b66ada8829c7cc",
+      "growth": "0e05141ca78210e048d87229fb0043d76d10912f6e9694f58e301d485933beae",
+      "randomCharacterGrowth": "9a99e88a684e9ffdd708a8d818ff89bec74cdff9b3b3ea3afb18a09ef4e3c1c7",
+      "randomCharacterSkillCaps": "faf2a9184331ba67607ca09e313cfc08e50f91752d66d157e5f3c1d57d69ba2b",
+      "randomCharacterTalents": "36182f3bd5f04e1d6a69f57478682bbd4d0d6d2d4bc352b81a689c4a629f2520",
+      "setEquipmentLevel": "cb888574ec37d15f123b780d766c7b3b7be2d1cf306575d54a3bd5825219b045",
+      "setEquipmentQuality": "7439f1e4e804c3f9268df4638dd43b5da2194fd413947d0bd27a37e503300781",
+      "treasureLevel": "cb888574ec37d15f123b780d766c7b3b7be2d1cf306575d54a3bd5825219b045"
+    }
+  },
   "roles": {
     "setEquipmentLevel": {
       "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
@@ -29,6 +46,11 @@
       "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
       "effects": "14078bdd865fdd091c315e334b814eb2fd9790c010fb3d671e36949182b264f1",
       "lifecycle": "aec1c9fa52f79c28a926e78c8c7419cfe933ffd02753fb1bbcbd2012a8c6ac1f"
+    },
+    "setEquipmentQuality": {
+      "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
+      "effects": "d8862b26ecb874781c9f67b6a3de0b0550146c5eca435457978d37e748e3b02b",
+      "lifecycle": "911011749f6213ad461d434de6cf8e1c3047258cb83f4d53eb0eabbd3431af62"
     },
     "growth": {
       "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
@@ -85,6 +107,12 @@
     "setEquipmentLevel": "86831316f3112d4ae6f6785cc85235ee735286844bb7cffa39727a024f8531a9",
     "backpackTreasureLevel": "f5351ba416120f3dda660ce6e9321dbd04eb3391a292cc4c6c80d02f9f0312e1",
     "treasureLevel": "f5351ba416120f3dda660ce6e9321dbd04eb3391a292cc4c6c80d02f9f0312e1",
+    "backpackSetEquipmentQualityUpgrade": "cb5e1f951505369f91bf877a92a8257a049aaa7ae0aac54ef807aebe411ceabc",
+    "backpackSetEquipmentQualityDowngrade": "cb5e1f951505369f91bf877a92a8257a049aaa7ae0aac54ef807aebe411ceabc",
+    "setEquipmentQualityUpgrade": "cb5e1f951505369f91bf877a92a8257a049aaa7ae0aac54ef807aebe411ceabc",
+    "setEquipmentQualityDowngrade": "cb5e1f951505369f91bf877a92a8257a049aaa7ae0aac54ef807aebe411ceabc",
+    "backpackSetEquipmentLevelCrossPool": "cb5e1f951505369f91bf877a92a8257a049aaa7ae0aac54ef807aebe411ceabc",
+    "setEquipmentLevelCrossPool": "cb5e1f951505369f91bf877a92a8257a049aaa7ae0aac54ef807aebe411ceabc",
     "randomCharacterTalents": "9147a7b6687005b9d9309cec340537cd3cc3316bc3db3f73cc00fd4f40fedc27",
     "randomCharacterSkillCaps": "24690926687b1bc8130cfc789ef8152d650b42dbb0c92c558b5cb20c88f39398",
     "randomCharacterBaseAptitudes": "3a5f3d21fc65d09694aebd302f32813f5dc82723fd87f16d795329306431fd76",

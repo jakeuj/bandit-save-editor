@@ -71,11 +71,13 @@
   // Only the first conversion of an ordinary template is covered; repeated set conversion is unknown.
   if(!origin||origin.slot!==t.slot||origin.tier!==t.tier||!Number.isSafeInteger(record[23])||record[23]<1||record[23]>6||!decimal2(record[26])||record[26]<0||!Number.isSafeInteger(Math.round(record[26]*10))||Math.abs(record[26]*10-Math.round(record[26]*10))>1e-7)fail('合成來源 metadata 尚未涵蓋。');
   if(![0,1].includes(record[24])||record[25]!==0||!Number.isSafeInteger(record[8])||record[8]<80+30*(quality-1)||record[8]>80+30*quality||!Number.isSafeInteger(owner)||owner<0)fail('特殊狀態、主係數或歸屬不符。');
+  // Cross-pool scope reuses the set-quality pool (P套) for the one selected slot, behind its own per-plane first proof; closed, it is the original-pool check.
+  const crossPool=KNOWLEDGE.verification[plane===7?'backpackSetEquipmentLevelCrossPool':'setEquipmentLevelCrossPool']===true?KNOWLEDGE.setEquipmentQuality?.pools?.[record[1]]:undefined;
   let selected=0;
   for(let slot=1;slot<=6;slot++){
    const id=record[8+slot],coefficient=record[14+slot],flag=record[27+slot];
    if(![0,1].includes(flag))fail('洗練旗標不符。');
-   if(slot<quality){if(!origin.affixIds.includes(id)||!decimal2(coefficient)||coefficient<10*(quality-1)||coefficient>60+10*quality)fail('原裝備詞條或係數不符。');}
+   if(slot<quality){if(!(origin.affixIds.includes(id)||flag===1&&!!crossPool?.affixIds.includes(id))||!decimal2(coefficient)||coefficient<10*(quality-1)||coefficient>60+10*quality)fail('原裝備詞條或係數不符。');}
    else if(id!==0||coefficient!==0||flag!==0)fail('品質外詞條槽仍有資料。');
    if(flag&&++selected>1)fail('多個已選洗練槽尚未涵蓋。');
   }

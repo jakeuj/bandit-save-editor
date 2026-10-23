@@ -65772,6 +65772,8 @@
     "backpackSetEquipmentQualityDowngrade": false,
     "setEquipmentQualityUpgrade": false,
     "setEquipmentQualityDowngrade": false,
+    "backpackSetEquipmentLevelCrossPool": false,
+    "setEquipmentLevelCrossPool": false,
     "randomCharacterTalents": true,
     "randomCharacterSkillCaps": true,
     "randomCharacterBaseAptitudes": true,

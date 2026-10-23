@@ -32,7 +32,7 @@ const sharedCoreRoots = ['parse','serialize','transaction','setField','addExperi
 const coreRoots = Object.fromEntries(Object.entries({
   setEquipmentLevel:['setEquipmentLevel'],
   treasureLevel:['setEquipmentLevel'],
-  setEquipmentQuality:['setEquipmentQualityCandidateInfo','previewSetEquipmentQualityCandidate','applySetEquipmentQualityCandidate','setEquipmentQualityCandidateEffects'],
+  setEquipmentQuality:['setEquipmentLevel','setEquipmentLevelInfo','setEquipmentQualityCandidateInfo','previewSetEquipmentQualityCandidate','applySetEquipmentQualityCandidate','setEquipmentQualityCandidateEffects'],
   growth:[],
   advanced:['setEquipmentLevel','setProfessionTrainingCap','setAdvancedTechnologyLevel','editingInfo'],
   batch2:['setEquipmentAffixCoefficient','setPillAptitudeBonus','pillInfo'],

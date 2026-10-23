@@ -14,7 +14,7 @@ const nativeLifecycleChecks = {load: 'load', save: 'save', restart: 'reload', or
 const families = {
   setEquipmentLevel: {groups:['backpackSetEquipmentLevel','setEquipmentLevel'],initialProofRequired:true,oracle:'verify-set-equipment-level.cjs',lifecycle:['verify-set-level-migration-lifecycle.cjs'],checks:nativeLifecycleChecks},
   treasureLevel: {groups:['backpackTreasureLevel','treasureLevel'],initialProofRequired:true,oracle:'verify-treasure-level.cjs',lifecycle:['verify-treasure-level-migration-lifecycle.cjs'],checks:nativeLifecycleChecks},
-  setEquipmentQuality: {groups:['backpackSetEquipmentQualityUpgrade','backpackSetEquipmentQualityDowngrade','setEquipmentQualityUpgrade','setEquipmentQualityDowngrade'],initialProofRequired:true,oracle:'verify-set-equipment-quality.cjs',lifecycle:['verify-set-equipment-quality-migration-lifecycle.cjs'],checks:nativeLifecycleChecks},
+  setEquipmentQuality: {groups:['backpackSetEquipmentQualityUpgrade','backpackSetEquipmentQualityDowngrade','setEquipmentQualityUpgrade','setEquipmentQualityDowngrade','backpackSetEquipmentLevelCrossPool','setEquipmentLevelCrossPool'],initialProofRequired:true,oracle:'verify-set-equipment-quality.cjs',lifecycle:['verify-set-equipment-quality-migration-lifecycle.cjs'],checks:nativeLifecycleChecks},
   randomCharacterTalents: {
     groups:['randomCharacterTalents'],
     initialProofRequired:true,
