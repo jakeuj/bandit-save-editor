@@ -103,20 +103,64 @@ async function backpackOverLimit(state, s) {
   return {store, upgrade, takeout, wear, back};
 }
 
+// Edited backpack relics placed natively on a building, taken off and placed again. Moves copy all 50 fields through z19
+// (y0 keeps the original row, so a relic can come back to another backpack row with a stale y0); only the placement pointer
+// z19 y12 ↔ building z1 y9 changes. Any building works for the move; only a 置物台 (67) feeds 刷新地块灵气, not covered here.
+const relicFind = `const same=(v,w)=>v.every((x,y)=>y===12||w[y]===x);const find=v=>{for(let x=1;x<a.GetWidth();x++)if(a.At(x,1,18)!==0&&same(v,record(x,18)))return x;throw Error('Relic missing in z18');};`;
+async function placeRelic(state, id, building) {
+  await evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);if(a.At(${building},9,1)!==0)throw Error('Building already holds a relic');call('摆放灵物',${id},${building});return true;})()`);
+  await pause(500);
+  return evaluate(state, `(()=>{${prefix}const slot=a.At(${building},9,1);return {slot,placed:record(slot,19),source:record(${id},18)};})()`);
+}
+async function takeOffRelic(state, building, before) {
+  const slot = await evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);const slot=a.At(${building},9,1);call('取下灵物',${building},true);return slot;})()`);
+  await pause(500);
+  return evaluate(state, `(()=>{${prefix}${relicFind}const id=find(${JSON.stringify(before)});return {slot:${slot},id,record:record(id,18),pointer:a.At(${building},9,1),cleared:record(${slot},19)};})()`);
+}
+function checkPlaced(p, before, building) {
+  assert.ok(p.slot > 0, 'Placement did not set the building pointer');
+  for (let y = 0; y < 50; y++) assert.equal(p.placed[y], y === 12 ? building : before[y], 'Placed relic field ' + y);
+  assert.ok(p.source.every(v => v === 0), 'Placed relic left its backpack row');
+}
+function checkTakenOff(t, before) {
+  for (let y = 0; y < 50; y++) assert.equal(t.record[y], y === 12 ? 0 : before[y], 'Returned relic field ' + y);
+  assert.equal(t.pointer, 0, 'Building still points at the relic');
+  assert.ok(t.cleared.every(v => v === 0), 'Placement row was not cleared');
+}
+async function relicPlacement(state, s) {
+  const {id, building} = s.relics, before = await evaluate(state, `(()=>{${prefix}return record(${id},18);})()`);
+  assert.equal(before[12], 0);
+  const first = await placeRelic(state, id, building); checkPlaced(first, before, building);
+  const off = await takeOffRelic(state, building, before); checkTakenOff(off, before);
+  const again = await placeRelic(state, off.id, building); checkPlaced(again, before, building);
+  state.relic = {building, record: before};
+  for (const [x, z] of [[id, 18], [off.id, 18], [first.slot, 19], [again.slot, 19]]) for (let y = 0; y < 50; y++) state.cells.push([x, y, z]);
+  state.cells.push([building, 9, 1]);
+  return {before, first, off, again};
+}
+// After a restart the placed relic is taken off again and must return unchanged, ready for the editor to read back.
+async function relicTakeOff(state) {
+  const {building, record} = state.relic, off = await takeOffRelic(state, building, record); checkTakenOff(off, record);
+  for (let y = 0; y < 50; y++) state.cells.push([off.id, y, 18]);
+  return off;
+}
+
 async function main() {
   const statePath = opt('--state'), state = JSON.parse(fs.readFileSync(statePath)), scenario = JSON.parse(fs.readFileSync(opt('--scenario')));
   const rel = path.relative(path.resolve(__dirname, '..'), state.dir), child = path.relative(state.dir, state.game);
   if (!rel || (!path.isAbsolute(rel) && rel !== '..' && !rel.startsWith('..' + path.sep)) || !child || path.isAbsolute(child) || child.startsWith('..')) throw Error('External disposable state required');
-  if (!scenario.followup && !scenario.pills && !scenario.backpackOverLimit) throw Error('Scenario has no native follow-up actions');
+  if (!scenario.followup && !scenario.pills && !scenario.backpackOverLimit && !scenario.relics && !scenario.relicTakeOff) throw Error('Scenario has no native follow-up actions');
   await waitMain(state);
   const result = {};
   if (scenario.followup) result.followup = await followup(state, scenario);
   if (scenario.pills) result.pills = await pillsAndRebirth(state, scenario);
   if (scenario.backpackOverLimit) result.backpackOverLimit = await backpackOverLimit(state, scenario);
+  if (scenario.relics) result.relics = await relicPlacement(state, scenario);
+  if (scenario.relicTakeOff) result.relicTakeOff = await relicTakeOff(state);
   state.expected = await evaluate(state, `(()=>{${prefix}return ${JSON.stringify(state.cells)}.map(([x,y,z])=>a.At(x,y,z));})()`);
   fs.writeFileSync(statePath, JSON.stringify(state, null, 2));
   fs.writeFileSync(path.join(state.dir, 'native-lifecycle.json'), JSON.stringify(result, null, 2));
   console.log('PASS: native ' + Object.keys(result).join(' and ') + ' follow-up actions');
 }
 if (require.main === module) main().catch(e => { console.error(e.stack); process.exitCode = 1; });
-module.exports = {followup, pillsAndRebirth, backpackOverLimit};
+module.exports = {followup, pillsAndRebirth, backpackOverLimit, relicPlacement, relicTakeOff};

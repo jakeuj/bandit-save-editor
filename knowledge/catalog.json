@@ -49206,167 +49206,398 @@
       {
         "id": 1,
         "name": "妖狐靈火",
-        "category": "獸血"
+        "category": "獸血",
+        "bases": [
+          55,
+          95,
+          30,
+          75,
+          45
+        ]
       },
       {
         "id": 2,
         "name": "幻魅狐印",
-        "category": "獸骨"
+        "category": "獸骨",
+        "bases": [
+          70,
+          100,
+          30,
+          60,
+          40
+        ]
       },
       {
         "id": 3,
         "name": "九尾靈絨",
-        "category": "獸皮"
+        "category": "獸皮",
+        "bases": [
+          50,
+          90,
+          30,
+          50,
+          80
+        ]
       },
       {
         "id": 4,
         "name": "經猿戰髓",
-        "category": "獸血"
+        "category": "獸血",
+        "bases": [
+          90,
+          30,
+          80,
+          50,
+          50
+        ]
       },
       {
         "id": 5,
         "name": "經猿金箍",
-        "category": "獸骨"
+        "category": "獸骨",
+        "bases": [
+          100,
+          40,
+          30,
+          60,
+          70
+        ]
       },
       {
         "id": 6,
         "name": "戰猿赤綾",
-        "category": "獸皮"
+        "category": "獸皮",
+        "bases": [
+          95,
+          45,
+          30,
+          75,
+          55
+        ]
       },
       {
         "id": 7,
         "name": "麒麟護心珠",
-        "category": "獸血"
+        "category": "獸血",
+        "bases": [
+          50,
+          30,
+          80,
+          50,
+          90
+        ]
       },
       {
         "id": 8,
         "name": "麒麟焰鬃",
-        "category": "獸骨"
+        "category": "獸骨",
+        "bases": [
+          55,
+          45,
+          30,
+          75,
+          95
+        ]
       },
       {
         "id": 9,
         "name": "帝麟金甲",
-        "category": "獸皮"
+        "category": "獸皮",
+        "bases": [
+          70,
+          40,
+          30,
+          60,
+          100
+        ]
       },
       {
         "id": 10,
         "name": "焚天火晶",
-        "category": "獸血"
+        "category": "獸血",
+        "bases": [
+          60,
+          40,
+          30,
+          100,
+          70
+        ]
       },
       {
         "id": 11,
         "name": "朱雀涅槃羽",
-        "category": "獸骨"
+        "category": "獸骨",
+        "bases": [
+          75,
+          45,
+          30,
+          95,
+          55
+        ]
       },
       {
         "id": 12,
         "name": "朱雀熔鱗",
-        "category": "獸皮"
+        "category": "獸皮",
+        "bases": [
+          50,
+          30,
+          80,
+          90,
+          50
+        ]
       },
       {
         "id": 13,
         "name": "八岐蛇毒",
-        "category": "獸血"
+        "category": "獸血",
+        "bases": [
+          80,
+          30,
+          90,
+          50,
+          50
+        ]
       },
       {
         "id": 14,
         "name": "大蛇金額冠",
-        "category": "獸骨"
+        "category": "獸骨",
+        "bases": [
+          60,
+          30,
+          100,
+          70,
+          40
+        ]
       },
       {
         "id": 15,
         "name": "八岐蛇鱗",
-        "category": "獸皮"
+        "category": "獸皮",
+        "bases": [
+          45,
+          30,
+          95,
+          55,
+          75
+        ]
       },
       {
         "id": 16,
         "name": "玄武靈焰核",
-        "category": "獸血"
+        "category": "獸血",
+        "bases": [
+          55,
+          30,
+          95,
+          75,
+          45
+        ]
       },
       {
         "id": 17,
         "name": "玄武鷹喙",
-        "category": "獸骨"
+        "category": "獸骨",
+        "bases": [
+          50,
+          30,
+          90,
+          50,
+          80
+        ]
       },
       {
         "id": 18,
         "name": "玄武甲紋殼",
-        "category": "獸皮"
+        "category": "獸皮",
+        "bases": [
+          70,
+          30,
+          100,
+          60,
+          40
+        ]
       },
       {
         "id": 19,
         "name": "星獸熔岩核",
-        "category": "獸血"
+        "category": "獸血",
+        "bases": [
+          80,
+          45,
+          40,
+          80,
+          55
+        ]
       },
       {
         "id": 20,
         "name": "星獸晶簇角",
-        "category": "獸骨"
+        "category": "獸骨",
+        "bases": [
+          85,
+          40,
+          60,
+          75,
+          40
+        ]
       },
       {
         "id": 21,
         "name": "星獸岩甲",
-        "category": "獸皮"
+        "category": "獸皮",
+        "bases": [
+          75,
+          55,
+          45,
+          75,
+          50
+        ]
       },
       {
         "id": 22,
         "name": "青龍靈涎",
-        "category": "獸血"
+        "category": "獸血",
+        "bases": [
+          50,
+          90,
+          80,
+          50,
+          30
+        ]
       },
       {
         "id": 23,
         "name": "青龍龍角",
-        "category": "獸骨"
+        "category": "獸骨",
+        "bases": [
+          60,
+          100,
+          30,
+          70,
+          40
+        ]
       },
       {
         "id": 24,
         "name": "青龍逆鱗",
-        "category": "獸皮"
+        "category": "獸皮",
+        "bases": [
+          75,
+          95,
+          30,
+          55,
+          45
+        ]
       },
       {
         "id": 25,
         "name": "燭陰冥毒焰",
-        "category": "獸血"
+        "category": "獸血",
+        "bases": [
+          50,
+          30,
+          80,
+          50,
+          90
+        ]
       },
       {
         "id": 26,
         "name": "燭陰冥符石",
-        "category": "獸骨"
+        "category": "獸骨",
+        "bases": [
+          75,
+          45,
+          30,
+          55,
+          95
+        ]
       },
       {
         "id": 27,
         "name": "燭陰青銅甲",
-        "category": "獸皮"
+        "category": "獸皮",
+        "bases": [
+          60,
+          40,
+          30,
+          70,
+          100
+        ]
       },
       {
         "id": 28,
         "name": "通靈猿靈珠",
-        "category": "獸血"
+        "category": "獸血",
+        "bases": [
+          45,
+          95,
+          75,
+          55,
+          30
+        ]
       },
       {
         "id": 29,
         "name": "通靈猿木心",
-        "category": "獸骨"
+        "category": "獸骨",
+        "bases": [
+          70,
+          100,
+          30,
+          60,
+          40
+        ]
       },
       {
         "id": 30,
         "name": "通靈猿臂甲",
-        "category": "獸皮"
+        "category": "獸皮",
+        "bases": [
+          50,
+          90,
+          30,
+          80,
+          50
+        ]
       },
       {
         "id": 31,
         "name": "翡翠龍晶",
-        "category": "獸血"
+        "category": "獸血",
+        "bases": [
+          70,
+          100,
+          30,
+          60,
+          40
+        ]
       },
       {
         "id": 32,
         "name": "翡翠龍鬚",
-        "category": "獸骨"
+        "category": "獸骨",
+        "bases": [
+          50,
+          90,
+          30,
+          50,
+          80
+        ]
       },
       {
         "id": 33,
         "name": "翡翠龍鱗",
-        "category": "獸皮"
+        "category": "獸皮",
+        "bases": [
+          55,
+          95,
+          30,
+          75,
+          45
+        ]
       }
     ]
   },
@@ -65791,6 +66022,7 @@
     "equipmentAffixCoefficient": true,
     "pillAptitudeBonus": true,
     "pillAptitudeBonusDecimal": true,
+    "relicAttributes": true,
     "names": true,
     "characterExperience": true,
     "professionExperience": true,

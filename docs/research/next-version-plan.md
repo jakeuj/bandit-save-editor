@@ -4,17 +4,17 @@
 
 ## 現在接哪一案
 
-**目前沒有功能主線。** 背包普通裝備等級超限已完成 v2.14（2026-10-24）；2026-10-24 起改採[輕量開發流程](../maintenance/lightweight.md)。
+**目前沒有功能主線。** 背包靈物五行已完成 v2.15（2026-10-24）；2026-10-24 起改採[輕量開發流程](../maintenance/lightweight.md)。
 
 | 要知道什麼 | 目前答案 |
 | --- | --- |
-| 剛完成 | v2.14 背包普通裝備等級超限（2026-10-24）：背包進階上限 1000、已超限列可再調整，隔離遊戲冒煙（含原生搬移、升級、穿卸）通過並開啟 `backpackEquipmentLevelAdvanced`。實作摘要見[背包研究](equipment-workflow.md#實作摘要2026-10-24v214-背包普通裝備等級超限) |
-| 前一版 | v2.13 小數丹藥增量（2026-10-24）：0.1 格線輸入、未改值保留原始 token，開啟 `pillAptitudeBonusDecimal`。實作摘要見[集中研究](candidate-sweep-2026-10-23.md#實作摘要2026-10-24v213) |
+| 剛完成 | v2.15 背包靈物五行（2026-10-24）：背包靈物五行一起調整、平均依原式重算，只接受原版可生成組合；隔離遊戲冒煙（含原生擺放、取下、再擺放）通過並開啟 `relicAttributes`。實作摘要見[集中研究](candidate-sweep-2026-10-23.md#實作摘要2026-10-24v215-背包靈物五行) |
+| 前一版 | v2.14 背包普通裝備等級超限（2026-10-24）：背包進階上限 1000，開啟 `backpackEquipmentLevelAdvanced`。實作摘要見[背包研究](equipment-workflow.md#實作摘要2026-10-24v214-背包普通裝備等級超限) |
 | 目前主線 | 無功能主線 |
 | 下一步 | 下一個功能從 roadmap 挑，依[輕量開發流程](../maintenance/lightweight.md)做 |
-| 授權 | 背包等級超限已完成；提交／推送依當次對話授權，下一個功能待使用者指定 |
+| 授權 | 背包靈物五行已完成；提交／推送依當次對話授權，下一個功能待使用者指定 |
 | 分派 | 預設在同一個 session 做完；查詢用子 agent，符合[分派判斷](../maintenance/dispatch.md#先判斷要不要分派)才開子 session |
-| 開放狀態 | 以目前 catalog／verification 為準；輕量開啟的群組（`pillAptitudeBonusDecimal`、`backpackEquipmentLevelAdvanced`）記在 `verification.json` 的 `lightweight` |
+| 開放狀態 | 以目前 catalog／verification 為準；輕量開啟的群組（`pillAptitudeBonusDecimal`、`backpackEquipmentLevelAdvanced`、`relicAttributes`）記在 `verification.json` 的 `lightweight` |
 
 ### 其他候選
 
@@ -22,7 +22,7 @@
 | --- | --- | --- | --- |
 | 降低原生重證成本 | 第 1、2、4 節已實作並推送：core 依 family 切片綁定、獨立入口開發規範、開發中不選跑；以 v2.11 已證明 core 建立切片基準，未重跑原生 | 剩第 3 節：並行副本（先做 PID／profile 核對與 2 份 Steam 探針）；何時值得做由[重證成本紀錄](reproof-ledger.json)判斷，切片報告達門檻會印「提示：」 | 只改 `scripts/` 與文件；並行需要實際跑原生副本驗證 |
 
-其他候選（靈物、結丹丹藥、內丹與渡劫、城市與城牆、建築、其餘超限）排序與理由見[路線圖](feature-roadmap.md)；候選不等於排程或實作授權。
+其他候選（結丹丹藥、內丹與渡劫、城市與城牆、建築、其餘超限，以及靈物的置物台效果／套裝合成驗證）排序與理由見[路線圖](feature-roadmap.md)；候選不等於排程或實作授權。
 
 套裝品質已於 2026-10-23 選為主線，A1–A10 已授權並完成。2026-10-23 的[後續候選集中研究](candidate-sweep-2026-10-23.md)補查了小數丹藥的跨 API 限制、靈物共同生成／平均值、結丹相依、內丹空經驗函式及城市／城牆，交付限研究文件，沒有功能發布或新增原生證明。
 
@@ -36,7 +36,7 @@
 | v2.10 套裝等級 | 已發布並驗收歸檔；兩庫各自首次證明及 Node／瀏覽器驗收通過，對應 SHA 的 Pages build／deploy 成功 | [研究](set-equipment-level.md)、[提案](../../sdd/archive/2026-10-23-set-equipment-level/proposal.md)、[任務](../../sdd/archive/2026-10-23-set-equipment-level/tasks.md) |
 | v2.11 寶物等級 | 已發布並歸檔；兩庫首次證明已合併並開啟，經驗候選經查證排除 | [研究](treasure-level.md)、[提案](../../sdd/archive/2026-10-23-treasure-level/proposal.md)、[任務](../../sdd/archive/2026-10-23-treasure-level/tasks.md) |
 | 原生重證成本 | 切片綁定與開發規範已實作；並行副本待做 | [提案](../../sdd/core-slice-reproof/proposal.md) |
-| 其他候選 | 小數丹藥、套裝品質／詞條、結丹丹藥、靈物等依目前優先順序評估 | [路線圖](feature-roadmap.md) |
+| 其他候選 | 結丹丹藥、內丹與渡劫、城市與城牆等依目前優先順序評估 | [路線圖](feature-roadmap.md) |
 
 ## 尚待驗收
 

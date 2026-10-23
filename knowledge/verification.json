@@ -61,7 +61,8 @@
     "professionTrainingCap": true,
     "professionTrainingCapAdvanced": true,
     "advancedTechnologyLevel": true,
-    "advancedTechnologyLevelAdvanced": true
+    "advancedTechnologyLevelAdvanced": true,
+    "relicAttributes": true
   },
   "lightweight": {
     "pillAptitudeBonusDecimal": {
@@ -91,6 +92,21 @@
       ],
       "baselineSaveSha256": "ebb0a4a28791218986c594d3b3819a066482bc11ff75aac99f8498c4ce4b84c5",
       "resultSha256": "c529c3aa1e6b5b3b087818095629a0a67faad698d2adaf1e0f97df775e5e714d",
+      "passed": true
+    },
+    "relicAttributes": {
+      "date": "2026-10-24",
+      "gameVersion": "V1.0.11.2",
+      "flow": "docs/maintenance/lightweight.md",
+      "smoke": "verify-game.cjs + verify-native-lifecycle.cjs relics／relicTakeOff（隔離副本、雲存檔載入、原版存檔、新 PID 讀回、原生擺放／取下／再擺放，擺放狀態存讀重啟後再取下）",
+      "cases": [
+        "背包 #1 妖狐靈火 Q1 L2：1.2/1.6/0.4/1.6/0.9 平均 1.1 → 木最高組合 1.2/3.4/0.6/1.6/1 平均 1.6",
+        "背包 #6 幻魅狐印 Q5 L4：5.1/8/1.8/3.2/2.4 → 依基底比例 4.8/6.9/2.1/4.1/2.8（平均維持 4.1）",
+        "#6 原生擺放到營房 #9 → 取下回到背包第 5 列（y0 仍為 6）→ 再擺放；z19 y12／建築 y9 互指正確，其餘 50 欄不變；擺放狀態存檔重啟後保留，再取下後 50 欄不變",
+        "最終原版存檔以修改器讀回：第 1、5 列皆判定可由原版生成，第 5 列可再調整；地塊靈氣效果因無置物台只做離線公式核對"
+      ],
+      "baselineSaveSha256": "ebb0a4a28791218986c594d3b3819a066482bc11ff75aac99f8498c4ce4b84c5",
+      "resultSha256": "37302c3e309666ad37227a3655c39aa7289b8ede14e03cda3ffbf821292e4e6a",
       "passed": true
     }
   },

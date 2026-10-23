@@ -33,7 +33,7 @@
  $('batchBtn').onclick=()=>{try{const n=num($('batchValue'));if(n<0)throw Error('材料數量不能小於 0。');const list=visibleMaterials();if(perform(()=>{for(const m of list)C.set(model,m,n,`${m.name}（材料 #${m.id}）`);}))toast(`已調整 ${list.length} 筆材料，可從「檢視變更」確認。`);}catch(e){toast(e.message,true);}};
  $('undoBtn').onclick=()=>{if(model&&!loading){C.undo(model);revision++;render();toast('已復原上一步。');}};
  function renderReview(){const list=[...model.changes.values()],size=50;reviewPage=Math.max(0,Math.min(reviewPage,Math.ceil(list.length/size)-1));const start=reviewPage*size;
-  $('reviewRows').innerHTML=list.length?list.slice(start,start+size).map(c=>`<tr><td>${esc(c.label)}${c.operation?`<span class="operation-note">${esc(c.operation)}</span>`:''}${c.group?.startsWith('skill-growth:')?'<span class="sub">還原會一起撤回此角色九項上限、等級與餘額的累計修改（27 欄）。</span>':''}${c.group?.startsWith('aptitude:')?'<span class="sub">還原會一起撤回此角色三槽天賦等級、三項基礎資質與丹藥增量（12 欄）。</span>':''}<span class="sub mono">[${c.x}, ${c.y}, ${c.z}]</span></td><td class="mono muted">${htmlValue(c.original)}</td><td class="mono positive">${htmlValue(c.value)}</td><td><button class="small ghost" data-restore="${C.key(c)}">還原</button></td></tr>`).join(''):'<tr><td colspan="4" class="empty">所有修改已還原。</td></tr>';
+  $('reviewRows').innerHTML=list.length?list.slice(start,start+size).map(c=>`<tr><td>${esc(c.label)}${c.operation?`<span class="operation-note">${esc(c.operation)}</span>`:''}${c.group?.startsWith('skill-growth:')?'<span class="sub">還原會一起撤回此角色九項上限、等級與餘額的累計修改（27 欄）。</span>':''}${c.group?.startsWith('aptitude:')?'<span class="sub">還原會一起撤回此角色三槽天賦等級、三項基礎資質與丹藥增量（12 欄）。</span>':''}${c.group?.startsWith('relic:')?'<span class="sub">還原會一起撤回此靈物的五行與平均靈氣。</span>':''}<span class="sub mono">[${c.x}, ${c.y}, ${c.z}]</span></td><td class="mono muted">${htmlValue(c.original)}</td><td class="mono positive">${htmlValue(c.value)}</td><td><button class="small ghost" data-restore="${C.key(c)}">還原</button></td></tr>`).join(''):'<tr><td colspan="4" class="empty">所有修改已還原。</td></tr>';
   $('reviewPageInfo').textContent=`第 ${reviewPage+1} / ${Math.max(1,Math.ceil(list.length/size))} 頁 · ${list.length} 個欄位`;$('reviewPrev').disabled=reviewPage===0;$('reviewNext').disabled=start+size>=list.length;$('reviewDownloadBtn').disabled=!list.length||loading;
  }
  $('reviewPrev').onclick=()=>{reviewPage--;renderReview();};$('reviewNext').onclick=()=>{reviewPage++;renderReview();};
@@ -59,5 +59,6 @@
  /*__KNOWLEDGE_UI__*/
  /*__PROFESSION_UI__*/
  /*__BATCH_UI__*/
+ /*__RELIC_UI__*/
  showTab('resources');renderFooter();
 })();

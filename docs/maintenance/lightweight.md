@@ -46,7 +46,7 @@
 
 不再核對 core 摘要、證明內容、manifest 或工具雜湊，所以改 `src/core.js` 不會讓建置失敗。新功能冒煙通過後，在 `groups` 加上該群組、在 `verification.json` 的 `lightweight` 加一筆冒煙紀錄（日期、遊戲版本、代表案例、基準存檔與 repo 外結果檔的 SHA-256），並打開旗標。
 
-`lightweight` 裡的群組不進舊的複合遷移證明（`scripts/migration-proof.cjs` 的 `composite`）：選跑、`problem` 與 `compose` 都略過它們，所以版本遷移寫回後這些旗標會關閉，要在新版重跑冒煙再開。沒有這筆紀錄的已開群組仍照舊要求複合證據。冒煙可沿用 `verify-game.cjs --scenario`（`setPillAptitudeBonus`、`setEquipmentLevel` 等具名操作）加 `verify-native-lifecycle.cjs`（`followup`、`pills`、`backpackOverLimit` 三種後續動作；`穿戴装备` 後要等一拍再讀角色指標，同一次 evaluate 內讀到的是空列）；固定基準存檔先複製到 repo 外的新資料夾，步驟依 `.local/game-sources.json` 的 `nativeSmoke` 紀錄（雲存檔載入 → 存檔 → assert → stop → restart → 存檔載入 → assert）。遊戲改版時，對受影響的功能跑冒煙，再更新 `gameVersion` 與 `fingerprints`。測試見 `tests/build-gate.test.cjs`。
+`lightweight` 裡的群組不進舊的複合遷移證明（`scripts/migration-proof.cjs` 的 `composite`）：選跑、`problem` 與 `compose` 都略過它們，所以版本遷移寫回後這些旗標會關閉，要在新版重跑冒煙再開。沒有這筆紀錄的已開群組仍照舊要求複合證據。冒煙可沿用 `verify-game.cjs --scenario`（`setPillAptitudeBonus`、`setEquipmentLevel` 等具名操作）加 `verify-native-lifecycle.cjs`（`followup`、`pills`、`backpackOverLimit`、`relics`、`relicTakeOff` 五種後續動作；擺放類動作要在存檔重啟後另跑一次取下，才算驗過兩輪 IO；`穿戴装备` 後要等一拍再讀角色指標，同一次 evaluate 內讀到的是空列）；固定基準存檔先複製到 repo 外的新資料夾，步驟依 `.local/game-sources.json` 的 `nativeSmoke` 紀錄（雲存檔載入 → 存檔 → assert → stop → restart → 存檔載入 → assert）。遊戲改版時，對受影響的功能跑冒煙，再更新 `gameVersion` 與 `fingerprints`。測試見 `tests/build-gate.test.cjs`。
 
 `scripts/*-proof.cjs` 與 `verification.json` 裡較早的首次證明紀錄仍保留作為歷史證據與遷移工具，但不再是建置條件。
 
@@ -55,5 +55,7 @@
 2026-10-24 第一次在輕量流程下改 core（小數丹藥）時，有 21 項舊測試失敗：它們斷言「已開放群組的首次證明、B7 等價或 core 切片基準必須對上目前的 `src/core.js`」。依使用者決定已刪除這些斷言（`tests/helpers/set-quality-shipped.cjs` 的 `assertShipped` 只核對旗標與群組紀錄存在）；切片選取機制測試改以目前 core 當基準。之後新增測試不要再把歷史證明綁到目前 core 文字或切片。
 
 新增旗標時，除了 `extract-game.cjs` 的預設值與 `catalog.json`，也要登記到 `scripts/verification-requirements.cjs` 與 `scripts/verification-suite.cjs` 對應 family 的 `groups`，否則 `version-migration` 測試會報「no family」；旗標開啟前，`version-migration.test.cjs` 的 write-back 比對清單也要列入它（開啟後自動排除）。
+
+`verify-game.cjs` 的操作白名單新增具名方法時，也要把它（與對應的 info／preview 入口）列進 `scripts/migration-analysis.cjs` 該 family 的 `coreRoots`，否則 `tests/core-slice-roots.test.cjs` 報「不屬於任何 family」。新的 UI 模組（例如 v2.15 的 `src/relic-ui.js`）要在 `build-editor.cjs` 加佔位替換、在 `tests/skill-caps-ui.test.cjs`／`tests/talent-levels-ui.test.cjs` 兩個完整 UI 測試台注入，並在 `knowledge-ui.js` 呼叫處加 `typeof` 防護（單獨載入 knowledge-ui 的測試沒有該函式）。重抽 `catalog.json` 時鍵順序可能和既有檔不同，以語意比對確認沒有其他差異即可。
 
 改到 `editingInfo`、`setEditingValue` 這類共用樞紐（v2.14 背包超限）時，所有 family 的切片都會變，`migration-proof` 的 `problem()` 對歷史證明一律回「複合證明與來源或程式不相符」。比照上段：直接斷言「開放群組的證明對上目前 core」的測試改成只核對群組紀錄；要測證明結構檢查（缺首次紀錄、交換、資料雜湊）的測試，用 `tests/helpers/current-core-proof.cjs` 把複本的 core 身分換成目前來源再測。換身分後原生證據摘要仍綁舊切片，所以不能再斷言整體 `problem()` 為 null。

@@ -22,7 +22,7 @@ const sections = {
     checks: ['loadedIntoMainLayout', 'nativeSaveWritten', 'processRestartedAndReloaded', 'allTenObservedCellsMatch', 'originalSaveHashesUnchanged', 'steamMutationsRedirectedToLocalMirror', 'allThirteenTestedSourceHashesMatch', 'realSteamInitialization', 'restartUsesDifferentProcess', 'advancedNormalAndOvercapNativeRoundtrip', 'nativeEquipmentAndTechnologyEffectsFinite', 'nativeEquipmentUnequipReequip', 'subsequentProfessionTransferAndExperience', 'subsequentResearchAndTrainingStartStop']
   },
   batch2: {
-    groups: ['equipmentAffixCoefficient', 'pillAptitudeBonus', 'pillAptitudeBonusDecimal'],
+    groups: ['equipmentAffixCoefficient', 'pillAptitudeBonus', 'pillAptitudeBonusDecimal', 'relicAttributes'],
     checks: ['nativeLoad', 'nativeSave', 'stopAndRestart', 'originalHashesUnchanged', 'nativeEffects', 'coreNativeAptitudeAgreement', 'nativeRewash', 'unequipReequip', 'nativePillConsumption', 'rebirthClears']
   },
   affixReplacement: {

@@ -764,6 +764,80 @@
   }else if(!Number.isSafeInteger(bonus)||bonus<0||bonus>info.max)throw Error(`累積增量須為 0–${info.max} 的整數（每 1 等於資質 0.1 點）。`);
   return batch2Put(m,info,bonus,`aptitude:${characterId}`,`${get(m,C(characterId,1,2))}・${info.name}丹藥累積增量`);
  }
+ // Backpack relic attributes (relicAttributes). 获得灵物 draws c_i=b_i×random(0.6,1) from lw y6–10, splits one total G by
+ // c_i/Σc and rounds each share to 0.1 (z18 y5–9); y10 is the rounded mean. Five values are accepted only together, and only
+ // when a witness (G, c) reproduces every share with the game's own expressions; template, quality and level stay fixed.
+ const RELIC_ELEMENTS=['金','木','水','火','土'];
+ const relicTotal=(L,R)=>Math.round(((10*5)*(1+(L*0.2)))*(R/100))/10;
+ const relicShare=(G,c,i)=>Math.round((10*G)*(c[i]/((((c[0]+c[1])+c[2])+c[3])+c[4])))/10;
+ const relicAverage=a=>Math.round(10*(((((a[0]+a[1])+a[2])+a[3])+a[4])/5))/10;
+ function relicWitness(bases,G,k){
+  // Normalised shares u_i=c_i·t must sit in their rounding cell and in the random box; Σu=1 picks t (1/Σc).
+  const e=1e-9,lo=k.map(n=>(n-0.5)/(10*G)+e),hi=k.map(n=>(n+0.5)/(10*G)-e),boxLo=t=>bases.map(b=>0.6*b*t*(1+e)),boxHi=t=>bases.map(b=>b*t*(1-e));
+  const low=t=>boxLo(t).map((v,i)=>Math.max(v,lo[i])),high=t=>boxHi(t).map((v,i)=>Math.min(v,hi[i])),sum=a=>a.reduce((s,v)=>s+v,0);
+  const tMin=Math.max(...bases.map((b,i)=>lo[i]/(b*(1-e)))),tMax=Math.min(...bases.map((b,i)=>hi[i]/(0.6*b*(1+e))));
+  if(!(tMin<=tMax)||sum(low(tMin))>1||sum(high(tMax))<1)return null;
+  const search=(ok,from,to)=>{for(let n=0;n<80;n++){const mid=(from+to)/2;if(ok(mid))to=mid;else from=mid;}return to;};
+  const t1=sum(high(tMin))>=1?tMin:search(t=>sum(high(t))>=1,tMin,tMax),t2=sum(low(tMax))<=1?tMax:tMax-search(s=>sum(low(tMax-s))<=1,0,tMax-tMin);
+  if(t1>t2)return null;
+  const t=(t1+t2)/2,a=low(t),z=high(t),span=sum(z)-sum(a),f=span>0?(1-sum(a))/span:0,c=a.map((v,i)=>(v+f*(z[i]-v))/t),ratios=c.map((v,i)=>v/bases[i]);
+  if(ratios.some(r=>!(r>=0.6&&r<1))||k.some((n,i)=>Math.round(relicShare(G,c,i)*10)!==n))return null;
+  return {total:G,ratios};
+ }
+ function relicTotals(level,quality){
+  const min=relicTotal(level,80+30*(quality-1)),max=relicTotal(level,80+30*quality-1e-9);
+  return Array.from({length:Math.round(max*10)-Math.round(min*10)+1},(_,n)=>(Math.round(max*10)-n)/10);
+ }
+ // Five roundings move the sum at most 0.25 away from the total, so only a few totals need a witness search.
+ function relicSearch(info,k){const sum=k.reduce((s,n)=>s+n,0);for(const G of info.totals){if(Math.abs(G*10-sum)>2.5+1e-9)continue;const w=relicWitness(info.bases,G,k);if(w)return w;}return null;}
+ function listRelics(m){
+  const rows=[];
+  // The game finds relics by template (y1); y0 keeps the row 获得灵物 used and goes stale after 取下灵物 returns it elsewhere.
+  for(let x=1;x<m.original.size[0];x++)if(catalogMaps.relics.has(get(m,C(x,1,18))))rows.push({id:x,name:catalogName('relics',get(m,C(x,1,18))),quality:get(m,C(x,4,18)),level:get(m,C(x,2,18))});
+  return rows;
+ }
+ function relicAttributesInfo(m,{itemId}){
+  if(!Number.isSafeInteger(itemId)||itemId<1||itemId>=m.original.size[0])throw Error('無效的靈物列號。');
+  const record=Array.from({length:14},(_,y)=>get(m,C(itemId,y,18)));
+  if(!record[1])throw Error('此列沒有背包靈物。');
+  const relic=catalogMaps.relics.get(record[1]),bases=relic?.bases;
+  if(!Number.isSafeInteger(record[0])||record[0]<1)throw Error('靈物列號資料不符。');
+  if(!Array.isArray(bases)||bases.length!==5||!bases.every(b=>typeof b==='number'&&Number.isFinite(b)&&b>0))throw Error('此靈物範本的五行基底尚未核對。');
+  const level=record[2],quality=record[4],values=record.slice(5,10);
+  if(!Number.isSafeInteger(level)||level<0||level>1000||!Number.isSafeInteger(quality)||quality<1||quality>6)throw Error('靈物品質或等級不在已核對範圍。');
+  if(record[12]!==0)throw Error('此靈物仍記錄擺放建築，請先在遊戲中取下。');
+  if(!values.every(v=>typeof v==='number'&&Number.isFinite(v)&&v>=0)||typeof record[10]!=='number'||!Number.isFinite(record[10]))throw Error('現有五行或平均值不是有效數值。');
+  const totals=relicTotals(level,quality);
+  const info={itemId,record,template:record[1],name:relic.name,category:relic.category,level,quality,bases,elements:RELIC_ELEMENTS,values,average:record[10],totals,total:{min:totals.at(-1),max:totals[0]},verified:!!KNOWLEDGE.verification.relicAttributes};
+  // Natural rolls at the largest total: equal ratios keep the base proportions; one element near its full base with the
+  // others near 60% is about the highest that element can roll. random(0.6,1) never reaches 1, so each preset steps
+  // inside the box until the witness search accepts it.
+  const roll=(G,i,hi,rest)=>{for(const d of [1e-6,1e-4,1e-2]){const c=bases.map((b,j)=>b*(j===i?hi-d:rest+d)),a=c.map((_,n)=>relicShare(G,c,n));if(relicSearch(info,a.map(v=>Math.round(v*10))))return a;}return null;};
+  info.proportional=roll(totals[0],-1,0,0.8);info.focused=bases.map((_,i)=>roll(totals[0],i,1,0.6));
+  info.ranges=bases.map((_,i)=>({min:roll(totals.at(-1),i,0.6+2e-2,1-2e-2)?.[i]??null,max:info.focused[i]?.[i]??null}));
+  const k=values.map(v=>Math.round(v*10));
+  info.natural=values.every((v,i)=>Math.abs(v*10-k[i])<1e-8)&&!!relicSearch(info,k)&&relicAverage(values)===record[10];
+  return info;
+ }
+ function previewRelicAttributes(m,{itemId,values}){
+  const info=relicAttributesInfo(m,{itemId});
+  if(!Array.isArray(values)||values.length!==5)throw Error('請輸入金、木、水、火、土五項數值。');
+  const k=values.map(v=>{if(typeof v!=='number'||!Number.isFinite(v)||v<0||v>1e6||Math.abs(v*10-Math.round(v*10))>1e-8)throw Error('五行數值須為非負數，最多一位小數。');return Math.round(v*10);});
+  // Re-entering a displayed value keeps the native token.
+  const after=k.map((n,i)=>Math.round(info.values[i]*10)===n?info.values[i]:n/10),unchanged=after.every((v,i)=>Object.is(v,info.values[i]));
+  const witness=relicSearch(info,k);
+  if(!unchanged&&!witness)throw Error(`這組五行無法由原版生成：同一總靈氣（${info.total.min}–${info.total.max}）須依基底比例 ${info.bases.join('：')} 分配，每項可在基底的 60%–100% 間浮動。`);
+  const average=unchanged?info.average:relicAverage(after),label=`背包靈物 #${itemId}・${info.name}`;
+  const changes=[...after.flatMap((v,i)=>Object.is(v,info.values[i])?[]:[{coordinate:C(itemId,5+i,18),before:info.values[i],after:v,label:`${label}・${RELIC_ELEMENTS[i]}`}]),...(Object.is(average,info.average)?[]:[{coordinate:C(itemId,10,18),before:info.average,after:average,label:`${label}・平均靈氣`}])];
+  return {itemId,name:info.name,before:info.values,after,average:{before:info.average,after:average},witness,changes,unchanged,verified:info.verified};
+ }
+ function setRelicAttributes(m,{itemId,values}){
+  const preview=previewRelicAttributes(m,{itemId,values});
+  if(!preview.verified)throw Error('靈物五行調整尚未完成隔離遊戲驗證。');
+  const previous=m.currentGroup;m.currentGroup=`relic:${itemId}`;
+  try{transaction(m,()=>{for(const c of preview.changes)put(m,c.coordinate,c.after,c.label);},`背包靈物 #${itemId}・五行調整`);}finally{m.currentGroup=previous;}
+  return preview;
+ }
  /** @returns {FieldDescriptor} */
  function resolveField(m,c){
   if(!exists(m.original,c))throw Error('座標超出這份存檔的範圍。');
@@ -1012,5 +1086,5 @@
   if(patches.length!==m.changes.size)throw Error('部分修改座標未能定位，已停止匯出。');
   const parts=[];let previous=0;for(const p of patches){parts.push(m.text.slice(previous,p.start),p.value);previous=p.end;}parts.push(m.text.slice(previous));return parts.join('');
  }
- globalThis.SaveCore={setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,previewSetEquipmentQualityCandidate,applySetEquipmentQualityCandidate,setEquipmentQualityCandidateEffects,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
+ globalThis.SaveCore={relicAttributesInfo,previewRelicAttributes,setRelicAttributes,listRelics,setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,previewSetEquipmentQualityCandidate,applySetEquipmentQualityCandidate,setEquipmentQualityCandidateEffects,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
 })();
