@@ -6,7 +6,7 @@ const sections = {
   treasureLevel: {groups:['backpackTreasureLevel','treasureLevel'],perGroup:true,checks:nativeLifecycle},
   setEquipmentQuality: {groups:['backpackSetEquipmentQualityUpgrade','backpackSetEquipmentQualityDowngrade','setEquipmentQualityUpgrade','setEquipmentQualityDowngrade','backpackSetEquipmentLevelCrossPool','setEquipmentLevelCrossPool'],perGroup:true,checks:nativeLifecycle},
   randomCharacterTalents: {
-    groups: ['randomCharacterTalents'], perGroup: true,
+    groups: ['randomCharacterTalents', 'randomCharacterTalentsAscended'], perGroup: true,
     checks: ['load','save','restart','originalHashes','nativeEffects','talentFormulas','aptitudeCap','numericUpdate','nativeTransfer','nativePrison','nativeRebirth','nativeDismiss','stageRoundtrips']
   },
   randomCharacterSkillCaps: {
@@ -14,7 +14,7 @@ const sections = {
     checks: ['load','save','restart','originalHashes','nativeEffects','nativeRecruitment','numericUpdate','nativeSkillExperience','capRemainderTiming','batchCompatibility','nativeTransfer','nativePrison','nativeRebirth','nativeDismiss','stageRoundtrips']
   },
   randomCharacterGrowth: {
-    groups: ['randomCharacterBaseAptitudes'], perGroup: true,
+    groups: ['randomCharacterBaseAptitudes', 'randomCharacterBaseAptitudesAscended'], perGroup: true,
     checks: ['load', 'save', 'restart', 'originalHashes', 'nativeEffects', 'numericUpdate', 'nativePills', 'nativeTransfer', 'nativePrison', 'nativeRebirth', 'nativeDismiss', 'stageRoundtrips']
   },
   base: {

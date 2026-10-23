@@ -35,7 +35,7 @@ for (const width of [1280, 390]) {
     await page.setViewportSize({width, height: 844});
     const f = talentLevelsFixture();
     await page.goto(site.url); await loadRaw(page, site, f.raw);
-    for (const [id, reason] of [[1, '範本'], [2, '監'], [3, '紀錄']]) {
+    for (const [id, reason] of [[1, '範本'], [2, '監'], [3, '結丹']]) {
       await selectCharacter(page, id);
       await expect(page.locator('#talentLevelsStatus')).toContainText(reason);
       await expect(page.locator('#talentLevelsPreviewBtn')).toBeDisabled();

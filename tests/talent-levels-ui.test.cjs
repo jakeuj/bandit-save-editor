@@ -74,7 +74,7 @@ test('talent UI shows ids, level pools and effects; the closed gate previews but
 });
 
 test('talent UI explains read-only characters and the single-level Q6 pool',async()=>{
- for(const [y,z,value,reason]of [[2,2,1,/範本 0/],[55,2,2,/在監/],[50,2,1,/結丹/],[1,16,1,/重生/],[3,12,0,/空槽/],[21,12,4,/等級池/]]){
+ for(const [y,z,value,reason]of [[2,2,1,/範本 0/],[55,2,2,/在監/],[50,2,1,/結丹/],[1,16,1,/結丹紀錄/],[3,12,0,/空槽/],[21,12,4,/等級池/]]){
   const h=await setup({mutate:data=>data[1][y][z]=value});
   assert.equal(h.$('talentLevelsPreviewBtn').disabled,true);assert.match(h.$('talentLevelsStatus').textContent,reason);
   assert.equal(h.model.changes.size,0);

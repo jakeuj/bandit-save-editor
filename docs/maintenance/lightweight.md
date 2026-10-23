@@ -54,7 +54,7 @@
 
 2026-10-24 第一次在輕量流程下改 core（小數丹藥）時，有 21 項舊測試失敗：它們斷言「已開放群組的首次證明、B7 等價或 core 切片基準必須對上目前的 `src/core.js`」。依使用者決定已刪除這些斷言（`tests/helpers/set-quality-shipped.cjs` 的 `assertShipped` 只核對旗標與群組紀錄存在）；切片選取機制測試改以目前 core 當基準。之後新增測試不要再把歷史證明綁到目前 core 文字或切片。
 
-新增旗標時，除了 `extract-game.cjs` 的預設值與 `catalog.json`，也要登記到 `scripts/verification-requirements.cjs` 與 `scripts/verification-suite.cjs` 對應 family 的 `groups`，否則 `version-migration` 測試會報「no family」；旗標開啟前，`version-migration.test.cjs` 的 write-back 比對清單也要列入它（開啟後自動排除）。
+新增旗標時，除了 `extract-game.cjs` 的預設值與 `catalog.json`，也要登記到 `scripts/verification-requirements.cjs` 與 `scripts/verification-suite.cjs` 對應 family 的 `groups`，否則 `version-migration` 測試會報「no family」；旗標開啟前，`version-migration.test.cjs` 的 write-back 比對清單也要列入它（開啟後自動排除）；但 family 設有 `initialProofRequired`（例如 randomCharacterTalents）時，write-back 不會開它，不要列入（v2.17 教訓）。core 以 `vm` 載入，回傳的陣列屬另一個 realm，`assert.deepEqual` 會報「same structure but are not reference-equal」；先展開（`[...x]`）或只比長度再比較。
 
 `verify-game.cjs` 的操作白名單新增具名方法時，也要把它（與對應的 info／preview 入口）列進 `scripts/migration-analysis.cjs` 該 family 的 `coreRoots`，否則 `tests/core-slice-roots.test.cjs` 報「不屬於任何 family」。新的 UI 模組（例如 v2.15 的 `src/relic-ui.js`）要在 `build-editor.cjs` 加佔位替換、在 `tests/skill-caps-ui.test.cjs`／`tests/talent-levels-ui.test.cjs` 兩個完整 UI 測試台注入，並在 `knowledge-ui.js` 呼叫處加 `typeof` 防護（單獨載入 knowledge-ui 的測試沒有該函式）。重抽 `catalog.json` 時鍵順序可能和既有檔不同，以語意比對確認沒有其他差異即可。
 

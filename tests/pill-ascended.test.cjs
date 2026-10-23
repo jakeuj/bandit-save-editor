@@ -97,8 +97,10 @@ test('worn treasures, inner pills and set pieces are accepted while none of them
  set.effects=[...effects,{pieces:2,attributeId:104,coefficient:1}];try{assert.throws(()=>s.C.pillInfo(s.m,2,1,s.high[0]),/資質加成/);}finally{set.effects=effects;}
 });
 
-test('base aptitudes and talents stay closed for ascended characters; custom coordinates cannot bypass',()=>{
+test('without their own v2.17 flags, base aptitudes and talents stay closed for ascended characters; custom coordinates cannot bypass',()=>{
  const {C,m,high}=setup();
+ for(const g of ['randomCharacterBaseAptitudesAscended','randomCharacterTalentsAscended'])C.KNOWLEDGE.verification[g]=false;
+ assert.match(C.randomCharacterTalentsInfo(m,{characterId:2}).reasons.join(),/無結丹/);
  assert.equal(C.randomCharacterGrowthInfo(m,{characterId:2}).eligible,false);
  assert.match(C.randomCharacterGrowthInfo(m,{characterId:2}).reasons.join(),/無結丹/);
  for(const c of [B(2,1),{x:2,y:50,z:2},{x:2,y:1,z:16},{x:400,y:15,z:17}]){assert.throws(()=>C.set(m,c,1),/唯讀/);assert.throws(()=>C.setField(m,c,1),/唯讀/);}

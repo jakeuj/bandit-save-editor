@@ -18,7 +18,8 @@
 ### 普通裝備與丹藥
 
 - 第二批詞條與丹藥資質增量：讀 repo 的 `docs/research/advanced-editing-batch2.md` 與 `sdd/advanced-editing-batch2/`。v2.2 已開放獨立驗證的既有詞條係數與丹藥增量；替換ID見v2.3，品質見v2.5，超限另行驗證。小數丹藥增量（0.1 格線、未改值保留原 token、旗標 `pillAptitudeBonusDecimal`）的實作摘要在 `docs/research/candidate-sweep-2026-10-23.md`；它同時放寬基礎資質與天賦對 B 的讀取檢查。
-- 結丹角色丹藥（v2.16，旗標 `pillAptitudeBonusAscended`）：讀 repo `docs/research/candidate-sweep-2026-10-23.md` 第 2 節與其實作摘要。只改 B；M＝1.5＋依 k 順序加總的 z17 y15（加總順序影響浮點）；本版沒有任何內丹／裝備帶 104–106，A 不受影響，出現就拒絕。原生重生只清第一筆入體內丹，殘留 z17 列不被引用，不得據此拒絕。基礎資質與天賦對結丹角色仍關閉。
+- 結丹角色丹藥（v2.16，旗標 `pillAptitudeBonusAscended`）：讀 repo `docs/research/candidate-sweep-2026-10-23.md` 第 2 節與其實作摘要。只改 B；M＝1.5＋依 k 順序加總的 z17 y15（加總順序影響浮點）；本版沒有任何內丹／裝備帶 104–106，A 不受影響，出現就拒絕。原生重生只清第一筆入體內丹，殘留 z17 列不被引用，不得據此拒絕。基礎資質與天賦對結丹角色由 v2.17 開放（下一條）。
+- 結丹角色基礎資質與天賦（v2.17，旗標 `randomCharacterBaseAptitudesAscended`、`randomCharacterTalentsAscended`）：讀同一節 v2.17 實作摘要。兩入口傳 `ascended=true` 給 `characterAptitudeSource`，cap 用 `aptitudeCap`；`渡劫结束` 不寫 z2 y10–12、y49、z12，招募與等級池判斷不變。有名角色與技藝上限仍拒絕結丹角色。
 - 背包靈物五行（v2.15，旗標 `relicAttributes`）：讀 repo `docs/research/candidate-sweep-2026-10-23.md` 第 3 節與其實作摘要。只改 z18 未擺放列的 y5–10，五行須能由 `获得灵物` 共同生成（見證搜尋），平均一律依原式重算；原生取下後 y0 會過期，以 y1 範本判定靈物，不得以 y0≠列號拒絕。置物台效果、套裝合成與精煉未原生驗證。
 - 精準洗練、替換已選槽詞條、單件裝備效果預覽或搬移識別：讀 repo 的 `docs/research/precise-affix-editing.md` 與 `sdd/precise-affix-editing/tasks.md`。v2.3 使用獨立替換驗證群組，不沿用係數證明；原生搬移後 y0 可不同於目前列號，不得據此拒絕合法裝備。
 - 背包裝備、首次洗練選槽或新取得標記：讀 repo `docs/research/equipment-workflow.md` 與 `sdd/equipment-workflow/tasks.md`。v2.4已正式發布並開放首次選槽；具備代表遊戲選槽UI、原版存檔／新PID讀回、桌面／390px精確下載及PWA離線／更新交接證據。詳細範圍與SHA以repo紀錄為準；直接file://新流程仍待人工。

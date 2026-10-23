@@ -66008,6 +66008,8 @@
     "randomCharacterTalents": true,
     "randomCharacterSkillCaps": true,
     "randomCharacterBaseAptitudes": true,
+    "randomCharacterBaseAptitudesAscended": true,
+    "randomCharacterTalentsAscended": true,
     "backpackEquipmentQualityUpgrade": true,
     "backpackEquipmentQualityDowngrade": true,
     "equipmentQualityUpgrade": true,

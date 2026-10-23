@@ -145,7 +145,7 @@
  function renderBaseAptitudes(){
   const characterId=Number($('characterSelect').value),info=C.randomCharacterGrowthInfo(model,{characterId});
   $('baseAptitudeEditor').innerHTML=`<h3>一般隨機角色基礎資質</h3><p class="muted small-text" id="baseAptitudeStatus" role="status"></p><div class="aptitude-inputs">${['力量','敏捷','智力'].map((name,i)=>`<label>${name}原始值<input id="baseAptitude${i}" type="number" min="1" max="300" step="1" value="${esc(read(characterId,10+i,2))}" ${info.eligible?'':'disabled'}></label>`).join('')}</div><p class="muted small-text">每 1 代表顯示資質 0.1 點。三項須能由同品質的原版招募共同生成；不修改品質、天賦或丹藥。還原會一起還原此角色三項基礎及三項丹藥增量。</p><div class="toolbar"><button id="baseAptitudePreviewBtn" class="small">預覽三項資質</button><button id="baseAptitudeApplyBtn" class="primary small" disabled>套用三項資質</button></div><div id="baseAptitudePreview" aria-live="polite"></div>`;
-  $('baseAptitudeStatus').textContent=info.eligible?`品質 ${info.quality} · 同品質任一原生傾向${info.verified?'':' · 尚待獨立隔離驗證，套用停用'}`:info.reasons.join('；');
+  $('baseAptitudeStatus').textContent=info.eligible?`品質 ${info.quality} · 同品質任一原生傾向${info.ascensions?` · 結丹 ${info.ascensions} 次，倍率 ${info.multiplier}`:''}${info.verified?'':' · 尚待獨立隔離驗證，套用停用'}`:info.reasons.join('；');
   $('baseAptitudePreviewBtn').disabled=!info.eligible;
   let snapshot=null;
   const request=()=>({characterId,baseRaw:[0,1,2].map(i=>{const s=$('baseAptitude'+i).value;if(!s.trim())throw Error('三項基礎資質不能空白。');return Number(s);})});
@@ -184,7 +184,7 @@
   const characterId=Number($('characterSelect').value),info=C.randomCharacterTalentsInfo(model,{characterId});
   const effect=e=>`${esc(e.name)} ${htmlValue(e.value)}${e.unit==='百分比'?'%':''}`,effects=list=>list.map(effect).join('、');
   $('talentLevelsEditor').innerHTML=`<h3>一般隨機角色天賦等級</h3><p class="muted small-text" id="talentLevelsStatus" role="status"></p>${info.eligible?`<div class="tablewrap"><table><thead><tr><th>槽</th><th>天賦</th><th>等級</th><th>目前效果</th></tr></thead><tbody>${info.slots.map(s=>`<tr><td>${s.slot}</td><td>#${s.id} ${esc(s.name)}</td><td><select id="talentLevel${s.slot}" aria-label="第 ${s.slot} 槽天賦等級" ${info.levelPool.length>1?'':'disabled'}>${info.levelPool.map(l=>`<option value="${l}" ${l===s.level?'selected':''}>Lv ${l}</option>`).join('')}</select></td><td>${effects(s.effects)}</td></tr>`).join('')}</tbody></table></div>`:''}<p class="muted small-text">只調整三槽天賦等級，等級須在角色品質的原版等級池內；天賦 ID 依原版招募固定，不能更換或清空。力量／敏捷／智力強化會改變資質來源與丹藥上限，既有丹藥增量超過新上限時整筆阻擋，不會截斷。</p><p class="muted small-text" id="talentLevelsRestoreNote">此角色三槽天賦等級、三項基礎資質與丹藥增量共 12 欄會累計一起還原；復原一步只撤回上一筆操作。其他角色與技藝上限不受影響。</p><div class="toolbar"><button id="talentLevelsPreviewBtn" class="small">預覽天賦等級</button><button id="talentLevelsApplyBtn" class="primary small" disabled>套用天賦等級</button></div><div id="talentLevelsPreview" aria-live="polite"></div>`;
-  $('talentLevelsStatus').textContent=info.eligible?`品質 ${info.quality} · 等級池 ${info.levelPool.join('、')}${info.levelPool.length>1?'':' · 此品質只有一個等級，無可調整值'}${info.verified?' · 已通過獨立隔離驗證':' · 尚待獨立隔離驗證，可預覽，套用停用'}`:info.reasons.join('；');
+  $('talentLevelsStatus').textContent=info.eligible?`品質 ${info.quality} · 等級池 ${info.levelPool.join('、')}${info.levelPool.length>1?'':' · 此品質只有一個等級，無可調整值'}${info.ascensions?` · 結丹 ${info.ascensions} 次，倍率 ${info.multiplier}`:''}${info.verified?' · 已通過獨立隔離驗證':' · 尚待獨立隔離驗證，可預覽，套用停用'}`:info.reasons.join('；');
   $('talentLevelsPreviewBtn').disabled=!info.eligible||info.levelPool.length<2;
   if(!info.eligible)return;
   let snapshot=null;

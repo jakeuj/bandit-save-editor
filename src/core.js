@@ -571,7 +571,8 @@
    if(!activeCharacter(m,characterId)||get(m,C(characterId,0,2))!==characterId)throw Error('找不到有效的已招募角色。');
    if(get(m,C(characterId,2,2))!==0)throw Error('有名角色載入／數值更新會依範本回填天賦；只支援範本 0。');
    if(get(m,C(characterId,55,2))!==0)throw Error('目前只支援非在監的已招募角色。');
-   if(get(m,C(characterId,50,2))!==0||Array.from({length:16},(_,i)=>get(m,C(characterId,i+1,16))).some(v=>v!==0))throw Error('目前只支援無結丹及重生階段紀錄的角色。');
+   if(ascendedTalents()){const ascension=ascensionRecord(m,characterId);info.ascensions=ascension.count;info.multiplier=ascension.multiplier;}
+   else if(get(m,C(characterId,50,2))!==0||Array.from({length:16},(_,i)=>get(m,C(characterId,i+1,16))).some(v=>v!==0))throw Error('目前只支援無結丹及重生階段紀錄的角色。');
    info.quality=get(m,C(characterId,49,2));
    if(!Number.isSafeInteger(info.quality)||info.quality<1||info.quality>6)throw Error('角色品質須為原版 1–6。');
    info.levelPool=rules.talentLevels[info.quality-1];
@@ -606,12 +607,13 @@
     // Aptitude talents move the pill cap; an existing bonus above the new cap blocks instead of being clipped.
     const touched=[1,2,3].filter(a=>changes.some(c=>KNOWLEDGE.batch2Data.talents[c.id].attributes.includes(103+a)));
     try{
+     const ascended=ascendedTalents();
      aptitudes=touched.map(aptitude=>{
-      const before=characterAptitudeSource(m,characterId,aptitude).base,base=talentAptitudeBase(m,characterId,aptitude,levels),bonus=get(m,C(characterId,12+aptitude,2));
+      const source=characterAptitudeSource(m,characterId,aptitude,undefined,ascended),before=source.base,base=talentAptitudeBase(m,characterId,aptitude,levels),bonus=get(m,C(characterId,12+aptitude,2));
       assertPillBonusReadable(bonus);
-      const cap=Math.round(100*base*1.5)/100,total=Math.round(100*(base+bonus/10))/100,name=aptitudeNames[aptitude-1];
+      const cap=aptitudeCap(base,source.ascension),total=Math.round(100*(base+bonus/10))/100,name=aptitudeNames[aptitude-1];
       if(total>cap)reasons.push(`${name}丹藥增量 ${pillGrid(bonus)} 使新總資質 ${total} 超過上限 ${cap}；請先降低丹藥增量。`);
-      return {aptitude,name,before:{base:before,cap:Math.round(100*before*1.5)/100},after:{base,bonus,total,cap}};
+      return {aptitude,name,before:{base:before,cap:aptitudeCap(before,source.ascension)},after:{base,bonus,total,cap}};
      });
     }catch(e){reasons.push(e.message);}
    }
@@ -672,6 +674,12 @@
  // counts the stored inner pills' wp main attributes, and no V1.0.11.2 template, affix or set effect is 104–106, so A stays
  // raw/10 plus talents; such an attribute is rejected instead of modelled.
  const ascendedPills=()=>!!KNOWLEDGE.verification.pillAptitudeBonusAscended;
+ // Base aptitudes and talent levels (randomCharacterBaseAptitudesAscended／randomCharacterTalentsAscended) reuse the same record
+ // and per-piece wearing check; 渡劫结束 never writes z2 y10–12, y49 or z12, so only the cap multiplier moves.
+ const ascendedBaseAptitudes=()=>!!KNOWLEDGE.verification.randomCharacterBaseAptitudesAscended;
+ const ascendedTalents=()=>!!KNOWLEDGE.verification.randomCharacterTalentsAscended;
+ // 角色资质上限 rounds 100×(A×M); without a record the v2.7 product order for M=1.5 stays.
+ const aptitudeCap=(base,ascension)=>ascension?Math.round(100*(base*ascension.multiplier))/100:Math.round(100*base*1.5)/100;
  const aptitudeAttribute=id=>id>=104&&id<=106;
  // 结丹资质提升系数(品阶 q, 渡劫等阶 k), which 渡劫结束 writes to z17 y15–17 of the k-th stored inner pill.
  const ascensionCoefficient=(quality,round)=>Math.round(100*(Math.pow(1.2,round-1)*(0.4+((round+quality)-2)*0.2)))/100;
@@ -748,14 +756,15 @@
    talents.forEach((id,i)=>{const level=get(m,C(characterId,21+i,12));if(id===0&&level===0)return;if(!Number.isSafeInteger(id)||!KNOWLEDGE.batch2Data.talents[id]||!Number.isSafeInteger(level)||level<1||level>5||seen.has(id))throw Error('天賦 ID／等級、空槽或重複資料不符，保持唯讀。');seen.add(id);});
    const raw=[10,11,12].map(y=>get(m,C(characterId,y,2)));
    if(!recruitmentCombination(quality,raw))throw Error('目前三項基礎資質不屬於此品質的原版招募組合。');
+   const ascended=ascendedBaseAptitudes();let ascension=null;
    const aptitudes=[1,2,3].map(aptitude=>{
-    const {base}=characterAptitudeSource(m,characterId,aptitude),bonus=get(m,C(characterId,12+aptitude,2));
-    assertPillBonusReadable(bonus);
-    const cap=Math.round(100*base*1.5)/100,total=Math.round(100*(base+bonus/10))/100;
+    const source=characterAptitudeSource(m,characterId,aptitude,undefined,ascended),base=source.base,bonus=get(m,C(characterId,12+aptitude,2));
+    assertPillBonusReadable(bonus);ascension=source.ascension;
+    const cap=aptitudeCap(base,ascension),total=Math.round(100*(base+bonus/10))/100;
     if(!Number.isFinite(total)||total>cap)throw Error('目前丹藥增量超過角色資質上限，請先降低增量。');
     return {aptitude,name:aptitudeNames[aptitude-1],raw:raw[aptitude-1],base,bonus,total,cap};
    });
-   return {characterId,quality,baseRaw:raw,aptitudes,eligible:true,reasons,verified:!!KNOWLEDGE.verification.randomCharacterBaseAptitudes};
+   return {characterId,quality,baseRaw:raw,aptitudes,ascended,multiplier:ascension?ascension.multiplier:1.5,ascensions:ascension?.count??0,eligible:true,reasons,verified:!!KNOWLEDGE.verification.randomCharacterBaseAptitudes};
   }catch(e){reasons.push(e.message);return {characterId,quality,eligible:false,reasons,verified:!!KNOWLEDGE.verification.randomCharacterBaseAptitudes};}
  }
  function previewCharacterBaseAptitudes(m,options){
@@ -766,7 +775,7 @@
   const combination=recruitmentCombination(info.quality,baseRaw);
   if(!combination)reasons.push('三項數值無法由此品質的任一原版招募傾向共同生成。');
   const aptitudes=info.aptitudes.map(before=>{
-   const base=characterAptitudeSource(m,characterId,before.aptitude,baseRaw).base,cap=Math.round(100*base*1.5)/100,total=Math.round(100*(base+before.bonus/10))/100;
+   const source=characterAptitudeSource(m,characterId,before.aptitude,baseRaw,info.ascended),base=source.base,cap=aptitudeCap(base,source.ascension),total=Math.round(100*(base+before.bonus/10))/100;
    if(total>cap)reasons.push(`${before.name}丹藥增量 ${pillGrid(before.bonus)} 使新總資質 ${total} 超過上限 ${cap}；請先降低丹藥增量。`);
    return {aptitude:before.aptitude,name:before.name,before,after:{raw:baseRaw[before.aptitude-1],base,bonus:before.bonus,total,cap}};
   });

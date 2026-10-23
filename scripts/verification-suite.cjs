@@ -16,7 +16,7 @@ const families = {
   treasureLevel: {groups:['backpackTreasureLevel','treasureLevel'],initialProofRequired:true,oracle:'verify-treasure-level.cjs',lifecycle:['verify-treasure-level-migration-lifecycle.cjs'],checks:nativeLifecycleChecks},
   setEquipmentQuality: {groups:['backpackSetEquipmentQualityUpgrade','backpackSetEquipmentQualityDowngrade','setEquipmentQualityUpgrade','setEquipmentQualityDowngrade','backpackSetEquipmentLevelCrossPool','setEquipmentLevelCrossPool'],initialProofRequired:true,oracle:'verify-set-equipment-quality.cjs',lifecycle:['verify-set-equipment-quality-migration-lifecycle.cjs'],checks:nativeLifecycleChecks},
   randomCharacterTalents: {
-    groups:['randomCharacterTalents'],
+    groups:['randomCharacterTalents','randomCharacterTalentsAscended'],
     initialProofRequired:true,
     oracle:'verify-random-character-talents.cjs', lifecycle:['verify-talents-lifecycle.cjs'],
     checks:{load:'load',save:'save',restart:'reload',originalHashes:'assert',nativeEffects:'oracleCompare',talentFormulas:'oracleCompare',aptitudeCap:'oracleCompare',numericUpdate:'lifecycle',nativeTransfer:'lifecycle',nativePrison:'lifecycle',nativeRebirth:'lifecycle',nativeDismiss:'lifecycle',stageRoundtrips:'lifecycle'}
@@ -72,7 +72,7 @@ const families = {
     checks: {...nativeLifecycleChecks, qualityUi: 'ui'}
   },
   randomCharacterGrowth: {
-    groups: ['randomCharacterBaseAptitudes'], oracle: 'verify-random-character-growth.cjs', lifecycle: ['verify-random-character-lifecycle.cjs'],
+    groups: ['randomCharacterBaseAptitudes', 'randomCharacterBaseAptitudesAscended'], oracle: 'verify-random-character-growth.cjs', lifecycle: ['verify-random-character-lifecycle.cjs'],
     checks: {load:'load',save:'save',restart:'reload',originalHashes:'assert',nativeEffects:'oracleCompare',numericUpdate:'lifecycle',nativePills:'lifecycle',nativeTransfer:'lifecycle',nativePrison:'lifecycle',nativeRebirth:'lifecycle',nativeDismiss:'lifecycle',stageRoundtrips:'lifecycle'}
   }
 };

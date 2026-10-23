@@ -38,6 +38,8 @@
     "randomCharacterTalents": true,
     "randomCharacterSkillCaps": true,
     "randomCharacterBaseAptitudes": true,
+    "randomCharacterBaseAptitudesAscended": true,
+    "randomCharacterTalentsAscended": true,
     "backpackEquipmentQualityUpgrade": true,
     "backpackEquipmentQualityDowngrade": true,
     "equipmentQualityUpgrade": true,
@@ -66,6 +68,32 @@
     "relicAttributes": true
   },
   "lightweight": {
+    "randomCharacterBaseAptitudesAscended": {
+      "date": "2026-10-24",
+      "gameVersion": "V1.0.11.2",
+      "flow": "docs/maintenance/lightweight.md",
+      "smoke": "沿用 v2.16 原生結丹備料存檔（verify-native-lifecycle.cjs ascend：角色 8 结丹 2 次、穿寶物）當基準；verify-game.cjs 編輯、雲存檔載入、原版存檔、新 PID 讀回，再以修改器重讀遊戲寫出的存檔",
+      "baselineSaveSha256": "39a7c42075ccf4fc5d0c2842476a3235c26aa0422a7f100afd4ca716ef0a0ce1",
+      "resultSha256": "96f4c4bd3690488f41699242a3e63052f392df90fae15abb9a1fa94a1f17c9e4",
+      "passed": true,
+      "cases": [
+        "角色 8（範本 0、Q1、結丹 2 次，倍率 3.98，穿寶物內丹草）基礎資質 35/32/28→40/30/28；丹藥 B 17.5/16/14 保留",
+        "兩輪存讀一致；修改器重讀遊戲寫出的存檔，上限 15.92／11.94／11.14、總資質 5.75／4.6／4.2，倍率仍 3.98"
+      ]
+    },
+    "randomCharacterTalentsAscended": {
+      "date": "2026-10-24",
+      "gameVersion": "V1.0.11.2",
+      "flow": "docs/maintenance/lightweight.md",
+      "smoke": "沿用 v2.16 原生結丹備料存檔（verify-native-lifecycle.cjs ascend：角色 8 结丹 2 次、穿寶物）當基準；verify-game.cjs 編輯、雲存檔載入、原版存檔、新 PID 讀回，再以修改器重讀遊戲寫出的存檔",
+      "baselineSaveSha256": "39a7c42075ccf4fc5d0c2842476a3235c26aa0422a7f100afd4ca716ef0a0ce1",
+      "resultSha256": "96f4c4bd3690488f41699242a3e63052f392df90fae15abb9a1fa94a1f17c9e4",
+      "passed": true,
+      "cases": [
+        "角色 8 三槽天賦 攻速強化／擅長普攻／力量系職業 Lv2/2/2→1/2/1（Q1 等級池 1–2，無資質天賦）",
+        "兩輪存讀一致；天賦 ID、結丹紀錄與 z17 係數 0.8／1.68 不變"
+      ]
+    },
     "pillAptitudeBonusAscended": {
       "date": "2026-10-24",
       "gameVersion": "V1.0.11.2",
