@@ -98,7 +98,7 @@ test('same quality is an unchanged preview with no group',()=>{
  const f=fixture({quality:3}),p=preview(f,{quality:3});
  assert.equal(p.unchanged,true);assert.equal(p.direction,'none');assert.equal(p.group,null);assert.equal(p.verified,false);assert.equal(p.changes.length,0);untouched(f);
 });
-test('formal entries still reject the candidate range and no write entry exists',()=>{
+test('formal entries still reject the candidate range and only candidate entries exist',()=>{
  for(const plane of [7,9]){
   const f=fixture({plane,affixes:[setOnly[0],P原[1]],flags:{1:1}});preview(f,{quality:2});
   assert.throws(()=>f.C.setEquipmentLevelInfo(f.model,{itemId:f.id,plane}),/套裝等級/);
@@ -109,6 +109,6 @@ test('formal entries still reject the candidate range and no write entry exists'
   untouched(f);
  }
  const f=fixture();
- assert.deepEqual(Object.keys(f.C).filter(k=>/SetEquipmentQuality|setEquipmentQualityCandidate/i.test(k)&&k!=='setEquipmentQuality').sort(),['previewSetEquipmentQualityCandidate','setEquipmentQualityCandidateInfo']);
+ assert.deepEqual(Object.keys(f.C).filter(k=>/SetEquipmentQuality|setEquipmentQualityCandidate/i.test(k)&&k!=='setEquipmentQuality').sort(),['applySetEquipmentQualityCandidate','previewSetEquipmentQualityCandidate','setEquipmentQualityCandidateInfo']);
  for(const g of D.groups)assert.equal(f.k.verification[g],undefined);
 });

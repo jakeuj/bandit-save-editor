@@ -1,6 +1,6 @@
 # 套裝品質 A 任務
 
-狀態：目前主線；A1–A4、A7 已授權並完成（2026-10-23），其餘逐段明確授權。[子提案](proposal.md)／[母規格與全案驗收](../set-equipment-quality/tasks.md)／[進度入口](../../docs/research/next-version-plan.md)。
+狀態：目前主線；A1–A5、A7–A9 已授權並完成（2026-10-23），其餘逐段明確授權。[子提案](proposal.md)／[母規格與全案驗收](../set-equipment-quality/tasks.md)／[進度入口](../../docs/research/next-version-plan.md)。
 
 每項工程操作目標 30–60 分鐘；超時先再拆子 SDD。自動矩陣執行另記分片／checkpoint，完成全部分母才可勾選。
 
@@ -8,7 +8,7 @@
 - [x] A2. 擴充最小資料：產出 P原／P套、品質規則與 Q1–Q10 相依摘要；缺來源、錯同階／部位及雙池差異有合成案例，原始表不入 repo。
 - [x] A3. 隔離候選共同資格：未選槽限 P原，唯一已選槽可用聯集；測試正式等級及其他入口仍拒絕未補證的新範圍，普通裝備權限不變。
 - [x] A4. 實作候選資訊與預覽：驗主副 roll 平移、槽數、雙池、cap 及四方向分派；不寫存檔，正式群組保持關閉。
-- [ ] A5. 實作候選升品交易：明選新增 P原 尾槽且旗標 0、禁止新增重複，保留原有重複及非交易欄；精確 token 與失敗回滾有合成案例。
+- [x] A5. 實作候選升品交易：明選新增 P原 尾槽且旗標 0、禁止新增重複，保留原有重複及非交易欄；精確 token 與失敗回滾有合成案例。
 - [ ] A6. 實作候選降品與整件還原：刪尾槽確認、刪已選槽／目標超 cap 拒絕；品質→等級→品質、undo、累計還原與無變更合成案例通過。
 - [x] A7. 建立獨立交易與生成可達性預期：不讀被測 core 預覽，明列來源生成規則與原生見證待辦；不杜撰原生升品函式或偽造生成結果。
 - [x] A8. 建立獨立效果及生命週期預期：涵蓋攻擊 L×Q、取整、主副重疊、舊效果移除、S／N，列兩輪 IO、搬移 50 欄及尾十欄斷言。
@@ -67,6 +67,12 @@
 - 拒絕：目標品質非 1–6 整數、等級超過目標 cap（提示先用套裝等級降低，y6 永不在 changes）、已選槽會被移除、新增尾槽數量不符或非連續尾槽、新增 ID 不在 P原（含 P套 專有）、新增與保留槽或彼此重複、新增係數超出目標區間或超過兩位小數；保留既有重複。未修改 `editingInfo`、`setEditingValue`、`ordinaryEquipment`、`equipmentQualityInfo`、`previewEquipmentQualityChange` 等既有函式；效果計算留給 A8 獨立 oracle，本入口不估效果。
 - 新增 `tests/set-equipment-quality-preview.test.cjs`（合成存檔，預期值依母規格公式直接寫出，不讀被測預覽）：四方向分派且 changes 只落在 y5／y8／詞條／係數／旗標、升品平移與 P原 尾槽旗標 0、百分之一精度、降品刪尾槽清零、已選 P套 槽保留旗標、既有重複保留／新增重複拒絕、cap 擋降品、各類拒絕、同品質無變更；正式等級／品質入口與 `set`／`setField` 對跨池範圍仍拒絕，SaveCore 只有兩個候選名稱，四群組未註冊。
 - `node scripts/core-slice-report.cjs`：core 切片未變；既有群組沿用，不需選跑。`npm test` 267／267、`npm run test:browser` 25／25 通過。未跑原生。
+
+### A5（2026-10-23）
+
+- 新增獨立入口 `applySetEquipmentQualityCandidate(m,{itemId,plane,quality,addedAffixes,advanced})`（`src/core.js`，緊接 A4 入口，只新增 `globalThis.SaveCore` 匯出名稱）。先取 A4 預覽，只接受升品：同品質直接回傳、不建交易與歷史；降品回「降品交易尚未實作」留給 A6；`advanced` 非 false 拒絕；群組旗標（`verification[UP]`）非 true 拒絕。交易沿用 `editing:equipment:庫別:列號`，只 `put` 預覽 changes（y5、y8、保留槽係數、新增尾槽 ID／係數；旗標 0 本即 0 不產生變更），寫入後在同一交易內重讀候選資格與每格值，不符即丟錯回滾。沒有修改 `transaction`、`put`、`setEquipmentQuality`、`previewEquipmentQualityChange` 等既有函式。
+- 新增 `tests/set-equipment-quality-transaction.test.cjs`（7 項，旗標只在隔離知識副本開啟；預期 bytes 依母規格公式由獨立 renderer 產生）：兩庫與穿戴升品輸出精確 token、BOM／空白／大型整數／指數保留、changes 不碰非交易欄；已選 P套 槽 ID 與旗標保留、既有重複保留、新增重複／P套／池外拒絕；四群組各自獨立（只開另一庫或降品旗標仍拒絕）、降品與超限拒絕、出貨 catalog 拒絕；同品質無歷史；失敗保留先前等級變更、外層交易丟錯整筆回滾、undo 逐筆回前一交易；連續升品以百分之一累加。正式等級／品質入口與 `set`／`setField` 對跨池範圍仍拒絕。A4 測試的 SaveCore 候選名稱清單同步加入新入口。
+- `node scripts/core-slice-report.cjs`：core 切片未變；既有群組沿用，不需選跑。`npm test` 311／311、`npm run test:browser` 25／25 通過。未跑原生；四品質群組未註冊。
 
 ### A7（2026-10-23）
 
