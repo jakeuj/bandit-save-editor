@@ -134,4 +134,4 @@ Mac 啟動與存檔位置讀 [launcher 說明](../launcher/README.md)；規劃�
 
 ## 進度與續做
 
-問目前進度、下一步或繼續實作時，先看[下一步與目前進度](research/next-version-plan.md)，再依[承接流程](maintenance/planning.md)讀當前 SDD，依[任務分派](maintenance/dispatch.md)拆成各模型的 prompt；不要從歷史排序重開已完成工作。
+問目前進度、下一步或繼續實作時，先看[下一步與目前進度](research/next-version-plan.md)，再依[承接流程](maintenance/planning.md)讀當前 SDD，由主 session 依[任務分派](maintenance/dispatch.md)自動開各模型的子 session；不要從歷史排序重開已完成工作。

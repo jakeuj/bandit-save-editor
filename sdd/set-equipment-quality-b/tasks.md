@@ -17,7 +17,7 @@
 
 ## 分派
 
-依[任務分派與下一步 prompt](../../docs/maintenance/dispatch.md)產出各段 prompt。B 依賴 A 全部完成；原生遊戲同時只能有一段在跑。
+由主 session 依[任務分派與子 session](../../docs/maintenance/dispatch.md)開各段子 session。B 依賴 A 全部完成；原生遊戲同時只能有一段在跑。
 
 | 段 | 任務 | 模型 | 思考 | 前置 | 可同時跑 | 備註 |
 | --- | --- | --- | --- | --- | --- | --- |
