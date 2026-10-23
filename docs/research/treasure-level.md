@@ -1,6 +1,6 @@
 # 寶物等級／經驗可行性研究
 
-日期：2026-10-23。基準：V1.0.11.2／Steam build 26126719；目前公開修改器 v2.10。進度入口：[下一步與目前進度](next-version-plan.md)。提案與待辦：[寶物等級 SDD](../../sdd/treasure-level/proposal.md)、[任務](../../sdd/treasure-level/tasks.md)。
+日期：2026-10-23。基準：V1.0.11.2／Steam build 26126719；公開修改器 v2.11 已發布寶物等級。進度入口：[下一步與目前進度](next-version-plan.md)。提案與待辦：[寶物等級 SDD](../../sdd/treasure-level/proposal.md)、[任務](../../sdd/treasure-level/tasks.md)。
 
 ## 結論
 

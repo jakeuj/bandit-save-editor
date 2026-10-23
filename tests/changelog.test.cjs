@@ -29,3 +29,9 @@ test('v2.8.1 explains the withdrawn set-level path and the scope of consolidatio
  assert.ok(entry,'v2.8.1 changelog entry missing');
  for(const required of [/遊戲 V1\.0\.11\.2/,/z9 套裝等級改為唯讀/,/待獨立證明/,/不追溯/,/不算載入失敗/,/無法由本版還原/,/不新增修改功能/])assert.match(entry,required);
 });
+
+test('v2.11 releases treasure levels as level-only edits without experience and states its limits',()=>{
+ const entry=html.match(/<h3>v2\.11<span>([\s\S]*?)(?=<li><h3>)/)?.[0];
+ assert.ok(entry,'v2.11 changelog entry missing');
+ for(const required of [/遊戲 V1\.0\.11\.2/,/寶物/,/T1–T6/,/10／15／20／25／30／35/,/只改等級/,/不扣魂魄/,/不提供經驗修改/,/舊歸屬/,/獨立驗證/,/12,240/,/16 份隔離副本/,/32 種屬性/,/未模擬完整戰鬥/])assert.match(entry,required);
+});
