@@ -44,7 +44,7 @@ function nativeDriver(request){
   return {id:item.id,values:request.attributes.map(id=>[id,call('装备属性计算',1,id,0,0,0,0,0,0,0)]),record:read(1,9)};
  });
  // 装备主属性(等级,等阶,属性,系数,设置,'主属性',0,品质): the per-item main attribute, isolated from character totals.
- if(request.op==='single')return request.items.map(item=>({id:item.id,value:call('装备主属性',item.level,item.tier,item.attribute,item.coefficient,item.setting,'主属性',0,item.quality)}));
+ if(request.op==='single')return request.items.map(item=>({id:item.id,value:call('装备主属性',item.level,item.tier,item.attribute,item.coefficient,item.setting,item.mode||'主属性',0,item.quality)}));
  if(request.op==='observe')return {records:request.locations.map(v=>({...v,record:read(v.id,v.plane)})),refs:refs()};
  throw Error('Unknown native treasure request '+request.op);
 }

@@ -3,7 +3,7 @@
 // Treasure lifecycle IO shard: native equip / unequip / replace slot 6, original-format save and new-PID reload.
 // Disposable hidden copies only. Calibration-grade until the final matrix runs against the final core.
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
-const {evaluate,waitMain}=require('./verify-game.cjs'),V=require('./verify-treasure-level-native.cjs'),O=require('./treasure-level-oracle.cjs');
+const {evaluate,waitMain}=require('./verify-game.cjs'),V=require('./verify-treasure-level-native.cjs'),O=require('./treasure-level-oracle.cjs'),D=require('./treasure-level-data.cjs');
 const {rpc,command,firstOf}=V,root=path.resolve(__dirname,'..');
 const SLOT=6,POINTER=15+SLOT;
 async function nativeCycle(request){
@@ -16,7 +16,7 @@ async function nativeCycle(request){
  call('穿戴装备',request.slot,bag,1,false,false);await pause();z9=a.At(1,15+request.slot,2);steps.push({phase:'equip',id:z9,plane:9,record:record(z9,9),refs:refs(),source:record(bag,7)});
  if(!z9)throw Error('Native equip did not set role pointer '+JSON.stringify(steps));
  call('刷新单角色全属性',1,true,0);call('卸下装备',request.slot,z9,1,false,false);await pause();bag=find(7);steps.push({phase:'unequip',id:bag,plane:7,record:record(bag,7),refs:refs(),source:record(z9,9)});
- return {initial,steps,locations:[{id:bag,plane:7},{id:z9,plane:9}]};
+ return {initial,steps,worn:!!request.worn,locations:[{id:bag,plane:7},{id:z9,plane:9}]};
 }
 // Wear the unequipped item, generate a different treasure natively, wear it over slot 6 and observe the swap.
 async function nativeReplace(request){
@@ -35,7 +35,7 @@ async function nativeReplace(request){
 const near=(a,b)=>a.every((v,y)=>v===b[y]);
 function validateCycle(report,expected){
  assert.deepEqual(report.initial,expected);const final=report.steps.at(-1);assert.equal(final.phase,'unequip');
- for(const step of report.steps){for(let y=0;y<50;y++)if(y!==7)assert.equal(step.record[y],expected[y],'搬移欄位 '+y);assert.equal(step.record[7],step.phase==='equip'?1:step.phase==='takeout'?expected[7]:0,'owner '+step.phase);// takeout keeps the stored owner (stale owner included); only unequip clears it.
+ for(const step of report.steps){for(let y=0;y<50;y++)if(y!==7)assert.equal(step.record[y],expected[y],'搬移欄位 '+y);assert.equal(step.record[7],step.phase==='equip'?1:step.phase==='takeout'?(report.worn?0:expected[7]):0,'owner '+step.phase);// 裝備庫取出 keeps the stored owner (stale owner included); taking a worn item off (worn) and unequip clear it.
   if(step.phase==='equip')assert.equal(step.refs[SLOT-1],step.id);else assert.equal(step.refs[SLOT-1],0);
   // Moves copy and clear y0-49 only; the source keeps y50-59 and the destination does not receive them (observed below, pinned per run).
   for(let y=0;y<50;y++)assert.equal(step.source[y],0,'來源搬移後未清除 y'+y);}
@@ -117,9 +117,11 @@ async function runCase({k,cfg,out,c,baselines,index,replace}){
  }finally{if(stateFile)try{command(['--state',stateFile,'--stop']);}catch{}}
 }
 async function main(argv){
- const opt=n=>argv.includes(n)?argv[argv.indexOf(n)+1]:undefined,cfg=JSON.parse(fs.readFileSync(opt('--config'))),k=JSON.parse(fs.readFileSync(path.join(root,'knowledge/catalog.json'))),out=require('./migration-source.cjs').external(cfg.out);
+ const opt=n=>argv.includes(n)?argv[argv.indexOf(n)+1]:undefined,cfg=JSON.parse(fs.readFileSync(opt('--config'))),k=JSON.parse(fs.readFileSync(path.join(root,'knowledge/catalog.json'))),out=require('./migration-source.cjs').external(cfg.out+'/lifecycle');
  const only=(opt('--only')==='all'?cases(k).map(c=>c.id):opt('--only')?opt('--only').split(','):SMOKE),list=cases(k).filter(c=>only.includes(c.id));assert.equal(list.length,only.length,'未知案例');
- const baselines=await ensureBaselines({k,cfg,out,list}),file=path.join(out,'treasure-lifecycle.json'),result=fs.existsSync(file)?JSON.parse(fs.readFileSync(file)):{mode:'shard',nativeProofCounted:false,copies:[]};
+ const baselines=await ensureBaselines({k,cfg,out,list}),file=path.join(out,'treasure-lifecycle.json'),core=fs.readFileSync(path.join(root,'src/core.js'),'utf8'),binding={coreHash:D.hash(core),dataHash:D.hash(k.treasureLevel),fingerprints:{...k.fingerprints,...k.batch2Fingerprints},runnerHash:D.hash(fs.readFileSync(__filename,'utf8').split(String.fromCharCode(13)).join('')),driverHash:D.hash(require('./treasure-level-native.cjs').nativeDriver.toString())},
+  result=fs.existsSync(file)?JSON.parse(fs.readFileSync(file)):{mode:'native',binding,copies:[]};
+ assert.deepEqual(result.binding,binding,'生命週期結果的核心／規則／runner 綁定與目前不符，須刪除重建');
  for(const [index,c] of list.entries()){
   if(result.copies.some(v=>v.id===c.id))continue;
   result.copies.push(await runCase({k,cfg,out,c,baselines,index,replace:c.state==='equipped'}));fs.writeFileSync(file+'.tmp',JSON.stringify(result));fs.renameSync(file+'.tmp',file);console.log('treasure lifecycle '+result.copies.length+'/'+list.length+' '+c.id);

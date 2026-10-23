@@ -31,10 +31,11 @@ function batchDecompose(rows,{quality,souls:balance=0}){
 function itemEffects(record,rules,affix){
  const t=rules.items[record[1]];assert.ok(t,'缺寶物範本');
  const tier=record[3],level=record[6],coefficient=record[8],values={},uncovered=[];
- t.mainAttributes.forEach(id=>{
+ t.mainAttributes.forEach((id,i)=>{
   if(!id)return;const rule=affix.attributes[id];
   if(!rule){uncovered.push(id);return;}
-  values[id]=(values[id]||0)+Math.floor((rule.base+rule.tier*tier+rule.level*level)*(coefficient/100)*100)/100;
+  const setting=rules.items[record[1]].mainSettings?.[i]??100;
+  values[id]=(values[id]||0)+Math.floor((rule.base+rule.tier*tier+rule.level*level)*(coefficient/100)*(setting/100)*100)/100;
  });
  for(const v of Object.values(values))assert.ok(Number.isFinite(v),'單件效果不是有限值');
  return {values,uncovered};
@@ -47,4 +48,15 @@ function assertLevelOnly(before,after,target){
  assert.equal(before.length,60);assert.equal(after.length,60);
  assert.deepEqual(after,before.map((v,y)=>y===6?target:v),'等級外欄位被改寫');
 }
-module.exports={ransom,cap,souls,upgrade,decompose,batchDecompose,itemEffects,movedRecord,assertLevelOnly};
+// Function-level components (main attribute slots and sub-affix slots) mirroring what 装备主属性 is asked per slot.
+// Only the percent branch is derivable from static data; other attributes carry value=null (native-observation-only).
+function components(record,rules,affix){
+ const t=rules.items[record[1]];assert.ok(t,'缺寶物範本');
+ const tier=record[3],level=record[6],out=[];
+ // Observed natively: the sub-affix branch carries no level term, the main-attribute branch does.
+ const value=(id,coefficient,setting,leveled)=>{const rule=affix.attributes[id];return rule?Math.floor((rule.base+rule.tier*tier+(leveled?rule.level*level:0))*(coefficient/100)*(setting/100)*100)/100:null;};
+ t.mainAttributes.forEach((id,i)=>{if(id){const setting=t.mainSettings?.[i]??100;out.push({kind:'主属性',id,coefficient:record[8],setting,value:value(id,record[8],setting,true)});}});
+ for(let s=0;s<6;s++){const id=record[9+s];if(id)out.push({kind:'副词条',id,coefficient:record[15+s],setting:100,value:value(id,record[15+s],100,false)});}
+ return out;
+}
+module.exports={components,ransom,cap,souls,upgrade,decompose,batchDecompose,itemEffects,movedRecord,assertLevelOnly};
