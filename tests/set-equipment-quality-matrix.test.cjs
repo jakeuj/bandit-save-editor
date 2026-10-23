@@ -61,8 +61,9 @@ function perfect(sc){
  const rules=k.setEquipmentLevel,attrs=X.attributesOf(k),eff=X.effectAttributesOf(k);
  const singles=row=>attrs.map(id=>[id,L.itemEffects(row,rules)[id]||0]);
  const character=rows=>{const e=L.characterEffects(rows,rules),s=rules.items[rows[0][1]].setLink,sm=e.summaries[s];return {values:eff.map(id=>[id,(e.singles[id]||0)+(e.sets[id]||0)]),summary:[sm.parts,sm.score,sm.count]};};
- const before=sc.pieces.map(p=>p.record),obs={loaded:before.map(r=>r.slice()),refs:[],beforeSingles:before.map(singles)};
- if(sc.character)obs.beforeCharacter=character(before);
+ const before=sc.pieces.map(p=>p.record),obs={loaded:before.map(r=>r.slice()),refs:[]};
+ if(sc.expect==='apply')obs.beforeSingles=before.map(singles);
+ if(sc.character&&sc.expect==='apply')obs.beforeCharacter=character(before);
  if(sc.expect==='apply'){
   obs.edited=sc.after.map(r=>r.slice());obs.afterSingles=sc.after.map(singles);if(sc.character)obs.afterCharacter=character(sc.after);
   if(sc.refine){
@@ -224,4 +225,14 @@ test('emit lists passed native rows in the A10 shape and every other outcome exp
   fs.writeFileSync(path.join(life,'b4-lifecycle-report.json'),JSON.stringify({binding:{coreHash:'0'.repeat(64)},manifestHash:manifest.manifestHash}));
   assert.throws(()=>R.emit(dir,manifest,manifest,{tools},X.matrixKinds),/核心/);
  }finally{fs.rmSync(dir,{recursive:true,force:true});}
+});
+
+test('every rejection case validates against a perfect game, even when its start record is not a legal set item',async()=>{
+ const cases=manifest.cases.filter(c=>c.kind==='reject'&&c.classification!==M.classes.na&&!['stale-proof','incomplete-proof'].includes(c.rejection));
+ assert.ok(cases.length>=70);
+ for(const c of cases){
+  const sc=X.build(c,k,supply),core=X.runCore(C,m,sc);if(core.pending)await core.pending;
+  assert.equal(X.validate(C,m,k,sc,perfect(sc)).outcome,'reject',c.id);
+  const [obs]=await drive({op:'cases',items:[X.nativeItem(sc,k)]});assert.equal(X.validate(C,m,k,sc,obs).outcome,'reject',c.id);
+ }
 });

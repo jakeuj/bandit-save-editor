@@ -292,8 +292,8 @@ async function matrixDriver(request){
    reset();const z=item.plane,r={id:item.id};
    const load=rows=>{reset();rows.forEach((row,i)=>{put(i+1,z,row);if(row[7])a.Set(1,15+item.slots[i],2,i+1);});};
    load(item.before);r.loaded=item.before.map((_,i)=>read(i+1,z));r.refs=refs();
-   r.beforeSingles=item.before.map(row=>singles(row,item.attributes));
-   if(item.character)r.beforeCharacter=characterValues(item.effectAttributes,item.before[0][1]);
+   if(item.effects)r.beforeSingles=item.before.map(row=>singles(row,item.attributes));
+   if(item.effects&&item.character)r.beforeCharacter=characterValues(item.effectAttributes,item.before[0][1]);
    if(item.after){
     item.after.forEach((row,i)=>put(i+1,z,row));
     r.edited=item.after.map((_,i)=>read(i+1,z));r.afterSingles=item.after.map(row=>singles(row,item.attributes));
@@ -340,8 +340,11 @@ function validate(C,m,k,sc,obs){
  const ok=(fn)=>{try{fn();}catch(e){throw e instanceof Refutation?e:new Refutation(e.message);}};
  const before=sc.pieces.map(p=>p.record);
  ok(()=>rowsEqual(obs.loaded,before,'載入後與起點不符'));
- ok(()=>obs.beforeSingles.forEach((s,i)=>checkSingles(s,before[i],rules,'編輯前')));
- if(obs.beforeCharacter)ok(()=>checkCharacter(obs.beforeCharacter,before,rules,'編輯前'));
+ // Effects are compared only for legal starts; a rejection case may start from a record the effect formulas do not cover.
+ if(sc.expect==='apply'){
+  ok(()=>obs.beforeSingles.forEach((s,i)=>checkSingles(s,before[i],rules,'編輯前')));
+  if(obs.beforeCharacter)ok(()=>checkCharacter(obs.beforeCharacter,before,rules,'編輯前'));
+ }
  const summary={outcome:sc.expect,startNative:true};
  if(sc.expect==='apply'){
   ok(()=>rowsEqual(obs.edited,sc.after,'原生讀回與 oracle 結果不符'));
@@ -406,7 +409,7 @@ function poolsOfRecord(k,rec){return {origin:k.setEquipmentLevel.origins[rec[27]
 
 // ---- request building -------------------------------------------------------------------------------------------------------
 function nativeItem(sc,k){
- return {id:sc.id,plane:sc.plane,state:sc.state,slots:sc.pieces.map(p=>p.slot),before:sc.pieces.map(p=>p.record),after:sc.expect==='apply'?sc.after:null,
+ return {id:sc.id,plane:sc.plane,state:sc.state,slots:sc.pieces.map(p=>p.slot),before:sc.pieces.map(p=>p.record),after:sc.expect==='apply'?sc.after:null,effects:sc.expect==='apply',
   attributes:attributesOf(k),effectAttributes:effectAttributesOf(k),character:sc.character,refine:sc.refine,move:sc.move&&sc.expect==='apply',cap:sc.cap};
 }
 // Case fields the observation keeps so a reviewer can retrace the case without the raw rows.

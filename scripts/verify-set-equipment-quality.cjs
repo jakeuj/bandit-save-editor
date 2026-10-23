@@ -198,5 +198,5 @@ async function run(argv=process.argv.slice(2)){
  if(mode==='plan')console.log(JSON.stringify(summaryAll));
  return summaryAll;
 }
-module.exports={emit,parseShards,shardName,selectionOf,reconcile,a10Rows,loadSupply,missingNeeds,offline,run};
+module.exports={session,emit,parseShards,shardName,selectionOf,reconcile,a10Rows,loadSupply,missingNeeds,offline,run};
 if(require.main===module)run().then(()=>process.stdout.write('',()=>process.exit(process.exitCode||0))).catch(e=>{console.error(e.stack);process.stderr.write('',()=>process.exit(1));});
