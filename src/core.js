@@ -198,6 +198,26 @@
   },preview.direction==='upgrade'?'套裝品質候選升品':'套裝品質候選降品');}finally{m.currentGroup=previous;}
   return preview;
  }
+ // Set-quality candidate effects (B3): read-only single-item before/after effects for the previewed record; no write, no transaction.
+ function setEquipmentQualityCandidateEffects(m,{itemId,plane=9,quality,addedAffixes=[]}){
+  const info=setEquipmentQualityCandidateInfo(m,{itemId,plane}),preview=previewSetEquipmentQualityCandidate(m,{itemId,plane,quality,addedAffixes}),levels=KNOWLEDGE.setEquipmentLevel,t=info.template;
+  const before=info.record,after=before.slice();for(const c of preview.changes)after[c.coordinate.y]=c.after;
+  const calc=(record,id,coefficient,setting,L)=>{
+   const rule=levels.attributes[id],T=record[3],Q=record[5];if(!rule)throw Error('套裝品質候選：此效果公式尚未核對。');let value;
+   if(rule.kind==='attack'){const n=((T-1)*30)+1,base=Math.ceil(((5*n)+(65*Math.pow(1.036,n)))-55);value=Math.floor((((base*(1+(0.04*L)))*(coefficient/100))*(setting/100))+(L*Q));}
+   else if(rule.kind==='aptitude')value=Math.floor((((((100*0.003)*Math.pow(T,1.6))*(1+(0.04*L)))*100)*(coefficient/100))*(setting/100))/100;
+   else if(rule.kind==='work'){const base=Math.round(8+(2*Math.pow(((T-1)*10)+1,1.2)));value=Math.floor(((((0.4*base)*(1+(0.04*L)))*(coefficient/100))*(setting/100))+L);}
+   else if(rule.kind==='percent')value=Math.floor(((rule.base+(rule.tier*T)+(rule.level*L))*(coefficient/100))*100)/100;
+   else throw Error('套裝品質候選：此效果公式尚未核對。');
+   if(!Number.isFinite(value))throw Error('套裝品質候選：效果超出可計算範圍。');return value;
+  };
+  const total=(record,id)=>{let sum=0;t.mainAttributes.forEach((main,s)=>{if(main===id)sum+=calc(record,id,record[8],t.mainSettings[s],record[6]);});for(let s=1;s<=6;s++)if(record[8+s]===id)sum+=calc(record,id,record[14+s],100,0);return sum;};
+  const ids=new Set([...t.mainAttributes.filter(Boolean),...before.slice(9,15),...after.slice(9,15)].filter(Boolean)),effects=[...ids].sort((a,b)=>a-b).map(id=>{
+   const rule=levels.attributes[id],a=total(before,id),b=total(after,id);
+   return {attributeId:id,name:catalogName('attributes',id),unit:rule?.format==='百分比'?'%':'',before:a,after:b,delta:b-a,removed:b===0&&a!==0};
+  });
+  return {kind:'setEquipmentQualityCandidateEffects',candidate:true,itemId,plane,quality,effects,effectUnchanged:effects.every(v=>v.before===v.after),setBonusNote:'套裝積分、件數與額外套裝效果不隨品質改變。'};
+ }
  function editingInfo(m,kind,id,plane=9){
   if(kind==='equipment'&&![7,9].includes(plane))throw Error('裝備庫別只接受 7 或 9。');
   if(!Number.isSafeInteger(id)||id<1||id>=m.original.size[0])throw Error('無效的資料編號。');
@@ -978,5 +998,5 @@
   if(patches.length!==m.changes.size)throw Error('部分修改座標未能定位，已停止匯出。');
   const parts=[];let previous=0;for(const p of patches){parts.push(m.text.slice(previous,p.start),p.value);previous=p.end;}parts.push(m.text.slice(previous));return parts.join('');
  }
- globalThis.SaveCore={setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,previewSetEquipmentQualityCandidate,applySetEquipmentQualityCandidate,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
+ globalThis.SaveCore={setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,previewSetEquipmentQualityCandidate,applySetEquipmentQualityCandidate,setEquipmentQualityCandidateEffects,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
 })();

@@ -109,6 +109,6 @@ test('formal entries still reject the candidate range and only candidate entries
   untouched(f);
  }
  const f=fixture();
- assert.deepEqual(Object.keys(f.C).filter(k=>/SetEquipmentQuality|setEquipmentQualityCandidate/i.test(k)&&k!=='setEquipmentQuality').sort(),['applySetEquipmentQualityCandidate','previewSetEquipmentQualityCandidate','setEquipmentQualityCandidateInfo']);
+ assert.deepEqual(Object.keys(f.C).filter(k=>/SetEquipmentQuality|setEquipmentQualityCandidate/i.test(k)&&k!=='setEquipmentQuality').sort(),['applySetEquipmentQualityCandidate','previewSetEquipmentQualityCandidate','setEquipmentQualityCandidateEffects','setEquipmentQualityCandidateInfo']);
  for(const g of D.groups)assert.equal(f.k.verification[g],false);
 });

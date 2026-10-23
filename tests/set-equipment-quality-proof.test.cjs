@@ -24,7 +24,7 @@ test('the four quality groups are registered everywhere but stay closed',()=>{
  }
  assert.equal(S.families.setEquipmentQuality.initialProofRequired,true);assert.deepEqual(S.uncovered(P.groups),[]);
  for(const script of [S.families.setEquipmentQuality.oracle,...S.families.setEquipmentQuality.lifecycle])assert.ok(fs.existsSync(path.join(__dirname,'../scripts',script)),script);
- assert.deepEqual(A.coreRoots.setEquipmentQuality.slice(-3),['setEquipmentQualityCandidateInfo','previewSetEquipmentQualityCandidate','applySetEquipmentQualityCandidate']);
+ assert.deepEqual(A.coreRoots.setEquipmentQuality.slice(-4),['setEquipmentQualityCandidateInfo','previewSetEquipmentQualityCandidate','applySetEquipmentQualityCandidate','setEquipmentQualityCandidateEffects']);
  assert.ok(A.dependencies.setEquipmentQuality&&A.regions.setEquipmentQuality);
  assert.equal(P.problem(k,proof,source),null);
 });

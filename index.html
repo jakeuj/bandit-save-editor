@@ -41,7 +41,7 @@
 /* Profession guide stays available before loading a save and in the offline HTML. */
 .profession-intro{display:flex;gap:18px;flex-wrap:wrap;margin:18px 0;color:var(--muted);font-size:13px}.profession-intro strong{color:var(--gold);font-size:22px;margin-right:5px}.profession-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0 12px}.profession-toolbar input{flex:1 1 230px}.profession-toolbar select{flex:0 1 auto;max-width:100%}.profession-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;margin:12px 0}.profession-family{--family-color:var(--muted);color:var(--family-color)}.profession-family[data-family="1"]{--family-color:#ffaaa0}.profession-family[data-family="2"]{--family-color:#a8d99b}.profession-family[data-family="3"]{--family-color:#a9c9ff}.profession-family[data-family="4"]{--family-color:#e8bb72}.profession-detail{border:1px solid #52695e;border-radius:12px;padding:20px;margin:18px 0 24px;background:linear-gradient(120deg,#24373180,var(--panel));scroll-margin-top:18px}.profession-detail:focus{outline:2px solid var(--gold);outline-offset:3px}.profession-detail h3{font-size:23px}.profession-detail .sub{margin:5px 0 12px}.profession-detail-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.profession-detail-grid h4{margin:0 0 6px;color:var(--muted);font-size:12px;font-weight:500}.profession-detail-grid p{font-size:14px}.profession-detail-grid button{margin:3px 4px 3px 0}.profession-progress{border-top:1px solid var(--line);margin-top:16px;padding-top:14px;font-size:13px}.profession-routes{width:100%;min-width:750px;table-layout:fixed}.profession-routes th{font-size:12px}.profession-routes td{padding:10px 7px}.profession-node{display:block;width:100%;background:#152024;text-align:left;padding:8px 10px;border-color:var(--line);font-size:14px}.profession-node small{display:block;color:var(--muted);font:10px var(--mono);margin-top:3px}.profession-node[aria-pressed="true"]{border-color:var(--gold);background:#3a3323}.profession-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.profession-card{text-align:left;padding:14px;background:var(--panel)}.profession-card strong{display:block;font-size:17px}.profession-card small{display:block;color:var(--muted);font-size:12px;margin-top:6px}.profession-source{margin-top:24px;font-size:12px;color:var(--muted)}.profession-source summary{cursor:pointer;color:var(--teal)}.profession-source p{margin-top:8px}.profession-source code{overflow-wrap:anywhere}.profession-empty{padding:30px;color:var(--muted);text-align:center}
 @media(max-width:1000px){.profession-list{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:760px){.profession-detail-grid{grid-template-columns:1fr;gap:15px}.profession-detail{padding:16px}.profession-list{grid-template-columns:1fr}.profession-toolbar select{flex:1 1 130px}.profession-intro{gap:12px}.profession-routes td{padding:7px 5px}}
-#qualityPreview table{min-width:520px}
+#qualityPreview table,#setQualityPreview table{min-width:520px}
 .batch-characters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:15px 0}.batch-character{display:flex;align-items:center;gap:8px;padding:8px;border:1px solid var(--line);border-radius:6px;overflow-wrap:anywhere}.batch-summary{margin:20px 0;font-size:13px}#tab-batch label{font-size:13px}#batchValueLabel{display:block;margin-top:15px}#batchValueLabel input{display:block;margin-top:8px}#tab-batch select{max-width:100%}#tab-batch td{overflow-wrap:anywhere}.mobile-help{display:none}
 @media(max-width:760px){.batch-characters{grid-template-columns:1fr}.mobile-help{display:flex;gap:10px;margin-bottom:15px}.footer .actions #undoBtn{display:inline-flex}#tab-batch .toolbar{flex-wrap:wrap}#tab-batch .knowledge-details{padding:12px}#tab-batch table{min-width:480px}}
 .aptitude-inputs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.aptitude-inputs label{min-width:0;font-size:13px}.aptitude-inputs input{display:block;width:100%;margin-top:8px}#baseAptitudeEditor .tablewrap,#skillCapsEditor .tablewrap,#talentLevelsEditor .tablewrap{max-width:100%;overflow-x:auto}#skillCapsPreview table{min-width:600px}#skillCapsEditor,#talentLevelsEditor{min-width:0}@media(max-width:760px){.aptitude-inputs{grid-template-columns:1fr}#baseAptitudeEditor .toolbar,#skillCapsEditor .toolbar,#talentLevelsEditor .toolbar{flex-wrap:wrap}}
@@ -148,6 +148,7 @@
     <div class="form-card" id="equipmentEditor"></div>
     <div class="form-card" id="affixEditor"></div>
     <div class="form-card" id="qualityEditor"></div>
+    <div class="form-card" id="setQualityEditor"></div>
 
     <div class="table-wrap"><table><thead><tr><th>實體 / 範本</th><th>物品</th><th>位置</th><th>品質 / 等級</th><th>查閱</th></tr></thead><tbody id="inventoryRows"></tbody></table></div><div class="diff-pager"><span id="inventoryPageInfo"></span><div><button id="inventoryPrev" class="small">上一頁</button><button id="inventoryNext" class="small">下一頁</button></div></div>
    </section>
@@ -377,6 +378,26 @@
    if(after.quality!==quality||preview.changes.some(c=>!Object.is(get(m,c.coordinate),c.after)))fail('寫入後檢查不符。');
   },preview.direction==='upgrade'?'套裝品質候選升品':'套裝品質候選降品');}finally{m.currentGroup=previous;}
   return preview;
+ }
+ // Set-quality candidate effects (B3): read-only single-item before/after effects for the previewed record; no write, no transaction.
+ function setEquipmentQualityCandidateEffects(m,{itemId,plane=9,quality,addedAffixes=[]}){
+  const info=setEquipmentQualityCandidateInfo(m,{itemId,plane}),preview=previewSetEquipmentQualityCandidate(m,{itemId,plane,quality,addedAffixes}),levels=KNOWLEDGE.setEquipmentLevel,t=info.template;
+  const before=info.record,after=before.slice();for(const c of preview.changes)after[c.coordinate.y]=c.after;
+  const calc=(record,id,coefficient,setting,L)=>{
+   const rule=levels.attributes[id],T=record[3],Q=record[5];if(!rule)throw Error('套裝品質候選：此效果公式尚未核對。');let value;
+   if(rule.kind==='attack'){const n=((T-1)*30)+1,base=Math.ceil(((5*n)+(65*Math.pow(1.036,n)))-55);value=Math.floor((((base*(1+(0.04*L)))*(coefficient/100))*(setting/100))+(L*Q));}
+   else if(rule.kind==='aptitude')value=Math.floor((((((100*0.003)*Math.pow(T,1.6))*(1+(0.04*L)))*100)*(coefficient/100))*(setting/100))/100;
+   else if(rule.kind==='work'){const base=Math.round(8+(2*Math.pow(((T-1)*10)+1,1.2)));value=Math.floor(((((0.4*base)*(1+(0.04*L)))*(coefficient/100))*(setting/100))+L);}
+   else if(rule.kind==='percent')value=Math.floor(((rule.base+(rule.tier*T)+(rule.level*L))*(coefficient/100))*100)/100;
+   else throw Error('套裝品質候選：此效果公式尚未核對。');
+   if(!Number.isFinite(value))throw Error('套裝品質候選：效果超出可計算範圍。');return value;
+  };
+  const total=(record,id)=>{let sum=0;t.mainAttributes.forEach((main,s)=>{if(main===id)sum+=calc(record,id,record[8],t.mainSettings[s],record[6]);});for(let s=1;s<=6;s++)if(record[8+s]===id)sum+=calc(record,id,record[14+s],100,0);return sum;};
+  const ids=new Set([...t.mainAttributes.filter(Boolean),...before.slice(9,15),...after.slice(9,15)].filter(Boolean)),effects=[...ids].sort((a,b)=>a-b).map(id=>{
+   const rule=levels.attributes[id],a=total(before,id),b=total(after,id);
+   return {attributeId:id,name:catalogName('attributes',id),unit:rule?.format==='百分比'?'%':'',before:a,after:b,delta:b-a,removed:b===0&&a!==0};
+  });
+  return {kind:'setEquipmentQualityCandidateEffects',candidate:true,itemId,plane,quality,effects,effectUnchanged:effects.every(v=>v.before===v.after),setBonusNote:'套裝積分、件數與額外套裝效果不隨品質改變。'};
  }
  function editingInfo(m,kind,id,plane=9){
   if(kind==='equipment'&&![7,9].includes(plane))throw Error('裝備庫別只接受 7 或 9。');
@@ -1158,7 +1179,7 @@
   if(patches.length!==m.changes.size)throw Error('部分修改座標未能定位，已停止匯出。');
   const parts=[];let previous=0;for(const p of patches){parts.push(m.text.slice(previous,p.start),p.value);previous=p.end;}parts.push(m.text.slice(previous));return parts.join('');
  }
- globalThis.SaveCore={setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,previewSetEquipmentQualityCandidate,applySetEquipmentQualityCandidate,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
+ globalThis.SaveCore={setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,previewSetEquipmentQualityCandidate,applySetEquipmentQualityCandidate,setEquipmentQualityCandidateEffects,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
 })();
 </script>
 <script id="save-ui">
@@ -1312,6 +1333,49 @@
   $('qualityItem').onchange=update;$('qualityTarget').onchange=rows;$('qualityRemoval').onchange=preview;
   $('qualityApply').onclick=()=>{try{const o={...target(),addedAffixes:additions(),confirmRemovedAffixes:$('qualityRemoval').checked};perform(()=>C.setEquipmentQuality(model,o));}catch(e){toast(e.message,true);}};update();
  }
+ function renderSetQuality(){
+  const old=$('setQualityItem')?.value,names=['','凡物','優秀','精緻','絕世','傳說','神話'],sets=C.KNOWLEDGE.setEquipmentLevel?.items||{};
+  const choices=equipmentChoices().filter(v=>sets[read(v.id,1,v.z)]);
+  $('setQualityEditor').innerHTML=`<h3>套裝品質候選（隔離驗證前停用套用）</h3><div class="toolbar"><select id="setQualityItem" aria-label="套裝品質裝備">${choices.map(v=>`<option value="${v.z}:${v.id}">${esc(equipmentLabel(v))}</option>`).join('')}</select><select id="setQualityTarget" aria-label="套裝目標品質"></select></div><p id="setQualityInfo" class="muted small-text" role="status"></p><p id="setQualityStatus" class="small-text" role="status"></p><details><summary>詞條池與每槽來源</summary><div id="setQualityPools" class="small-text"></div></details><div id="setQualityAdditions"></div><div id="setQualityPreview" class="small-text" role="status"></div><label id="setQualityRemovalLabel" class="check" hidden><input id="setQualityRemoval" type="checkbox">確認移除預覽中的尾端詞條槽</label><div class="toolbar"><button id="setQualityApply" class="primary small" disabled>套用套裝品質</button><button id="setQualityReset" class="small" type="button">重設選項與確認</button></div><p class="muted small-text">新增尾槽只能用原裝備詞條池（P原），旗標為 0；降品會刪除尾槽，須先確認。主係數每級 ±30、保留槽係數每級 ±10。品質不改等級，超過目標上限須先降低套裝等級。套裝積分與額外套裝效果不隨品質改變。</p>`;
+  if(choices.some(v=>`${v.z}:${v.id}`===old))$('setQualityItem').value=old;
+  let info=null;
+  const target=()=>{const [plane,itemId]=$('setQualityItem').value.split(':').map(Number);return {plane,itemId,quality:Number($('setQualityTarget').value)};};
+  const attrName=id=>id?C.catalogName('attributes',id):'無';
+  const additions=()=>{const q=Number($('setQualityTarget').value);return Array.from({length:Math.max(0,q-(info?.quality??q))},(_,n)=>{const slot=info.quality+n;if(!$('setQualityAffix'+slot).value)throw Error('請明選新增槽 '+slot+' 的詞條。');if(!$('setQualityCoefficient'+slot).value.trim())throw Error('新增詞條係數不能空白。');return {slot,attributeId:Number($('setQualityAffix'+slot).value),coefficient:Number($('setQualityCoefficient'+slot).value)};});};
+  const preview=()=>{
+   $('setQualityApply').disabled=true;
+   try{
+    if(!info)throw Error('請選擇有效套裝裝備。');
+    const o={...target(),addedAffixes:additions()},p=C.previewSetEquipmentQualityCandidate(model,o),f=C.setEquipmentQualityCandidateEffects(model,o);
+    const dir=p.direction==='upgrade'?'升品':p.direction==='downgrade'?'降品':'未變';
+    $('setQualityStatus').textContent=p.group?`${info.plane===7?'背包':'裝備庫'} · ${dir} · 群組 ${p.group} · ${p.verified?'已通過驗證':'尚待獨立遊戲驗證，套用停用'}`:'品質未改變。';
+    $('setQualityPreview').innerHTML=`<p>品質 ${p.previousQuality}・${names[p.previousQuality]} → ${p.quality}・${names[p.quality]} · 等級 ${htmlValue(p.level)}（上限 ${htmlValue(p.previousMax)} → ${htmlValue(p.normalMax)}）<br>主係數 ${htmlValue(p.mainCoefficient.before)} → ${htmlValue(p.mainCoefficient.after)} · 已選槽 ${p.selectedSlot??'無'}</p><div class="table-wrap"><table><thead><tr><th>槽位／動作</th><th>來源</th><th>目前詞條／係數／旗標</th><th>套用後</th></tr></thead><tbody>${p.slots.map(s=>`<tr><td>${s.slot}・${({added:'新增',removed:'移除',retained:'保留'})[s.kind]}</td><td>${({origin:'P原',set:'P套',both:'P原＋P套'})[s.source]}</td><td>${esc(attrName(s.before.attributeId))} / ${htmlValue(s.before.coefficient)} / ${s.before.flag}</td><td>${esc(attrName(s.after.attributeId))} / ${htmlValue(s.after.coefficient)} / ${s.after.flag}</td></tr>`).join('')}</tbody></table></div><div class="table-wrap"><table><thead><tr><th>裝備屬性</th><th>目前</th><th>套用後</th><th>差異</th></tr></thead><tbody>${f.effects.filter(e=>e.before||e.after).map(e=>`<tr><td>${esc(e.name)}</td><td>${htmlValue(e.before)}${esc(e.unit)}</td><td>${htmlValue(e.after)}${esc(e.unit)}</td><td>${htmlValue(Math.round(e.delta*100)/100)}${e.unit==='%'?' 百分點':''}</td></tr>`).join('')}</tbody></table></div><p>${p.unchanged?'品質未改變。':f.effectUnchanged?'取整後效果不變。':''}${esc(f.setBonusNote)}</p>`;
+    $('setQualityRemovalLabel').hidden=!p.requiresRemovalConfirmation;
+    $('setQualityApply').disabled=!p.verified||p.unchanged||p.requiresRemovalConfirmation&&!$('setQualityRemoval').checked;
+   }catch(e){$('setQualityStatus').textContent='';$('setQualityPreview').textContent=e.message;$('setQualityRemovalLabel').hidden=true;}
+  };
+  const changed=()=>{$('setQualityRemoval').checked=false;preview();};
+  const rows=()=>{
+   if(!info)return;const q=Number($('setQualityTarget').value),min=10*(q-1),max=60+10*q,kept=info.slots.slice(0,Math.min(q,info.quality)-1).map(v=>v.attributeId);
+   $('setQualityRemoval').checked=false;$('setQualityRemovalLabel').hidden=q>=info.quality;
+   $('setQualityAdditions').innerHTML=Array.from({length:Math.max(0,q-info.quality)},(_,n)=>{const s=info.quality+n;return `<div class="form-card"><h4>新增詞條槽 ${s}（P原）</h4><div class="toolbar"><select id="setQualityAffix${s}" aria-label="新增槽 ${s} 詞條"><option value="">請明選詞條</option>${info.pools.origin.map(id=>`<option value="${id}" ${kept.includes(id)?'disabled':''}>${esc(attrName(id))}</option>`).join('')}</select><label>係數<input id="setQualityCoefficient${s}" aria-label="新增槽 ${s} 係數" type="number" min="${min}" max="${max}" step="0.01" value="${(min+max)/2}"></label></div></div>`;}).join('');
+   for(let s=info.quality;s<q;s++){$('setQualityAffix'+s).onchange=changed;$('setQualityCoefficient'+s).oninput=changed;}
+   preview();
+  };
+  const update=()=>{
+   info=null;$('setQualityRemoval').checked=false;$('setQualityRemovalLabel').hidden=true;$('setQualityAdditions').innerHTML='';$('setQualityStatus').textContent='';$('setQualityPools').textContent='';
+   try{
+    if(!choices.length)throw Error('目前沒有可選擇的套裝裝備。');
+    const {itemId,plane}=target();info=C.setEquipmentQualityCandidateInfo(model,{itemId,plane});
+    $('setQualityTarget').disabled=false;$('setQualityTarget').innerHTML=[1,2,3,4,5,6].map(q=>`<option value="${q}" ${q===info.quality?'selected':''}>${q}・${names[q]}</option>`).join('');
+    $('setQualityInfo').textContent=`目前品質 ${info.quality} · 等級 ${info.level}（上限 ${info.normalMax}） · 主係數 ${info.mainCoefficient} · 已選槽 ${info.selectedSlot??'無'} · 升品 ${info.verified.upgrade?'已驗證':'待驗證'} · 降品 ${info.verified.downgrade?'已驗證':'待驗證'}`;
+    $('setQualityPools').innerHTML=`<p>P原（${info.pools.origin.length}）：${esc(info.pools.origin.map(attrName).join('、'))}</p><p>P套（${info.pools.set.length}）：${esc(info.pools.set.map(attrName).join('、'))}</p><p>現有槽來源：${info.slots.map(s=>`槽 ${s.slot} ${({origin:'P原',set:'P套',both:'P原＋P套'})[s.source]}${s.selected?'（已選）':''}`).join('；')||'無'}</p>`;
+    rows();
+   }catch(e){info=null;$('setQualityTarget').innerHTML='<option value="">無法調整品質</option>';$('setQualityTarget').disabled=true;$('setQualityInfo').textContent=e.message;$('setQualityPreview').textContent='';$('setQualityApply').disabled=true;}
+  };
+  $('setQualityItem').onchange=update;$('setQualityTarget').onchange=rows;$('setQualityRemoval').onchange=preview;$('setQualityReset').onclick=update;
+  $('setQualityApply').onclick=()=>{try{const o={...target(),addedAffixes:additions(),confirmRemovedAffixes:$('setQualityRemoval').checked};perform(()=>C.applySetEquipmentQualityCandidate(model,o));}catch(e){toast(e.message,true);}};update();
+ }
  function renderPills(){
   const aptitude=$('pillAptitude')?.value||'1',old=$('pillType')?.value;
   $('pillEditor').innerHTML=`<h3>丹藥資質累積增量</h3><div class="toolbar"><select id="pillAptitude" aria-label="丹藥資質">${['力量','敏捷','智力'].map((name,i)=>`<option value="${i+1}">${name}</option>`).join('')}</select><select id="pillType" aria-label="上限依據丹藥"></select></div><p id="pillInfo" class="muted small-text" role="status"></p><div class="toolbar"><label>累積增量（1＝資質 0.1 點）<input id="pillValue" type="number" min="0" step="1"></label><button id="pillApply" class="primary small">套用丹藥增量</button></div><p class="muted small-text">直接設定累積增量，可下降或歸零，不扣丹藥；以已持有的同類丹藥及角色上限限制。只支援無結丹紀錄且資質來源可核對的角色，重生會依原版清零。</p>`;
@@ -1429,7 +1493,7 @@
   const q=$('inventorySearch').value.trim().toLowerCase(),z=$('inventoryPlane').value;
   const rows=C.listEntities(model,'inventory').filter(r=>(!z||r.z===Number(z))&&`${r.id} ${r.name} ${r.detail}`.toLowerCase().includes(q));
   paged('inventory',rows,r=>`<tr><td class="mono">#${r.id} / ${esc(read(r.id,1,r.z))}</td><td>${esc(r.name)}</td><td>${r.z===7?'背包':'裝備庫／穿戴'}</td><td>${htmlValue(read(r.id,5,r.z))} / Lv ${htmlValue(read(r.id,6,r.z))}</td><td><button class="small" data-inspect-item="${r.id}" data-plane="${r.z}">查看欄位</button></td></tr>`,'inventoryRows');
-  renderEditing('equipment');renderAffixes();renderQuality();
+  renderEditing('equipment');renderAffixes();renderQuality();renderSetQuality();
  }
  function renderAtlas(){
   const z=Number($('atlasPlane').value),plane=K.planes[z],q=$('atlasSearch').value.trim().toLowerCase();

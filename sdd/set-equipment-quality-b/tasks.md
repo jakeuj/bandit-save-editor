@@ -6,7 +6,7 @@
 
 - [x] B1. 核對並補取得原生基準：只補缺 Q／池／材料與洗練見證，保存生成／合成履歷；至少有套裝池專有 ID，未抽到維持缺案，原檔／快取雜湊不變。
 - [ ] B2. 固定生命週期副本與執行接線：建立三狀態×升降至少六類起點及覆蓋表，沿用 runner 接兩輪 IO／新 PID；不足則加副本，不編造 metadata。
-- [ ] B3. 完成候選介面與停用驗收：預覽庫別／方向、雙池、增刪槽、效果及確認重設，驗拒絕與未證明方向停用；隔離候選測試不計為正式可用驗收。
+- [x] B3. 完成候選介面與停用驗收：預覽庫別／方向、雙池、增刪槽、效果及確認重設，驗拒絕與未證明方向停用；隔離候選測試不計為正式可用驗收。
 - [ ] B4. 執行首次矩陣與生命週期分片：交易／效果、成本、洗練舊效果移除、穿卸／搬移／排序、兩輪 IO／新 PID 全部對帳；完整 manifest 結束才勾選，未命中與失敗不縮分母。
 - [ ] B5. 完成必要原版 UI 證據：依當次明確授權驗品質顯示、槽數與已選槽停用／洗練；未授權或失敗保留缺口，不開相關群組。
 - [ ] B6. 補既有套裝等級兩庫跨池證明：各自獨立原生證明與原池回歸，驗合法等級、cap、效果、IO 及品質交錯 undo／還原；此時正式入口仍不擴權。
@@ -59,3 +59,10 @@
 - 見證：W1 已取得（Q1–Q6 起點／目標生成履歷）；W2 已取得（取得／合成後全槽在 y27 原池、旗標 0；品質編輯新增尾槽的原生讀回屬 B4）；W3 已取得（z7／z9 套裝池專有 ID 洗練見證）；W4–W7 不適用於 B1（品質平移讀回、降品刪槽、品質與等級交錯、穿卸／搬移歸屬由 B2／B4／B6 取得）。
 - 缺案／界線：只洗槽 1（已選槽在尾、多槽組合與既有重複的實例屬 B4 雙池分片）；z9 只有未穿戴，穿戴者洗練屬 B2／B4。主係數固定 95+30(Q−1)，端點屬 B4 係數維度。
 - 驗證：新增 `tests/set-equipment-quality-baseline.test.cjs`（7 項，合成資料）；`npm test` 334／334；`node scripts/core-slice-report.cjs` 為「core 切片未變」。未改 src、index.html、sw.js、knowledge、verification；四品質群組維持 false，未合併任何證明。
+
+### B3（2026-10-23）
+
+- 新增獨立唯讀入口 `setEquipmentQualityCandidateEffects(m,{itemId,plane,quality,addedAffixes})`（`src/core.js`，只新增 `SaveCore` 匯出，已加入 `coreRoots.setEquipmentQuality`）：取候選資格與預覽，對前後紀錄各算單件各屬性效果（公式與 A8 oracle 分開撰寫，測試逐屬性與 `effectChange` 對拍），不寫存檔、不建交易。未改 `editingInfo`、`setEditingValue`、`resolveField`、`ordinaryEquipment`、`equipmentQuality*`、`setEquipmentLevel*`、`transaction`、`put`、`restore`、`undo`。
+- 新增 UI 卡片 `setQualityEditor`（`src/knowledge-ui.js` `renderSetQuality`、`index.html`）：只列套裝裝備；顯示庫別／方向／群組與驗證狀態、P原／P套 詞條池與每槽來源、新增尾槽的 P原 選擇與係數、刪尾槽確認、主係數與 cap、效果前後；旗標為 false 的方向停用「套用」並顯示原因；拒絕（超 cap、刪已選槽、重複、池外、係數越界、未明選）顯示 core 訊息；「重設選項與確認」清除輸入與確認。普通裝備品質卡與套裝等級介面未改動。
+- 測試：`tests/set-equipment-quality-ui.test.cjs`（9 項，真實 widget 搭 DOM adapter；旗標只在隔離知識副本開啟）與 `tests/browser/set-equipment-quality.spec.cjs`（桌面／390px，出貨旗標下可預覽、套用停用、無橫向溢位）。既有 preview／proof 測試的名稱清單同步加入新入口。`node scripts/core-slice-report.cjs`：切片未變。`npm test` 336／336、`npm run test:browser` 27／27。
+- 範圍：四群組旗標維持 false，未改 verification／catalog 旗標與進度入口；未跑原生。隔離候選測試只算 B3 候選驗收，不算正式可用驗收（B9）。

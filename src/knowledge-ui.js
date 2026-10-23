@@ -90,6 +90,49 @@
   $('qualityItem').onchange=update;$('qualityTarget').onchange=rows;$('qualityRemoval').onchange=preview;
   $('qualityApply').onclick=()=>{try{const o={...target(),addedAffixes:additions(),confirmRemovedAffixes:$('qualityRemoval').checked};perform(()=>C.setEquipmentQuality(model,o));}catch(e){toast(e.message,true);}};update();
  }
+ function renderSetQuality(){
+  const old=$('setQualityItem')?.value,names=['','凡物','優秀','精緻','絕世','傳說','神話'],sets=C.KNOWLEDGE.setEquipmentLevel?.items||{};
+  const choices=equipmentChoices().filter(v=>sets[read(v.id,1,v.z)]);
+  $('setQualityEditor').innerHTML=`<h3>套裝品質候選（隔離驗證前停用套用）</h3><div class="toolbar"><select id="setQualityItem" aria-label="套裝品質裝備">${choices.map(v=>`<option value="${v.z}:${v.id}">${esc(equipmentLabel(v))}</option>`).join('')}</select><select id="setQualityTarget" aria-label="套裝目標品質"></select></div><p id="setQualityInfo" class="muted small-text" role="status"></p><p id="setQualityStatus" class="small-text" role="status"></p><details><summary>詞條池與每槽來源</summary><div id="setQualityPools" class="small-text"></div></details><div id="setQualityAdditions"></div><div id="setQualityPreview" class="small-text" role="status"></div><label id="setQualityRemovalLabel" class="check" hidden><input id="setQualityRemoval" type="checkbox">確認移除預覽中的尾端詞條槽</label><div class="toolbar"><button id="setQualityApply" class="primary small" disabled>套用套裝品質</button><button id="setQualityReset" class="small" type="button">重設選項與確認</button></div><p class="muted small-text">新增尾槽只能用原裝備詞條池（P原），旗標為 0；降品會刪除尾槽，須先確認。主係數每級 ±30、保留槽係數每級 ±10。品質不改等級，超過目標上限須先降低套裝等級。套裝積分與額外套裝效果不隨品質改變。</p>`;
+  if(choices.some(v=>`${v.z}:${v.id}`===old))$('setQualityItem').value=old;
+  let info=null;
+  const target=()=>{const [plane,itemId]=$('setQualityItem').value.split(':').map(Number);return {plane,itemId,quality:Number($('setQualityTarget').value)};};
+  const attrName=id=>id?C.catalogName('attributes',id):'無';
+  const additions=()=>{const q=Number($('setQualityTarget').value);return Array.from({length:Math.max(0,q-(info?.quality??q))},(_,n)=>{const slot=info.quality+n;if(!$('setQualityAffix'+slot).value)throw Error('請明選新增槽 '+slot+' 的詞條。');if(!$('setQualityCoefficient'+slot).value.trim())throw Error('新增詞條係數不能空白。');return {slot,attributeId:Number($('setQualityAffix'+slot).value),coefficient:Number($('setQualityCoefficient'+slot).value)};});};
+  const preview=()=>{
+   $('setQualityApply').disabled=true;
+   try{
+    if(!info)throw Error('請選擇有效套裝裝備。');
+    const o={...target(),addedAffixes:additions()},p=C.previewSetEquipmentQualityCandidate(model,o),f=C.setEquipmentQualityCandidateEffects(model,o);
+    const dir=p.direction==='upgrade'?'升品':p.direction==='downgrade'?'降品':'未變';
+    $('setQualityStatus').textContent=p.group?`${info.plane===7?'背包':'裝備庫'} · ${dir} · 群組 ${p.group} · ${p.verified?'已通過驗證':'尚待獨立遊戲驗證，套用停用'}`:'品質未改變。';
+    $('setQualityPreview').innerHTML=`<p>品質 ${p.previousQuality}・${names[p.previousQuality]} → ${p.quality}・${names[p.quality]} · 等級 ${htmlValue(p.level)}（上限 ${htmlValue(p.previousMax)} → ${htmlValue(p.normalMax)}）<br>主係數 ${htmlValue(p.mainCoefficient.before)} → ${htmlValue(p.mainCoefficient.after)} · 已選槽 ${p.selectedSlot??'無'}</p><div class="table-wrap"><table><thead><tr><th>槽位／動作</th><th>來源</th><th>目前詞條／係數／旗標</th><th>套用後</th></tr></thead><tbody>${p.slots.map(s=>`<tr><td>${s.slot}・${({added:'新增',removed:'移除',retained:'保留'})[s.kind]}</td><td>${({origin:'P原',set:'P套',both:'P原＋P套'})[s.source]}</td><td>${esc(attrName(s.before.attributeId))} / ${htmlValue(s.before.coefficient)} / ${s.before.flag}</td><td>${esc(attrName(s.after.attributeId))} / ${htmlValue(s.after.coefficient)} / ${s.after.flag}</td></tr>`).join('')}</tbody></table></div><div class="table-wrap"><table><thead><tr><th>裝備屬性</th><th>目前</th><th>套用後</th><th>差異</th></tr></thead><tbody>${f.effects.filter(e=>e.before||e.after).map(e=>`<tr><td>${esc(e.name)}</td><td>${htmlValue(e.before)}${esc(e.unit)}</td><td>${htmlValue(e.after)}${esc(e.unit)}</td><td>${htmlValue(Math.round(e.delta*100)/100)}${e.unit==='%'?' 百分點':''}</td></tr>`).join('')}</tbody></table></div><p>${p.unchanged?'品質未改變。':f.effectUnchanged?'取整後效果不變。':''}${esc(f.setBonusNote)}</p>`;
+    $('setQualityRemovalLabel').hidden=!p.requiresRemovalConfirmation;
+    $('setQualityApply').disabled=!p.verified||p.unchanged||p.requiresRemovalConfirmation&&!$('setQualityRemoval').checked;
+   }catch(e){$('setQualityStatus').textContent='';$('setQualityPreview').textContent=e.message;$('setQualityRemovalLabel').hidden=true;}
+  };
+  const changed=()=>{$('setQualityRemoval').checked=false;preview();};
+  const rows=()=>{
+   if(!info)return;const q=Number($('setQualityTarget').value),min=10*(q-1),max=60+10*q,kept=info.slots.slice(0,Math.min(q,info.quality)-1).map(v=>v.attributeId);
+   $('setQualityRemoval').checked=false;$('setQualityRemovalLabel').hidden=q>=info.quality;
+   $('setQualityAdditions').innerHTML=Array.from({length:Math.max(0,q-info.quality)},(_,n)=>{const s=info.quality+n;return `<div class="form-card"><h4>新增詞條槽 ${s}（P原）</h4><div class="toolbar"><select id="setQualityAffix${s}" aria-label="新增槽 ${s} 詞條"><option value="">請明選詞條</option>${info.pools.origin.map(id=>`<option value="${id}" ${kept.includes(id)?'disabled':''}>${esc(attrName(id))}</option>`).join('')}</select><label>係數<input id="setQualityCoefficient${s}" aria-label="新增槽 ${s} 係數" type="number" min="${min}" max="${max}" step="0.01" value="${(min+max)/2}"></label></div></div>`;}).join('');
+   for(let s=info.quality;s<q;s++){$('setQualityAffix'+s).onchange=changed;$('setQualityCoefficient'+s).oninput=changed;}
+   preview();
+  };
+  const update=()=>{
+   info=null;$('setQualityRemoval').checked=false;$('setQualityRemovalLabel').hidden=true;$('setQualityAdditions').innerHTML='';$('setQualityStatus').textContent='';$('setQualityPools').textContent='';
+   try{
+    if(!choices.length)throw Error('目前沒有可選擇的套裝裝備。');
+    const {itemId,plane}=target();info=C.setEquipmentQualityCandidateInfo(model,{itemId,plane});
+    $('setQualityTarget').disabled=false;$('setQualityTarget').innerHTML=[1,2,3,4,5,6].map(q=>`<option value="${q}" ${q===info.quality?'selected':''}>${q}・${names[q]}</option>`).join('');
+    $('setQualityInfo').textContent=`目前品質 ${info.quality} · 等級 ${info.level}（上限 ${info.normalMax}） · 主係數 ${info.mainCoefficient} · 已選槽 ${info.selectedSlot??'無'} · 升品 ${info.verified.upgrade?'已驗證':'待驗證'} · 降品 ${info.verified.downgrade?'已驗證':'待驗證'}`;
+    $('setQualityPools').innerHTML=`<p>P原（${info.pools.origin.length}）：${esc(info.pools.origin.map(attrName).join('、'))}</p><p>P套（${info.pools.set.length}）：${esc(info.pools.set.map(attrName).join('、'))}</p><p>現有槽來源：${info.slots.map(s=>`槽 ${s.slot} ${({origin:'P原',set:'P套',both:'P原＋P套'})[s.source]}${s.selected?'（已選）':''}`).join('；')||'無'}</p>`;
+    rows();
+   }catch(e){info=null;$('setQualityTarget').innerHTML='<option value="">無法調整品質</option>';$('setQualityTarget').disabled=true;$('setQualityInfo').textContent=e.message;$('setQualityPreview').textContent='';$('setQualityApply').disabled=true;}
+  };
+  $('setQualityItem').onchange=update;$('setQualityTarget').onchange=rows;$('setQualityRemoval').onchange=preview;$('setQualityReset').onclick=update;
+  $('setQualityApply').onclick=()=>{try{const o={...target(),addedAffixes:additions(),confirmRemovedAffixes:$('setQualityRemoval').checked};perform(()=>C.applySetEquipmentQualityCandidate(model,o));}catch(e){toast(e.message,true);}};update();
+ }
  function renderPills(){
   const aptitude=$('pillAptitude')?.value||'1',old=$('pillType')?.value;
   $('pillEditor').innerHTML=`<h3>丹藥資質累積增量</h3><div class="toolbar"><select id="pillAptitude" aria-label="丹藥資質">${['力量','敏捷','智力'].map((name,i)=>`<option value="${i+1}">${name}</option>`).join('')}</select><select id="pillType" aria-label="上限依據丹藥"></select></div><p id="pillInfo" class="muted small-text" role="status"></p><div class="toolbar"><label>累積增量（1＝資質 0.1 點）<input id="pillValue" type="number" min="0" step="1"></label><button id="pillApply" class="primary small">套用丹藥增量</button></div><p class="muted small-text">直接設定累積增量，可下降或歸零，不扣丹藥；以已持有的同類丹藥及角色上限限制。只支援無結丹紀錄且資質來源可核對的角色，重生會依原版清零。</p>`;
@@ -207,7 +250,7 @@
   const q=$('inventorySearch').value.trim().toLowerCase(),z=$('inventoryPlane').value;
   const rows=C.listEntities(model,'inventory').filter(r=>(!z||r.z===Number(z))&&`${r.id} ${r.name} ${r.detail}`.toLowerCase().includes(q));
   paged('inventory',rows,r=>`<tr><td class="mono">#${r.id} / ${esc(read(r.id,1,r.z))}</td><td>${esc(r.name)}</td><td>${r.z===7?'背包':'裝備庫／穿戴'}</td><td>${htmlValue(read(r.id,5,r.z))} / Lv ${htmlValue(read(r.id,6,r.z))}</td><td><button class="small" data-inspect-item="${r.id}" data-plane="${r.z}">查看欄位</button></td></tr>`,'inventoryRows');
-  renderEditing('equipment');renderAffixes();renderQuality();
+  renderEditing('equipment');renderAffixes();renderQuality();renderSetQuality();
  }
  function renderAtlas(){
   const z=Number($('atlasPlane').value),plane=K.planes[z],q=$('atlasSearch').value.trim().toLowerCase();
