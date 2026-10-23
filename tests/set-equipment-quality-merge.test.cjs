@@ -144,6 +144,10 @@ test('the snapshot build marks its outputs undelivered; plain builds and --check
   }
  }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
+test('driver digests accept only the LF and CRLF forms of the same function source',()=>{
+ const {driverDigests}=require('../scripts/merge-set-equipment-quality-proof.cjs'),f=new Function('a','return a+1'),g=new Function('a','return a+2');
+ const [a,b]=driverDigests(f);assert.notEqual(a,b);assert.ok(!driverDigests(g).includes(a)&&!driverDigests(g).includes(b));
+});
 test('the shipped catalog keeps all six groups closed and the merge tool refuses to write on main',()=>{
  for(const g of [...P.groups,...CP.groups])assert.equal(k.verification[g],false,g);
  assert.match(fs.readFileSync(path.join(root,'scripts/merge-set-equipment-quality-proof.cjs'),'utf8'),/只能在不推送的快照分支寫入開閘結果/);

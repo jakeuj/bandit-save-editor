@@ -12,6 +12,9 @@ const {hash}=D,root=path.resolve(__dirname,'..'),lf=s=>s.replace(/\r\n/g,'\n');
 const sha=file=>crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 const codeHash=file=>hash(lf(fs.readFileSync(path.join(__dirname,file),'utf8')));
 const read=file=>JSON.parse(fs.readFileSync(file,'utf8'));
+// Driver digests were taken from Function#toString without normalizing line endings, so a CRLF and an LF checkout of the same
+// committed source give two digests. Both are accepted for exactly that content; anything else still differs.
+const driverDigests=fn=>{const t=lf(fn.toString());return [hash(t),hash(t.replace(/\n/g,'\r\n'))];};
 const lines=file=>fs.readFileSync(file,'utf8').split('\n').filter(Boolean).map(l=>JSON.parse(l));
 // SHA-256 of the raw result files exactly as recorded in sdd/set-equipment-quality-b/tasks.md (B4, B7 rerun of B6).
 const pinned={
@@ -30,7 +33,8 @@ function loadB4(dir,k,source){
  const binding=read(path.join(dir,'binding.json')),matrixRun=read(path.join(dir,'binding-matrix-run.json')),a10=read(path.join(dir,'a10-results.json'));
  // Bound tools: everything but the core equals the current files; the core is the pinned pre-B7 one.
  const tools=X.toolBinding(source);
- for(const key of Object.keys(tools))if(key!=='coreHash')assert.equal(binding.tools[key],tools[key],'B4 綁定工具與目前不符：'+key);
+ for(const key of Object.keys(tools))if(key==='driverHash')assert.ok(driverDigests(X.matrixDriver).includes(binding.tools[key]),'B4 綁定工具與目前不符：'+key);
+ else if(key!=='coreHash')assert.equal(binding.tools[key],tools[key],'B4 綁定工具與目前不符：'+key);
  assert.equal(binding.tools.coreHash,E.B4.from.coreHash,'B4 的 core 不是等價紀錄釘住的舊 core');
  assert.equal(binding.a10ManifestHash,E.B4.from.manifestHash,'B4 的 A10 manifest 與等價紀錄不符');
  assert.equal(binding.manifestHash,E.oldManifestHash(k,source,binding.inputs),'B4 真實輸入 manifest 無法由反向修補重現');
@@ -67,7 +71,8 @@ function loadB6(dir,k,source){
  for(const [file,want] of Object.entries(pinned.b6.files))assert.equal(sha(path.join(dir,file)),want,'B6 結果檔雜湊與紀錄不符：'+file);
  const a10=read(path.join(dir,'a10-results.json')),res=read(path.join(dir,'b6-results.json')),B6=require('./verify-set-equipment-level-cross-pool.cjs');
  const manifest=M.createManifest(k,source,Object.fromEntries(['baselineHash','runtimeHash','sourceManifestHash','runtimeManifestHash'].map(x=>[x,'0'.repeat(64)])));
- const want={coreHash:P.textHash(source),crossPoolGroups:[...D.crossPoolGroups],runnerHash:codeHash('verify-set-equipment-level-cross-pool.cjs'),driverHash:hash(B6.crossPoolDriver.toString()),
+ const driver=driverDigests(B6.crossPoolDriver);assert.ok(driver.includes(res.binding.driverHash),'B6 driver 與目前不符');
+ const want={coreHash:P.textHash(source),crossPoolGroups:[...D.crossPoolGroups],runnerHash:codeHash('verify-set-equipment-level-cross-pool.cjs'),driverHash:res.binding.driverHash,
   matrixHash:codeHash('set-equipment-quality-matrix.cjs'),lifecycleHash:codeHash('verify-set-equipment-quality-migration-lifecycle.cjs'),levelOracleHash:codeHash('set-equipment-level-oracle.cjs'),manifestHash:manifest.manifestHash,fingerprints:{...k.fingerprints,...k.batch2Fingerprints}};
  assert.deepEqual(res.binding,want,'B6 綁定與目前 core／工具不符');assert.deepEqual(a10.binding,want);
  assert.equal(a10.manifestHash,manifest.manifestHash);assert.equal(a10.resultsHash,pinned.b6.files['b6-results.json']);assert.ok(a10.complete===true&&a10.missing.length===0);
@@ -161,4 +166,4 @@ function run(argv=process.argv.slice(2)){
  return report;
 }
 if(require.main===module){const r=run();console.log(JSON.stringify(Object.fromEntries(Object.entries(r.groups).map(([g,v])=>[g,{...v.coverage,checks:undefined,allChecks:Object.values(v.coverage.checks).every(Boolean)}])),null,1));}
-module.exports={pinned,loadB4,loadB6,lifecycleIo,b6Io,qualityResults,crossPoolResults,coverage,flip,run};
+module.exports={driverDigests,pinned,loadB4,loadB6,lifecycleIo,b6Io,qualityResults,crossPoolResults,coverage,flip,run};
