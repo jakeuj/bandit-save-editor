@@ -1,6 +1,6 @@
 # 套裝品質 A 任務
 
-狀態：目前主線；A1–A9 已授權並完成（2026-10-23），A10 待明確授權。[子提案](proposal.md)／[母規格與全案驗收](../set-equipment-quality/tasks.md)／[進度入口](../../docs/research/next-version-plan.md)。
+狀態：目前主線；A1–A10 已授權並完成（2026-10-23），A 階段交接（Haiku）待執行；B 階段需逐段明確授權。[子提案](proposal.md)／[母規格與全案驗收](../set-equipment-quality/tasks.md)／[進度入口](../../docs/research/next-version-plan.md)。
 
 每項工程操作目標 30–60 分鐘；超時先再拆子 SDD。自動矩陣執行另記分片／checkpoint，完成全部分母才可勾選。
 
@@ -13,7 +13,7 @@
 - [x] A7. 建立獨立交易與生成可達性預期：不讀被測 core 預覽，明列來源生成規則與原生見證待辦；不杜撰原生升品函式或偽造生成結果。
 - [x] A8. 建立獨立效果及生命週期預期：涵蓋攻擊 L×Q、取整、主副重疊、舊效果移除、S／N，列兩輪 IO、搬移 50 欄及尾十欄斷言。
 - [x] A9. 固定 manifest 與分片契約：列 19,440 基礎案、至少 864 組效果及母規格全部額外維度，拆四群組分母、合法／拒絕／未知／不適用，checkpoint 綁精確輸入。
-- [ ] A10. 接線拒絕未證明的 proof 流程：requirements／suite／migration／摘要綁定測試拒絕漏案、重複、錯方向、過期、缺 IO／UI 及僅代表遷移；四群組關閉，交付 B 準備清單。
+- [x] A10. 接線拒絕未證明的 proof 流程：requirements／suite／migration／摘要綁定測試拒絕漏案、重複、錯方向、過期、缺 IO／UI 及僅代表遷移；四群組關閉，交付 B 準備清單。
 
 ## 分派
 
@@ -99,3 +99,22 @@
 - 四群組分母（總數／可執行）：z7 升 18,004／15,053、z7 降 18,004／15,039、z9 升 22,043／18,846、z9 降 22,043／18,817；`denominators` 逐群組逐類型逐分類可對帳，`dimensions` 對應母規格矩陣層次且每層至少一個可執行案例。
 - 分片 `shard`（預設只含可執行，依群組／類型過濾，輪流分配且併集恰好一次）、`checkpoint`／`validateCheckpoint`（綁 manifest 摘要、輸入綁定、分片條件與案例 ID 清單）、`emptyProgress`／`recordResult`／`validateProgress`／`summary`（只收合成結果，拒絕原生標示、重複、未知、不適用、改標；摘要逐群組回報且 `nativeComplete`、四群組 `opened` 皆 false）。binding 綁 15 指紋、品質／等級規則摘要、核心雜湊、資料腳本、兩個 oracle 與本腳本、基準與 runtime 雜湊。
 - 新增 `tests/set-equipment-quality-scenarios.test.cjs`（11 項）。未新增 requirements／suite／migration 註冊（A10）；未改 src／catalog／index.html／sw.js／verification，沒有原生執行。
+
+### A10（2026-10-23）
+
+- 新增 `scripts/set-equipment-quality-proof.cjs`：四群組各自的首次證明契約。`expected` 以固定 manifest（輸入雜湊不影響案例）重算每群組必過案例＝自己的可執行案例＋同庫別的等級回歸補證；`validateResults` 逐案核對：漏案、重複、錯庫／錯方向、不適用或未知案例、過期案例摘要、未通過、非原生標記一律拒絕，並要求 manifest、A7／A8 oracle 摘要、外部輸入雜湊、兩輪 IO（新 PID、搬移 50 欄、尾十欄）與 UI 驗收（桌面、390px、下載重載、file、PWA）齊備。`recordProblem` 綁 15 指紋、品質／等級規則、核心、四支腳本與 manifest／案例清單雜湊，過期即拒絕。`mergeProof` 只收逐案原生結果，只有 checks=true、代表遷移或缺案例的輸入全部拒絕，且只開合併的那一群組。
+- 接線：`verification-requirements`（section `setEquipmentQuality`）、`verification-suite`（family，`initialProofRequired`）、`migration-analysis`（dependencies／regions／`coreRoots` 宣告 `setEquipmentQualityCandidateInfo`、`previewSetEquipmentQualityCandidate`、`applySetEquipmentQualityCandidate`）、`migration-proof`（規則摘要、`qualityInitialVerification` 的保存／驗證／合併）、`verify-migration`（首次證明檢查，品質群組不可由代表遷移開啟）、`build-editor` 閘門；catalog 與 `extract-game` 的四個旗標登記為 false。`verify-set-equipment-quality*.cjs` 為占位腳本，執行即失敗，不產生任何結果（原生 runner 屬 B 階段）。沒有代表遷移副本。
+- `Core.slices` 容忍凍結舊 core 缺少 family 新入口（記為 absent，family 的根全缺仍拒絕），使舊版 fixture 測試仍可切片；`tests/core-slice-roots.test.cjs` 另核對每個宣告的根都存在於目前 SaveCore。既有 family 的切片雜湊逐字不變。
+- 舊 A 階段測試中「四群組未註冊」的斷言改為「已註冊且為 false」；版本遷移測試排除四個無代表副本的關閉群組。
+- `node scripts/core-slice-report.cjs`：core 切片未變。對 v2.11 證明快照逐 family 比對：既有 11 個 family 全部 same，新增 `setEquipmentQuality` 為 NEW（快照沒有它的基準；B 階段開閘前需補，目前退回整份 core 綁定）。未改 `src/core.js`。
+- `tests/set-equipment-quality-proof.test.cjs`（10 項）；`npm test` 327／327、`npm run test:browser` 25／25 通過。未跑原生；四品質群組旗標與 verification 皆維持 false，未合併任何原生證據。
+
+### B 準備清單（A 階段交接用）
+
+1. 授權：B 階段逐段需使用者明確授權；原生遊戲同時只能一段在跑，B5 另需 computer use 授權。
+2. 輸入：`.local/game-sources.json` 的 `preferredDevelopmentSourceId`（`v1.0.11.2-full`）完整來源與獨立 runtime，核對逐檔 manifest 與 15 指紋；A9 manifest 的外部輸入（基準、runtime、來源／runtime manifest 雜湊）必須在 B1 取得後填入，proof 要求這四個雜湊。
+3. 缺口：目前沒有品質變更後的原生基準；套裝池專有 ID 的取得見證、跨池洗練見證、品質後等級回歸皆為 0（B1、B6）。生成／洗練見證 W1–W7 全為 pending-native。
+4. 待實作：`verify-set-equipment-quality.cjs` 與 `verify-set-equipment-quality-migration-lifecycle.cjs` 現為失敗占位；B2／B4 換成真 runner。A10 契約要求逐案 `{id,caseHash,passed,nativeCompared:true}`、兩輪 IO、UI 五項與兩支 oracle 雜湊。
+5. 開閘前：補 `setEquipmentQuality` family 的 core 切片基準；核對最終 core 對既有已開放群組（含技藝上限與套裝等級）的相依，只重證切片改變者（B7）；B3 正式入口與 UI 另有 core／UI 變更時重跑切片報告。
+6. 界線：任一群組缺完整分母或 IO／UI 證據就保持關閉；代表遷移與 checks=true 不能首次開放；不得縮分母或只換摘要。
+

@@ -87,8 +87,12 @@ function slices(source,roots){
  const index=sliceIndex(source);if(index.problem)return null;
  const hashes={};
  for(const family of Object.keys(roots).sort()){
-  const seen=new Set(),queue=[...index.preludeRefs],used=[...new Set(roots[family])].sort().map(name=>{
-   if(!index.exports.has(name))throw Error('core 切片根不在 SaveCore 匯出：'+family+':'+name);
+  const names=[...new Set(roots[family])].sort();
+  // A family may name entry points that a core predating them does not export yet; those are recorded as absent (so the
+  // slice changes when they appear). A family none of whose roots exist is a typo and still refused.
+  if(!names.some(name=>index.exports.has(name)))throw Error('core 切片根不在 SaveCore 匯出：'+family+':'+names[0]);
+  const seen=new Set(),queue=[...index.preludeRefs],used=names.map(name=>{
+   if(!index.exports.has(name))return [name,null];
    queue.push(index.exports.get(name));return [name,index.exports.get(name)];
   });
   while(queue.length){const name=queue.pop();if(seen.has(name))continue;seen.add(name);queue.push(...index.refs.get(name));}

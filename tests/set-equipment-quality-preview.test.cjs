@@ -29,7 +29,7 @@ test('four plane×direction previews dispatch to their own closed group and neve
   const prefix=plane===7?'backpackSetEquipmentQuality':'setEquipmentQuality';
   assert.equal(p.kind,'setEquipmentQualityCandidatePreview');assert.equal(p.candidate,true);
   assert.equal(p.direction,direction);assert.equal(p.group,prefix+(direction==='upgrade'?'Upgrade':'Downgrade'));assert.equal(p.verified,false);
-  assert.equal(f.k.verification[p.group],undefined);
+  assert.equal(f.k.verification[p.group],false);
   for(const c of p.changes){assert.equal(c.coordinate.x,f.id);assert.equal(c.coordinate.z,plane);assert.ok(allowedY.has(c.coordinate.y),`y${c.coordinate.y}`);}
   untouched(f);
  }
@@ -110,5 +110,5 @@ test('formal entries still reject the candidate range and only candidate entries
  }
  const f=fixture();
  assert.deepEqual(Object.keys(f.C).filter(k=>/SetEquipmentQuality|setEquipmentQualityCandidate/i.test(k)&&k!=='setEquipmentQuality').sort(),['applySetEquipmentQualityCandidate','previewSetEquipmentQualityCandidate','setEquipmentQualityCandidateInfo']);
- for(const g of D.groups)assert.equal(f.k.verification[g],undefined);
+ for(const g of D.groups)assert.equal(f.k.verification[g],false);
 });

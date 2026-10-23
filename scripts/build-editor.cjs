@@ -18,6 +18,7 @@ if(Object.values(knowledge.verification).some(Boolean)){
   if(Object.hasOwn(proof,'schemaVersion')&&proof.schemaVersion!==2)throw Error('不支援的驗證證明格式');
   const setProblem=require('./set-equipment-level-proof.cjs').problem(knowledge,proof,fs.readFileSync(path.join(root,'src/core.js'),'utf8'));if(setProblem)throw Error(setProblem);
   const treasureProblem=require('./treasure-level-proof.cjs').problem(knowledge,proof,fs.readFileSync(path.join(root,'src/core.js'),'utf8'));if(treasureProblem)throw Error(treasureProblem);
+  const qualityProblem=require('./set-equipment-quality-proof.cjs').problem(knowledge,proof,fs.readFileSync(path.join(root,'src/core.js'),'utf8'));if(qualityProblem)throw Error(qualityProblem);
   if(proof.schemaVersion===2){
     const issue=require('./migration-proof.cjs').problem(knowledge,proof,fs.readFileSync(path.join(root,'src/core.js'),'utf8'));
     if(issue)throw Error(issue);

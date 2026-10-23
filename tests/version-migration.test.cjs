@@ -134,7 +134,9 @@ test('representative scenarios replay on the base save and together cover every 
   const saveText = JSON.stringify({c2array: true, size: [2501, 60, 22], data});
   const copies = buildScenarios({catalog, saveText});
   const covered = copies.flatMap(c => c.groups || S.families[c.family].groups);
-  assert.deepEqual([...new Set(covered)].sort(), Object.keys(catalog.verification).sort());
+  // The four set-equipment quality groups are closed and have no representative copies: only an independent first proof may open them.
+  const closedQuality = require('../scripts/set-equipment-quality-data.cjs').groups;
+  assert.deepEqual([...new Set(covered)].sort(), Object.keys(catalog.verification).filter(g => !closedQuality.includes(g)).sort());
   const byName = Object.fromEntries(copies.map(c => [c.name, c]));
   const level = (c, x, y, z) => c.scenario.baseline.filter(([a, b, d]) => a === x && b === y && d === z).at(-1)?.[3];
   assert.equal(level(byName['advanced-normal'], 4, 5, 1), 1);
@@ -286,7 +288,7 @@ test('write-back opens proven groups on a new build, compares on the proven buil
 
     const written = M.writeBack({dir, catalog: next, proof, results: results('V9.9.9'), steamBuild: '26200000'});
     assert.equal(written.action, 'written', written.reason);
-    assert.deepEqual(written.closed.sort(), [...R.sections.equipmentQuality.groups,'randomCharacterSkillCaps','randomCharacterTalents','backpackSetEquipmentLevel','setEquipmentLevel','backpackTreasureLevel','treasureLevel'].sort());
+    assert.deepEqual(written.closed.sort(), [...R.sections.equipmentQuality.groups,'randomCharacterSkillCaps','randomCharacterTalents','backpackSetEquipmentLevel','setEquipmentLevel','backpackTreasureLevel','treasureLevel',...require('../scripts/set-equipment-quality-data.cjs').groups].sort());
     const gated = JSON.parse(fs.readFileSync(files[0], 'utf8')), saved = JSON.parse(fs.readFileSync(files[1], 'utf8'));
     assert.equal(gated.verification.equipmentAffixInitialSelection, true);
     assert.equal(gated.verification.equipmentQualityUpgrade, false);

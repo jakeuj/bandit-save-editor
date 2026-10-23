@@ -6,7 +6,7 @@ const scripts=path.join(__dirname,'../scripts'),read=f=>fs.readFileSync(path.joi
 const used=text=>new Set([...text.matchAll(/\b(?:C|SaveCore)\.([A-Za-z_]\w*)\b/g)].map(m=>m[1]));
 const union=new Set(Object.values(A.coreRoots).flat());
 // Family modules loaded on the Node side besides the suite's oracle/lifecycle scripts.
-const extra={setEquipmentLevel:['set-level-migration-scenarios.cjs'],treasureLevel:['treasure-level-migration-scenarios.cjs'],randomCharacterTalents:['random-character-talents-scenarios.cjs','random-character-talents-proof.cjs'],randomCharacterSkillCaps:['random-character-skill-caps-scenarios.cjs','random-character-skill-caps-proof.cjs'],randomCharacterGrowth:['random-character-growth-scenarios.cjs','random-character-growth-proof.cjs']};
+const extra={setEquipmentLevel:['set-level-migration-scenarios.cjs'],treasureLevel:['treasure-level-migration-scenarios.cjs'],setEquipmentQuality:['set-equipment-quality-scenarios.cjs','set-equipment-quality-proof.cjs'],randomCharacterTalents:['random-character-talents-scenarios.cjs','random-character-talents-proof.cjs'],randomCharacterSkillCaps:['random-character-skill-caps-scenarios.cjs','random-character-skill-caps-proof.cjs'],randomCharacterGrowth:['random-character-growth-scenarios.cjs','random-character-growth-proof.cjs']};
 
 test('every migration family declares roots, and the current core slices with them',()=>{
  assert.deepEqual(Object.keys(A.coreRoots).sort(),Object.keys(S.families).sort());
@@ -14,6 +14,9 @@ test('every migration family declares roots, and the current core slices with th
  const table=Core.slices(fs.readFileSync(path.join(__dirname,'../src/core.js'),'utf8'),A.coreRoots);
  assert.ok(table,'src/core.js 必須可切片；否則所有群組退回整份 core 綁定');
  assert.deepEqual(Object.keys(table.hashes).sort(),Object.keys(A.coreRoots).sort());
+ // Slicing tolerates roots a legacy core lacks, so a typo would go unnoticed: every declared root must exist in the current core.
+ const exported=Object.keys(require('../scripts/verify-game.cjs').loadCore(require('../knowledge/catalog.json')));
+ for(const [family,roots] of Object.entries(A.coreRoots))for(const name of roots)assert.ok(exported.includes(name),family+': '+name+' 不在目前 SaveCore');
 });
 test('scenario operations and batch requests of every representative copy are roots of its family',()=>{
  const {buildScenarios}=require('../scripts/migration-scenarios.cjs'),catalog=require('../knowledge/catalog.json');

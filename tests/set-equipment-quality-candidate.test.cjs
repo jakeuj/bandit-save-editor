@@ -94,7 +94,7 @@ test('ordinary, set-level and treasure-level permissions are unchanged and rejec
 });
 test('candidate entry is read-only and all four quality groups remain closed',()=>{
  const f=fixture({affixes:[setOnly[0],P原[1]],flags:{1:1}});
- for(const g of D.groups)assert.equal(f.k.verification[g],undefined);
+ for(const g of D.groups)assert.equal(f.k.verification[g],false);
  const before=f.C.serialize(f.model);for(let n=0;n<3;n++)info(f);assert.equal(f.C.serialize(f.model),before);untouched(f);
  const k=structuredClone(catalog);k.verification.setEquipmentQualityUpgrade=true;assert.throws(()=>D.requireClosed(k),/首次證明/);
 });

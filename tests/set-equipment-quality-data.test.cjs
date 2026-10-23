@@ -15,7 +15,7 @@ test('quality rules reconstruct 216 pools and Q1-Q10 dependency digests; four gr
  assert.equal(Object.keys(data.pools).length,216);assert.deepEqual(Object.keys(data.dependencies),['Q1','Q2','Q3','Q4','Q5','Q6','Q7','Q8','Q9','Q10']);
  assert.deepEqual(D.sourceSids,[...new Set(Object.values(D.dependencies).flatMap(d=>d.sids))]);
  assert.equal(data.quality.mainBase+data.quality.mainStep*5,230);
- assert.deepEqual(D.groups.map(g=>k.verification[g]),[undefined,undefined,undefined,undefined]);D.requireClosed(k);
+ assert.deepEqual(D.groups.map(g=>k.verification[g]),[false,false,false,false]);D.requireClosed(k);
  const open=structuredClone(k);open.verification.setEquipmentQualityUpgrade=true;assert.throws(()=>D.requireClosed(open),/首次證明/);
 });
 test('missing sources, changed events and changed templates fail closed',()=>{
