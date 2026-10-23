@@ -66022,6 +66022,7 @@
     "equipmentAffixCoefficient": true,
     "pillAptitudeBonus": true,
     "pillAptitudeBonusDecimal": true,
+    "pillAptitudeBonusAscended": true,
     "relicAttributes": true,
     "names": true,
     "characterExperience": true,

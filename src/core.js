@@ -668,21 +668,66 @@
   }
   return null;
  }
- function characterAptitudeSource(m,characterId,aptitude,baseRaw){
+ // Ascended pills (pillAptitudeBonusAscended): 角色资质上限倍率 is 1.5 plus z17[z16[c,2k],15] for k=1..y50. 内丹属性计算 only
+ // counts the stored inner pills' wp main attributes, and no V1.0.11.2 template, affix or set effect is 104–106, so A stays
+ // raw/10 plus talents; such an attribute is rejected instead of modelled.
+ const ascendedPills=()=>!!KNOWLEDGE.verification.pillAptitudeBonusAscended;
+ const aptitudeAttribute=id=>id>=104&&id<=106;
+ // 结丹资质提升系数(品阶 q, 渡劫等阶 k), which 渡劫结束 writes to z17 y15–17 of the k-th stored inner pill.
+ const ascensionCoefficient=(quality,round)=>Math.round(100*(Math.pow(1.2,round-1)*(0.4+((round+quality)-2)*0.2)))/100;
+ function ascensionRecord(m,characterId){
+  const count=get(m,C(characterId,50,2)),rows=new Set(),templates=new Set(),records=[];let sum=0;
+  if(!Number.isSafeInteger(count)||count<0||count>8)throw Error('結丹次數須為原版 0–8。');
+  for(let k=1;k<=8;k++){
+   const quality=get(m,C(characterId,2*k-1,16)),row=get(m,C(characterId,2*k,16));
+   if(k>count){if(quality!==0||row!==0)throw Error('結丹次數以外的結丹紀錄仍有資料。');continue;}
+   if(!Number.isSafeInteger(quality)||quality<1||quality>9)throw Error('結丹品質須為原版 1–9。');
+   if(!Number.isSafeInteger(row)||row<1||row>=m.original.size[0]||rows.has(row))throw Error('入體內丹列號越界或重複。');
+   const templateId=get(m,C(row,1,17)),item=catalogMaps.items.get(templateId),rules=KNOWLEDGE.batch2Data.items[templateId],coefficient=ascensionCoefficient(quality,k);
+   if(!item||item.kind!=='内丹'||!rules||templates.has(templateId))throw Error('入體內丹範本不符或重複。');
+   if(get(m,C(row,7,17))!==characterId)throw Error('入體內丹 owner 與角色不符。');
+   if([9,10,11].some((y,i)=>get(m,C(row,y,17))!==107+i)||[15,16,17].some(y=>get(m,C(row,y,17))!==coefficient))throw Error('入體內丹的資質上限詞條與原版結丹係數不符。');
+   if(rules.mainAttributes.some(aptitudeAttribute))throw Error('入體內丹的資質加成尚未涵蓋。');
+   rows.add(row);templates.add(templateId);sum+=coefficient;records.push({round:k,quality,row,templateId,coefficient});
+  }
+  // Native 角色重生 clears only the first z17 row it owns (删除角色内丹数据 never resets 次数), so later stored pills stay as
+  // unreferenced rows; nothing reads them through z16, so they do not change A or M and are not rejected.
+  return {count,multiplier:1.5+sum,records};
+ }
+ // 装备属性计算 reads every worn z9 row's wp main attributes, affix ids y9–14 and tz set effects; none may be an aptitude.
+ function aptitudeNeutralEquipment(m,characterId){
+  const worn=[];
+  for(let slot=1;slot<=6;slot++){
+   const itemId=get(m,C(characterId,15+slot,2));if(itemId===0)continue;
+   if(!Number.isSafeInteger(itemId)||itemId<1||itemId>=m.original.size[0])throw Error('穿戴裝備列號越界。');
+   const templateId=get(m,C(itemId,1,9)),item=catalogMaps.items.get(templateId),rules=KNOWLEDGE.batch2Data.items[templateId];
+   if(get(m,C(itemId,7,9))!==characterId||!item||item.slot!==slot||!rules)throw Error('穿戴裝備與角色或部位不符。');
+   const set=rules.setLink>0?KNOWLEDGE.setEquipmentLevel?.sets?.[rules.setLink]:null;
+   if(rules.setLink>0&&!set)throw Error('套裝效果尚未辨識。');
+   if(rules.mainAttributes.some(aptitudeAttribute)||Array.from({length:6},(_,i)=>get(m,C(itemId,9+i,9))).some(aptitudeAttribute)||set?.effects.some(e=>aptitudeAttribute(e.attributeId)))throw Error('穿戴裝備的資質加成尚未涵蓋。');
+   worn.push(itemId);
+  }
+  for(let i=1;i<m.original.size[0];i++)if(get(m,C(i,7,9))===characterId&&get(m,C(i,0,9))>0&&!worn.includes(i))throw Error('有 owner 指向角色但未穿戴的裝備。');
+ }
+ function characterAptitudeSource(m,characterId,aptitude,baseRaw,ascended=false){
   if(!activeCharacter(m,characterId)||get(m,C(characterId,0,2))!==characterId)throw Error('找不到有效角色。');
   const templateId=get(m,C(characterId,2,2));
   if(!Number.isSafeInteger(templateId)||templateId<0)throw Error('角色範本尚未辨識。');
   const template=templateId===0?{base:[10,11,12].map(y=>get(m,C(characterId,y,2))),talents:[1,2,3].map(y=>get(m,C(characterId,y,12))),talentLevels:[21,22,23].map(y=>get(m,C(characterId,y,12)))}:KNOWLEDGE.batch2Data?.characters[templateId];
   if(!template||!template.base.every(v=>Number.isSafeInteger(v)&&v>0))throw Error('角色範本或基礎資質尚未辨識。');
-  if(get(m,C(characterId,50,2))!==0||Array.from({length:16},(_,i)=>get(m,C(characterId,i+1,16))).some(v=>v!==0))throw Error('目前只支援無結丹及重生階段紀錄的角色。');
+  const ascension=ascended?ascensionRecord(m,characterId):null;
+  if(!ascended&&(get(m,C(characterId,50,2))!==0||Array.from({length:16},(_,i)=>get(m,C(characterId,i+1,16))).some(v=>v!==0)))throw Error('目前只支援無結丹及重生階段紀錄的角色。');
   for(let i=0;i<3;i++)if(get(m,C(characterId,10+i,2))!==template.base[i]||get(m,C(characterId,1+i,12))!==template.talents[i]||get(m,C(characterId,21+i,12))!==template.talentLevels[i])throw Error('角色基礎資質或天賦與載入範本不一致，請先回遊戲存檔。');
-  for(let slot=1;slot<=6;slot++){
-   const itemId=get(m,C(characterId,15+slot,2));if(itemId===0)continue;
-   const equipment=ordinaryEquipment(m,itemId);
-   if(get(m,C(itemId,7,9))!==characterId||catalogMaps.items.get(get(m,C(itemId,1,9))).slot!==slot||equipment.rules.mainAttributes.some(id=>id>=104&&id<=106))throw Error('穿戴裝備的資質加成尚未涵蓋。');
+  if(ascended)aptitudeNeutralEquipment(m,characterId);
+  else{
+   for(let slot=1;slot<=6;slot++){
+    const itemId=get(m,C(characterId,15+slot,2));if(itemId===0)continue;
+    const equipment=ordinaryEquipment(m,itemId);
+    if(get(m,C(itemId,7,9))!==characterId||catalogMaps.items.get(get(m,C(itemId,1,9))).slot!==slot||equipment.rules.mainAttributes.some(id=>id>=104&&id<=106))throw Error('穿戴裝備的資質加成尚未涵蓋。');
+   }
+   // Also catch an orphan owner which is absent from the character's slot array.
+   for(let i=1;i<m.original.size[0];i++)if(get(m,C(i,7,9))===characterId&&get(m,C(i,0,9))>0)ordinaryEquipment(m,i);
   }
-  // Also catch an orphan owner which is absent from the character's slot array.
-  for(let i=1;i<m.original.size[0];i++)if(get(m,C(i,7,9))===characterId&&get(m,C(i,0,9))>0)ordinaryEquipment(m,i);
   let base=(baseRaw||template.base)[aptitude-1]/10;
   for(let i=0;i<3;i++){
    const id=template.talents[i],level=template.talentLevels[i];if(id===0&&level===0)continue;
@@ -690,7 +735,7 @@
    if(!talent||!Number.isSafeInteger(level)||level<0)throw Error('天賦資料不符。');
    for(let k=0;k<3;k++)if(talent.attributes[k]===103+aptitude)base+=level*talent.coefficients[k]/10;
   }
-  return {base,template};
+  return {base,template,ascension};
  }
  function randomCharacterGrowthInfo(m,{characterId}){
   const reasons=[],quality=Number.isSafeInteger(characterId)&&exists(m.original,C(characterId,49,2))?get(m,C(characterId,49,2)):undefined;
@@ -743,13 +788,15 @@
  function assertPillBonusReadable(bonus){if(!pillBonusReadable(bonus))throw Error(decimalPills()?'丹藥增量須為非負有限數值。':'丹藥增量須為非負整數；既有小數增量保持唯讀。');}
  function pillInfo(m,characterId,aptitude,pillId){
   if(!Number.isInteger(aptitude)||aptitude<1||aptitude>3)throw Error('無效的資質類型。');
-  const {base}=characterAptitudeSource(m,characterId,aptitude);
+  const ascended=ascendedPills(),{base,ascension}=characterAptitudeSource(m,characterId,aptitude,undefined,ascended);
   if(!Number.isSafeInteger(pillId)||pillId<1||pillId>=m.original.size[0])throw Error('無效的丹藥編號。');
   const pill=KNOWLEDGE.batch2Data.pills[pillId];
   if(!pill||pill.aptitude!==aptitude||!Number.isSafeInteger(get(m,C(pillId,6,0)))||get(m,C(pillId,6,0))<1)throw Error('請選擇已持有的對應資質丹藥作為上限依據。');
-  const decimal=decimalPills(),cap=Math.round(100*base*1.5)/100,room=Math.min(cap,pill.cap)-base,max=decimal?Math.floor(room*100+1e-6)/10:Math.floor(room*10+1e-8),coordinate=C(characterId,12+aptitude,2),current=get(m,coordinate);
+  // 角色资质上限 rounds 100×(A×M); the flag-off path keeps the v2.2 product order for M=1.5.
+  const multiplier=ascension?ascension.multiplier:1.5,cap=ascension?Math.round(100*(base*multiplier))/100:Math.round(100*base*1.5)/100;
+  const decimal=decimalPills(),room=Math.min(cap,pill.cap)-base,max=decimal?Math.floor(room*100+1e-6)/10:Math.floor(room*10+1e-8),coordinate=C(characterId,12+aptitude,2),current=get(m,coordinate);
   if(!Number.isFinite(base)||base<=0||!Number.isFinite(max)||max<0||!pillBonusReadable(current))throw Error(decimal?'現有增量或資質上限尚未涵蓋。':'現有增量或資質上限尚未涵蓋；小數原始增量保持唯讀。');
-  return {characterId,aptitude,pillId,coordinate,current,display:pillGrid(current),step:decimal?0.1:1,decimal,min:0,max,base,cap,pillCap:pill.cap,total:Math.round(100*(base+current/10))/100,name:aptitudeNames[aptitude-1],verified:!!KNOWLEDGE.verification.pillAptitudeBonus};
+  return {characterId,aptitude,pillId,coordinate,current,display:pillGrid(current),step:decimal?0.1:1,decimal,min:0,max,base,cap,multiplier,ascensions:ascension?.count??0,pillCap:pill.cap,total:Math.round(100*(base+current/10))/100,name:aptitudeNames[aptitude-1],verified:!!KNOWLEDGE.verification.pillAptitudeBonus};
  }
  function setPillAptitudeBonus(m,{characterId,aptitude,pillId,bonus,advanced=false}){
   if(advanced!==false)throw Error('丹藥增量尚未開放超限模式。');

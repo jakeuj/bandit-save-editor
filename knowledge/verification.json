@@ -52,6 +52,7 @@
     "equipmentAffixCoefficient": true,
     "pillAptitudeBonus": true,
     "pillAptitudeBonusDecimal": true,
+    "pillAptitudeBonusAscended": true,
     "names": true,
     "characterExperience": true,
     "professionExperience": true,
@@ -65,6 +66,22 @@
     "relicAttributes": true
   },
   "lightweight": {
+    "pillAptitudeBonusAscended": {
+      "date": "2026-10-24",
+      "gameVersion": "V1.0.11.2",
+      "flow": "docs/maintenance/lightweight.md",
+      "smoke": "verify-native-lifecycle.cjs ascend 先在隔離副本原生做出結丹角色（获得物品→穿戴→渡劫结束 兩次，另穿寶物），存讀後當基準；再 verify-game.cjs 編輯、雲存檔載入、原版存檔、新 PID 讀回，原生服藥與重生",
+      "cases": [
+        "角色 8（範本 0）結丹 2 次：q3 係數 0.8、q5 係數 1.68，原生倍率 3.98；編輯器上限 13.93／12.74／11.14 與原生 角色资质上限 相同；穿寶物內丹草",
+        "力量 17.5→104.3（端點，總資質＝上限）、敏捷 16→60.7、智力 14→83.3（端點前一步），兩輪存讀一致",
+        "原生服藥：力量端點不消耗；敏捷 60.7→92.7；智力 83.3→83.4（原生 clamp 端點＝編輯器上限）",
+        "原生重生：B、y50、z16 清零，但只清掉第一筆入體內丹，第二筆 z17 列殘留且不被引用；修改器讀回最終存檔時倍率回到 1.5"
+      ],
+      "baselineSaveSha256": "ebb0a4a28791218986c594d3b3819a066482bc11ff75aac99f8498c4ce4b84c5",
+      "ascendedBaselineSha256": "39a7c42075ccf4fc5d0c2842476a3235c26aa0422a7f100afd4ca716ef0a0ce1",
+      "resultSha256": "dc6b3e11e56c0200dcf766afe5b6108fb458720b228110e5f941792f2540a876",
+      "passed": true
+    },
     "pillAptitudeBonusDecimal": {
       "date": "2026-10-24",
       "gameVersion": "V1.0.11.2",

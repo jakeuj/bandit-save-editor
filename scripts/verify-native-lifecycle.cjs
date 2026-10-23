@@ -2,6 +2,7 @@
 'use strict';
 // Native follow-up actions after editing, for disposable states created by verify-game. The follow-up copy covers
 // equip cycle, profession transfer and research/training start-stop; the batch-two copy covers pills and rebirth.
+// `ascend` alone prepares an ascended base save; with `pills` the same block only tells rebirth to check the cleanup.
 const fs = require('node:fs'), path = require('node:path'), assert = require('node:assert/strict');
 const {evaluate, waitMain} = require('./verify-game.cjs');
 const args = process.argv.slice(2), opt = k => args[args.indexOf(k) + 1];
@@ -45,21 +46,67 @@ async function followup(state, s) {
   return {before, worn, career, research, training};
 }
 
+// Prepares an ascended character on a base save without one: each round obtains a fresh inner pill with 获得物品, wears it
+// with 穿戴装备 and runs the 渡劫结束 success branch with the 渡劫 variables set (渡劫结丹品质 is a static local) (the 渡劫台 timer and progress UI are skipped).
+// An optional treasure is worn afterwards. Returns the native multiplier, caps and totals for the editor to compare.
+const ascensionCoefficient = (q, k) => Math.round(100 * (Math.pow(1.2, k - 1) * (0.4 + ((k + q) - 2) * 0.2))) / 100;
+async function obtainAndWear(state, character, template) {
+  const id = await evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);const wp=r.GetObjectClassByName('wp').GetInstances()[0].GetSdkInstance(),seen=new Set();for(let x=1;x<a.GetWidth();x++)if(a.At(x,1,7)>0)seen.add(x);
+    call('获得物品',true,${template},1,1,wp.At(${template},3,0),100,1,false,0,'特定装备',false,false);for(let x=1;x<a.GetWidth();x++)if(!seen.has(x)&&a.At(x,1,7)===${template})return x;throw Error('Obtained item missing in z7');})()`);
+  await pause(500);
+  await evaluate(state, `(()=>{${prefix}const wp=r.GetObjectClassByName('wp').GetInstances()[0].GetSdkInstance();call('穿戴装备',wp.At(${template},6,0),${id},${character},false,false);return true;})()`);
+  await pause(500);
+  const worn = await evaluate(state, `(()=>{${prefix}const wp=r.GetObjectClassByName('wp').GetInstances()[0].GetSdkInstance(),slot=wp.At(${template},6,0),id=a.At(${character},15+slot,2);return {slot,id,record:record(id,9)};})()`);
+  assert.equal(worn.record[1], template, 'Obtained item was not worn');
+  assert.equal(worn.record[7], character, 'Worn item owner');
+  return worn;
+}
+async function ascend(state, s) {
+  const {character, rounds, treasure} = s.ascend, done = [];
+  for (const [i, {template, quality}] of rounds.entries()) {
+    const worn = await obtainAndWear(state, character, template);
+    assert.equal(worn.slot, 5, 'Inner pill slot');
+    await evaluate(state, `(()=>{${prefix}const m=r.GetEventSheetManager(),v=name=>{const f=[...m.GetAllGlobalVariables(),...m.GetAllLocalVariables()].filter(v=>v.GetName()===name);if(f.length!==1)throw Error('Ambiguous variable '+name);return f[0];};v('渡劫角色序号').SetValue(${character});v('渡劫结丹品质').SetValue(${quality});call('渡劫结束',false);return true;})()`);
+    await pause(500);
+    const after = await evaluate(state, `(()=>{${prefix}const c=${character},k=a.At(c,50,2),row=a.At(c,2*k,16);return {count:k,quality:a.At(c,2*k-1,16),row,stored:record(row,17),slot:a.At(c,20,2),source:record(${worn.id},9)};})()`);
+    const k = i + 1, coefficient = ascensionCoefficient(quality, k);
+    assert.deepEqual([after.count, after.quality, after.slot], [k, quality, 0], 'Ascension record');
+    assert.equal(after.stored[1], template); assert.equal(after.stored[7], character);
+    assert.deepEqual(after.stored.slice(9, 12), [107, 108, 109]); assert.deepEqual(after.stored.slice(15, 18), [coefficient, coefficient, coefficient]);
+    assert.ok(after.source.every(v => v === 0), 'Worn inner pill row was not moved');
+    done.push({template, quality, worn, ...after});
+  }
+  const extra = treasure ? await obtainAndWear(state, character, treasure) : null;
+  const native = await evaluate(state, `(()=>{${prefix}const c=${character};return {multiplier:call('角色资质上限倍率',c,0,0),caps:['力量','敏捷','智力'].map(t=>call('角色资质上限',c,t)),totals:[1,2,3].map(t=>call('角色资质计算',c,t))};})()`);
+  assert.equal(native.multiplier, 1.5 + done.reduce((sum, d) => sum + ascensionCoefficient(d.quality, d.count), 0), 'Native cap multiplier');
+  for (const d of done) for (let y = 0; y < 50; y++) state.cells.push([d.row, y, 17]);
+  for (let y = 1; y <= 16; y++) state.cells.push([character, y, 16]);
+  state.cells.push([character, 50, 2], [character, 20, 2], [character, 21, 2]);
+  if (extra) for (let y = 0; y < 50; y++) state.cells.push([extra.id, y, 9]);
+  return {rounds: done, treasure: extra, native};
+}
+
 async function pillsAndRebirth(state, s) {
-  const pills = await evaluate(state, `(()=>{${prefix}return ${JSON.stringify(s.pills)}.map(({aptitude,pillId})=>{const count=a.At(pillId,6,0),bonus=a.At(1,12+aptitude,2);call('服用普通丹药',pillId,1,1);return {aptitude,pillId,count:[count,a.At(pillId,6,0)],bonus:[bonus,a.At(1,12+aptitude,2)]};});})()`);
+  const c = s.pillCharacter ?? 1;
+  const pills = await evaluate(state, `(()=>{${prefix}return ${JSON.stringify(s.pills)}.map(({aptitude,pillId})=>{const count=a.At(pillId,6,0),bonus=a.At(${c},12+aptitude,2);call('服用普通丹药',pillId,${c},1);return {aptitude,pillId,count:[count,a.At(pillId,6,0)],bonus:[bonus,a.At(${c},12+aptitude,2)]};});})()`);
   for (const p of pills) {
     assert.ok(p.bonus[1] >= p.bonus[0], 'Pill lowered the aptitude bonus');
     // The conservative editor maximum may already sit at the native cap; other aptitudes must consume one pill.
     if (p.aptitude !== 1) { assert.equal(p.count[1], p.count[0] - 1, 'Pill not consumed'); assert.ok(p.bonus[1] > p.bonus[0], 'Pill bonus unchanged'); }
     else assert.ok(p.count[1] === p.count[0] - 1 || p.count[1] === p.count[0]);
   }
-  await evaluate(state, `(()=>{${prefix}call('角色重生',1,0,0);return true;})()`);
+  await evaluate(state, `(()=>{${prefix}call('角色重生',${c},0,0);return true;})()`);
   await pause(500);
-  const rebirth = await evaluate(state, `(()=>{${prefix}return [13,14,15].map(y=>a.At(1,y,2));})()`);
+  const rebirth = await evaluate(state, `(()=>{${prefix}return [13,14,15].map(y=>a.At(${c},y,2));})()`);
   assert.deepEqual(rebirth, [0, 0, 0], 'Rebirth did not clear pill bonuses');
+  // An ascended character also loses its ascension record. 删除角色内丹数据 never resets its column counter, so only the first
+  // z17 row the character owns is cleared; later stored pills stay as unreferenced rows and are reported, not rejected.
+  const cleared = s.ascend ? await evaluate(state, `(()=>{${prefix}const c=${c},owned=[];for(let x=1;x<a.GetWidth();x++)if(a.At(x,7,17)===c)owned.push(x);return {count:a.At(c,50,2),record:Array.from({length:16},(_,i)=>a.At(c,i+1,16)),owned};})()`) : null;
+  if (cleared) { assert.equal(cleared.count, 0, 'Rebirth kept the ascension count'); assert.ok(cleared.record.every(v => v === 0), 'Rebirth kept z16'); }
   for (const p of pills) state.cells.push([p.pillId, 6, 0]);
-  for (const y of [3, 4, 13, 14, 15, 50, 56]) state.cells.push([1, y, 2]);
-  return {pills, rebirth};
+  for (const y of [3, 4, 13, 14, 15, 50, 56]) state.cells.push([c, y, 2]);
+  if (cleared) for (let y = 1; y <= 16; y++) state.cells.push([c, y, 16]);
+  return {pills, rebirth, cleared};
 }
 
 // Over-limit backpack rows: one is stored into z9, a native level-up below the cap still works (control), both native
@@ -149,9 +196,10 @@ async function main() {
   const statePath = opt('--state'), state = JSON.parse(fs.readFileSync(statePath)), scenario = JSON.parse(fs.readFileSync(opt('--scenario')));
   const rel = path.relative(path.resolve(__dirname, '..'), state.dir), child = path.relative(state.dir, state.game);
   if (!rel || (!path.isAbsolute(rel) && rel !== '..' && !rel.startsWith('..' + path.sep)) || !child || path.isAbsolute(child) || child.startsWith('..')) throw Error('External disposable state required');
-  if (!scenario.followup && !scenario.pills && !scenario.backpackOverLimit && !scenario.relics && !scenario.relicTakeOff) throw Error('Scenario has no native follow-up actions');
+  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.backpackOverLimit && !scenario.relics && !scenario.relicTakeOff) throw Error('Scenario has no native follow-up actions');
   await waitMain(state);
   const result = {};
+  if (scenario.ascend && !scenario.pills) result.ascend = await ascend(state, scenario);
   if (scenario.followup) result.followup = await followup(state, scenario);
   if (scenario.pills) result.pills = await pillsAndRebirth(state, scenario);
   if (scenario.backpackOverLimit) result.backpackOverLimit = await backpackOverLimit(state, scenario);
@@ -163,4 +211,4 @@ async function main() {
   console.log('PASS: native ' + Object.keys(result).join(' and ') + ' follow-up actions');
 }
 if (require.main === module) main().catch(e => { console.error(e.stack); process.exitCode = 1; });
-module.exports = {followup, pillsAndRebirth, backpackOverLimit, relicPlacement, relicTakeOff};
+module.exports = {ascend, followup, pillsAndRebirth, backpackOverLimit, relicPlacement, relicTakeOff};

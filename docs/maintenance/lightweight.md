@@ -46,7 +46,7 @@
 
 不再核對 core 摘要、證明內容、manifest 或工具雜湊，所以改 `src/core.js` 不會讓建置失敗。新功能冒煙通過後，在 `groups` 加上該群組、在 `verification.json` 的 `lightweight` 加一筆冒煙紀錄（日期、遊戲版本、代表案例、基準存檔與 repo 外結果檔的 SHA-256），並打開旗標。
 
-`lightweight` 裡的群組不進舊的複合遷移證明（`scripts/migration-proof.cjs` 的 `composite`）：選跑、`problem` 與 `compose` 都略過它們，所以版本遷移寫回後這些旗標會關閉，要在新版重跑冒煙再開。沒有這筆紀錄的已開群組仍照舊要求複合證據。冒煙可沿用 `verify-game.cjs --scenario`（`setPillAptitudeBonus`、`setEquipmentLevel` 等具名操作）加 `verify-native-lifecycle.cjs`（`followup`、`pills`、`backpackOverLimit`、`relics`、`relicTakeOff` 五種後續動作；擺放類動作要在存檔重啟後另跑一次取下，才算驗過兩輪 IO；`穿戴装备` 後要等一拍再讀角色指標，同一次 evaluate 內讀到的是空列）；固定基準存檔先複製到 repo 外的新資料夾，步驟依 `.local/game-sources.json` 的 `nativeSmoke` 紀錄（雲存檔載入 → 存檔 → assert → stop → restart → 存檔載入 → assert）。遊戲改版時，對受影響的功能跑冒煙，再更新 `gameVersion` 與 `fingerprints`。測試見 `tests/build-gate.test.cjs`。
+`lightweight` 裡的群組不進舊的複合遷移證明（`scripts/migration-proof.cjs` 的 `composite`）：選跑、`problem` 與 `compose` 都略過它們，所以版本遷移寫回後這些旗標會關閉，要在新版重跑冒煙再開。沒有這筆紀錄的已開群組仍照舊要求複合證據。冒煙可沿用 `verify-game.cjs --scenario`（`setPillAptitudeBonus`、`setEquipmentLevel` 等具名操作）加 `verify-native-lifecycle.cjs`（`ascend`、`followup`、`pills`、`backpackOverLimit`、`relics`、`relicTakeOff` 六種動作；`pills` 可用 `pillCharacter` 指定角色；擺放類動作要在存檔重啟後另跑一次取下，才算驗過兩輪 IO；`穿戴装备` 後要等一拍再讀角色指標，同一次 evaluate 內讀到的是空列）；固定基準存檔先複製到 repo 外的新資料夾，步驟依 `.local/game-sources.json` 的 `nativeSmoke` 紀錄（雲存檔載入 → 存檔 → assert → stop → restart → 存檔載入 → assert）。遊戲改版時，對受影響的功能跑冒煙，再更新 `gameVersion` 與 `fingerprints`。測試見 `tests/build-gate.test.cjs`。
 
 `scripts/*-proof.cjs` 與 `verification.json` 裡較早的首次證明紀錄仍保留作為歷史證據與遷移工具，但不再是建置條件。
 
@@ -59,3 +59,13 @@
 `verify-game.cjs` 的操作白名單新增具名方法時，也要把它（與對應的 info／preview 入口）列進 `scripts/migration-analysis.cjs` 該 family 的 `coreRoots`，否則 `tests/core-slice-roots.test.cjs` 報「不屬於任何 family」。新的 UI 模組（例如 v2.15 的 `src/relic-ui.js`）要在 `build-editor.cjs` 加佔位替換、在 `tests/skill-caps-ui.test.cjs`／`tests/talent-levels-ui.test.cjs` 兩個完整 UI 測試台注入，並在 `knowledge-ui.js` 呼叫處加 `typeof` 防護（單獨載入 knowledge-ui 的測試沒有該函式）。重抽 `catalog.json` 時鍵順序可能和既有檔不同，以語意比對確認沒有其他差異即可。
 
 改到 `editingInfo`、`setEditingValue` 這類共用樞紐（v2.14 背包超限）時，所有 family 的切片都會變，`migration-proof` 的 `problem()` 對歷史證明一律回「複合證明與來源或程式不相符」。比照上段：直接斷言「開放群組的證明對上目前 core」的測試改成只核對群組紀錄；要測證明結構檢查（缺首次紀錄、交換、資料雜湊）的測試，用 `tests/helpers/current-core-proof.cjs` 把複本的 core 身分換成目前來源再測。換身分後原生證據摘要仍綁舊切片，所以不能再斷言整體 `problem()` 為 null。
+
+### 基準存檔缺狀態時先原生備料（v2.16 教訓）
+
+固定基準存檔沒有要測的狀態（例如結丹角色）時，不要手寫存檔欄位。先用一次隔離副本做原生備料：雲存檔載入，接著用 `verify-native-lifecycle.cjs` 呼叫原生函式做出狀態（`ascend` 是範例：`获得物品`→`穿戴装备`→設定變數後呼叫 `渡劫结束`），然後原生存檔、新 PID 讀回。最後把該副本的 `save/ea1save.dat`（連同 `saveinfo.dat`）複製到 repo 外，作為新的 `--save-file` 基準，再照常跑編輯冒煙。踩過的坑：
+
+- 事件表的 static local（例如 `渡劫结丹品质`）不在 `GetAllGlobalVariables()`，要從 `GetAllLocalVariables()` 依名稱找，名稱須唯一。
+- `verify-game.cjs` 的 `editSave` 每次都會改角色 1（等級、y50 歸零、名稱與經驗），所以要測的狀態放在別的角色。
+- `--setup` 在讀 `--scenario` 前就建好副本目錄；情境檔路徑錯時，要清掉殘留目錄再重跑。Git Bash 的 `node -e` 寫檔要用 `H:/...`，不能用 `/h/...`。
+- 半途失敗時，遊戲內狀態已經變了，不要在同一副本續跑，從 `--setup` 重來。
+- 原生行為和預期不同時（例如重生只清第一筆入體內丹），先在現場讀值確認，再決定是修正拒絕條件還是工具斷言，並把它寫進實作摘要。
