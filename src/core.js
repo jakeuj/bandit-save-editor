@@ -109,6 +109,42 @@
   const group=plane===7?'backpackTreasureLevel':'treasureLevel';
   return {kind:'equipment',isTreasure:true,id:itemId,itemId,plane,name:item.name,coordinate:C(itemId,6,plane),current:level,min:1,normalMax,advancedMax:normalMax,advancedVerified:false,verified:KNOWLEDGE.verification[group]===true,group,record,template:t,metadataStatus:'preserved; independent-native-proof-required'};
  }
+ // Set-quality candidate eligibility (A3): read-only, cross-pool policy for isolated tests only. Formal level/quality entries keep their proven scope.
+ function setEquipmentQualityCandidateInfo(m,{itemId,plane=9}){
+  const fail=reason=>{throw Error('套裝品質候選：'+reason);},rules=KNOWLEDGE.setEquipmentQuality,levels=KNOWLEDGE.setEquipmentLevel;
+  if(!rules||rules.version!==1||!levels||levels.version!==1||!rules.limits.planes.includes(plane)||!Number.isSafeInteger(itemId)||itemId<1||itemId>=m.original.size[0])fail('庫別、資料或編號不符。');
+  const record=Array.from({length:60},(_,y)=>get(m,C(itemId,y,plane))),item=catalogMaps.items.get(record[1]),t=levels.items[record[1]],pool=rules.pools[record[1]],q=rules.quality,quality=record[5],level=record[6],owner=record[7];
+  if(!item||item.kind!=='套装'||!t||!pool||!levels.sets[t.setLink]?.members.includes(record[1])||t.slot!==item.slot||t.part!==t.slot||pool.tier!==t.tier||pool.slot!==t.slot)fail('範本或詞條池尚未涵蓋。');
+  if(!Number.isSafeInteger(record[0])||record[0]<1||record[0]>=m.original.size[0]||record[2]!==rules.limits.quantity||record[3]!==t.tier||t.tier<rules.limits.minTier||t.tier>rules.limits.maxTier)fail('識別、數量或等階不符。');
+  const normalMax=q.levelCapBase+q.levelCapStep*(quality-1);
+  if(!Number.isSafeInteger(quality)||quality<q.min||quality>q.max||!Number.isSafeInteger(level)||level<1||level>normalMax)fail('只支援原版品質與等級，超限停用。');
+  // y27 names the ordinary source (P原); it must share tier and slot with the set template (P套).
+  const origin=Number.isSafeInteger(record[27])&&record[27]>0?levels.origins[record[27]]:undefined;
+  if(!origin)fail('缺少合成來源 y27。');
+  if(origin.tier!==pool.tier||origin.slot!==pool.slot)fail('合成來源同階／部位不符。');
+  if(!Number.isSafeInteger(record[23])||record[23]<1||record[23]>6||!decimal2(record[26])||record[26]<0||Math.abs(record[26]*10-Math.round(record[26]*10))>1e-7)fail('合成來源 metadata 尚未涵蓋。');
+  if(![0,1].includes(record[24])||record[25]!==0||!Number.isSafeInteger(record[8])||record[8]<q.mainBase+q.mainStep*(quality-1)||record[8]>q.mainBase+q.mainStep*quality||!Number.isSafeInteger(owner)||owner<0)fail('特殊狀態、主係數或歸屬不符。');
+  const slots=[];let selected=0;
+  for(let slot=1;slot<=6;slot++){
+   const id=record[8+slot],coefficient=record[14+slot],flag=record[27+slot];
+   if(![0,1].includes(flag))fail('洗練旗標不符。');
+   if(slot>=quality){if(id!==0||coefficient!==0||flag!==0)fail('品質外詞條槽仍有資料。');continue;}
+   if(flag){if(selected)fail('多個已選洗練槽。');selected=slot;}
+   const inOrigin=origin.affixIds.includes(id),inSet=pool.affixIds.includes(id),source=inOrigin&&inSet?'both':inOrigin?'origin':inSet?'set':'none';
+   if(flag?source==='none':!inOrigin)fail(flag?'已選槽詞條不在原裝備或套裝池。':'未選槽只能使用原裝備詞條。');
+   if(!decimal2(coefficient)||coefficient<q.subStep*(quality-1)||coefficient>q.subSpan+q.subStep*quality)fail('詞條係數不符。');
+   slots.push({slot,attributeId:id,coefficient,selected:!!flag,source});
+  }
+  let references=0;
+  for(let x=1;plane===9&&x<m.original.size[0];x++)for(let s=1;s<=6;s++)if(get(m,C(x,15+s,2))===itemId){
+   references++;if(owner!==x||!activeCharacter(m,x)||s!==t.slot)fail('穿戴雙向指標不一致。');
+  }
+  if(plane===7&&owner!==rules.limits.backpackOwner||owner>0&&(!activeCharacter(m,owner)||references!==1)||owner===0&&references!==0)fail('穿戴雙向指標不一致。');
+  const prefix=plane===7?'backpackSetEquipmentQuality':'setEquipmentQuality',groups={upgrade:prefix+'Upgrade',downgrade:prefix+'Downgrade'};
+  return {kind:'setEquipmentQualityCandidate',candidate:true,itemId,plane,name:item.name,quality,level,normalMax,mainCoefficient:record[8],originId:record[27],selectedSlot:selected||null,slots,
+   groups,verified:{upgrade:KNOWLEDGE.verification[groups.upgrade]===true,downgrade:KNOWLEDGE.verification[groups.downgrade]===true},
+   pools:{origin:[...origin.affixIds],set:[...pool.affixIds]},policies:{...rules.policies},record,template:t,metadataStatus:'candidate-only; independent-native-proof-required'};
+ }
  function editingInfo(m,kind,id,plane=9){
   if(kind==='equipment'&&![7,9].includes(plane))throw Error('裝備庫別只接受 7 或 9。');
   if(!Number.isSafeInteger(id)||id<1||id>=m.original.size[0])throw Error('無效的資料編號。');
@@ -889,5 +925,5 @@
   if(patches.length!==m.changes.size)throw Error('部分修改座標未能定位，已停止匯出。');
   const parts=[];let previous=0;for(const p of patches){parts.push(m.text.slice(previous,p.start),p.value);previous=p.end;}parts.push(m.text.slice(previous));return parts.join('');
  }
- globalThis.SaveCore={setEquipmentLevelInfo,treasureLevelInfo,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
+ globalThis.SaveCore={setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
 })();

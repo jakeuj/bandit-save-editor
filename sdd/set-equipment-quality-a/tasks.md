@@ -1,12 +1,12 @@
 # 套裝品質 A 任務
 
-狀態：目前主線；A1–A2 已授權並完成（2026-10-23），A3 起逐段明確授權。[子提案](proposal.md)／[母規格與全案驗收](../set-equipment-quality/tasks.md)／[進度入口](../../docs/research/next-version-plan.md)。
+狀態：目前主線；A1–A3 已授權並完成（2026-10-23），A4 起逐段明確授權。[子提案](proposal.md)／[母規格與全案驗收](../set-equipment-quality/tasks.md)／[進度入口](../../docs/research/next-version-plan.md)。
 
 每項工程操作目標 30–60 分鐘；超時先再拆子 SDD。自動矩陣執行另記分片／checkpoint，完成全部分母才可勾選。
 
 - [x] A1. 核對來源與重用工具：記錄完整來源／runtime manifest、15 指紋、既有生成／測試工具及基準缺口；未知來源或缺表拒絕。
 - [x] A2. 擴充最小資料：產出 P原／P套、品質規則與 Q1–Q10 相依摘要；缺來源、錯同階／部位及雙池差異有合成案例，原始表不入 repo。
-- [ ] A3. 隔離候選共同資格：未選槽限 P原，唯一已選槽可用聯集；測試正式等級及其他入口仍拒絕未補證的新範圍，普通裝備權限不變。
+- [x] A3. 隔離候選共同資格：未選槽限 P原，唯一已選槽可用聯集；測試正式等級及其他入口仍拒絕未補證的新範圍，普通裝備權限不變。
 - [ ] A4. 實作候選資訊與預覽：驗主副 roll 平移、槽數、雙池、cap 及四方向分派；不寫存檔，正式群組保持關閉。
 - [ ] A5. 實作候選升品交易：明選新增 P原 尾槽且旗標 0、禁止新增重複，保留原有重複及非交易欄；精確 token 與失敗回滾有合成案例。
 - [ ] A6. 實作候選降品與整件還原：刪尾槽確認、刪已選槽／目標超 cap 拒絕；品質→等級→品質、undo、累計還原與無變更合成案例通過。
@@ -36,3 +36,10 @@
 - 接進 `scripts/extract-game.cjs` 並以原位附加寫入 `knowledge/catalog.json` 的 `setEquipmentQuality`（只增不刪，其他鍵逐字不變）。**未新增 verification 旗標**；`groups` 四個新名稱尚不在 verification，旗標註冊留到 A10。
 - 新增 `tests/set-equipment-quality-data.test.cjs`（合成表，從 catalog 規則重建）：重建一致、缺來源／事件改變／池空或重複／池類型錯誤、錯同階／同部位、雙池 origin／set／both 皆存在、保留條件。原始遊戲表不入 repo。
 - `node scripts/core-slice-report.cjs`：core 切片未變；未改 src。
+
+### A3（2026-10-23）
+
+- 新增獨立入口 `setEquipmentQualityCandidateInfo(m,{itemId,plane})`（`src/core.js`，只新增 `globalThis.SaveCore` 匯出名稱）。只讀、不寫存檔、不建交易；沒有修改 `editingInfo`、`setEditingValue`、`resolveField`、`ordinaryEquipment`、`setEquipmentLevelInfo`、`equipmentQualityInfo` 等既有函式，共同檢查在新區塊內另寫。
+- 資格規則（資料取自 catalog `setEquipmentQuality` 與 `setEquipmentLevel`）：y27 必須指向 `setEquipmentLevel.origins`（P原），且與 `setEquipmentQuality.pools[y1]`（P套）同階同部位；未選槽 ID 只能來自 P原；唯一已選槽可來自 P原 或 P套，旗標保留並回報 `source`（origin／set／both）。拒絕：多旗標、品質外槽有 ID／係數／旗標、缺或非整數 y27、來源錯同階／部位、P原／P套 皆不含的 ID，以及沿用套裝等級的識別、數量、等階、品質／等級、metadata、主係數與穿戴互指檢查。回傳四群組名稱與 `verified`（目前皆 false）。
+- 新增 `tests/set-equipment-quality-candidate.test.cjs`（合成存檔，範本 #28／原裝備 #2，P原 專有、P套 專有、交集 ID 皆存在）：兩庫與穿戴狀態下兩池各自合法、已選槽頭／尾、Q1–Q6 槽數；跨池錯位（P套 放未選槽）、池外 ID、多旗標、缺 y27、錯同階、錯部位、品質外尾槽資料與旗標；正式 `setEquipmentLevelInfo`／`editingInfo`／`setEquipmentLevel`（等級旗標開啟下）、`equipmentQualityInfo`／`previewEquipmentQualityChange`／`setEquipmentQuality` 與 `set`／`setField` 對新跨池範圍仍拒絕且存檔不變；套裝等級合法寫入、關閉旗標拒絕及寶物等級分派不變；候選入口拒絕寶物與普通裝備；四品質群組未註冊、`requireClosed` 仍擋開啟。
+- `node scripts/core-slice-report.cjs`：core 切片未變；既有群組沿用，不需選跑。
