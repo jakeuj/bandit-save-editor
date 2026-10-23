@@ -1,6 +1,6 @@
 # 套裝品質 A 任務
 
-狀態：目前主線；A1–A3 已授權並完成（2026-10-23），A4 起逐段明確授權。[子提案](proposal.md)／[母規格與全案驗收](../set-equipment-quality/tasks.md)／[進度入口](../../docs/research/next-version-plan.md)。
+狀態：目前主線；A1–A3、A7 已授權並完成（2026-10-23），其餘逐段明確授權。[子提案](proposal.md)／[母規格與全案驗收](../set-equipment-quality/tasks.md)／[進度入口](../../docs/research/next-version-plan.md)。
 
 每項工程操作目標 30–60 分鐘；超時先再拆子 SDD。自動矩陣執行另記分片／checkpoint，完成全部分母才可勾選。
 
@@ -10,7 +10,7 @@
 - [ ] A4. 實作候選資訊與預覽：驗主副 roll 平移、槽數、雙池、cap 及四方向分派；不寫存檔，正式群組保持關閉。
 - [ ] A5. 實作候選升品交易：明選新增 P原 尾槽且旗標 0、禁止新增重複，保留原有重複及非交易欄；精確 token 與失敗回滾有合成案例。
 - [ ] A6. 實作候選降品與整件還原：刪尾槽確認、刪已選槽／目標超 cap 拒絕；品質→等級→品質、undo、累計還原與無變更合成案例通過。
-- [ ] A7. 建立獨立交易與生成可達性預期：不讀被測 core 預覽，明列來源生成規則與原生見證待辦；不杜撰原生升品函式或偽造生成結果。
+- [x] A7. 建立獨立交易與生成可達性預期：不讀被測 core 預覽，明列來源生成規則與原生見證待辦；不杜撰原生升品函式或偽造生成結果。
 - [ ] A8. 建立獨立效果及生命週期預期：涵蓋攻擊 L×Q、取整、主副重疊、舊效果移除、S／N，列兩輪 IO、搬移 50 欄及尾十欄斷言。
 - [ ] A9. 固定 manifest 與分片契約：列 19,440 基礎案、至少 864 組效果及母規格全部額外維度，拆四群組分母、合法／拒絕／未知／不適用，checkpoint 綁精確輸入。
 - [ ] A10. 接線拒絕未證明的 proof 流程：requirements／suite／migration／摘要綁定測試拒絕漏案、重複、錯方向、過期、缺 IO／UI 及僅代表遷移；四群組關閉，交付 B 準備清單。
@@ -60,3 +60,9 @@
 - 資格規則（資料取自 catalog `setEquipmentQuality` 與 `setEquipmentLevel`）：y27 必須指向 `setEquipmentLevel.origins`（P原），且與 `setEquipmentQuality.pools[y1]`（P套）同階同部位；未選槽 ID 只能來自 P原；唯一已選槽可來自 P原 或 P套，旗標保留並回報 `source`（origin／set／both）。拒絕：多旗標、品質外槽有 ID／係數／旗標、缺或非整數 y27、來源錯同階／部位、P原／P套 皆不含的 ID，以及沿用套裝等級的識別、數量、等階、品質／等級、metadata、主係數與穿戴互指檢查。回傳四群組名稱與 `verified`（目前皆 false）。
 - 新增 `tests/set-equipment-quality-candidate.test.cjs`（合成存檔，範本 #28／原裝備 #2，P原 專有、P套 專有、交集 ID 皆存在）：兩庫與穿戴狀態下兩池各自合法、已選槽頭／尾、Q1–Q6 槽數；跨池錯位（P套 放未選槽）、池外 ID、多旗標、缺 y27、錯同階、錯部位、品質外尾槽資料與旗標；正式 `setEquipmentLevelInfo`／`editingInfo`／`setEquipmentLevel`（等級旗標開啟下）、`equipmentQualityInfo`／`previewEquipmentQualityChange`／`setEquipmentQuality` 與 `set`／`setField` 對新跨池範圍仍拒絕且存檔不變；套裝等級合法寫入、關閉旗標拒絕及寶物等級分派不變；候選入口拒絕寶物與普通裝備；四品質群組未註冊、`requireClosed` 仍擋開啟。
 - `node scripts/core-slice-report.cjs`：core 切片未變；既有群組沿用，不需選跑。
+
+### A7（2026-10-23）
+
+- 新增 `scripts/set-equipment-quality-oracle.cjs`：不引入 SaveCore／core／預覽／fixture；規則以來源式（Q1 區間 80+30(Q-1)..80+30Q、10(Q-1)..60+10Q、槽數 Q-1；Q2 上限 10+5(Q-1)）自行計算，池資料以參數傳入。含來源有效性檢查、`transition`（主 +30ΔQ／保留槽 +10ΔQ 的百分之一整數運算、明選 P原 尾槽旗標 0、降品清尾槽、拒絕理由）、30 種轉換列舉、保留欄斷言、可達性普查（216 範本 × 同階同部位原裝備，共 1,458 列；本版資料有 486 列缺原池專有 ID、486 列缺套裝池專有 ID，不假設每套三池）及 `witnessTodo`（W1–W7，全為 pending-native）。`nativeFunctionKnown=null`，不杜撰原生升降品函式，也不產生生成結果。
+- 新增 `tests/set-equipment-quality-oracle.test.cjs`（14 項）：區間公式對照 catalog、升降平移與清槽、兩位小數精確、端點平移、30 轉換、拒絕案、雙池、既有重複、失敗不改來源、往返、普查、待辦、獨立性。
+- 未改 src／catalog／index.html／sw.js／verification；未跑原生；四品質群組仍關閉。
