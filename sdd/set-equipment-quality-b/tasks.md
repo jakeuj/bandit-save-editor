@@ -1,6 +1,6 @@
 # 套裝品質 B 任務
 
-狀態：全部未執行，尚未授權實作。[子提案](proposal.md)／[母規格與全案驗收](../set-equipment-quality/tasks.md)。目前主線仍為[寶物等級](../../docs/research/next-version-plan.md)。
+狀態：全部未執行，尚未授權實作。[子提案](proposal.md)／[母規格與全案驗收](../set-equipment-quality/tasks.md)。目前主線為套裝品質（A 階段，見[進度入口](../../docs/research/next-version-plan.md)）。
 
 每項工程操作目標 30–60 分鐘；超時先再拆子 SDD。自動矩陣執行另記分片／checkpoint，完成全部分母才可勾選。
 

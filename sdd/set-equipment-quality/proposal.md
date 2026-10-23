@@ -1,10 +1,10 @@
 # 套裝品質
 
-需求類型：**新功能**。日期：2026-10-23。狀態：**候選案，文件拆分完成，尚未授權實作**。
+需求類型：**新功能**。日期：2026-10-23。狀態：**目前主線（2026-10-23 選定）；A1–A2 已授權，其餘逐段授權**。
 
 依據：[套裝品質研究](../../docs/research/set-equipment-quality.md)的有條件 go；目前基準 v2.10／遊戲 V1.0.11.2。本文 Q1–Q10 指向該研究的 SID／expression 證據索引，全部為該版本編號。研究只有靜態核對，本案原生品質證明仍為零。任務見 [tasks.md](tasks.md)。本次僅修訂文件並依授權提交推送；不修改 src、catalog、verification，不啟動遊戲。後續實作及測試依當次有效授權進行。
 
-目前主線維持[寶物等級](../../docs/research/next-version-plan.md)，本案未取代主線；未指定功能的「繼續實作下一版」仍承接寶物。套裝品質須明確選案後才開始。[A 子提案](../set-equipment-quality-a/proposal.md)負責靜態候選，[B 子提案](../set-equipment-quality-b/proposal.md)負責原生證明與整合。
+本案自 2026-10-23 為目前主線，「繼續實作下一版」依[進度入口](../../docs/research/next-version-plan.md)承接本案。[A 子提案](../set-equipment-quality-a/proposal.md)負責靜態候選，[B 子提案](../set-equipment-quality-b/proposal.md)負責原生證明與整合。
 
 ## 為什麼做
 
