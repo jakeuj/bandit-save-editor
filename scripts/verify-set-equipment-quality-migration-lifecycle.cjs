@@ -290,7 +290,7 @@ async function run({out,perClass=1,only,all=false,verbose=console.log}){
   copies:done.map(c=>({id:c.id,caseId:c.caseId,state:c.state,direction:c.direction,group:c.group,templateId:c.templateId,tier:c.tier,from:c.from,to:c.to,passed:outcomes.get(c.id)})),
   cases:caseResults(manifest,done,outcomes),coverage:(({rows,...rest})=>({...rest,pendingExecutable:rows.filter(r=>r.status==='pending-B4').length,covered:rows.filter(r=>r.copies.length).map(r=>r.id)}))(coverage(manifest,done,outcomes)),
   resultsHash:sha(resultFile)};
- fs.writeFileSync(path.join(out,'b2-report.json'),JSON.stringify(report,null,1)+'\n');return report;
+ fs.writeFileSync(path.join(out,all?'b4-lifecycle-report.json':'b2-report.json'),JSON.stringify(report,null,1)+'\n');return report;
 }
 module.exports={playCopy,markerBase,spans,lifecycleId,classes,planCopies,planAll,Miss,tailFor,candidateCore,buildStart,validateRefine,validateSort,validateCopy,covers,coverage,caseResults,lifecycleDriver,run};
 if(require.main===module){
