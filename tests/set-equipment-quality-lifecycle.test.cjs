@@ -11,7 +11,7 @@ function baseline(templateId,q){
  const row=census.find(r=>r.templateId===templateId),origin=k.setEquipmentLevel.origins[row.originId],set=k.setEquipmentQuality.pools[templateId],rec=Array(60).fill(0);
  Object.assign(rec,{0:1,1:templateId,2:1,3:set.tier,5:q,6:1,8:95+30*(q-1),23:3,24:1,26:1.5,27:row.originId});
  for(let s=1;s<=q-1;s++){rec[8+s]=origin.affixIds[s-1];rec[14+s]=O.subRange(q)[0]+5;}
- return {templateId,quality:q,origin:row.originId,after:rec};
+ return {templateId,quality:q,origin:row.originId,before:rec.slice(),material:Array(60).fill(0),after:rec};
 }
 const templates=Object.keys(k.setEquipmentQuality.pools).map(Number);
 const results=templates.flatMap(t=>[1,2,3,4,5,6].map(q=>baseline(t,q)));
@@ -38,7 +38,7 @@ test('start bytes come from the candidate transaction and agree with both indepe
 });
 
 // ---- mock engine ---------------------------------------------------------------------------------------------------------
-function engine(k,start){
+function engine(k,start,synthAfter){
  const cells=new Map(),key=(x,y,z)=>x+','+y+','+z,At=(x,y,z)=>cells.get(key(x,y,z))??0,Set=(x,y,z,v)=>cells.set(key(x,y,z),v);
  const data=JSON.parse(start).data;for(const z of [7,9])for(let x=1;x<30;x++)for(let y=0;y<60;y++)if(data[x][y][z])Set(x,y,z,data[x][y][z]);for(let s=0;s<6;s++)Set(1,16+s,2,data[1][16+s][2]);
  let n=0;const blocks={};
@@ -48,12 +48,14 @@ function engine(k,start){
  blocks['穿戴装备']=(slot,id)=>{Set(1,15+slot,2,move({id,z:7},{z:9},1));};
  blocks['卸下装备']=(slot,id)=>{Set(1,15+slot,2,0);move({id,z:9},{z:7},0);};
  blocks['刷新单角色全属性']=()=>{};blocks['装备排序']=()=>{};
+ let synthPlane=0;
+ blocks['套装合成']=()=>{synthAfter.forEach((v,y)=>Set(3,y,synthPlane,y===7?0:v));};
  blocks['词条洗练']=(id,slot,z)=>{const pool=k.setEquipmentQuality.pools[At(id,1,z)].affixIds,q=At(id,5,z);Set(id,8+slot,z,pool[n++%pool.length]);Set(id,14+slot,z,O.subRange(q)[0]+9+n/100);Set(id,27+slot,z,1);Set(3,2,0,At(3,2,0)-100);};
  const fn=name=>({GetEventBlock:()=>({GetSolModifiersIncludingParents:()=>null,RunAsExpressionFunctionCall:(a,b,c,d,...args)=>blocks[name](...args)}),IsCopyPicked:()=>false,GetReturnType:()=>0,GetDefaultReturnValue:()=>0});
- return {At,Set,rows:cells,runtime:{GetEventSheetManager:()=>({GetFunctionBlockByName:name=>blocks[name]?fn(name):null}),GetObjectClassByName:()=>({GetInstances:()=>[{GetSdkInstance:()=>({At,Set,GetWidth:()=>30})}]}),SetTimeScale(){}}};
+ return {At,Set,rows:cells,runtime:{GetEventSheetManager:()=>({GetFunctionBlockByName:name=>blocks[name]?fn(name):null,GetEventVariableBySID:sid=>({SetValue:v=>{if(sid===158219813858328)synthPlane=v;}})}),GetObjectClassByName:()=>({GetInstances:()=>[{GetSdkInstance:()=>({At,Set,GetWidth:()=>30})}]}),SetTimeScale(){}}};
 }
 async function play(copy){
- const C=R.candidateCore(k,source),start=R.buildStart(C,k,saveText(),copy),eng=engine(k,start.editedText);
+ const C=R.candidateCore(k,source),start=R.buildStart(C,k,saveText(),copy),eng=engine(k,start.editedText,copy.synth?.after);
  const saved={self:globalThis.self,timeout:globalThis.setTimeout};globalThis.self=globalThis;globalThis.__banditValidationRuntime=eng.runtime;globalThis.setTimeout=fn=>{fn();return 0;};
  let pid=100;
  try{
@@ -120,4 +122,45 @@ test('runner stays outside the repo and keeps the shipped flags closed',()=>{
  const src=fs.readFileSync(path.join(__dirname,'../scripts/verify-set-equipment-quality-migration-lifecycle.cjs'),'utf8');
  assert.match(src,/Artifacts must stay outside the repo/);
  for(const g of Q.groups)assert.equal(k.verification[g],false);
+});
+
+// ---- B4: one copy per executable lifecycle case ---------------------------------------------------------------------------------
+const E=require('../scripts/set-equipment-quality-effects-oracle.cjs');
+test('planAll gives one buildable copy per executable A9 lifecycle case with the axis it is named after',()=>{
+ const all=R.planAll(k,results,manifest),executable=manifest.cases.filter(c=>c.kind==='lifecycle'&&c.classification!==M.classes.na);
+ assert.equal(all.length,38);assert.deepEqual(all.map(c=>c.id).sort(),executable.map(c=>c.id).sort());
+ const C=R.candidateCore(k,source);
+ for(const copy of all){
+  const c=executable.find(v=>v.id===copy.id);assert.equal(copy.group,c.group);assert.equal(copy.plane,c.group.startsWith('backpack')?7:9);
+  assert.ok((copy.to>copy.from)===(copy.direction==='up'));
+  if(copy.plane===9)assert.ok(['stored','equipped'].includes(copy.state));else assert.equal(copy.state,'backpack');
+  assert.equal(copy.record[7],copy.state==='equipped'?1:0);
+  if(c.axis==='tier')assert.equal(copy.tier,c.extra==='tier-1'?1:9);
+  if(c.axis==='transition'){const e=E.lifecycleStarts().extras.find(v=>v.id===c.extra);assert.deepEqual([copy.from,copy.to],[e.from,e.to]);}
+  if(c.axis==='path'){assert.equal(copy.synth.plane,c.extra==='synthesis-in-place-z9'?9:7);assert.ok(copy.synth.before&&copy.synth.material);}
+  if(c.axis==='selected')assert.equal(copy.record[28],1);
+  assert.equal(copy.refineMustHitSetOnly,c.extra==='set-pool-slot');
+  for(const candidate of [copy,...copy.alternates]){
+   const b=R.buildStart(C,k,saveText(),candidate);assert.equal(JSON.parse(b.editedText).data[1][5][candidate.plane],candidate.to);
+  }
+ }
+ for(const g of ['setEquipmentQualityUpgrade','setEquipmentQualityDowngrade'])assert.deepEqual([...new Set(all.filter(c=>c.group===g).map(c=>c.state))].sort(),['equipped','stored']);
+ const origin=all.find(c=>c.axis==='origin-pool-slot'&&c.direction==='up');assert.ok(origin.preferOriginOnly);
+ const o=R.buildStart(C,k,saveText(),origin),pools=k.setEquipmentQuality.pools[origin.templateId].affixIds;assert.ok(!pools.includes(o.tail[0].attributeId),'origin-pool tail uses an id only P原 has');
+ assert.throws(()=>R.planAll(k,results.filter(v=>v.quality!==6),manifest),/缺 /);
+});
+test('synthesis-path copies play through the driver, and a set-pool copy without a P套-only roll is a miss, not a failure',async()=>{
+ const all=R.planAll(k,results,manifest);
+ for(const id of ['lifecycle:synthesis-in-place-z9:setEquipmentQualityUpgrade','lifecycle:synthesis-from-bag-z7:backpackSetEquipmentQualityDowngrade']){
+  const copy=all.find(c=>c.id===id),{report}=await play(copy),summary=R.validateCopy(k,copy,report);
+  assert.equal(summary.synthPlane,copy.synth.plane);assert.equal(report.synth.plane,copy.synth.plane);
+  const bad=structuredClone(report);bad.synth.after[9]+=1;assert.throws(()=>R.validateCopy(k,copy,bad),/合成欄位 y9/);
+  const none=structuredClone(report);none.synth=null;assert.throws(()=>R.validateCopy(k,copy,none),/缺合成路徑觀察/);
+ }
+ const copy=all.find(c=>c.refineMustHitSetOnly),{report}=await play(copy);
+ const origin=k.setEquipmentLevel.origins[copy.originId].affixIds,set=k.setEquipmentQuality.pools[copy.templateId].affixIds,shared=set.find(id=>origin.includes(id));
+ if(shared){
+  const r=structuredClone(report);r.refine.hit=false;r.refine.attempts=r.refine.attempts.slice(0,1);r.refine.attempts[0].row[O.col.id(1)]=shared;
+  assert.throws(()=>R.validateCopy(k,copy,r),R.Miss);
+ }
 });

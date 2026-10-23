@@ -77,3 +77,14 @@
 - 綁定與雜湊（SHA-256）：manifest `240c8b5c…e09679cd`、runner `3be470c4…c82af6505`、核心 `69b462a0…40bf1d6d5`、結果檔 `4df28e3f…bcfa47f33e`、固定基準存檔 `ebb0a4a2…84c5`（外部輸入四雜湊沿用 B1）。原始結果、起點存檔與 log 在 repo 外 `set-equipment-quality-B2`；執行前後固定存檔、玩家原檔、等級基準與兩份快取 manifest 雜湊相同。第一次嘗試誤把「回到原列的目的列有標記」當成複製而失敗，改為每步各自種下標記後重跑，舊結果收入 `superseded`，最終以此 runner 重跑六類。
 - B4 可直接開跑的條件：沿用同一 runner 的 `playCopy`／`lifecycleDriver`／`validateCopy`，`--per-class 2` 可加副本；其餘 32 個生命週期軸需 B4 擴充 `planCopies` 的起點；runner 尚無依 A9 完整案例清單的分片排程與續跑（B4 需補）。
 - 驗證：新增 `tests/set-equipment-quality-lifecycle.test.cjs`（8 項，合成資料與記憶體引擎驅動真 driver：規劃、bytes 對拍、六類報告、尾十欄／清除／PID／洗練／排序拒絕、覆蓋表與逐案格式、不可合併證明）；A10 占位測試改為「未給 --output 拒絕」。`npm test` 351／351；`node scripts/core-slice-report.cjs`：core 切片未變。未改 src、index.html、sw.js、knowledge、旗標與進度入口。
+
+### B4（2026-10-23）
+
+#### 工程（原生長跑前）
+
+- 新矩陣 runner `scripts/verify-set-equipment-quality.cjs`（取代失敗占位；未給 `--output` 仍拒絕）＋`scripts/set-equipment-quality-matrix.cjs`（情境、驗證器、原生 driver、checkpoint）。範圍＝A9 manifest 的 `base`／`effect`／`coefficient`／`level-cap`／`pool`／`reject`；`lifecycle` 走擴充後的 B2 runner；`level-regression` 16 案屬 B6 的跨池補證，不在本段、也不縮進任何分母。
+- 每案流程：原生取得／合成的起點（沿用 1,944 份等級基準，其餘原池／階段由 `generate` 現取，快取於 repo 外 `supply.jsonl`）→ 候選 core 交易（品質旗標只在隔離知識副本）→ 與 A7／A8 oracle 逐欄對拍（不讀 core 當答案）→ 同一批列放進隔離遊戲：原生讀回、單件效果（`装备主属性`，編輯前後）、穿戴者全角色效果與套裝摘要（`装备属性计算`／`套装数量检測`）、原生同槽洗練（魂魄成本、其他槽不變、舊槽貢獻移除，再以核心資格 API 與預覽核對洗練後可再轉換）、依狀態的搬移（`装备库存入`／`装备库取出`／`卸下装备`，y0–49 與 owner／指標）、原生 `升级装备` 的 cap 探測。拒絕案：核心拒絕且不留變更，原生只讀回起點。
+- 係數端點：主係數端點先請原生取得（`获得物品` 帶端點）；原生不給或副係數端點、百分之一邊界、已選槽的 P原專有／交集 ID 無法由原生產生者，以 `injected` 標示後寫入原生放置，仍由原生讀回與重算效果。P套專有的已選槽一律來自原生洗練（最多 400 次，未命中記為 miss，不改標通過）。
+- 精確 checkpoint：每個分片目錄 `checkpoint.json` 綁 A9 manifest（含真實外部輸入）、選取條件（index／total／kinds／groups）、案例 ID 清單雜湊、以及 runner／matrix／driver／核心／兩支 oracle／等級 oracle／scenarios 雜湊；不符即拒絕續跑。結果逐行 `results.jsonl`（`{id,caseHash,status,passed,nativeCompared,observation}`，過期案例摘要、未知或重複案例拒絕），每批更新 `progress.json`。原生反證（原生與 oracle 不一致）即停；未命中、失敗、不存在（不適用）、未知（未跑）分開計。`--report` 對帳、`--emit` 輸出 A10 逐案列＋所有未通過清單（不合併任何證明）。
+- B2 runner 擴充：`planAll` 對 38 個可執行生命週期案各開一份副本（6 基礎起點＋tier-1／tier-9、Q1↔Q6、Q5↔Q6、原池專有尾槽／保留槽、P套洗練命中、已選槽保留、z7 背包合成路徑與 z9 原位合成路徑 × 對應群組），新增原生 `synth` 觀察；P套洗練未命中先換備選範本，仍未命中記 miss。每份仍是兩輪 IO／新 PID＋洗練＋穿卸搬移＋`装备排序`。
+- 合成測試：`tests/set-equipment-quality-matrix.test.cjs`（14 項：情境與 oracle／核心對拍、驗證器竄改偵測、拒絕與純契約案、對帳、checkpoint 綁定、分片唯一覆蓋、driver 對記憶體遊戲、emit）與 lifecycle 測試新增 2 項（planAll、合成路徑／miss）；`npm test` 371／371；`node scripts/core-slice-report.cjs`：core 切片未變。未改 `src/`、`index.html`、`sw.js`、`knowledge/`、旗標、進度入口。

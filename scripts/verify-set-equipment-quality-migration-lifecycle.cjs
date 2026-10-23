@@ -31,9 +31,50 @@ function planCopies(k,levelResults,{perClass=1}={}){
  }});
  return out;
 }
+// B4: one copy per executable A9 lifecycle case (the 6 base starts plus every extra axis crossed with its groups). Axes: tier, Q transition,
+// origin-pool tail/retained ids, set-pool refine hit, selected slot kept, and the synthesis path (z7 from the bag / z9 in place).
+function planAll(k,levelResults,manifest){
+ const items=k.setEquipmentLevel.items,life=E.lifecycleStarts(),out=[],byGroup={};
+ const cases=manifest.cases.filter(c=>c.kind==='lifecycle'&&c.classification!==M.classes.na);
+ cases.forEach((c,ci)=>{
+  const ex=c.extra?life.extras.find(e=>e.id===c.extra):null,direction=c.direction;
+  const ordinal=byGroup[c.group]=(byGroup[c.group]||0)+1;
+  const state=c.state??(c.group.startsWith('backpack')?'backpack':ordinal%2?'stored':'equipped'),plane=state==='backpack'?7:9;
+  let [from,to]=spans[direction][0];if(ex?.axis==='transition'){from=ex.from;to=ex.to;}
+  const tierWanted=ex?.axis==='tier'?ex.value:ci%2?9:1;
+  const fits=v=>{
+   if(v.quality!==from||v.after[23]!==3)return false;const it=items[v.templateId],origin=k.setEquipmentLevel.origins[v.origin],set=k.setEquipmentQuality.pools[v.templateId].affixIds;
+   if(it.tier!==tierWanted&&ex?.axis==='tier')return false;
+   if(to>from&&origin.affixIds.length<O.slots(to))return false;
+   if(ex?.axis==='pool'&&ex.value==='set'&&!set.some(id=>!origin.affixIds.includes(id)))return false;
+   if(ex?.axis==='pool'&&ex.value==='origin'&&!origin.affixIds.some(id=>!set.includes(id)))return false;
+   if(ex?.axis==='selected'&&from<2)return false;
+   return true;
+  };
+  const candidates=levelResults.filter(fits).sort((a,b)=>a.templateId-b.templateId);
+  assert.ok(candidates.length,`缺 ${c.id} 的 Q${from} 基準`);
+  const alt=candidates.map((_,i)=>candidates[(ci*7+i)%candidates.length]);
+  const make=source=>{
+   const record=source.after.slice();record[7]=state==='equipped'?1:0;
+   const origin=k.setEquipmentLevel.origins[source.origin],set=k.setEquipmentQuality.pools[source.templateId].affixIds,setOnly=set.filter(id=>!origin.affixIds.includes(id)),originOnly=origin.affixIds.filter(id=>!set.includes(id));
+   const copy={id:c.id,caseId:c.id,index:0,axis:ex?.id??'base',state,direction,plane,group:c.group,templateId:source.templateId,originId:source.origin,tier:items[source.templateId].tier,from,to,slot:items[source.templateId].slot,record,injected:[],refineMustHitSetOnly:ex?.axis==='pool'&&ex.value==='set'};
+   if(ex?.axis==='selected'){const id=setOnly[0]??set[0];record[9]=id;record[28]=1;copy.injected.push('selected-slot-1');}
+   if(ex?.axis==='pool'&&ex.value==='origin'){
+    if(direction==='up')copy.preferOriginOnly=true;else{for(let s=1;s<=O.slots(from)&&s<=originOnly.length;s++)record[8+s]=originOnly[s-1];copy.injected.push('origin-only-retained');}
+   }
+   if(ex?.axis==='path'){copy.synth={plane:ex.value==='z9'?9:7,before:source.before,material:source.material,after:source.after,templateId:source.templateId};}
+   return copy;
+  };
+  const copy=make(alt[0]);copy.alternates=alt.slice(1,4).map(make);out.push(copy);
+ });
+ assert.equal(new Set(out.map(c=>c.id)).size,out.length);return out;
+}
 // P原 tail for an upgrade: first origin ids not already kept; coefficient inside the target range with two decimals.
 function tailFor(k,copy){
- const pool=k.setEquipmentLevel.origins[copy.originId].affixIds,keep=O.slots(copy.from),kept=new Set(copy.record.slice(9,9+keep));
+ if(copy.tail)return copy.tail;
+ const origin=k.setEquipmentLevel.origins[copy.originId].affixIds,set=k.setEquipmentQuality.pools[copy.templateId].affixIds,keep=O.slots(copy.from),kept=new Set(copy.record.slice(9,9+keep));
+ // axis 'origin-pool' prefers ids only P原 has; everything else takes the first unused origin ids.
+ const pool=copy.preferOriginOnly?[...origin.filter(id=>!set.includes(id)),...origin.filter(id=>set.includes(id))]:origin;
  const need=O.slots(copy.to)-keep,ids=pool.filter(id=>!kept.has(id)).slice(0,Math.max(0,need));assert.equal(ids.length,Math.max(0,need),'原池不足以補尾槽');
  const [lo]=O.subRange(copy.to);return ids.map((attributeId,i)=>({slot:keep+1+i,attributeId,coefficient:lo+7.25+i}));
 }
@@ -58,6 +99,7 @@ function buildStart(C,k,saveText,copy){
 }
 
 // ---- pure validation of one native observation report -------------------------------------------------------------------------
+class Miss extends Error{}
 const colsOf=s=>[O.col.id(s),O.col.coef(s),O.col.flag(s)];
 // Native same-slot refining must only touch the chosen slot, stay in the set pool, in the sub range of the current quality, and cost souls.
 function validateRefine(k,copy,start,refine){
@@ -85,13 +127,19 @@ function validateSort(sort,expected){
 function validateCopy(k,copy,report){
  const {expected,refine,cycle}=report;
  const refined=validateRefine(k,copy,expected,refine);
+ if(copy.refineMustHitSetOnly&&!refined.hit)throw new Miss('洗練 '+refine.attempts.length+' 次未取得 P套 專有 ID');
  E.validateCycle(cycle,refined.final,{slot:copy.slot,worn:copy.state==='equipped'});
  for(const step of cycle.steps)E.validateTail({steps:[step]},step.markers);
  E.validateIO(report.rounds,expected,report.finalLocations);
  assert.equal(report.rounds[0].label,'edit');assert.equal(report.rounds[1].label,'cycle');
  const bag=cycle.steps.at(-1);assert.equal(bag.plane,7);assert.equal(bag.record[7],0,'最後應在背包且無 owner');
  const sorted=validateSort(report.sort,cycle.steps.at(-1).record);
- return {refineAttempts:refined.attempts,setOnlyHit:refined.hit,steps:cycle.steps.map(s=>s.phase),sortedAt:{id:sorted.id,plane:sorted.plane}};
+ if(copy.synth){
+  assert.ok(report.synth&&report.synth.plane===copy.synth.plane,'缺合成路徑觀察');
+  const want=copy.synth.after,got=report.synth.after;
+  for(let y=0;y<60;y++){if(y===0||y===7)continue;assert.equal(got[y],want[y],`${copy.synth.plane===9?'z9 原位':'z7 背包'}合成欄位 y${y}：${got[y]} ≠ ${want[y]}`);}
+ }
+ return {refineAttempts:refined.attempts,setOnlyHit:refined.hit,steps:cycle.steps.map(s=>s.phase),sortedAt:{id:sorted.id,plane:sorted.plane},synthPlane:copy.synth?.plane??null};
 }
 
 // ---- coverage ---------------------------------------------------------------------------------------------------------------
@@ -132,6 +180,13 @@ async function lifecycleDriver(request){
  const observe=locations=>({records:locations.map(v=>({...v,record:read(v.id,v.plane)})),refs:refs()});
  const find=(z,template)=>{for(let id=1;id<a.GetWidth();id++)if(a.At(id,0,z)>0&&a.At(id,1,z)===template)return id;throw Error('Native destination absent '+z+' refs '+JSON.stringify(refs()));};
  if(request.op==='observe')return observe(request.locations);
+ if(request.op==='synth'){
+  // Native in-place synthesis on the given plane with the baseline's own materials, in row 3 so the monitored rows stay untouched.
+  const setGlobal=(sid,value)=>manager.GetEventVariableBySID(sid).SetValue(value);
+  request.before.forEach((v,y)=>a.Set(3,y,request.plane,v));request.material.forEach((v,y)=>a.Set(3,y,18,v));a.Set(1,2,0,1e12);
+  setGlobal(551767285314451,3);setGlobal(990563423582099,3);setGlobal(158219813858328,request.plane);call('套装合成',request.templateId);
+  return {plane:request.plane,after:read(3,request.plane)};
+ }
  if(request.op==='prepare'){runtime.SetTimeScale(0);a.Set(3,2,0,1e9);a.Set(1,2,0,1e12);for(const d of request.decoys)d.record.forEach((v,y)=>a.Set(d.id,y,d.plane,v));return observe([{id:1,plane:request.plane}]);}
  if(request.op==='refine'){
   const attempts=[];let hit=false;
@@ -169,6 +224,8 @@ async function playCopy({copy,k,start,pid0,rpc,restart}){
   const pid1=await restart();assert.notEqual(pid0,pid1,'第一輪 PID 未更新');
   const reloaded1=await rpc({op:'observe',locations:loc1});assert.deepEqual(reloaded1,observed1,'第一輪新 PID 讀回不一致');
   const round1={label:'edit',observed:observed1.records[0].record,reloaded:reloaded1.records[0].record,pids:[pid0,pid1]};
+  // Synthesis-path axis: the same baseline materials synthesize natively on the named plane (z7 from the bag / z9 in place).
+  const synth=copy.synth?await rpc({op:'synth',plane:copy.synth.plane,before:copy.synth.before,material:copy.synth.material,templateId:copy.synth.templateId}):null;
   // Round 2: refine in place, move cycle with tail markers, sort, then save and read back again.
   const pools=k.setEquipmentQuality.pools[copy.templateId].affixIds,origin=k.setEquipmentLevel.origins[copy.originId].affixIds,setOnly=pools.filter(id=>!origin.includes(id));
   const decoy=copy.record.map((v,y)=>y===1?copy.originId:y===0?1:[7,23,24,26,27].includes(y)?0:v),decoys=[{id:2,plane:7,record:decoy},...(copy.plane===7?[{id:1,plane:9,record:decoy}]:[])];
@@ -180,7 +237,7 @@ async function playCopy({copy,k,start,pid0,rpc,restart}){
   const beforeFinal=await rpc({op:'observe',locations:finalLocations});const pid2=await restart();assert.notEqual(pid1,pid2,'第二輪 PID 未更新');
   const afterFinal=await rpc({op:'observe',locations:finalLocations});assert.deepEqual(afterFinal,beforeFinal,'第二輪新 PID 讀回不一致');
   const round2={label:'cycle',observed:beforeFinal.records.map(v=>v.record),reloaded:afterFinal.records.map(v=>v.record),pids:[pid1,pid2]};
- return {expected:start.expected,refine,cycle,sort,finalLocations,rounds:[round1,round2]};
+ return {expected:start.expected,refine,cycle,sort,finalLocations,rounds:[round1,round2],synth};
 }
 async function runCopy({copy,k,source,entry,out,saveInfo,catalogPath,port,C,fixedText}){
  const {evaluate,waitMain}=require('./verify-game.cjs'),L=require('./verify-set-equipment-level-lifecycle.cjs');
@@ -199,7 +256,7 @@ async function runCopy({copy,k,source,entry,out,saveInfo,catalogPath,port,C,fixe
  }finally{if(stateFile)try{L.command(['--state',stateFile,'--stop']);}catch{}}
 }
 
-async function run({out,perClass=1,only,verbose=console.log}){
+async function run({out,perClass=1,only,all=false,verbose=console.log}){
  const root=path.resolve(__dirname,'..'),index=JSON.parse(fs.readFileSync(path.join(root,'.local/game-sources.json'),'utf8')),entry=index.entries.find(e=>e.id===index.preferredDevelopmentSourceId);
  const B1=require('./set-equipment-quality-baseline.cjs'),catalogPath=path.join(root,'knowledge/catalog.json'),k=JSON.parse(fs.readFileSync(catalogPath,'utf8')),source=fs.readFileSync(path.join(root,'src/core.js'),'utf8');
  if(!path.relative(root,out).startsWith('..'))throw Error('Artifacts must stay outside the repo');fs.mkdirSync(out,{recursive:true});
@@ -208,34 +265,39 @@ async function run({out,perClass=1,only,verbose=console.log}){
  const saveInfo=fs.existsSync(path.join(path.dirname(fixedSave),'saveinfo.dat'))?path.join(path.dirname(fixedSave),'saveinfo.dat'):null;
  const sources=B1.verifySources(entry,k),guarded={fixedSave:sha(fixedSave),playerSave:sha(playerSave),levelBaselines:sha(levelFile)};
  const level=JSON.parse(fs.readFileSync(levelFile,'utf8'));assert.deepEqual(level.binding.fingerprints,sources.fingerprints,'等級基準指紋不符');
- const copies=planCopies(k,level.results,{perClass}).filter(c=>!only||only.includes(c.id)),C=candidateCore(k,source),fixedText=fs.readFileSync(fixedSave,'utf8');
  const manifest=M.createManifest(k,source,{baselineHash:'0'.repeat(64),runtimeHash:entry.runtimeHash,sourceManifestHash:sources.sourceManifestHash,runtimeManifestHash:sources.runtimeManifestHash});
+ const copies=(all?planAll(k,level.results,manifest):planCopies(k,level.results,{perClass})).filter(c=>!only||only.includes(c.id)),C=candidateCore(k,source),fixedText=fs.readFileSync(fixedSave,'utf8');
  const resultFile=path.join(out,'lifecycle-results.json'),binding={coreHash:hash(source.replace(/\r\n/g,'\n')),dataHash:hash(k.setEquipmentQuality),scenarioHash:hash(fs.readFileSync(path.join(__dirname,'set-equipment-quality-scenarios.cjs'),'utf8').replace(/\r\n/g,'\n')),
   runnerHash:hash(fs.readFileSync(__filename,'utf8').replace(/\r\n/g,'\n')),fingerprints:sources.fingerprints};
  const result=fs.existsSync(resultFile)?JSON.parse(fs.readFileSync(resultFile,'utf8')):{binding,copies:[]};assert.deepEqual(result.binding,binding,'續跑綁定不符（程式或輸入已改）');
  const base=19700+Math.floor(Math.random()*200);
  for(const [i,copy] of copies.entries()){
   if(result.copies.some(v=>v.id===copy.id))continue;
-  const done=await runCopy({copy,k,source,entry,out,saveInfo,catalogPath,port:base+i,C,fixedText});
-  let summary,error=null;try{summary=validateCopy(k,copy,done.report);}catch(e){error=e.message;}
-  result.copies.push({id:copy.id,caseId:copy.caseId,passed:!error,error,summary,start:done.start,report:done.report,source:done.source,steam:done.steam});
-  fs.writeFileSync(resultFile+'.tmp',JSON.stringify(result));fs.renameSync(resultFile+'.tmp',resultFile);verbose(`lifecycle ${result.copies.length}/${copies.length} ${copy.id} ${error?'FAILED '+error:'passed'}`);
+  // A set-pool copy whose template never rolled a P套-only id is a miss, not a failure: the next alternate template is tried and every attempt is kept.
+  const attempts=[];let done,summary,error=null,miss=false;
+  for(const [j,candidate] of [copy,...(copy.alternates||[])].entries()){
+   done=await runCopy({copy:candidate,k,source,entry,out,saveInfo,catalogPath,port:base+i+j*40,C,fixedText});
+   try{summary=validateCopy(k,candidate,done.report);error=null;miss=false;}catch(e){error=e.message;miss=e instanceof Miss;summary=undefined;}
+   attempts.push({templateId:candidate.templateId,passed:!error,miss,error});if(!error||!miss)break;
+  }
+  result.copies.push({id:copy.id,caseId:copy.caseId,passed:!error,miss,error,summary,attempts,start:done.start,report:done.report,source:done.source,steam:done.steam});
+  fs.writeFileSync(resultFile+'.tmp',JSON.stringify(result));fs.renameSync(resultFile+'.tmp',resultFile);verbose(`lifecycle ${result.copies.length}/${copies.length} ${copy.id} ${error?(miss?'MISS ':'FAILED ')+error:'passed'}`);
  }
  const after={fixedSave:sha(fixedSave),playerSave:sha(playerSave),levelBaselines:sha(levelFile)};assert.deepEqual(after,guarded,'原檔或既有基準雜湊改變');
  assert.deepEqual(B1.verifySources(entry,k),sources,'快取雜湊改變');
  const outcomes=new Map(result.copies.map(v=>[v.id,v.passed])),done=copies.filter(c=>outcomes.has(c.id));
- const report={schemaVersion:1,task:'set-equipment-quality-B2',calibration:true,mergesProof:false,binding,manifestHash:manifest.manifestHash,guarded,guardedAfter:after,cacheUnchanged:true,
+ const misses=result.copies.filter(v=>v.miss).map(v=>v.id),report={schemaVersion:1,task:all?'set-equipment-quality-B4-lifecycle':'set-equipment-quality-B2',calibration:!all,mergesProof:false,misses,binding,manifestHash:manifest.manifestHash,guarded,guardedAfter:after,cacheUnchanged:true,
   copies:done.map(c=>({id:c.id,caseId:c.caseId,state:c.state,direction:c.direction,group:c.group,templateId:c.templateId,tier:c.tier,from:c.from,to:c.to,passed:outcomes.get(c.id)})),
   cases:caseResults(manifest,done,outcomes),coverage:(({rows,...rest})=>({...rest,pendingExecutable:rows.filter(r=>r.status==='pending-B4').length,covered:rows.filter(r=>r.copies.length).map(r=>r.id)}))(coverage(manifest,done,outcomes)),
   resultsHash:sha(resultFile)};
  fs.writeFileSync(path.join(out,'b2-report.json'),JSON.stringify(report,null,1)+'\n');return report;
 }
-module.exports={playCopy,markerBase,spans,lifecycleId,classes,planCopies,tailFor,candidateCore,buildStart,validateRefine,validateSort,validateCopy,covers,coverage,caseResults,lifecycleDriver,run};
+module.exports={playCopy,markerBase,spans,lifecycleId,classes,planCopies,planAll,Miss,tailFor,candidateCore,buildStart,validateRefine,validateSort,validateCopy,covers,coverage,caseResults,lifecycleDriver,run};
 if(require.main===module){
  const argv=process.argv.slice(2),opt=n=>argv.includes(n)?argv[argv.indexOf(n)+1]:undefined;
  // Without an explicit artifacts folder outside the repo nothing runs, so a migration run can never count this as evidence.
  if(!opt('--output')){console.error('套裝品質生命週期校正需要 --output（repo 外的 artifacts 目錄）；未提供，不產生任何驗證結果');process.exitCode=1;return;}
- run({out:path.resolve(opt('--output')),perClass:Number(opt('--per-class')||1),only:opt('--only')?.split(',')})
+ run({out:path.resolve(opt('--output')),perClass:Number(opt('--per-class')||1),only:opt('--only')?.split(','),all:argv.includes('--all')})
   .then(r=>{console.log(JSON.stringify({copies:r.copies.map(c=>c.id+':'+c.passed),cases:r.cases,baseComplete:r.coverage.baseComplete}));process.stdout.write('',()=>process.exit(r.copies.every(c=>c.passed)?0:1));})
   .catch(e=>{console.error(e.stack);process.stderr.write('',()=>process.exit(1));});
 }
