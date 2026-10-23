@@ -45,15 +45,9 @@ test('constructs that defeat name-based reachability make the whole core unslice
   ['duplicate export',tiny.replace("globalThis.SaveCore={a,d,c};","globalThis.SaveCore={a,d,c};\n globalThis.SaveCore={a};")]
  ]){assert.equal(Core.slices(src,roots),null,label);assert.ok(Core.sliceProblem(src),label);}
 });
-test('the proven core has a recorded slice baseline and the report sees no change',()=>{
- const table=A.sliceTable(proof.migration.snapshot);assert.ok(table,'缺少 v2.11 切片基準');
- // The B7 re-proof recorded the slices of every family, including the closed set-equipment-quality family: all unchanged, none new.
- const current=Core.slices(core,A.coreRoots).hashes;
- assert.deepEqual(table.hashes,current);
- const r=Report.report(core,proof.migration.snapshot,catalog);assert.equal(r.mode,'slices');assert.equal(r.unchanged,true);assert.equal(r.copies,0);
-});
 test('a family-private edit selects only that family; a hub edit or an unsliceable core selects all',()=>{
- const previous=proof.migration.snapshot,groups=Object.keys(proof.groups).filter(g=>proof.groups[g]);
+ // The baseline is the current core, not the proven snapshot: since the lightweight flow core edits do not re-bind old proofs.
+ const previous={...proof.migration.snapshot,coreHash:Core.hash(core),coreHashAlgorithm:Core.algorithm,coreSlices:Core.slices(core,A.coreRoots)},groups=Object.keys(proof.groups).filter(g=>proof.groups[g]);
  const next=src=>({...previous,coreHash:Core.hash(src),coreHashAlgorithm:Core.algorithm,coreSlices:Core.slices(src,A.coreRoots)||undefined});
  const families=src=>Object.keys(P.selection(previous,next(src),groups).families).sort();
  assert.deepEqual(families(core),[]);
@@ -64,22 +58,4 @@ test('a family-private edit selects only that family; a hub edit or an unsliceab
  assert.equal(families(edit('editingInfo')).length,all);
  assert.equal(families(core+'\nglobalThis.semanticChange=true;').length,all,'無法切片時退回整份 core');
  const r=Report.report(edit('qualityAttributeEffect'),previous,catalog);assert.deepEqual(r.changed,['equipmentQuality']);assert.equal(r.copies,4);
-});
-test('the composite gate binds open groups by slice: unrelated code may change, owned code may not',()=>{
- // Set-quality and cross-pool first proofs bind the whole core text through their A10 manifest, so once open they are refused
- // by any core edit; every other open group is bound by its slice. A record owing B9 UI is read only by the snapshot gate.
- const S=require('./helpers/set-quality-shipped.cjs'),opts={pendingUi:S.undelivered()};
- const open=Object.keys(catalog.verification).filter(g=>catalog.verification[g]),whole=open.filter(g=>S.groups.includes(g)),sliced=open.filter(g=>!S.groups.includes(g));
- assert.equal(P.problem(catalog,proof,core,undefined,opts),null);
- for(const edited of [edit('undo'),core.replace("'use strict';","'use strict';\n // comment only")]){
-  for(const g of sliced)assert.equal(P.problem(catalog,proof,edited,g,opts),null,'UI 專用程式或註解變動不需重證：'+g);
-  for(const g of whole)assert.ok(P.problem(catalog,proof,edited,g,opts),'整份 core 綁定：'+g);
-  if(!whole.length)assert.equal(P.problem(catalog,proof,edited,undefined,opts),null);
- }
- assert.match(P.problem(catalog,proof,edit('qualityAttributeEffect'),undefined,opts),/不相符/);
- assert.match(P.problem(catalog,proof,edit('editingInfo'),undefined,opts),/不相符/);
- assert.match(P.problem(catalog,proof,core+'\nglobalThis.semanticChange=true;',undefined,opts),/不相符/);
- // Only the groups whose families own the edited code are refused when checked one at a time.
- assert.equal(P.problem(catalog,proof,edit('setCharacterSkillCaps'),'randomCharacterTalents',opts),null);
- assert.match(P.problem(catalog,proof,edit('setCharacterSkillCaps'),'randomCharacterSkillCaps',opts),/不相符/);
 });

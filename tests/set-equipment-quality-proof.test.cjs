@@ -27,8 +27,7 @@ test('the four quality groups are registered everywhere and open only with their
  for(const script of [S.families.setEquipmentQuality.oracle,...S.families.setEquipmentQuality.lifecycle])assert.ok(fs.existsSync(path.join(__dirname,'../scripts',script)),script);
  assert.deepEqual(A.coreRoots.setEquipmentQuality.slice(-4),['setEquipmentQualityCandidateInfo','previewSetEquipmentQualityCandidate','applySetEquipmentQualityCandidate','setEquipmentQualityCandidateEffects']);
  assert.ok(A.dependencies.setEquipmentQuality&&A.regions.setEquipmentQuality);
- require('./helpers/set-quality-shipped.cjs').assertShipped(k,proof,source);
- assert.equal(P.problem(k,proof,source,undefined,{pendingUi:require('./helpers/set-quality-shipped.cjs').undelivered()}),null);
+ require('./helpers/set-quality-shipped.cjs').assertShipped(k,proof);
 });
 test('the matrix runner and the artifact-less lifecycle runner refuse to report any result without --output',()=>{
  const {spawnSync}=require('node:child_process');

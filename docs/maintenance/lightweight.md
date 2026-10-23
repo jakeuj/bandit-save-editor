@@ -47,3 +47,9 @@
 不再核對 core 摘要、證明內容、manifest 或工具雜湊，所以改 `src/core.js` 不會讓建置失敗。新功能冒煙通過後，在 `groups` 加上該群組並打開旗標。遊戲改版時，對受影響的功能跑冒煙，再更新 `gameVersion` 與 `fingerprints`。測試見 `tests/build-gate.test.cjs`。
 
 `scripts/*-proof.cjs` 與 `verification.json` 裡較早的首次證明紀錄仍保留作為歷史證據與遷移工具，但不再是建置條件。
+
+### 測試也不綁目前 core
+
+2026-10-24 第一次在輕量流程下改 core（小數丹藥）時，有 21 項舊測試失敗：它們斷言「已開放群組的首次證明、B7 等價或 core 切片基準必須對上目前的 `src/core.js`」。依使用者決定已刪除這些斷言（`tests/helpers/set-quality-shipped.cjs` 的 `assertShipped` 只核對旗標與群組紀錄存在）；切片選取機制測試改以目前 core 當基準。之後新增測試不要再把歷史證明綁到目前 core 文字或切片。
+
+新增旗標時，除了 `extract-game.cjs` 的預設值與 `catalog.json`，也要登記到 `scripts/verification-requirements.cjs` 與 `scripts/verification-suite.cjs` 對應 family 的 `groups`，否則 `version-migration` 測試會報「no family」。

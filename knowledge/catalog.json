@@ -65789,6 +65789,7 @@
     "equipmentAffixReplacement": true,
     "equipmentAffixCoefficient": true,
     "pillAptitudeBonus": true,
+    "pillAptitudeBonusDecimal": false,
     "names": true,
     "characterExperience": true,
     "professionExperience": true,

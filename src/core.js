@@ -607,9 +607,9 @@
     try{
      aptitudes=touched.map(aptitude=>{
       const before=characterAptitudeSource(m,characterId,aptitude).base,base=talentAptitudeBase(m,characterId,aptitude,levels),bonus=get(m,C(characterId,12+aptitude,2));
-      if(!Number.isSafeInteger(bonus)||bonus<0)throw Error('丹藥增量須為非負整數；既有小數增量保持唯讀。');
+      assertPillBonusReadable(bonus);
       const cap=Math.round(100*base*1.5)/100,total=Math.round(100*(base+bonus/10))/100,name=aptitudeNames[aptitude-1];
-      if(total>cap)reasons.push(`${name}丹藥增量 ${bonus} 使新總資質 ${total} 超過上限 ${cap}；請先降低丹藥增量。`);
+      if(total>cap)reasons.push(`${name}丹藥增量 ${pillGrid(bonus)} 使新總資質 ${total} 超過上限 ${cap}；請先降低丹藥增量。`);
       return {aptitude,name,before:{base:before,cap:Math.round(100*before*1.5)/100},after:{base,bonus,total,cap}};
      });
     }catch(e){reasons.push(e.message);}
@@ -704,7 +704,7 @@
    if(!recruitmentCombination(quality,raw))throw Error('目前三項基礎資質不屬於此品質的原版招募組合。');
    const aptitudes=[1,2,3].map(aptitude=>{
     const {base}=characterAptitudeSource(m,characterId,aptitude),bonus=get(m,C(characterId,12+aptitude,2));
-    if(!Number.isSafeInteger(bonus)||bonus<0)throw Error('丹藥增量須為非負整數；既有小數增量保持唯讀。');
+    assertPillBonusReadable(bonus);
     const cap=Math.round(100*base*1.5)/100,total=Math.round(100*(base+bonus/10))/100;
     if(!Number.isFinite(total)||total>cap)throw Error('目前丹藥增量超過角色資質上限，請先降低增量。');
     return {aptitude,name:aptitudeNames[aptitude-1],raw:raw[aptitude-1],base,bonus,total,cap};
@@ -721,7 +721,7 @@
   if(!combination)reasons.push('三項數值無法由此品質的任一原版招募傾向共同生成。');
   const aptitudes=info.aptitudes.map(before=>{
    const base=characterAptitudeSource(m,characterId,before.aptitude,baseRaw).base,cap=Math.round(100*base*1.5)/100,total=Math.round(100*(base+before.bonus/10))/100;
-   if(total>cap)reasons.push(`${before.name}丹藥增量 ${before.bonus} 使新總資質 ${total} 超過上限 ${cap}；請先降低丹藥增量。`);
+   if(total>cap)reasons.push(`${before.name}丹藥增量 ${pillGrid(before.bonus)} 使新總資質 ${total} 超過上限 ${cap}；請先降低丹藥增量。`);
    return {aptitude:before.aptitude,name:before.name,before,after:{raw:baseRaw[before.aptitude-1],base,bonus:before.bonus,total,cap}};
   });
   const changes=aptitudes.filter(a=>a.before.raw!==a.after.raw).map(a=>({coordinate:C(characterId,9+a.aptitude,2),before:a.before.raw,after:a.after.raw,label:`${get(m,C(characterId,1,2))}・${a.name}基礎資質`}));
@@ -735,21 +735,32 @@
   try{transaction(m,()=>{for(const c of preview.changes)put(m,c.coordinate,c.after,c.label);},'三項基礎資質調整');}finally{m.currentGroup=previous;}
   return preview;
  }
+ // Decimal pill bonus (pillAptitudeBonusDecimal): native B may carry .5 clamp endpoints or float tails; input uses a 0.1 grid.
+ const decimalPills=()=>!!KNOWLEDGE.verification.pillAptitudeBonusDecimal;
+ const pillBonusReadable=bonus=>decimalPills()?typeof bonus==='number'&&Number.isFinite(bonus)&&bonus>=0:Number.isSafeInteger(bonus)&&bonus>=0;
+ const pillGrid=bonus=>Number.isSafeInteger(bonus)?bonus:Math.round(bonus*10)/10;
+ function assertPillBonusReadable(bonus){if(!pillBonusReadable(bonus))throw Error(decimalPills()?'丹藥增量須為非負有限數值。':'丹藥增量須為非負整數；既有小數增量保持唯讀。');}
  function pillInfo(m,characterId,aptitude,pillId){
   if(!Number.isInteger(aptitude)||aptitude<1||aptitude>3)throw Error('無效的資質類型。');
   const {base}=characterAptitudeSource(m,characterId,aptitude);
   if(!Number.isSafeInteger(pillId)||pillId<1||pillId>=m.original.size[0])throw Error('無效的丹藥編號。');
   const pill=KNOWLEDGE.batch2Data.pills[pillId];
   if(!pill||pill.aptitude!==aptitude||!Number.isSafeInteger(get(m,C(pillId,6,0)))||get(m,C(pillId,6,0))<1)throw Error('請選擇已持有的對應資質丹藥作為上限依據。');
-  const cap=Math.round(100*base*1.5)/100,max=Math.floor((Math.min(cap,pill.cap)-base)*10+1e-8),coordinate=C(characterId,12+aptitude,2),current=get(m,coordinate);
-  if(!Number.isFinite(base)||base<=0||!Number.isSafeInteger(max)||max<0||!Number.isSafeInteger(current)||current<0)throw Error('現有增量或資質上限尚未涵蓋；小數原始增量保持唯讀。');
-  return {characterId,aptitude,pillId,coordinate,current,min:0,max,base,cap,pillCap:pill.cap,total:Math.round(100*(base+current/10))/100,name:aptitudeNames[aptitude-1],verified:!!KNOWLEDGE.verification.pillAptitudeBonus};
+  const decimal=decimalPills(),cap=Math.round(100*base*1.5)/100,room=Math.min(cap,pill.cap)-base,max=decimal?Math.floor(room*100+1e-6)/10:Math.floor(room*10+1e-8),coordinate=C(characterId,12+aptitude,2),current=get(m,coordinate);
+  if(!Number.isFinite(base)||base<=0||!Number.isFinite(max)||max<0||!pillBonusReadable(current))throw Error(decimal?'現有增量或資質上限尚未涵蓋。':'現有增量或資質上限尚未涵蓋；小數原始增量保持唯讀。');
+  return {characterId,aptitude,pillId,coordinate,current,display:pillGrid(current),step:decimal?0.1:1,decimal,min:0,max,base,cap,pillCap:pill.cap,total:Math.round(100*(base+current/10))/100,name:aptitudeNames[aptitude-1],verified:!!KNOWLEDGE.verification.pillAptitudeBonus};
  }
  function setPillAptitudeBonus(m,{characterId,aptitude,pillId,bonus,advanced=false}){
   if(advanced!==false)throw Error('丹藥增量尚未開放超限模式。');
   const info=pillInfo(m,characterId,aptitude,pillId);
   if(!info.verified)throw Error('丹藥增量尚未完成隔離遊戲驗證。');
-  if(!Number.isSafeInteger(bonus)||bonus<0||bonus>info.max)throw Error(`累積增量須為 0–${info.max} 的整數（每 1 等於資質 0.1 點）。`);
+  if(info.decimal){
+   if(typeof bonus!=='number'||!Number.isFinite(bonus)||Math.abs(bonus*10-Math.round(bonus*10))>1e-8)throw Error(`累積增量須為 0–${info.max}，最多一位小數（每 1 等於資質 0.1 點）。`);
+   bonus=pillGrid(bonus);
+   // Re-entering the displayed value keeps the native token, including binary float tails.
+   if(bonus===info.display)return {...info,value:info.current,unchanged:true};
+   if(bonus<0||bonus>info.max)throw Error(`累積增量須為 0–${info.max}，最多一位小數（每 1 等於資質 0.1 點）。`);
+  }else if(!Number.isSafeInteger(bonus)||bonus<0||bonus>info.max)throw Error(`累積增量須為 0–${info.max} 的整數（每 1 等於資質 0.1 點）。`);
   return batch2Put(m,info,bonus,`aptitude:${characterId}`,`${get(m,C(characterId,1,2))}・${info.name}丹藥累積增量`);
  }
  /** @returns {FieldDescriptor} */

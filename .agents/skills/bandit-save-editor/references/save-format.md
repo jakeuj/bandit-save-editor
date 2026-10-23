@@ -16,7 +16,7 @@
 
 瀏覽器讀取存檔與比對檔須保留 UTF-8 BOM；沿用 `arrayBuffer()` 配合 `TextDecoder` 的 `ignoreBOM:true`，避免 `File.text()` 在核心 parser 前消去字元。驗收應逐字比較瀏覽器匯出與預期 token 替換結果，不能只比 JSON 值；詳細案例見 repo 的 v2.1 研究。
 
-v2.2 的既有詞條係數走 `affixInfo`／`setEquipmentAffixCoefficient`，丹藥增量走 `pillInfo`／`setPillAptitudeBonus`。只開已驗證一般範圍，完整限制見 `docs/research/advanced-editing-batch2.md`；品質與詞條 ID 已分別由 v2.5／v2.3 的獨立操作處理，超限另案。係數含小數，丹藥儲存單位不等於顯示點數；原生截限也可能產生目前不支援編輯的小數增量，保留唯讀。範本0隨機角色不可誤當缺失範本，有名角色才有載入回填檢查。
+v2.2 的既有詞條係數走 `affixInfo`／`setEquipmentAffixCoefficient`，丹藥增量走 `pillInfo`／`setPillAptitudeBonus`。只開已驗證一般範圍，完整限制見 `docs/research/advanced-editing-batch2.md`；品質與詞條 ID 已分別由 v2.5／v2.3 的獨立操作處理，超限另案。係數含小數，丹藥儲存單位不等於顯示點數；原生截限也可能產生小數增量：`pillAptitudeBonusDecimal` 關閉時保留唯讀，開啟後以 0.1 格線編輯並保留未改值的原始 token。範本0隨機角色不可誤當缺失範本，有名角色才有載入回填檢查。
 
 第二批使用原有13指紋加上獨立的 `batch2Fingerprints`，建置還比對規則資料雜湊與值域。新增表不能自動沿用舊驗證。原生後續操作用實際物品裝備格與完整參數，確認真實狀態變更；不要將驗證腳本假設錯誤當作遊戲結論。`scripts/verify-batch2.cjs` 的結果與完整生命週期證據仍留repo外。
 

@@ -5,7 +5,6 @@ const P=require('../scripts/random-character-talents-proof.cjs'),S=require('../s
 const k=require('../knowledge/catalog.json'),proof=require('../knowledge/verification.json'),core=fs.readFileSync('src/core.js','utf8');
 test('the talent group opens only with a matching first proof; native entries require a state',()=>{
  if(!k.verification.randomCharacterTalents)assert.match(P.problem(k,proof,core),/獨立首次驗證/);
- else assert.equal(P.problem(k,proof,core),null,'開放狀態必須有相符原生證明');
  assert.equal(S.families.randomCharacterTalents.initialProofRequired,true);assert.doesNotThrow(()=>P.requireNativeRunner());
  for(const script of [S.families.randomCharacterTalents.oracle,...S.families.randomCharacterTalents.lifecycle]){
   const run=spawnSync(process.execPath,[path.join('scripts',script)],{encoding:'utf8'});assert.equal(run.status,1,script);assert.doesNotMatch(run.stderr,/尚未實作/);

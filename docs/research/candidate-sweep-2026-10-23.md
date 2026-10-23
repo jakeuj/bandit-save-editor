@@ -47,6 +47,21 @@
 
 另以 Node 的 IEEE-754 算術代入同一端點式（仍非原生遊戲測試）：baseRaw=69、A=6.9、C=10.35、P=10 得 B=`30.999999999999996`；baseRaw=71、P=10 得 `29.000000000000004`。連理論上整數的端點都會有尾數，故單純把檢查改成 `Number.isSafeInteger(B*10)` 仍會誤拒。輸入目標格線與既有原生數值資格必須分開設計；實際遊戲序列化結果待獨立見證。
 
+### 實作摘要（2026-10-24，旗標關閉）
+
+依[輕量開發流程](../maintenance/lightweight.md)直接實作，限無結丹，不建 SDD。對話決定的兩項政策：
+
+- **輸入格線 0.1**：B 最多一位小數（資質 0.01 步進，對應遊戲顯示兩位小數）。上限 `max=floor(100×(min(C,P)−A)+1e-6)/10`，仍是 v2.2 的保守產品限制（外層完整 A），不是原版雙 clamp 的逐字等價。浮點尾數端點（例如 30.999999999999996）落回格線 31，不會少一格。
+- **原始浮點保留**：載入不四捨五入；既有 B 只要是非負有限數值就可讀，資格仍以原始值算總資質不超上限。`pillInfo` 回傳原始 `current` 與格線 `display`；填回同一顯示值回傳 `unchanged`、不寫入，原始 token 逐字保留。
+
+**欄位與入口**：只寫 `[角色,13–15,2]`，入口仍為 `pillInfo`／`setPillAptitudeBonus`（`aptitude:角色ID` 還原群組不變）。新旗標 `pillAptitudeBonusDecimal` 預設關閉；關閉時行為與 v2.2 完全相同（整數、小數 B 唯讀）。開啟後一併放寬 `randomCharacterGrowthInfo` 與天賦預覽的 B 讀取檢查（`assertPillBonusReadable`），基礎資質與天賦會照常因小數 B 超上限而阻擋。旗標登記在 batch2 family（`verification-requirements.cjs`／`verification-suite.cjs`），重建 batch2 規則時與既有丹藥旗標一起關閉。
+
+**拒絕條件**：非數值、NaN／Infinity、負數、超過一位小數、超過 max、`advanced`，以及丹藥主旗標未開。自訂座標與 `setField` 仍唯讀。
+
+**合成測試**：`tests/pill-decimal.test.cjs`，涵蓋旗標關閉、三項資質 0／15.4／15.5 端點／15.6、浮點尾數端點、既有尾數 token 保留與 undo／restore、基礎資質群組相依、天賦預覽讀小數 B、自訂座標不可繞過。
+
+**尚待**：隔離遊戲冒煙（建議代表案例：一名無結丹範本 0 角色，某項 B 設 .5 端點、另一項設一般小數；原版存檔、新程序讀回，再原生服一顆藥確認 clamp 正常）。通過後在 `verification.json` 的 `groups` 加 `pillAptitudeBonusDecimal` 並開旗標。
+
 ## 2. 結丹丹藥與內丹：先做唯讀依賴
 
 `角色资质上限倍率` SID **358500068340403**，expressions **4058–4060** 仍由角色 y50 的整數次數，逐次讀 `z16[角色,2k]` 引用的 `z17[內丹,15]`，最後加 1.5。
