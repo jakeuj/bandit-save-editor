@@ -4,15 +4,15 @@
 
 ## 現在接哪一案
 
-**目前主線：套裝品質／詞條。階段：A1–A10 已完成（來源核對、最小資料、獨立候選資格／預覽／升降品交易入口 `setEquipmentQualityCandidateInfo`、`previewSetEquipmentQualityCandidate`、`applySetEquipmentQualityCandidate`，獨立交易／可達性、效果／生命週期 oracle 與 manifest 分片契約，並已把四群組接進 requirements／suite／migration／proof，旗標一律 false；core 切片未變）；A 階段已交接完成（`210351d`），B 階段待使用者授權。** 2026-10-23 由使用者選定；寶物等級已作為 v2.11 發布，背包與裝備庫（含穿戴）兩庫的首次證明已合併並開啟。更新日期：2026-10-23。
+**目前主線：套裝品質／詞條。階段：A1–A10 已完成（來源核對、最小資料、獨立候選資格／預覽／升降品交易入口 `setEquipmentQualityCandidateInfo`、`previewSetEquipmentQualityCandidate`、`applySetEquipmentQualityCandidate`，獨立交易／可達性、效果／生命週期 oracle 與 manifest 分片契約，並已把四群組接進 requirements／suite／migration／proof，旗標一律 false；core 切片未變）；A 階段已交接完成（`210351d`）；B 階段第一批 B1 原生基準（`ba3d733`）與 B3 候選介面（`26721bc`）已完成並核對，四群組旗標仍為 false。** 2026-10-23 由使用者選定；寶物等級已作為 v2.11 發布，背包與裝備庫（含穿戴）兩庫的首次證明已合併並開啟。更新日期：2026-10-23。
 
 | 要知道什麼 | 目前答案 |
 | --- | --- |
 | 剛完成 | v2.11 寶物等級：只改等級、不扣魂魄、不提供經驗修改；SDD 十項完成並[歸檔](../../sdd/archive/2026-10-23-treasure-level/tasks.md)，研究見[寶物等級研究](treasure-level.md)，發布說明見[各版紀錄](../releases.md#v211-寶物等級) |
 | 目前主線 | 套裝品質／詞條：[母規格](../../sdd/set-equipment-quality/proposal.md)、[A 任務](../../sdd/set-equipment-quality-a/tasks.md)、[B 任務](../../sdd/set-equipment-quality-b/tasks.md)。A 為候選資格、交易、oracle、manifest 與 proof 接線（不跑原生、四品質群組關閉）；B 為原生證明、合併與正式入口 |
-| 下一步 | B 階段（[B 任務](../../sdd/set-equipment-quality-b/tasks.md)），**須使用者明確授權才開始**：可同時開 B1 補原生基準（Opus，要啟動隔離遊戲）與 B3 候選介面與停用驗收（Sonnet，不跑原生）；起點與輸入見[B 準備清單](../../sdd/set-equipment-quality-a/tasks.md#b-準備清單a-階段交接用) |
-| 授權 | A 階段（A1–A10 與交接）已授權並完成；B 階段逐段明確授權，原生遊戲另需授權，B5 另需 computer use 授權 |
-| 分派 | 依 [B 任務的分派表](../../sdd/set-equipment-quality-b/tasks.md#分派)：B1（Opus）與 B3（Sonnet）可並行；原生遊戲同時只能一段。主 session 開子 session 與續派的規則見[任務分派](../maintenance/dispatch.md) |
+| 下一步 | [B2](../../sdd/set-equipment-quality-b/tasks.md) 生命週期副本與執行接線（Sonnet，原生小分片校正），**須使用者授權啟動隔離遊戲**；B2 完成後依序為 B4 首次矩陣（原生長跑）、B6 等級跨池補證，B5 原版 UI 另需 computer use 授權 |
+| 授權 | A 階段已完成；B1（含隔離遊戲）、B3 已授權並完成；其餘 B 段逐段明確授權，原生遊戲另需授權，B5 另需 computer use 授權 |
+| 分派 | 依 [B 任務的分派表](../../sdd/set-equipment-quality-b/tasks.md#分派)：B2（Sonnet）解鎖；B4 等 B2，B6 等 B4 且不可與 B4 同時跑；原生遊戲同時只能一段。主 session 開子 session 與續派的規則見[任務分派](../maintenance/dispatch.md) |
 | 開放狀態 | 以目前 catalog／verification 為準；四個品質群組已註冊但旗標為 false（`initialProofRequired`），未證明的群組維持關閉 |
 
 ### 其他候選
