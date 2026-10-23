@@ -265,7 +265,8 @@ async function run({out,perClass=1,only,all=false,verbose=console.log}){
  const saveInfo=fs.existsSync(path.join(path.dirname(fixedSave),'saveinfo.dat'))?path.join(path.dirname(fixedSave),'saveinfo.dat'):null;
  const sources=B1.verifySources(entry,k),guarded={fixedSave:sha(fixedSave),playerSave:sha(playerSave),levelBaselines:sha(levelFile)};
  const level=JSON.parse(fs.readFileSync(levelFile,'utf8'));assert.deepEqual(level.binding.fingerprints,sources.fingerprints,'等級基準指紋不符');
- const manifest=M.createManifest(k,source,{baselineHash:'0'.repeat(64),runtimeHash:entry.runtimeHash,sourceManifestHash:sources.sourceManifestHash,runtimeManifestHash:sources.runtimeManifestHash});
+ // Case ids / hashes do not depend on the external input hashes; the A10 contract compares against the all-zero-input manifest, so report that one.
+ const manifest=M.createManifest(k,source,Object.fromEntries(['baselineHash','runtimeHash','sourceManifestHash','runtimeManifestHash'].map(n=>[n,'0'.repeat(64)])));
  const copies=(all?planAll(k,level.results,manifest):planCopies(k,level.results,{perClass})).filter(c=>!only||only.includes(c.id)),C=candidateCore(k,source),fixedText=fs.readFileSync(fixedSave,'utf8');
  const resultFile=path.join(out,'lifecycle-results.json'),binding={coreHash:hash(source.replace(/\r\n/g,'\n')),dataHash:hash(k.setEquipmentQuality),scenarioHash:hash(fs.readFileSync(path.join(__dirname,'set-equipment-quality-scenarios.cjs'),'utf8').replace(/\r\n/g,'\n')),
   runnerHash:hash(fs.readFileSync(__filename,'utf8').replace(/\r\n/g,'\n')),fingerprints:sources.fingerprints};
