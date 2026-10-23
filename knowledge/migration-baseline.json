@@ -17,13 +17,18 @@
     "yx.json": "58b8eb984cf8190f52ed4e53d044079733cf82096224dd7014ec36e1da2b45bc",
     "tz.json": "a4b008981f39abc371b5673abe4c780bef5c91229a5ae3a42d2e8fef4e780c74"
   },
-  "coreHash": "c0f8ca69ace53511fbdf977b173925738085fa4d6cf78240aac402dde0a3b749",
+  "coreHash": "ae4bbdb76cdf419c2b93d634b1945c5001165020fe72e97ab9c8671bde1faf9d",
   "coreHashAlgorithm": "core-estree-acorn-8.15.0-es2024-v1",
   "roles": {
     "setEquipmentLevel": {
       "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
       "effects": "aa1a08538bfeccf16a4c8a3736c4c10bb329d96b2d87477440aaea81f147bf95",
       "lifecycle": "501fa3441a0be8311b3b40621e6ef11797fe5d01fd9c531a5bef8a6fad0fc76c"
+    },
+    "treasureLevel": {
+      "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
+      "effects": "14078bdd865fdd091c315e334b814eb2fd9790c010fb3d671e36949182b264f1",
+      "lifecycle": "aec1c9fa52f79c28a926e78c8c7419cfe933ffd02753fb1bbcbd2012a8c6ac1f"
     },
     "growth": {
       "io": "33fbdb44899bc76416185cf7549753410161dc1c15aa34ae8fb3ae1c980db5d7",
@@ -78,6 +83,8 @@
   "dataHashes": {
     "backpackSetEquipmentLevel": "86831316f3112d4ae6f6785cc85235ee735286844bb7cffa39727a024f8531a9",
     "setEquipmentLevel": "86831316f3112d4ae6f6785cc85235ee735286844bb7cffa39727a024f8531a9",
+    "backpackTreasureLevel": "f5351ba416120f3dda660ce6e9321dbd04eb3391a292cc4c6c80d02f9f0312e1",
+    "treasureLevel": "f5351ba416120f3dda660ce6e9321dbd04eb3391a292cc4c6c80d02f9f0312e1",
     "randomCharacterTalents": "9147a7b6687005b9d9309cec340537cd3cc3316bc3db3f73cc00fd4f40fedc27",
     "randomCharacterSkillCaps": "24690926687b1bc8130cfc789ef8152d650b42dbb0c92c558b5cb20c88f39398",
     "randomCharacterBaseAptitudes": "3a5f3d21fc65d09694aebd302f32813f5dc82723fd87f16d795329306431fd76",
@@ -103,6 +110,5 @@
     "professionTrainingCapAdvanced": "9cfc45ae4559b614a2453173e26df0cc5ff6299902f468bb07488acb4d91fe2b",
     "advancedTechnologyLevel": "9cfc45ae4559b614a2453173e26df0cc5ff6299902f468bb07488acb4d91fe2b",
     "advancedTechnologyLevelAdvanced": "9cfc45ae4559b614a2453173e26df0cc5ff6299902f468bb07488acb4d91fe2b"
-  },
-  "proofHash": "537cd8f6bc85b36933904da47e06edc0a970d9ac7975a3aa1ae440550b417dc4"
+  }
 }

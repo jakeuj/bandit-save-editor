@@ -1,7 +1,7 @@
 'use strict';
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),os=require('node:os'),{spawnSync}=require('node:child_process');
 const root=path.resolve(__dirname,'..'),P=require('../scripts/random-character-growth-proof.cjs'),R=require('../scripts/verification-requirements.cjs'),{mergeProof}=require('../scripts/verify-random-character-suite.cjs');
-const k=JSON.parse(fs.readFileSync(path.join(root,'knowledge/catalog.json'))),old=JSON.parse(fs.readFileSync(path.join(root,'knowledge/verification.json'))),core=fs.readFileSync(path.join(root,'src/core.js'),'utf8');
+const L=require('./helpers/legacy-release.cjs'),k=L.catalog(),old=L.proof(),core=L.core;// 凍結的舊版證明＋對應 core
 const checks=()=>Object.fromEntries(R.requiredChecks('randomCharacterBaseAptitudes').map(c=>[c,true]));
 const results=()=>({date:'2026-10-22T00:00:00Z',platform:'darwin-arm64',completed:true,copies:[{name:'random-growth-matrix',cases:24,ok:true},{name:'random-growth-lifecycle',cases:2,ok:true}],checks:{randomCharacterBaseAptitudes:checks()}});
 test('initial proof merges only new group and preserves all previous sections, including complete matrix coverage',()=>{
@@ -20,7 +20,7 @@ test('new growth gate binds all 15 sources, rules, relevant tables and actual ca
 test('real build rejects a candidate flag without new proof and rejects changed formula or rules',()=>{
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'bandit-growth-gate-'));
  try{
-  fs.cpSync(root,dir,{recursive:true,filter:p=>!/[\\/](\.git|graphify-out|node_modules)([\\/]|$)/.test(p)});
+  fs.cpSync(root,dir,{recursive:true,filter:p=>!/[\\/](\.git|graphify-out|node_modules)([\\/]|$)/.test(p)});L.overlay(dir);
   const kp=path.join(dir,'knowledge/catalog.json'),pp=path.join(dir,'knowledge/verification.json');
   const merged=mergeProof({catalog:k,proof:old,results:results(),coreSource:core});fs.writeFileSync(kp,JSON.stringify(merged.catalog));
   const missing=structuredClone(old);delete missing.randomCharacterGrowth;fs.writeFileSync(pp,JSON.stringify(missing));

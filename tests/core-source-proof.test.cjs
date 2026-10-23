@@ -1,7 +1,7 @@
 'use strict';
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs');
 const C=require('../scripts/core-source-proof.cjs'),P=require('../scripts/random-character-skill-caps-proof.cjs');
-const core=fs.readFileSync('src/core.js','utf8'),catalog=require('../knowledge/catalog.json'),proof=require('../knowledge/verification.json'),baseline=require('../knowledge/migration-baseline.json');
+const L=require('./helpers/legacy-release.cjs'),core=L.core,catalog=L.catalog(),proof=L.proof(),baseline=L.baseline();// 舊格式機制以凍結的舊版證明＋對應 core 驗證；現行 repo 證明為複合格式
 test('AST omits trivia but retains all executable syntax, directives, regex and template semantics',()=>{
  const source='"use strict"; const a = 123n; function f(x) { return x + 1; }';
  assert.equal(C.hash(source),C.hash('// header\r\n"use strict";\n const a=123n; /* comment */ function f ( x ) {\n return x+1;\n}'));
@@ -54,6 +54,7 @@ test('actual builder accepts cosmetic core rebuilds without rewriting native evi
  const root=path.resolve(__dirname,'..'),dir=fs.mkdtempSync(path.join(os.tmpdir(),'bandit-core-ast-'));
  t.after(()=>fs.rmSync(dir,{recursive:true,force:true}));
  for(const name of ['scripts','src','knowledge','assets','index.html','sw.js','manifest.webmanifest'])fs.cpSync(path.join(root,name),path.join(dir,name),{recursive:true});
+ L.overlay(dir);
  const nativeBefore=fs.readFileSync(path.join(dir,'knowledge/verification.json'));
  const baselineBefore=fs.readFileSync(path.join(dir,'knowledge/migration-baseline.json'));
  const run=args=>spawnSync(process.execPath,['scripts/build-editor.cjs',...args],{cwd:dir,encoding:'utf8'});

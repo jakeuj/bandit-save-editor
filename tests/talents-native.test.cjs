@@ -3,7 +3,7 @@ const {test}=require('node:test'),assert=require('node:assert/strict'),fs=requir
 const P=require('../scripts/random-character-talents-proof.cjs'),{mergeProof}=require('../scripts/verify-talents-suite.cjs');
 const {rawTokens}=require('../scripts/verify-random-character-talents.cjs'),{buildTalentScenarios,triples}=require('../scripts/random-character-talents-scenarios.cjs');
 // Merges start from the state before the first talent proof, even after the real proof is recorded.
-const k=JSON.parse(fs.readFileSync('knowledge/catalog.json','utf8')),proof=JSON.parse(fs.readFileSync('knowledge/verification.json','utf8')),source=fs.readFileSync('src/core.js','utf8');
+const L=require('./helpers/legacy-release.cjs'),k=L.catalog(),proof=L.proof(),source=L.core;
 k.verification.randomCharacterTalents=false;delete proof.randomCharacterTalents;delete proof.groups.randomCharacterTalents;
 const proofText=JSON.stringify(proof,null,2)+String.fromCharCode(10);
 const ctx={setTimeout};vm.runInNewContext(source.replace('/*__KNOWLEDGE__*/null',JSON.stringify(k)),ctx);const C=ctx.SaveCore;

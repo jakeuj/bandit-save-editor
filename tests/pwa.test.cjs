@@ -174,7 +174,7 @@ test('build check catches stale releases; changes to icons, HTML and worker code
 test('replacement gate rejects missing or stale independent proof', () => {
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'bandit-affix-proof-'));
  try{
-  for(const file of ['scripts','src','knowledge','assets','index.html','sw.js','manifest.webmanifest'])fs.cpSync(path.join(root,file),path.join(dir,file),{recursive:true});
+  for(const file of ['scripts','src','knowledge','assets','index.html','sw.js','manifest.webmanifest'])fs.cpSync(path.join(root,file),path.join(dir,file),{recursive:true});require('./helpers/legacy-release.cjs').overlay(dir);
   const catalogPath=path.join(dir,'knowledge/catalog.json'),proofPath=path.join(dir,'knowledge/verification.json');
   const k=JSON.parse(fs.readFileSync(catalogPath)),p=JSON.parse(fs.readFileSync(proofPath));k.verification.equipmentAffixReplacement=true;p.groups.equipmentAffixReplacement=true;
   fs.writeFileSync(catalogPath,JSON.stringify(k));delete p.affixReplacement;fs.writeFileSync(proofPath,JSON.stringify(p));
@@ -189,7 +189,7 @@ test('replacement gate rejects missing or stale independent proof', () => {
 test('equipment workflow independently rejects stale rules and first-selection without native UI evidence',()=>{
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'bandit-workflow-proof-'));
  try{
-  for(const file of ['scripts','src','knowledge','assets','index.html','sw.js','manifest.webmanifest'])fs.cpSync(path.join(root,file),path.join(dir,file),{recursive:true});
+  for(const file of ['scripts','src','knowledge','assets','index.html','sw.js','manifest.webmanifest'])fs.cpSync(path.join(root,file),path.join(dir,file),{recursive:true});require('./helpers/legacy-release.cjs').overlay(dir);
   const catalogPath=path.join(dir,'knowledge/catalog.json'),proofPath=path.join(dir,'knowledge/verification.json');
   const k=JSON.parse(fs.readFileSync(catalogPath)),p=JSON.parse(fs.readFileSync(proofPath));
   const run=()=>spawnSync(process.execPath,['scripts/build-editor.cjs'],{cwd:dir,encoding:'utf8'});
@@ -205,7 +205,7 @@ test('equipment workflow independently rejects stale rules and first-selection w
 test('quality directions require their own lifecycle UI and formula-bound proof',()=>{
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'bandit-quality-proof-'));
  try{
-  for(const file of ['scripts','src','knowledge','assets','index.html','sw.js','manifest.webmanifest'])fs.cpSync(path.join(root,file),path.join(dir,file),{recursive:true});
+  for(const file of ['scripts','src','knowledge','assets','index.html','sw.js','manifest.webmanifest'])fs.cpSync(path.join(root,file),path.join(dir,file),{recursive:true});require('./helpers/legacy-release.cjs').overlay(dir);
   const catalogPath=path.join(dir,'knowledge/catalog.json'),proofPath=path.join(dir,'knowledge/verification.json'),k=JSON.parse(fs.readFileSync(catalogPath)),p=JSON.parse(fs.readFileSync(proofPath));
   const groups=['backpackEquipmentQualityUpgrade','backpackEquipmentQualityDowngrade','equipmentQualityUpgrade','equipmentQualityDowngrade'],hash=require('node:crypto').createHash('sha256').update(JSON.stringify({quality:k.equipmentQuality,items:k.batch2Data.items,workflow:k.equipmentWorkflowLimits})).digest('hex');
   const formula=fs.readFileSync(path.join(dir,'src/core.js'),'utf8').match(/ function qualityAttributeEffect\([\s\S]*?(?= function previewEquipmentQualityChange)/)[0].replace(/\r\n/g,'\n');

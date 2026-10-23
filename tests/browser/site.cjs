@@ -8,12 +8,13 @@ const root = path.resolve(__dirname, '../..');
 const mime = {'.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
   '.webmanifest': 'application/manifest+json', '.svg': 'image/svg+xml', '.png': 'image/png'};
 
-// A candidate site is a disposable build of the current source with the named flags opened and the proof gate removed.
+// A candidate site is a disposable build of the current source with the named flags opened or closed and the proof gate removed.
 // It exists only to exercise unproven UI paths in a browser; it is never a release artifact and never touches the repo.
-async function buildCandidate(dir, flags) {
+async function buildCandidate(dir, spec) {
+  const {open = [], close = []} = Array.isArray(spec) ? {open: spec} : spec;
   for (const folder of ['scripts', 'src', 'knowledge']) await fs.cp(path.join(root, folder), path.join(dir, folder), {recursive: true});
   const catalogFile = path.join(dir, 'knowledge/catalog.json'), catalog = JSON.parse(await fs.readFile(catalogFile, 'utf8'));
-  for (const flag of flags) { if (!Object.hasOwn(catalog.verification, flag)) throw Error('Unknown candidate flag ' + flag); catalog.verification[flag] = true; }
+  for (const [flags, value] of [[open, true], [close, false]]) for (const flag of flags) { if (!Object.hasOwn(catalog.verification, flag)) throw Error('Unknown candidate flag ' + flag); catalog.verification[flag] = value; }
   await fs.writeFile(catalogFile, JSON.stringify(catalog, null, 2));
   const builder = path.join(dir, 'scripts/build-editor.cjs'), gate = 'if(Object.values(knowledge.verification).some(Boolean)){', source = await fs.readFile(builder, 'utf8');
   if (!source.includes(gate)) throw Error('Candidate builder gate not found');

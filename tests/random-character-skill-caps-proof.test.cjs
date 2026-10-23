@@ -2,7 +2,7 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),os=require('node:os'),{spawnSync}=require('node:child_process');
 const P=require('../scripts/random-character-skill-caps-proof.cjs'),R=require('../scripts/verification-requirements.cjs'),S=require('../scripts/verification-suite.cjs'),M=require('../scripts/verify-migration.cjs');
 const {mergeProof,recordProof}=require('../scripts/verify-skill-caps-suite.cjs');
-const k=structuredClone(require('../knowledge/catalog.json')),old=structuredClone(require('../knowledge/verification.json')),core=fs.readFileSync('src/core.js','utf8'),root=path.resolve(__dirname,'..');
+const L=require('./helpers/legacy-release.cjs'),k=L.catalog(),old=L.proof(),core=L.core,root=path.resolve(__dirname,'..');
 // Exercise first-opening behavior independently of whether the shipping catalog is already open.
 k.verification[P.group]=false;delete old[P.group];delete old.groups[P.group];
 const checks=()=>Object.fromEntries(R.requiredChecks(P.group).map(c=>[c,true]));
@@ -10,7 +10,7 @@ const validation={version:1,runner:'verify-skill-caps-suite.cjs',matrixCases:108
 // This structural unit fixture is never written into the product catalog or presented as native evidence.
 const record=()=>P.record(k,core,{date:'2026-10-22',platform:'synthetic-test-only',checks:checks(),coverage:'initial-matrix',copies:[{name:'random-skill-caps-matrix',operations:108},{name:'random-skill-caps-lifecycle',operations:2}],validation});
 const directory=()=>fs.mkdtempSync(path.join(os.tmpdir(),'bandit-caps-proof-'));
-const copyRepo=dir=>{fs.cpSync(root,dir,{recursive:true,filter:p=>!/[\\/](\.git|graphify-out|node_modules)([\\/]|$)/.test(p)});fs.writeFileSync(path.join(dir,'knowledge/catalog.json'),JSON.stringify(k));fs.writeFileSync(path.join(dir,'knowledge/verification.json'),JSON.stringify(old));};
+const copyRepo=dir=>{fs.cpSync(root,dir,{recursive:true,filter:p=>!/[\\/](\.git|graphify-out|node_modules)([\\/]|$)/.test(p)});L.overlay(dir);fs.writeFileSync(path.join(dir,'knowledge/catalog.json'),JSON.stringify(k));fs.writeFileSync(path.join(dir,'knowledge/verification.json'),JSON.stringify(old));};
 
 test('cap proof binds 15 sources, rules, all checks, entire core, complete initial ancestry and native evidence digest',()=>{
  const proof={...old,[P.group]:record()};assert.equal(P.problem(k,proof,core),null);assert.ok(P.problem(k,old,core));

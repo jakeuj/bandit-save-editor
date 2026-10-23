@@ -9,7 +9,7 @@
 
 ### 寶物、套裝與規劃
 
-- 寶物等級／經驗、穿卸搬移或分解返還：讀 repo 的 `docs/research/treasure-level.md` 與 `sdd/treasure-level/proposal.md`、`tasks.md`。V1.0.11.2 靜態研究確認實際為魂魄升級；經驗函式沒有找到呼叫，不新增虛構經驗欄位。等級有條件 go 不等於已實作／開閘，當前階段回進度入口核對。
+- 寶物等級／經驗、穿卸搬移或分解返還：讀 repo 的 `docs/research/treasure-level.md` 與 `sdd/treasure-level/proposal.md`、`tasks.md`。V1.0.11.2 靜態研究確認實際為魂魄升級；經驗函式沒有找到呼叫，不新增虛構經驗欄位。寶物等級已依 SDD 十項實作並通過兩庫各自的首次原生證明（只改 y6、不扣魂魄、不開放經驗），本機驗收通過但**尚未發布**；發布前回進度入口核對，版本號、提交推送與發布須另行授權。
 
 - 套裝等級、套裝積分或合成後搬移：讀 repo 的 `docs/research/set-equipment-level.md`、`sdd/archive/2026-10-23-set-equipment-level/proposal.md` 與 `tasks.md`。研究結論為 go 進入實作與首次驗證；實作階段與授權須核對最新 SDD 及當前對話；研究結論不代表開閘。首版只改 y6，z7／z9 各用 `backpackSetEquipmentLevel`／`setEquipmentLevel` 獨立群組與首次證明，不沿用普通裝備證明。原生升級只處理 z9，背包 oracle 須經原生搬移取得實際目的列；y23 積分與 y26／y27 合成來源保留，y0 不必等於列號。v2.10 已發布、驗收並歸檔，兩庫首次原生證明與介面驗收見歸檔 SDD，發布範圍見 `docs/releases.md`；矩陣、合法基準及來源 SID／expression 依研究、SDD 及 `docs/maintenance/core.md`，不在技能複製；任何新來源仍依證明開閘，套裝品質、詞條及超限另案。
 - 問進度、下一步或繼續實作：依 `docs/maintenance/planning.md` 承接；規劃下一版或評估候選順序先讀 repo 的 `docs/research/next-version-plan.md`（目前進度、候選及歷史盤點入口），需要單項排序理由再讀 `docs/research/feature-roadmap.md`；路線圖的 v2.8 排序及 V1.0.11.0 影響段屬歷史研究脈絡。不重做已記錄的盤點；開閘門仍依維護指引。範本0一般隨機角色的資質、技藝上限與天賦不受載入回填，與補丁提案範圍不同。

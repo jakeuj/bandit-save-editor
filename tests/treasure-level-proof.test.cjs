@@ -2,13 +2,13 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const P=require('../scripts/treasure-level-proof.cjs'),D=require('../scripts/treasure-level-data.cjs'),R=require('../scripts/verification-requirements.cjs'),S=require('../scripts/verification-suite.cjs'),M=require('../scripts/migration-proof.cjs');
 const k=JSON.parse(fs.readFileSync(path.join(__dirname,'../knowledge/catalog.json'),'utf8')),proof=JSON.parse(fs.readFileSync(path.join(__dirname,'../knowledge/verification.json'),'utf8')),source=fs.readFileSync(path.join(__dirname,'../src/core.js'),'utf8');
-const hex=c=>c.repeat(64);
-const record=group=>({group,coverage:'initial-matrix',fingerprints:{...k.fingerprints,...k.batch2Fingerprints},coreHash:require('../scripts/core-source-proof.cjs').hash(source),coreHashAlgorithm:require('../scripts/core-source-proof.cjs').algorithm,dataHash:D.hash(k.treasureLevel),manifestHash:hex('a'),evidenceHash:hex('b'),...P.expected[group]});
+const L=require('./helpers/legacy-release.cjs'),hex=c=>c.repeat(64);
+const record=(group,src=source)=>({group,coverage:'initial-matrix',fingerprints:{...k.fingerprints,...k.batch2Fingerprints},coreHash:require('../scripts/core-source-proof.cjs').hash(src),coreHashAlgorithm:require('../scripts/core-source-proof.cjs').algorithm,dataHash:D.hash(k.treasureLevel),manifestHash:hex('a'),evidenceHash:hex('b'),...P.expected[group]});
 const results=group=>({completed:true,checks:{[group]:Object.fromEntries(R.requiredChecks(group).map(c=>[c,true]))},copies:[{name:'initial'}]});
 
-test('both treasure groups are registered, closed and covered by the migration suite',()=>{
+test('both treasure groups are registered, covered by the migration suite and opened only with their own records',()=>{
  assert.deepEqual(D.groups,['backpackTreasureLevel','treasureLevel']);
- for(const g of D.groups){assert.equal(k.verification[g],false);assert.equal(R.sectionOf(g),'treasureLevel');assert.equal(S.familyOf(g),'treasureLevel');assert.deepEqual(R.requiredChecks(g),['load','save','restart','originalHashes','nativeEffects','lifecycle']);}
+ for(const g of D.groups){assert.equal(k.verification[g],true);assert.equal(R.sectionOf(g),'treasureLevel');assert.equal(S.familyOf(g),'treasureLevel');assert.deepEqual(R.requiredChecks(g),['load','save','restart','originalHashes','nativeEffects','lifecycle']);assert.equal(proof.groups[g],true);assert.equal(P.initialProblem(proof.migration.treasureInitialVerification[g],g),null);}
  assert.equal(S.families.treasureLevel.initialProofRequired,true);assert.deepEqual(S.uncovered(D.groups),[]);
  for(const script of [S.families.treasureLevel.oracle,...S.families.treasureLevel.lifecycle])assert.ok(fs.existsSync(path.join(__dirname,'../scripts',script)),script);
 });
@@ -19,22 +19,28 @@ test('initial records are exact per group; counts, order and binding cannot be b
  const short=record('treasureLevel');delete short.fingerprints['data.json'];assert.ok(P.initialProblem(short,'treasureLevel'));
  assert.ok(P.initialProblem(null,'treasureLevel'));assert.ok(P.initialProblem(record('treasureLevel'),'unknown'));
 });
-test('a true flag without its own composite initial proof is refused; closed flags pass',()=>{
- assert.equal(P.problem(k,proof,source),null);
- for(const g of D.groups){const open=structuredClone(k);open.verification[g]=true;assert.match(P.problem(open,proof,source,g),/首次|證據|證明/);}
+test('the repository proof opens each group only through its own composite record',()=>{
+ assert.equal(proof.schemaVersion,2);assert.equal(P.problem(k,proof,source),null);assert.equal(M.problem(k,proof,source),null);
+ for(const g of D.groups){
+  const missing=structuredClone(proof);delete missing.migration.treasureInitialVerification[g];assert.match(M.problem(k,missing,source,g),/寶物等級首次/);
+  const swapped=structuredClone(proof),other=D.groups.find(x=>x!==g);swapped.migration.treasureInitialVerification[g]=swapped.migration.treasureInitialVerification[other];assert.match(M.problem(k,swapped,source,g),/寶物等級首次/);
+  const stale=structuredClone(proof);stale.migration.treasureInitialVerification[g].dataHash=hex('c');assert.match(M.problem(k,stale,source,g),/寶物等級首次/);
+  const closed=structuredClone(k);closed.verification[g]=false;assert.equal(P.problem(closed,proof,source,g),null);
+ }
+ const changed=source+';0;';assert.match(P.problem(k,proof,changed),/不相符|無效/);
 });
-test('merging a validated record opens only that group; the other group keeps no proof',()=>{
- const g='backpackTreasureLevel',merged=P.mergeProof({catalog:k,proof,group:g,record:{date:'2026-10-23',initialVerification:{[g]:record(g)}},results:results(g),source});
+test('merging a validated record into a legacy proof opens only that group; the other group keeps no proof',()=>{
+ const lk=L.catalog(),lp=L.proof(),lsrc=L.core,g='backpackTreasureLevel';
+ const merged=P.mergeProof({catalog:lk,proof:lp,group:g,record:{date:'2026-10-23',initialVerification:{[g]:record(g,lsrc)}},results:results(g),source:lsrc});
  assert.equal(merged.groups[g],true);assert.notEqual(merged.groups.treasureLevel,true);
  assert.equal(merged.treasureLevel.initialVerification[g].group,g);assert.equal(merged.treasureLevel.initialVerification.treasureLevel,undefined);
- assert.equal(proof.treasureLevel,undefined,'來源證明不得被就地修改');
- const open=structuredClone(k);open.verification[g]=true;assert.equal(P.problem(open,merged,source,g),null);
- const other=structuredClone(k);other.verification.treasureLevel=true;assert.match(P.problem(other,merged,source,'treasureLevel'),/treasureLevel/);
- const stale=structuredClone(merged);stale.treasureLevel.dataHash=hex('c');assert.match(P.problem(open,stale,source,g),/backpackTreasureLevel/);
- const both=P.mergeProof({catalog:k,proof:merged,group:'treasureLevel',record:{date:'2026-10-23',initialVerification:{treasureLevel:record('treasureLevel')}},results:results('treasureLevel'),source});
+ assert.equal(lp.treasureLevel,undefined,'來源證明不得被就地修改');
+ const open=structuredClone(lk);open.verification[g]=true;assert.equal(P.problem(open,merged,lsrc,g),null);
+ const other=structuredClone(lk);other.verification.treasureLevel=true;assert.match(P.problem(other,merged,lsrc,'treasureLevel'),/treasureLevel/);
+ const stale=structuredClone(merged);stale.treasureLevel.dataHash=hex('c');assert.match(P.problem(open,stale,lsrc,g),/backpackTreasureLevel/);
+ const both=P.mergeProof({catalog:lk,proof:merged,group:'treasureLevel',record:{date:'2026-10-23',initialVerification:{treasureLevel:record('treasureLevel',lsrc)}},results:results('treasureLevel'),source:lsrc});
  assert.deepEqual(Object.keys(both.treasureLevel.initialVerification).sort(),['backpackTreasureLevel','treasureLevel']);
- // A different core binding for the second group refuses instead of mixing proofs.
- assert.throws(()=>P.mergeProof({catalog:k,proof:merged,group:'treasureLevel',record:{initialVerification:{treasureLevel:record('treasureLevel')}},results:results('treasureLevel'),source:source+';0;'}),/綁定/);
+ assert.throws(()=>P.mergeProof({catalog:lk,proof:merged,group:'treasureLevel',record:{initialVerification:{treasureLevel:record('treasureLevel',lsrc)}},results:results('treasureLevel'),source:lsrc+';0;'}),/綁定/);
 });
 test('a composite proof carries per-group initial records and the build gate checks them',()=>{
  const g='treasureLevel',v2={schemaVersion:2,groups:{},migration:{version:2,snapshot:{dataHashes:{}},anchors:{},evidence:{},enabledBefore:[]}};

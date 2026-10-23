@@ -1,6 +1,6 @@
 'use strict';
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs');
-const P=require('../scripts/set-equipment-level-proof.cjs'),D=require('../scripts/set-equipment-level-data.cjs'),k=require('../knowledge/catalog.json'),proof=require('../knowledge/verification.json'),source=fs.readFileSync('src/core.js','utf8');
+const P=require('../scripts/set-equipment-level-proof.cjs'),D=require('../scripts/set-equipment-level-data.cjs'),L=require('./helpers/legacy-release.cjs'),k=L.catalog(),proof=L.proof(),source=L.core;
 test('set first proofs bind each plane independently to native coverage, sources, rules and final core',()=>{
  assert.equal(P.problem(k,proof,source),null);const p=structuredClone(proof);delete p.setEquipmentLevel.initialVerification.backpackSetEquipmentLevel;
  assert.ok(P.problem(k,p,source,D.groups[0]));assert.equal(P.problem(k,p,source,D.groups[1]),null);

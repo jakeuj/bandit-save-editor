@@ -4,7 +4,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const root = path.resolve(__dirname, '..');
-const catalog = JSON.parse(fs.readFileSync(path.join(root, 'knowledge/catalog.json'), 'utf8'));
+const L = require('./helpers/legacy-release.cjs'), catalog = L.catalog();
 
 test('Mac preparation tool reviews the runtime the catalog was built from',()=>{
   const tool = fs.readFileSync(path.join(root, 'launcher/prepare-macos.py'), 'utf8');
@@ -58,7 +58,7 @@ test('build gating rejects an enabled group without requirements and proofs miss
   const os = require('node:os'), {spawnSync} = require('node:child_process');
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'bandit-build-'));
   try{
-    fs.cpSync(root, dir, {recursive: true, filter: source => !/[\\/](\.git|graphify-out|node_modules)([\\/]|$)/.test(source)});
+    fs.cpSync(root, dir, {recursive: true, filter: source => !/[\\/](\.git|graphify-out|node_modules)([\\/]|$)/.test(source)});L.overlay(dir);
     const catalogPath = path.join(dir, 'knowledge/catalog.json'), proofPath = path.join(dir, 'knowledge/verification.json');
     const build = () => spawnSync(process.execPath, ['scripts/build-editor.cjs'], {cwd: dir, encoding: 'utf8'});
     const k = JSON.parse(fs.readFileSync(catalogPath, 'utf8')), p = JSON.parse(fs.readFileSync(proofPath, 'utf8'));
@@ -116,7 +116,7 @@ test('UI proofs are accepted natively or carried only with an unchanged event di
   assert.match(R.uiEvidenceProblem('equipmentQualityUpgrade', {uiEvidence: {...carried.uiEvidence, carriedFrom: {gameVersion: 'V1', eventDigest: 'b'.repeat(64)}}}, 'V2'), /來源無效/);
   assert.match(R.uiEvidenceProblem('equipmentQualityUpgrade', {uiEvidence: {...carried.uiEvidence, carriedFrom: {gameVersion: 'V2', eventDigest: digest}}}, 'V2'), /來源無效/);
   assert.match(R.uiEvidenceProblem('equipmentQualityUpgrade', {uiEvidence: {...native.uiEvidence, source: 'assumed'}}, 'V2'), /來源無效/);
-  const proof = JSON.parse(fs.readFileSync(path.join(root, 'knowledge/verification.json'), 'utf8'));
+  const proof = L.proof();
   for (const group of Object.keys(R.uiChecks)) {
     const record = proof.equipmentQuality.groups[group] || proof.equipmentWorkflow.groups[group];
     assert.equal(R.uiEvidenceProblem(group, record, catalog.gameVersion), null, group);
@@ -199,7 +199,7 @@ test('migration runner replays each copy in order, stops on failure and derives 
     for(const name of ['game','profile','BANDIT Editor Test.app'])fs.mkdirSync(path.join(dir,name));
     fs.writeFileSync(path.join(dir,'BANDIT Editor Test.source.json'),'{}');
     const statePath = path.join(dir, 'state.json'); fs.writeFileSync(statePath, JSON.stringify({game: dir}));
-    const proof = JSON.parse(fs.readFileSync(path.join(root, 'knowledge/verification.json'), 'utf8'));
+    const proof = L.proof();
     const digests = {selectionUi: proof.equipmentWorkflow.groups.equipmentAffixInitialSelection.uiEvidence.eventDigest, qualityUi: 'f'.repeat(64)};
     const digest = (gameDir, sids) => sids === R.uiEvents.selectionUi ? digests.selectionUi : digests.qualityUi;
     // The new cap family has separate raw-evidence tests; a generic exit-zero mock cannot prove it.
@@ -251,11 +251,11 @@ test('migration runner replays each copy in order, stops on failure and derives 
 test('write-back opens proven groups on a new build, compares on the proven build and restores on failure',()=>{
   const os = require('node:os'), M = require('../scripts/verify-migration.cjs'), R = require('../scripts/verification-requirements.cjs'), S = require('../scripts/verification-suite.cjs');
   // This generic suite fixture has no cap observations. First-opening and cap migration use their own raw fixtures.
-  const catalog = JSON.parse(fs.readFileSync(path.join(root, 'knowledge/catalog.json'), 'utf8'));
+  const L = require('./helpers/legacy-release.cjs'), catalog = L.catalog();
   catalog.verification.randomCharacterSkillCaps = false; catalog.verification.randomCharacterTalents = false;
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'bandit-writeback-'));
   try{
-    fs.cpSync(root, dir, {recursive: true, filter: source => !/[\\/](\.git|graphify-out|node_modules)([\\/]|$)/.test(source)});
+    fs.cpSync(root, dir, {recursive: true, filter: source => !/[\\/](\.git|graphify-out|node_modules)([\\/]|$)/.test(source)});L.overlay(dir);
     const files = ['knowledge/catalog.json', 'knowledge/verification.json', 'index.html', 'sw.js'].map(f => path.join(dir, f)), snapshot = () => files.map(f => fs.readFileSync(f, 'utf8'));
     const proof = JSON.parse(fs.readFileSync(files[1], 'utf8')), selection = proof.equipmentWorkflow.groups.equipmentAffixInitialSelection.uiEvidence;
     delete proof.randomCharacterSkillCaps; delete proof.groups.randomCharacterSkillCaps; delete proof.randomCharacterTalents; delete proof.groups.randomCharacterTalents;

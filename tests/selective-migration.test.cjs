@@ -1,8 +1,8 @@
 'use strict';
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),os=require('node:os'),{spawnSync}=require('node:child_process');
 const A=require('../scripts/migration-analysis.cjs'),P=require('../scripts/migration-proof.cjs'),M=require('../scripts/verify-migration.cjs'),CLI=require('../scripts/migration-cli.cjs'),R=require('../scripts/verification-requirements.cjs');
-const root=path.resolve(__dirname,'..'),core=fs.readFileSync(path.join(root,'src/core.js'),'utf8');
-const catalog=require('../knowledge/catalog.json'),proof=require('../knowledge/verification.json');
+const root=path.resolve(__dirname,'..'),core=require('./helpers/legacy-release.cjs').core;
+const L=require('./helpers/legacy-release.cjs'),catalog=L.catalog(),proof=L.proof();
 function fixture(t) {
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'bandit-selective-'));t.after(()=>fs.rmSync(dir,{recursive:true,force:true}));
   fs.mkdirSync(path.join(dir,'scripts'));fs.writeFileSync(path.join(dir,'scripts/c3runtime.js'),'support\nself.C3_GetObjectRefTable = function() {}');
@@ -106,7 +106,7 @@ test('composite evidence carries original native origins, defers UI and refuses 
 test('builder accepts a complete composite proof and write-back restores every artifact on build failure',t=>{
   const f=fixture(t),start=f.snap(),{k,p,base}=legacy(f,start),current={...start,gameVersion:'V2',fingerprints:{...start.fingerprints,'data.json':A.sha('v2')}};
   const nextK={...k,gameVersion:'V2',fingerprints:{...k.fingerprints,'data.json':current.fingerprints['data.json']}},plan=P.selection(base,current,f.groups),results=emptyResults();
-  const dir=path.join(f.dir,'repo');fs.cpSync(root,dir,{recursive:true,filter:p=>!/[\\/](\.git|graphify-out|node_modules)([\\/]|$)/.test(p)});
+  const dir=path.join(f.dir,'repo');fs.cpSync(root,dir,{recursive:true,filter:p=>!/[\\/](\.git|graphify-out|node_modules)([\\/]|$)/.test(p)});L.overlay(dir);
   const paths=['knowledge/catalog.json','knowledge/verification.json','knowledge/migration-baseline.json','index.html','sw.js'].map(n=>path.join(dir,n)),bytes=()=>paths.map(p=>fs.readFileSync(p));
   const before=bytes();
   const failed=CLI.writeSelective({dir,catalog:nextK,previous:p,base,current,plan,results,exec:()=>({status:1,stderr:'synthetic build failure'})});

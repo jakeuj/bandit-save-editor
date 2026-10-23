@@ -5,7 +5,7 @@ const path=require('node:path'),{pathToFileURL}=require('node:url'),{test:base,e
 const catalog=require('../../knowledge/catalog.json'),templates=Object.keys(catalog.treasureLevel.items).filter(id=>catalog.treasureLevel.items[id].tier===1).map(Number);
 const open=['backpackTreasureLevel','treasureLevel'];
 const opened=base.extend({site:async({},use)=>{const site=await createSite({candidate:open});try{await use(site);}finally{await site.close();}}});
-const closed=base.extend({site:async({},use)=>{const site=await createSite({candidate:[]});try{await use(site);}finally{await site.close();}}});
+const closed=base.extend({site:async({},use)=>{const site=await createSite({candidate:{close:open}});try{await use(site);}finally{await site.close();}}});
 function fixture({invalid=false}={}){
  const {data}=saveFixture({characters:2}),row=Array(60).fill(0);
  Object.assign(row,{0:5,1:templates[0],2:1,3:1,5:3,6:5,8:100,22:0});

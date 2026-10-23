@@ -6,12 +6,14 @@ function tables(){
  for(const [id,t] of Object.entries(rules.items)){const r=wp[id];Object.assign(r,{0:+id,1:t.name,3:t.tier,4:'宝物',5:'装备',6:6});r.splice(8,6,...t.mainAttributes,...t.mainSettings);}
  return {wp};
 }
-test('treasure rules reconstruct 170 templates; both write groups stay closed',()=>{
+test('treasure rules reconstruct 170 templates; both write groups are registered with their own first proofs',()=>{
  const data=D.reviewedRules(D.reviewedDigest,tables());
  assert.equal(D.hash(data),D.hash(k.treasureLevel));assert.equal(Object.keys(data.items).length,170);
  assert.equal(data.limits.experience,false);assert.deepEqual(Object.values(data.decompose.byTier),[20,200,1000,10000,50000,500000]);
- for(const g of D.groups)assert.equal(k.verification[g],false,'已註冊旗標但沒有首次證明，維持關閉');D.requireClosed(k);
- const open=structuredClone(k);open.verification.treasureLevel=true;assert.throws(()=>D.requireClosed(open),/首次證明/);
+ // 兩庫已各有首次證明而開啟；requireClosed 仍是首次證明前工具的守門：關閉或不存在放行，開啟拒絕。
+ for(const g of D.groups)assert.equal(k.verification[g],true,'兩庫已有各自的首次證明');
+ const closed=structuredClone(k);for(const g of D.groups)closed.verification[g]=false;D.requireClosed(closed);
+ const open=structuredClone(closed);open.verification.treasureLevel=true;assert.throws(()=>D.requireClosed(open),/首次證明/);
 });
 test('unknown events, changed templates and tier counts fail closed',()=>{
  assert.throws(()=>D.reviewedRules('unknown',tables()),/來源事件/);
