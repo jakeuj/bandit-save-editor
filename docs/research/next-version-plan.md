@@ -4,14 +4,14 @@
 
 ## 現在接哪一案
 
-**目前主線：套裝品質／詞條。階段：A 階段已選定，A1–A2 待執行。** 2026-10-23 由使用者選定；寶物等級已作為 v2.11 發布，背包與裝備庫（含穿戴）兩庫的首次證明已合併並開啟。更新日期：2026-10-23。
+**目前主線：套裝品質／詞條。階段：A1–A2 已完成（來源核對與最小資料，`setEquipmentQuality` 規則已入 catalog，未註冊旗標），A3 起待逐段授權。** 2026-10-23 由使用者選定；寶物等級已作為 v2.11 發布，背包與裝備庫（含穿戴）兩庫的首次證明已合併並開啟。更新日期：2026-10-23。
 
 | 要知道什麼 | 目前答案 |
 | --- | --- |
 | 剛完成 | v2.11 寶物等級：只改等級、不扣魂魄、不提供經驗修改；SDD 十項完成並[歸檔](../../sdd/archive/2026-10-23-treasure-level/tasks.md)，研究見[寶物等級研究](treasure-level.md)，發布說明見[各版紀錄](../releases.md#v211-寶物等級) |
 | 目前主線 | 套裝品質／詞條：[母規格](../../sdd/set-equipment-quality/proposal.md)、[A 任務](../../sdd/set-equipment-quality-a/tasks.md)、[B 任務](../../sdd/set-equipment-quality-b/tasks.md)。A 為候選資格、交易、oracle、manifest 與 proof 接線（不跑原生、四品質群組關閉）；B 為原生證明、合併與正式入口 |
-| 下一步 | [A1–A2](../../sdd/set-equipment-quality-a/tasks.md)：核對來源與重用工具、擴充最小規則資料（不改 `src/`、不註冊旗標）。之後 A3 共同資格須依[core 開發規範](../maintenance/core.md#新功能的-core-開發規範)走獨立入口，不改 `editingInfo`／`setEditingValue`／`ordinaryEquipment` 等共用函式 |
-| 授權 | A1–A2 已授權（做完照最短流程推送）；A3 起與 B 階段逐段明確授權 |
+| 下一步 | [A3](../../sdd/set-equipment-quality-a/tasks.md)（A1–A2 已完成）：共同資格須依[core 開發規範](../maintenance/core.md#新功能的-core-開發規範)走獨立入口，不改 `editingInfo`／`setEditingValue`／`ordinaryEquipment` 等共用函式 |
+| 授權 | A1–A2 已授權並完成；A3 起與 B 階段逐段明確授權 |
 | 模型分工 | A1–A2、A7–A10 有寶物等級範本可照做，Sonnet 即可；A3–A6（共同資格與交易）與整個 B 階段建議 Opus |
 | 開放狀態 | 以目前 catalog／verification 為準；候選尚未實作，未證明的群組維持關閉 |
 
