@@ -87,10 +87,33 @@
   const group=plane===7?'backpackSetEquipmentLevel':'setEquipmentLevel',normalMax=10+5*(quality-1);
   return {kind:'equipment',isSet:true,id:itemId,itemId,plane,name:item.name,coordinate:C(itemId,6,plane),current:level,min:1,normalMax,advancedMax:normalMax,advancedVerified:false,verified:KNOWLEDGE.verification[group]===true,group,record,template:t,metadataStatus:'preserved; independent-native-proof-required'};
  }
+ // Treasure-level candidates (y6 only) are independent of ordinary and set equipment; gated by their own first proof.
+ function treasureLevelInfo(m,{itemId,plane=9}){
+  const fail=reason=>{throw Error('寶物等級：'+reason);},rules=KNOWLEDGE.treasureLevel;
+  if(!rules||rules.version!==1||![7,9].includes(plane)||!Number.isSafeInteger(itemId)||itemId<1||itemId>=m.original.size[0])fail('庫別、資料或編號不符。');
+  const record=Array.from({length:60},(_,y)=>get(m,C(itemId,y,plane))),item=catalogMaps.items.get(record[1]),t=rules.items[record[1]],quality=record[5],level=record[6],owner=record[7],limits=rules.limits;
+  if(!item||item.kind!=='宝物'||!t||t.slot!==limits.slot)fail('範本尚未涵蓋。');
+  if(record.some(v=>typeof v!=='number'||!Number.isFinite(v))||!Number.isSafeInteger(record[0])||record[0]<1||record[0]>=m.original.size[0])fail('識別或欄位型別不符。');
+  if(record[2]!==limits.quantity||record[3]!==t.tier||record[4]!==0||![0,1].includes(record[22]))fail('數量、等階或特殊狀態不符。');
+  if(!Number.isSafeInteger(quality)||quality<rules.qualities.min||quality>rules.qualities.max)fail('只支援原版品質。');
+  const normalMax=rules.qualities.capBase+rules.qualities.capStep*(quality-1);
+  if(!Number.isSafeInteger(level)||level<1||level>normalMax)fail('只支援原版等級，超限停用。');
+  // Native slot replacement leaves the displaced treasure with its old owner (observed); that stale owner must name an active character.
+  if(!Number.isSafeInteger(owner)||owner<0||owner>0&&!activeCharacter(m,owner))fail('歸屬不符。');
+  let references=0;
+  for(let x=1;plane===9&&x<m.original.size[0];x++)for(let slot=1;slot<=6;slot++)if(get(m,C(x,15+slot,2))===itemId){
+   references++;if(owner!==x||!activeCharacter(m,x)||slot!==limits.slot)fail('穿戴雙向指標不一致。');
+  }
+  // references===1 is a worn row; references===0 with an active owner is the observed native stale-owner state.
+  if(plane===9&&references>1)fail('穿戴雙向指標不一致。');
+  const group=plane===7?'backpackTreasureLevel':'treasureLevel';
+  return {kind:'equipment',isTreasure:true,id:itemId,itemId,plane,name:item.name,coordinate:C(itemId,6,plane),current:level,min:1,normalMax,advancedMax:normalMax,advancedVerified:false,verified:KNOWLEDGE.verification[group]===true,group,record,template:t,metadataStatus:'preserved; independent-native-proof-required'};
+ }
  function editingInfo(m,kind,id,plane=9){
   if(kind==='equipment'&&![7,9].includes(plane))throw Error('裝備庫別只接受 7 或 9。');
   if(!Number.isSafeInteger(id)||id<1||id>=m.original.size[0])throw Error('無效的資料編號。');
   if(kind==='equipment'&&catalogMaps.items.get(get(m,C(id,1,plane)))?.kind==='套装')return setEquipmentLevelInfo(m,{itemId:id,plane});
+  if(kind==='equipment'&&catalogMaps.items.get(get(m,C(id,1,plane)))?.kind==='宝物')return treasureLevelInfo(m,{itemId:id,plane});
   let coordinate,normalMax,min=1,name;
   if(kind==='equipment'){
    const item=catalogMaps.items.get(get(m,C(id,1,plane))),quality=get(m,C(id,5,plane)),owner=get(m,C(id,7,plane));
@@ -127,7 +150,7 @@
  function setEditingValue(m,kind,id,value,advanced=false,plane=9){
   if(typeof advanced!=='boolean')throw Error('進階模式參數不正確。');
   const info=editingInfo(m,kind,id,plane);
-  if(kind==='equipment'&&plane===7&&!info.isSet)ordinaryEquipment(m,id,plane);
+  if(kind==='equipment'&&plane===7&&!info.isSet&&!info.isTreasure)ordinaryEquipment(m,id,plane);
   if(!info.verified||advanced&&!info.advancedVerified)throw Error('此修改模式尚未完成隔離遊戲驗證，目前停用。');
   if(!Number.isSafeInteger(value)||value<info.min)throw Error(`請輸入不小於 ${info.min} 的安全整數；操練上限不得低於角色現有職業等級。`);
   const max=advanced?info.advancedMax:Math.min(info.normalMax,info.advancedMax);
@@ -866,5 +889,5 @@
   if(patches.length!==m.changes.size)throw Error('部分修改座標未能定位，已停止匯出。');
   const parts=[];let previous=0;for(const p of patches){parts.push(m.text.slice(previous,p.start),p.value);previous=p.end;}parts.push(m.text.slice(previous));return parts.join('');
  }
- globalThis.SaveCore={setEquipmentLevelInfo,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
+ globalThis.SaveCore={setEquipmentLevelInfo,treasureLevelInfo,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
 })();

@@ -103,8 +103,9 @@ test('both equipment planes reject sets and special kinds without changing the s
   for(const [y,value]of [[0,1],[2,1],[3,1],[5,1],[6,5]])a[1][y][plane]=value;
   for(const item of [C.KNOWLEDGE.catalogs.items.find(v=>v.id===28),...['宝物','内丹'].map(kind=>C.KNOWLEDGE.catalogs.items.find(v=>v.kind===kind))]){
    a[1][1][plane]=item.id;
-   const reason=item.id===28?/套裝/:/寶物及內丹/;
-   assert.throws(()=>C.editingInfo(model,'equipment',1,plane),reason);
+   const reason=item.id===28?/套裝/:item.kind==='宝物'?/寶物等級|驗證/:/寶物及內丹/;
+   // Treasures route to their own gated candidate: inspectable, but never writable without their own first proof.
+   if(item.kind!=='宝物')assert.throws(()=>C.editingInfo(model,'equipment',1,plane),reason);
    for(const advanced of [false,true])assert.throws(()=>C.setEquipmentLevel(model,{itemId:1,plane,level:6,advanced}),reason);
    assert.equal(model.changes.size,0);assert.equal(model.history.length,0);assert.equal(C.serialize(model),text);
   }
