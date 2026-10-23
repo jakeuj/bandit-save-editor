@@ -15,6 +15,23 @@
 - [ ] A9. 固定 manifest 與分片契約：列 19,440 基礎案、至少 864 組效果及母規格全部額外維度，拆四群組分母、合法／拒絕／未知／不適用，checkpoint 綁精確輸入。
 - [ ] A10. 接線拒絕未證明的 proof 流程：requirements／suite／migration／摘要綁定測試拒絕漏案、重複、錯方向、過期、缺 IO／UI 及僅代表遷移；四群組關閉，交付 B 準備清單。
 
+## 分派
+
+依[任務分派與下一步 prompt](../../docs/maintenance/dispatch.md)產出各段 prompt。思考程度未註明即為「中」。
+
+| 段 | 任務 | 模型 | 思考 | 前置 | 可同時跑 | 改動範圍 |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | A4 候選資訊與預覽 | Opus 5.5 | 中 | A3 | 2、3 | `src/core.js` 新入口、候選測試、重建 HTML |
+| 2 | A7 獨立交易與生成可達性預期 | Sonnet 5.5 | 中 | A2 | 1、3 | 新 oracle 腳本與測試（不讀被測 core） |
+| 3 | A8 獨立效果與生命週期預期 | Sonnet 5.5 | 中 | A2 | 1、2 | 新 oracle 腳本與測試（不讀被測 core） |
+| 4 | A5 候選升品交易 | Opus 5.5 | **高**（精確 token、回滾） | A4 | 2、3 | `src/core.js` 新入口 |
+| 5 | A6 候選降品與整件還原 | Opus 5.5 | **高**（還原、undo 交錯） | A5 | 2、3 | `src/core.js` 新入口 |
+| 6 | A9 manifest 與分片契約 | Sonnet 5.5 | 中 | A7、A8 | 4、5 | 新 scenarios 腳本與測試 |
+| 7 | A10 拒絕未證明的 proof 接線 | Sonnet 5.5 | 中 | A6、A9 | — | requirements／suite／migration／proof、catalog 旗標（false） |
+| 8 | A 階段交接 | Haiku 5.5 | 低 | A10 | — | 只更新文件：A 收尾紀錄、B 準備清單、進度入口 |
+
+段 1、4、5 依序改 `src/core.js`，一律走新入口、不改共用函式（[core 開發規範](../../docs/maintenance/core.md#新功能的-core-開發規範)）；每段結束時切片報告應為「未變」。段 2、3 與 core 鏈互不重疊，可在各自 worktree 同時跑。
+
 ## 驗收條件
 
 - 情境：候選跨池合成測試通過，正式等級入口仍拒絕未證明新範圍，四品質群組仍關閉。

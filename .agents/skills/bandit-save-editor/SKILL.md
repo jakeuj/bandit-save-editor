@@ -17,7 +17,7 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 
 ## 進度查詢與承接
 
-使用者問「現在做到哪」、「下一步做什麼」或「繼續實作下一版功能」時，先讀 repo 的 [下一步與目前進度](../../../docs/research/next-version-plan.md)，再讀該頁唯一主線的 SDD 與[承接流程](../../../docs/maintenance/planning.md)，核對工作樹。只問進度就回報；明確要求實作且提案可執行時，直接從第一個未完成任務接續，不重問已明確的目標。每次停點更新 SDD 與同一進度入口，區分研究、實作、首次證明及發布；roadmap 只用於候選排序，歷史完成工作不重開。
+使用者問「現在做到哪」、「下一步做什麼」或「繼續實作下一版功能」時，先讀 repo 的 [下一步與目前進度](../../../docs/research/next-version-plan.md)，再讀該頁唯一主線的 SDD 與[承接流程](../../../docs/maintenance/planning.md)，核對工作樹。只問進度就回報並附分派計畫；明確要求實作且提案可執行時，依[任務分派](../../../docs/maintenance/dispatch.md)把下一批任務拆成指定模型（Opus／Sonnet／Haiku 5.5）與思考程度的 prompt，第一段模型與目前 session 相同就直接接續，不重問已明確的目標。每段收尾必附「下一步 prompt」：已解鎖段落、可並行者、仍在等待者與待使用者決定事項。每次停點更新 SDD 與同一進度入口，區分研究、實作、首次證明及發布；roadmap 只用於候選排序，歷史完成工作不重開。
 
 ## 規則同步檢查
 
@@ -44,7 +44,7 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 | Project 卡片、狀態與清單異常 | `docs/maintenance/projects.md`；直接用 `gh` 更新既有 ID，清單異常不重複新增，除非使用者明確要求，否則不開瀏覽器 |
 | Discussions 公告發布與更新 | `docs/maintenance/discussions.md`；直接用 `gh api graphql`，不開瀏覽器，更新沿用原討論 ID 並讀回確認 |
 | Issues 建立、更新與查重 | `docs/maintenance/issues.md`；直接用 `gh`，不開瀏覽器，先查開啟／已關閉 Issue，更新沿用原編號，結果不明不重複新增 |
-| 目前進度、下一步、繼續實作下一版 | `docs/research/next-version-plan.md` → 當前 SDD；依 `docs/maintenance/planning.md` 承接，候選排序再讀 roadmap |
+| 目前進度、下一步、繼續實作下一版 | `docs/research/next-version-plan.md` → 當前 SDD 的分派表；依 `docs/maintenance/planning.md` 承接、`docs/maintenance/dispatch.md` 拆 prompt，候選排序再讀 roadmap |
 | 使用者明確要求遊戲 UI | `docs/game-ui-testing.md` 快速開始與目標路徑，再讀當次 computer-use 技能 |
 | Mac／CrossOver／Steam／存檔位置 | [Mac 參考](references/macos.md)、`launcher/README.md`、`docs/research/macos-runtime-investigation.md` |
 

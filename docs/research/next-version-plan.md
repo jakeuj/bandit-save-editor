@@ -12,7 +12,7 @@
 | 目前主線 | 套裝品質／詞條：[母規格](../../sdd/set-equipment-quality/proposal.md)、[A 任務](../../sdd/set-equipment-quality-a/tasks.md)、[B 任務](../../sdd/set-equipment-quality-b/tasks.md)。A 為候選資格、交易、oracle、manifest 與 proof 接線（不跑原生、四品質群組關閉）；B 為原生證明、合併與正式入口 |
 | 下一步 | [A4](../../sdd/set-equipment-quality-a/tasks.md)（A1–A3 已完成）：候選資訊與預覽，沿用 `setEquipmentQualityCandidateInfo` 並依[core 開發規範](../maintenance/core.md#新功能的-core-開發規範)走獨立入口，不寫存檔、四群組保持關閉 |
 | 授權 | A1–A3 已授權並完成；A4 起與 B 階段逐段明確授權 |
-| 模型分工 | A1–A2、A7–A10 有寶物等級範本可照做，Sonnet 即可；A3–A6（共同資格與交易）與整個 B 階段建議 Opus |
+| 分派 | 依 [A 任務的分派表](../../sdd/set-equipment-quality-a/tasks.md#分派)：A4（Opus）可與 A7、A8（Sonnet）同時跑；A5、A6 用 Opus、思考程度高。各段 prompt 與交棒規則見[任務分派](../maintenance/dispatch.md) |
 | 開放狀態 | 以目前 catalog／verification 為準；候選尚未實作，未證明的群組維持關閉 |
 
 ### 其他候選
