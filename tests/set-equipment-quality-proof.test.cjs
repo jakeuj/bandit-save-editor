@@ -9,7 +9,8 @@ const clone=o=>structuredClone(o);
 function results(group,src=source){
  const e=P.expected(k,src,group);
  return {completed:true,checks:{[group]:Object.fromEntries(R.requiredChecks(group).map(c=>[c,true]))},copies:[],native:{[group]:{
-  coverage:'initial-matrix',manifestHash:e.manifestHash,cases:e.cases.map(c=>({id:c.id,caseHash:hash(c),passed:true,nativeCompared:true})),
+  coverage:'initial-matrix',manifestHash:e.manifestHash,cases:e.cases.map(c=>({id:c.id,caseHash:hash(c),passed:true,nativeCompared:true,run:0})),
+  runs:[{label:'synthetic',manifestHash:e.manifestHash,coreHash:P.textHash(src),evidenceSha256:hex('a')}],
   io:{rounds:2,newPidReadback:true,shiftedColumns:50,tailColumns:10},ui:Object.fromEntries(P.uiKeys.map(x=>[x,true])),
   oracles:{transactionOracleHash:codeHash('set-equipment-quality-oracle.cjs'),effectOracleHash:codeHash('set-equipment-quality-effects-oracle.cjs')},
   inputs:{baselineHash:hex('a'),runtimeHash:hex('b'),sourceManifestHash:hex('c'),runtimeManifestHash:hex('d')}}}};

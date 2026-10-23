@@ -5,7 +5,21 @@ const {createHash} = require('node:crypto');
 const R = require('./verification-requirements.cjs');
 const root = path.resolve(__dirname, '..');
 const htmlPath = path.join(root, 'index.html');
-let html = fs.readFileSync(htmlPath, 'utf8');
+// Isolated pre-delivery snapshot (set-equipment quality B8): first proofs whose only gap is the B9 browser acceptance may open,
+// and every output carries the undelivered marker. A plain build or --check (pre-push snapshot check, Pages) refuses both.
+const deliveryMarker = 'bandit-delivery:undelivered-pending-ui';
+const markerMeta = `<meta name="bandit-delivery" content="${deliveryMarker}">\n`;
+const pendingUi = process.argv.includes('--pending-ui-snapshot');
+if (pendingUi) {
+  const branch = require('node:child_process').spawnSync('git', ['symbolic-ref', '--short', 'HEAD'], {cwd: root, encoding: 'utf8'});
+  if (branch.status === 0 && ['main', 'gh-pages'].includes(branch.stdout.trim())) throw Error('未交付快照建置不可在 main／發布分支執行');
+} else if (process.argv.includes('--check')) {
+  for (const file of ['index.html', 'sw.js']) if (fs.existsSync(path.join(root, file)) && fs.readFileSync(path.join(root, file), 'utf8').includes(deliveryMarker)) {
+    console.error(`${file} 是未交付快照產物（待 B9 UI 驗收），不可提交或推送`);
+    process.exit(1);
+  }
+}
+let html = fs.readFileSync(htmlPath, 'utf8').replace(markerMeta, '');
 const knowledge = JSON.parse(fs.readFileSync(path.join(root, 'knowledge/catalog.json'), 'utf8'));
 
 knowledge.professionGuide = JSON.parse(fs.readFileSync(path.join(root, 'knowledge/profession-guide.json'), 'utf8'));
@@ -16,11 +30,12 @@ if(Object.values(knowledge.verification).some(Boolean)){
   if(!fs.existsSync(proofPath))throw Error('寫入閘門缺少遊戲驗證紀錄');
   const proof=JSON.parse(fs.readFileSync(proofPath,'utf8'));
   if(Object.hasOwn(proof,'schemaVersion')&&proof.schemaVersion!==2)throw Error('不支援的驗證證明格式');
-  const setProblem=require('./set-equipment-level-proof.cjs').problem(knowledge,proof,fs.readFileSync(path.join(root,'src/core.js'),'utf8'));if(setProblem)throw Error(setProblem);
-  const treasureProblem=require('./treasure-level-proof.cjs').problem(knowledge,proof,fs.readFileSync(path.join(root,'src/core.js'),'utf8'));if(treasureProblem)throw Error(treasureProblem);
-  const qualityProblem=require('./set-equipment-quality-proof.cjs').problem(knowledge,proof,fs.readFileSync(path.join(root,'src/core.js'),'utf8'));if(qualityProblem)throw Error(qualityProblem);
+  const setProblem=require('./set-equipment-level-proof.cjs').problem(knowledge,proof,fs.readFileSync(path.join(root,'src/core.js'),'utf8'),undefined,{pendingUi});if(setProblem)throw Error(setProblem);
+  const treasureProblem=require('./treasure-level-proof.cjs').problem(knowledge,proof,fs.readFileSync(path.join(root,'src/core.js'),'utf8'),undefined,{pendingUi});if(treasureProblem)throw Error(treasureProblem);
+  const qualityProblem=require('./set-equipment-quality-proof.cjs').problem(knowledge,proof,fs.readFileSync(path.join(root,'src/core.js'),'utf8'),undefined,{pendingUi});if(qualityProblem)throw Error(qualityProblem);
+  const crossPoolProblem=require('./set-equipment-level-cross-pool-proof.cjs').problem(knowledge,proof,fs.readFileSync(path.join(root,'src/core.js'),'utf8'),undefined,{pendingUi});if(crossPoolProblem)throw Error(crossPoolProblem);
   if(proof.schemaVersion===2){
-    const issue=require('./migration-proof.cjs').problem(knowledge,proof,fs.readFileSync(path.join(root,'src/core.js'),'utf8'));
+    const issue=require('./migration-proof.cjs').problem(knowledge,proof,fs.readFileSync(path.join(root,'src/core.js'),'utf8'),undefined,{pendingUi});
     if(issue)throw Error(issue);
   }else{
   if(proof.eventFingerprint!==knowledge.fingerprints['data.json']||proof.runtimeFingerprint!==knowledge.fingerprints['scripts/c3runtime.js']||!Object.values(proof.checks).every(v=>v===true))throw Error('遊戲驗證紀錄與來源不相符');
@@ -52,13 +67,14 @@ for (const [id, file] of [['save-core', 'core'], ['save-ui', 'ui'], ['save-pwa',
   const code = fs.readFileSync(path.join(root, `src/${file}.js`), 'utf8').replace('/*__KNOWLEDGE__*/null', JSON.stringify(knowledge).replace(/</g, '\\u003c')).replace('/*__KNOWLEDGE_UI__*/',()=>fs.readFileSync(path.join(root,'src/knowledge-ui.js'),'utf8')).replace('/*__PROFESSION_UI__*/',()=>fs.readFileSync(path.join(root,'src/profession-ui.js'),'utf8')).replace('/*__BATCH_UI__*/',()=>fs.readFileSync(path.join(root,'src/batch-ui.js'),'utf8'));
   html = html.replace(new RegExp(`(<script id="${id}">)[\\s\\S]*?(</script>)`), (_, start, end) => `${start}\n${code.trim()}\n${end}`);
 }
+if (pendingUi) html = html.replace(/<head>\r?\n/, head => head + markerMeta);
 const sha256 = content => createHash('sha256').update(content).digest('hex');
 const assetPaths = ['index.html', 'manifest.webmanifest', 'assets/favicon.svg', 'assets/icon-192.png',
   'assets/icon-512.png', 'assets/icon-maskable-512.png', 'assets/apple-touch-icon.png'];
 const assets = assetPaths.map(file => ({path: file, sha256: sha256(file === 'index.html' ? html : fs.readFileSync(path.join(root, file)))}));
 const template = fs.readFileSync(path.join(root, 'src/service-worker.js'), 'utf8');
 const version = sha256(template + JSON.stringify(assets));
-const worker = template.replace('__PWA_VERSION__', version).replace('/*__PWA_ASSETS__*/[]', JSON.stringify(assets));
+const worker = (pendingUi ? `// ${deliveryMarker}\n` : '') + template.replace('__PWA_VERSION__', version).replace('/*__PWA_ASSETS__*/[]', JSON.stringify(assets));
 const outputs = [[htmlPath, html], [path.join(root, 'sw.js'), worker]];
 if (process.argv.includes('--check')) {
   for (const [file, content] of outputs) {

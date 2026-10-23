@@ -38,10 +38,10 @@ function validateMigrationCopy(copy,k){
  return Object.fromEntries(R.requiredChecks(D.groups[plane===7?0:1]).map(c=>[c,true]));
 }
 // Build gate: a flag may be true only when the composite proof carries this group's matching initial record.
-function problem(k,proof,source,only){
+function problem(k,proof,source,only,opts){
  const open=only?[only]:D.groups.filter(g=>k.verification[g]);
  if(!open.length)return null;
- if(proof.schemaVersion===2)return require('./migration-proof.cjs').problem(k,proof,source,only);
+ if(proof.schemaVersion===2)return require('./migration-proof.cjs').problem(k,proof,source,only,opts);
  const p=proof.treasureLevel,b=binding(k,source);
  for(const group of open)if(!p||!same(Object.fromEntries(Object.keys(b).map(key=>[key,p[key]])),b)||initialProblem(p.initialVerification?.[group],group)||!R.requiredChecks(group).every(c=>p.groups?.[group]?.checks?.[c]===true))return '寶物等級缺少相符的獨立首次證明：'+group;
  return null;

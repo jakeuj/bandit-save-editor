@@ -29,7 +29,7 @@ function baseline(catalog,proof,snapshot) {
 function imported(previous,base) {
   if (previous.migration?.version===2) {
     if (!A.same(previous.migration.snapshot,base)) throw Error('語意基準與現有複合證明不符');
-    return {anchors:{...previous.migration.anchors},evidence:previous.migration.evidence,initialVerification:previous.migration.initialVerification,talentInitialVerification:previous.migration.talentInitialVerification,setInitialVerification:previous.migration.setInitialVerification,treasureInitialVerification:previous.migration.treasureInitialVerification,qualityInitialVerification:previous.migration.qualityInitialVerification};
+    return {anchors:{...previous.migration.anchors},evidence:previous.migration.evidence,initialVerification:previous.migration.initialVerification,talentInitialVerification:previous.migration.talentInitialVerification,setInitialVerification:previous.migration.setInitialVerification,treasureInitialVerification:previous.migration.treasureInitialVerification,qualityInitialVerification:previous.migration.qualityInitialVerification,crossPoolInitialVerification:previous.migration.crossPoolInitialVerification};
   }
   if (base.proofHash!==A.sha(previous)) throw Error('語意基準不屬於既有原生證明');
   const checks = {}, evidence = {}, groups = Object.keys(previous.groups).filter(g=>previous.groups[g]);
@@ -37,7 +37,7 @@ function imported(previous,base) {
   const anchor = {kind:'legacy-native',gameVersion:base.gameVersion,fingerprints:base.fingerprints,snapshot:base,proofHash:base.proofHash,checks};
   const id = A.sha(anchor);
   for (const group of groups) evidence[group] = Object.fromEntries(checks[group].map(c=>[c,{source:'native',anchor:id}]));
-  return {anchors:{[id]:anchor},evidence,initialVerification:previous.randomCharacterSkillCaps?.initialVerification,talentInitialVerification:previous.randomCharacterTalents?.initialVerification,setInitialVerification:previous.setEquipmentLevel?.initialVerification,treasureInitialVerification:previous.treasureLevel?.initialVerification,qualityInitialVerification:previous.setEquipmentQuality?.initialVerification};
+  return {anchors:{[id]:anchor},evidence,initialVerification:previous.randomCharacterSkillCaps?.initialVerification,talentInitialVerification:previous.randomCharacterTalents?.initialVerification,setInitialVerification:previous.setEquipmentLevel?.initialVerification,treasureInitialVerification:previous.treasureLevel?.initialVerification,qualityInitialVerification:previous.setEquipmentQuality?.initialVerification,crossPoolInitialVerification:undefined};
 }
 function digest(snapshot,group,check) {
   const data = snapshot.dataHashes?.[group];
@@ -86,13 +86,13 @@ function compose({catalog,previous,base,current,plan,results,steamBuild}) {
     eventFingerprint:catalog.fingerprints['data.json'],runtimeFingerprint:catalog.fingerprints['scripts/c3runtime.js'],fingerprints:catalog.fingerprints,batch2Fingerprints:catalog.batch2Fingerprints,
     groups:Object.fromEntries(Object.keys(catalog.verification).map(g=>[g,groups.includes(g)])),
     method:'按功能相依選跑；原生、沿用與 UI 未重驗分開記錄',
-    migration:{version:2,policy:'selective-existing-v1',previousGameVersion:previous.gameVersion,enabledBefore:groups,snapshot:current,anchors:Object.fromEntries(Object.entries(anchors).filter(([id])=>used.has(id))),evidence,initialVerification:importedProof.initialVerification,talentInitialVerification:importedProof.talentInitialVerification,setInitialVerification:importedProof.setInitialVerification,treasureInitialVerification:importedProof.treasureInitialVerification,qualityInitialVerification:importedProof.qualityInitialVerification},
+    migration:{version:2,policy:'selective-existing-v1',previousGameVersion:previous.gameVersion,enabledBefore:groups,snapshot:current,anchors:Object.fromEntries(Object.entries(anchors).filter(([id])=>used.has(id))),evidence,initialVerification:importedProof.initialVerification,talentInitialVerification:importedProof.talentInitialVerification,setInitialVerification:importedProof.setInitialVerification,treasureInitialVerification:importedProof.treasureInitialVerification,qualityInitialVerification:importedProof.qualityInitialVerification,crossPoolInitialVerification:importedProof.crossPoolInitialVerification},
     limits:['例行改版未重驗遊戲 UI；沿用項目的原生實測版本見 anchors','不代表 Mac 啟動、真實 Cloud 或長時間遊玩已驗證']};
 }
 // Only the independent first-opening suites call this, after their complete native validation succeeds.
 function mergeInitial(catalog,proof,group,record,results,source) {
   if(proof.schemaVersion!==2)return proof;
-  if(!['randomCharacterSkillCaps','randomCharacterBaseAptitudes','randomCharacterTalents','backpackTreasureLevel','treasureLevel',...require('./set-equipment-quality-data.cjs').groups].includes(group)||record.coverage!=='initial-matrix'||!results.completed)throw Error('新增群組必須使用獨立首次證明');
+  if(!['randomCharacterSkillCaps','randomCharacterBaseAptitudes','randomCharacterTalents','backpackTreasureLevel','treasureLevel',...require('./set-equipment-quality-data.cjs').groups,...require('./set-equipment-quality-data.cjs').crossPoolGroups].includes(group)||record.coverage!=='initial-matrix'||!results.completed)throw Error('新增群組必須使用獨立首次證明');
   if(group==='randomCharacterSkillCaps')require('./random-character-skill-caps-proof.cjs').validateResults(catalog,source,results,{initial:true});
   if(group==='randomCharacterTalents')require('./random-character-talents-proof.cjs').validateResults(catalog,source,results,{initial:true});
   const m=proof.migration;
@@ -106,6 +106,7 @@ function mergeInitial(catalog,proof,group,record,results,source) {
   if(group==='randomCharacterTalents')m.talentInitialVerification=record.initialVerification;
   if(require('./treasure-level-data.cjs').groups.includes(group))m.treasureInitialVerification={...m.treasureInitialVerification,[group]:record.initialVerification[group]};
   if(require('./set-equipment-quality-data.cjs').groups.includes(group))m.qualityInitialVerification={...m.qualityInitialVerification,[group]:record.initialVerification[group]};
+  if(require('./set-equipment-quality-data.cjs').crossPoolGroups.includes(group))m.crossPoolInitialVerification={...m.crossPoolInitialVerification,[group]:record.initialVerification[group]};
   return proof;
 }
 // The source must match the snapshot on every family that owns a check of an open group: by slice when both sides can be
@@ -117,7 +118,7 @@ function coreMatches(source,snapshot,k,onlyGroup) {
   const families=[...new Set(groups.flatMap(g=>R.requiredChecks(g).filter(c=>c!==R.uiChecks[g]).flatMap(c=>A.owners(g,c))))];
   return families.every(f=>/^[a-f0-9]{64}$/.test(table.hashes[f]||'')&&table.hashes[f]===current.hashes[f]);
 }
-function problem(k,proof,source,onlyGroup) {
+function problem(k,proof,source,onlyGroup,opts={}) {
   try {
     const m=proof.migration;
     if(proof.schemaVersion!==2||m?.version!==2||m.policy!=='selective-existing-v1'||proof.gameVersion!==k.gameVersion||Object.keys(allSources(k)).length!==15||!Object.values(allSources(k)).every(h=>hashPattern.test(h))||!A.same(allSources(k),m.snapshot?.fingerprints)||!A.same(proof.fingerprints,k.fingerprints)||!A.same(proof.batch2Fingerprints,k.batch2Fingerprints)||!coreMatches(source,m.snapshot,k,onlyGroup)||!Array.isArray(m.snapshot.unknown)||m.snapshot.unknown.length) throw Error('複合證明與來源或程式不相符');
@@ -128,7 +129,8 @@ function problem(k,proof,source,onlyGroup) {
       if(require('./set-equipment-level-data.cjs').groups.includes(group)&&require('./set-equipment-level-proof.cjs').initialProblem(m.setInitialVerification?.[group],group))throw Error('套裝等級首次完整矩陣證明缺失');
       if(group==='randomCharacterTalents'&&require('./random-character-talents-proof.cjs').initialProblem(m.talentInitialVerification))throw Error('天賦首次完整矩陣證明缺失');
       if(require('./treasure-level-data.cjs').groups.includes(group)&&(require('./treasure-level-proof.cjs').initialProblem(m.treasureInitialVerification?.[group],group)||m.treasureInitialVerification[group].dataHash!==require('./treasure-level-data.cjs').hash(k.treasureLevel)))throw Error('寶物等級首次完整矩陣證明缺失');
-      if(require('./set-equipment-quality-data.cjs').groups.includes(group)&&require('./set-equipment-quality-proof.cjs').recordProblem(m.qualityInitialVerification?.[group],group,k,source))throw Error('套裝品質首次完整矩陣證明缺失');
+      if(require('./set-equipment-quality-data.cjs').groups.includes(group)&&require('./set-equipment-quality-proof.cjs').recordProblem(m.qualityInitialVerification?.[group],group,k,source,opts))throw Error('套裝品質首次完整矩陣證明缺失');
+      if(require('./set-equipment-quality-data.cjs').crossPoolGroups.includes(group)&&require('./set-equipment-level-cross-pool-proof.cjs').recordProblem(m.crossPoolInitialVerification?.[group],group,k,source,opts))throw Error('跨池等級首次證明缺失');
       for(const check of R.requiredChecks(group)) {
         const e=m.evidence[group]?.[check];
         if(check===R.uiChecks[group]) {if(e?.source!=='deferred'||e.eventDigest!==m.snapshot.roles[check]||!hashPattern.test(e.eventDigest||''))throw Error('UI 未重驗紀錄不完整');continue;}
