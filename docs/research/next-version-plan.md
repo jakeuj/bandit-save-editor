@@ -13,7 +13,7 @@
 | 目前主線 | 無功能主線 |
 | 下一步 | 下一個功能從 roadmap 挑，依[輕量開發流程](../maintenance/lightweight.md)做 |
 | 授權 | 小數丹藥已完成並發布；下一個功能待使用者指定 |
-| 分派 | 預設在同一個 session 做完；必要時才依[任務分派](../maintenance/dispatch.md)開子 session |
+| 分派 | 預設在同一個 session 做完；查詢用子 agent，符合[分派判斷](../maintenance/dispatch.md#先判斷要不要分派)才開子 session |
 | 開放狀態 | 以目前 catalog／verification 為準；四個品質群組與兩個跨池等級群組已開放 |
 
 ### 其他候選

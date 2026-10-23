@@ -17,7 +17,7 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 
 ## 進度查詢與承接
 
-使用者問「現在做到哪」、「下一步做什麼」或「繼續實作下一版功能」時，先讀 repo 的 [下一步與目前進度](../../../docs/research/next-version-plan.md)，核對工作樹，依[輕量開發流程](../../../docs/maintenance/lightweight.md)在同一個 session 實作；只有工作真的能並行或很長時，才依[任務分派](../../../docs/maintenance/dispatch.md)開子 session。不重問已明確的目標。每次停點更新同一進度入口；roadmap 只用於候選排序，歷史完成工作不重開。每完成一個功能，主動把可重用的教訓寫回技能或對應的維護文件。
+使用者問「現在做到哪」、「下一步做什麼」或「繼續實作下一版功能」時，先讀 repo 的 [下一步與目前進度](../../../docs/research/next-version-plan.md)，核對工作樹，依[輕量開發流程](../../../docs/maintenance/lightweight.md)在同一個 session 實作；查詢或核對用子 agent；只有同時符合「長、機械化、規格已定」或功能真的能並行時，才依[任務分派](../../../docs/maintenance/dispatch.md#先判斷要不要分派)開子 session。不重問已明確的目標。每次停點更新同一進度入口；roadmap 只用於候選排序，歷史完成工作不重開。每完成一個功能，主動把可重用的教訓寫回技能或對應的維護文件。
 
 ## 規則同步檢查
 
@@ -44,7 +44,7 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 | Project 卡片、狀態與清單異常 | `docs/maintenance/projects.md`；直接用 `gh` 更新既有 ID，清單異常不重複新增，除非使用者明確要求，否則不開瀏覽器 |
 | Discussions 公告發布與更新 | `docs/maintenance/discussions.md`；直接用 `gh api graphql`，不開瀏覽器，更新沿用原討論 ID 並讀回確認 |
 | Issues 建立、更新與查重 | `docs/maintenance/issues.md`；直接用 `gh`，不開瀏覽器，先查開啟／已關閉 Issue，更新沿用原編號，結果不明不重複新增 |
-| 目前進度、下一步、繼續實作下一版 | `docs/research/next-version-plan.md`；依 `docs/maintenance/lightweight.md` 在同一 session 實作，必要時才依 `docs/maintenance/dispatch.md` 開子 session，候選排序再讀 roadmap |
+| 目前進度、下一步、繼續實作下一版 | `docs/research/next-version-plan.md`；依 `docs/maintenance/lightweight.md` 在同一 session 實作，必要時才依 `docs/maintenance/dispatch.md`「先判斷要不要分派」開子 session，候選排序再讀 roadmap |
 | 使用者明確要求遊戲 UI | `docs/game-ui-testing.md` 快速開始與目標路徑，再讀當次 computer-use 技能 |
 | Mac／CrossOver／Steam／存檔位置 | [Mac 參考](references/macos.md)、`launcher/README.md`、`docs/research/macos-runtime-investigation.md` |
 
