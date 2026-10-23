@@ -15,6 +15,7 @@
 3. 開發期間既有證明失效、`build-editor` 拒絕建置屬預期：只在本機分支提交，不推送，也不以關閉旗標繞過。需要瀏覽器驗收時，用 `tests/browser/site.cjs` 的候選站（`createSite({candidate})`），不寫入正式 `index.html`／`sw.js`。
 4. 每個 SDD 停點記錄切片報告的變動 family 與預估副本數，讓原生成本在重證前就可見。
 5. 選跑規劃、複合證明閘門都以 family 切片核對 core（[切片綁定](../research/core-ast-proof.md#第二階段功能切片)）；切片無法分析時退回整份 core。
+6. **重證成本紀錄與改善提示**：每次實際跑完既有群組的原生重證（代表選跑、版本遷移、發布前全跑），立即記入 [`docs/research/reproof-ledger.json`](../research/reproof-ledger.json)：`node scripts/reproof-cost.cjs --record --trigger core-change|game-update|release|other --copies N --total 全部代表副本數 --minutes 實際分鐘`（可加 `--families`、`--note`）。新功能自己的首次證明探針不記。`node scripts/core-slice-report.cjs` 與 `node scripts/reproof-cost.cjs` 會依門檻（預設近 60 天 ≥2 次重跑過半副本、累計 ≥30 分鐘，或下一次重證預估過半且會是近期第 2 次）印出「提示：」，表示[並行副本](../../sdd/core-slice-reproof/proposal.md#3-執行層並行與情境合併)值得做。看到提示時主動向使用者提出；使用者暫緩記 `--decline`（下一次重證後才再提），做完記 `--done`。門檻改在紀錄檔的 `thresholds`。
 
 ### 本機開發快取
 

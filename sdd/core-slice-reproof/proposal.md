@@ -116,6 +116,8 @@
 
 ### 並行 2–4 份隔離副本
 
+何時值得做：依 [`docs/research/reproof-ledger.json`](../../docs/research/reproof-ledger.json) 的實際重證紀錄與門檻，由 `scripts/reproof-cost.cjs`（切片報告也會呼叫）印出「提示：」時提出；規則見[開發中的原生驗證](../../docs/maintenance/migration.md#開發中的原生驗證)第 6 點。
+
 目前每份副本已有獨立的 `mkdtemp` 目錄、`game/` 複本、`--user-data-dir` profile、`steam-writes.jsonl`、`cloud-mirror` 與證據 JSON，因此**檔案層面的證據已互相隔離**。阻礙並行的是：
 
 | 項目 | 現況 | 必要調整 |

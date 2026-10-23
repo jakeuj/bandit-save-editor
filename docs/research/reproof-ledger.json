@@ -1,0 +1,23 @@
+{
+ "version": 1,
+ "thresholds": {
+  "windowDays": 60,
+  "bigRatio": 0.5,
+  "bigRuns": 2,
+  "minutes": 30
+ },
+ "suggestion": {
+  "candidate": "降低原生重證成本 C：並行副本",
+  "status": "pending"
+ },
+ "runs": [
+  {
+   "date": "2026-10-23",
+   "trigger": "core-change",
+   "copies": 19,
+   "total": 19,
+   "minutes": 12,
+   "note": "v2.11 寶物等級接入共用樞紐，全部代表副本重證；分鐘數依當時 10–13 分鐘實測估計"
+  }
+ ]
+}

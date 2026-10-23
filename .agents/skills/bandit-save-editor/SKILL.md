@@ -48,7 +48,7 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 | 使用者明確要求遊戲 UI | `docs/game-ui-testing.md` 快速開始與目標路徑，再讀當次 computer-use 技能 |
 | Mac／CrossOver／Steam／存檔位置 | [Mac 參考](references/macos.md)、`launcher/README.md`、`docs/research/macos-runtime-investigation.md` |
 
-日常推送先依[待提交快照檢查](../../../docs/maintenance/release.md#待提交快照檢查)驗證暫存區 Git bytes；工作目錄的 `--check` 不代替此檢查；推送成功即結束（含功能發布），不追蹤 Pages；Wiki／Project／公告預設不同步，使用者要求才處理。功能收尾依發布指引的[最短流程](../../../docs/maintenance/release.md#功能收尾預設最短流程)。完整驗收與部署追蹤條件依發布指引，新增寫入的首次證明要求不變。core 的可執行語法變動依 family 切片判斷受影響群組（`node scripts/core-slice-report.cjs`），只重證切片改變的 family，切片無法分析時退回整份 core；既有已開放群組因本次變更失效時，不以關閉旗標的狀態推送。新增候選群組在首次證明前則維持關閉。
+日常推送先依[待提交快照檢查](../../../docs/maintenance/release.md#待提交快照檢查)驗證暫存區 Git bytes；工作目錄的 `--check` 不代替此檢查；推送成功即結束（含功能發布），不追蹤 Pages；Wiki／Project／公告預設不同步，使用者要求才處理。功能收尾依發布指引的[最短流程](../../../docs/maintenance/release.md#功能收尾預設最短流程)。完整驗收與部署追蹤條件依發布指引，新增寫入的首次證明要求不變。core 的可執行語法變動依 family 切片判斷受影響群組（`node scripts/core-slice-report.cjs`），只重證切片改變的 family，切片無法分析時退回整份 core；既有已開放群組因本次變更失效時，不以關閉旗標的狀態推送。新增候選群組在首次證明前則維持關閉。跑完既有群組的原生重證就用 `node scripts/reproof-cost.cjs --record` 記錄；切片報告或該腳本印出「提示：」時，主動向使用者提出降低重證成本的候選（規則見[開發中的原生驗證](../../../docs/maintenance/migration.md#開發中的原生驗證)第 6 點），不等使用者自己判斷。
 
 ## 編輯來源
 

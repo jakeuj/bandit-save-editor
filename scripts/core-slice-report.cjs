@@ -25,6 +25,9 @@ if(require.main===module){
  const r=report(fs.readFileSync(value('--source')||path.join(root,'src/core.js'),'utf8'),proof.migration.snapshot,read('knowledge/catalog.json'));
  console.log(r.unchanged?'core 切片未變：既有群組沿用，不需選跑':`需重證 family：${r.changed.join('、')}（約 ${r.copies} 份代表副本）`);
  if(r.mode!=='slices')console.log('退回整份 core 比對：'+r.reason);
+ // Surface the parallel-copies trigger whenever the agent checks re-proof cost.
+ const Cost=require('./reproof-cost.cjs'),tip=Cost.hint(Cost.check(Cost.load(),{planned:r.copies,total:Object.keys(availableCopies).length}));
+ if(tip)console.log(tip);
  if(args.includes('--json'))console.log(JSON.stringify(r,null,1));
 }
 module.exports={report};
