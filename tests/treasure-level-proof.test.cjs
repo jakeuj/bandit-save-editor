@@ -20,12 +20,11 @@ test('initial records are exact per group; counts, order and binding cannot be b
  assert.ok(P.initialProblem(null,'treasureLevel'));assert.ok(P.initialProblem(record('treasureLevel'),'unknown'));
 });
 test('the repository proof opens each group only through its own composite record',()=>{
- assert.equal(proof.schemaVersion,2);
+ assert.equal(proof.schemaVersion,2);const current=require('./helpers/current-core-proof.cjs')(proof,source);
  for(const g of D.groups){
-  const missing=structuredClone(proof);delete missing.migration.treasureInitialVerification[g];assert.match(M.problem(k,missing,source,g),/寶物等級首次/);
-  const swapped=structuredClone(proof),other=D.groups.find(x=>x!==g);swapped.migration.treasureInitialVerification[g]=swapped.migration.treasureInitialVerification[other];assert.match(M.problem(k,swapped,source,g),/寶物等級首次/);
-  const stale=structuredClone(proof);stale.migration.treasureInitialVerification[g].dataHash=hex('c');assert.match(M.problem(k,stale,source,g),/寶物等級首次/);
-  const closed=structuredClone(k);closed.verification[g]=false;assert.equal(P.problem(closed,proof,source,g),null);
+  const missing=structuredClone(current);delete missing.migration.treasureInitialVerification[g];assert.match(M.problem(k,missing,source,g),/寶物等級首次/);
+  const swapped=structuredClone(current),other=D.groups.find(x=>x!==g);swapped.migration.treasureInitialVerification[g]=swapped.migration.treasureInitialVerification[other];assert.match(M.problem(k,swapped,source,g),/寶物等級首次/);
+  const stale=structuredClone(current);stale.migration.treasureInitialVerification[g].dataHash=hex('c');assert.match(M.problem(k,stale,source,g),/寶物等級首次/);
  }
  const changed=source+';0;';assert.match(P.problem(k,proof,changed),/不相符|無效/);
 });

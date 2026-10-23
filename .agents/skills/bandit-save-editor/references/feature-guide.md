@@ -5,7 +5,7 @@
 ## 依任務讀取
 
 - 完整轉職表、職業條件與社群工作圖：讀 repo 的 `src/profession-ui.js`、`knowledge/profession-guide.json`；前置資料由 `extract-game.cjs` 重建，規則與來源界線見研究筆記「職業轉職圖鑑」。
-- 裝備等級、職業操練上限、進階科技或超限模式：讀 repo 的 `docs/research/advanced-editing.md` 與 `sdd/advanced-editing/tasks.md`；基礎資質、技藝上限、天賦回填或自然職業30級限制另讀 `sdd/runtime-patch/proposal.md`。v2.8.1 已在 `editingInfo` 的 z9 分支補普通／setLink 檢查，當時套裝等級唯讀；目前獨立套裝功能另見下項；v2.8 及以前的可寫路徑是未證明缺口，舊存檔不追溯，該件等級不能由本版還原。
+- 裝備等級、職業操練上限、進階科技或超限模式：讀 repo 的 `docs/research/advanced-editing.md` 與 `sdd/advanced-editing/tasks.md`；背包普通裝備等級超限（v2.14，旗標 `backpackEquipmentLevelAdvanced`，上限同 z9 的 1000）的實作摘要在 `docs/research/equipment-workflow.md`；基礎資質、技藝上限、天賦回填或自然職業30級限制另讀 `sdd/runtime-patch/proposal.md`。v2.8.1 已在 `editingInfo` 的 z9 分支補普通／setLink 檢查，當時套裝等級唯讀；目前獨立套裝功能另見下項；v2.8 及以前的可寫路徑是未證明缺口，舊存檔不追溯，該件等級不能由本版還原。
 
 ### 寶物、套裝與規劃
 

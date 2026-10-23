@@ -71,7 +71,7 @@ node scripts/build-editor.cjs
 
 既有群組的原生證據依 family 的 core 切片綁定（見[切片綁定](../research/core-ast-proof.md#第二階段功能切片)）。只有修改落在少數 family 專屬函式時才省得到選跑；碰到共用樞紐就等同整份 core 變動，全部重證。新功能依下列規範設計：
 
-1. 以**獨立具名入口**提供資格、預覽與交易（例如 `xxxInfo`／`previewXxx`／`setXxx`），UI 直接呼叫該入口；不在 `editingInfo`、`setEditingValue`、`resolveField` 等樞紐新增分支。寶物等級（v2.11）接入 `editingInfo`／`setEditingValue`，因此付了全部 19 份重證，是反例。
+1. 以**獨立具名入口**提供資格、預覽與交易（例如 `xxxInfo`／`previewXxx`／`setXxx`），UI 直接呼叫該入口；不在 `editingInfo`、`setEditingValue`、`resolveField` 等樞紐新增分支。寶物等級（v2.11）接入 `editingInfo`／`setEditingValue`，因此付了全部 19 份重證，是反例。v2.14 背包等級超限只是把 z7 納入既有進階判斷，仍改在樞紐內（另寫入口會複製整套背包檢查）；代價是要調整綁歷史證明的測試，見[輕量流程](lightweight.md#測試也不綁目前-core)。
 2. 新入口只新增 `globalThis.SaveCore` 匯出名稱；新增名稱不影響既有 family，改變既有名稱的指向則會影響。
 3. 新功能的唯讀保護若必須進入 `resolveField`（例如自訂座標不可繞過），先排在一次本來就要全跑的時點（遊戲改版或發布前），把分類改成資料驅動；不在開發中修改樞紐。
 4. 共用工具（座標、格存取、`put`、`transaction`、`parse`／`serialize`）只在發布前批次修改；新功能需要的輔助函式放在自己的區塊。

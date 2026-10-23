@@ -43,6 +43,7 @@
     "equipmentQualityUpgrade": true,
     "equipmentQualityDowngrade": true,
     "backpackEquipmentLevel": true,
+    "backpackEquipmentLevelAdvanced": true,
     "backpackEquipmentAffixCoefficient": true,
     "backpackEquipmentAffixReplacement": true,
     "equipmentAffixInitialSelection": true,
@@ -75,6 +76,21 @@
       ],
       "baselineSaveSha256": "ebb0a4a28791218986c594d3b3819a066482bc11ff75aac99f8498c4ce4b84c5",
       "resultSha256": "81ea17df5dcde1363a35be72262f6e8d2c2884085042b7b540668c0fc2d9a4fc",
+      "passed": true
+    },
+    "backpackEquipmentLevelAdvanced": {
+      "date": "2026-10-24",
+      "gameVersion": "V1.0.11.2",
+      "flow": "docs/maintenance/lightweight.md",
+      "smoke": "verify-game.cjs + verify-native-lifecycle.cjs backpackOverLimit（隔離副本、雲存檔載入、原版存檔、新 PID 讀回、原生搬移／升級／穿卸後再存檔與重啟）",
+      "cases": [
+        "背包 #3 鐮刀 T1 Q1 等級 1→1000（進階上限）、背包 #6 礦鍬 T1 Q1 等級 1→11（一般上限+1）",
+        "#3 原生存入裝備庫：升级装备／升级最大装备不改等級、不扣貨幣魂魄（上限下對照可升一級並扣費）；取出回背包 50 欄不變",
+        "#6 由背包直接穿上角色 1：主屬性有限且與原生公式一致；卸下回背包除 y7 外不變",
+        "最終原版存檔以修改器讀回：搬移後新列號可降回 10、再升 1000，拒絕 1001"
+      ],
+      "baselineSaveSha256": "ebb0a4a28791218986c594d3b3819a066482bc11ff75aac99f8498c4ce4b84c5",
+      "resultSha256": "c529c3aa1e6b5b3b087818095629a0a67faad698d2adaf1e0f97df775e5e714d",
       "passed": true
     }
   },

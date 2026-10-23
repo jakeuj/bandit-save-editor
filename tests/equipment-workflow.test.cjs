@@ -15,7 +15,7 @@ test('plane identity isolates overlapping rows and restore groups across operati
 });
 test('backpack validates plane quantity owner bounds and unknown state without treating z9 refs as z7 refs',()=>{
  for(const override of [{plane:0},{plane:'7'},{plane:null},{plane:8},{plane:NaN}]){const {C,m,text}=setup();assert.throws(()=>C.setEquipmentAffix(m,{...opt,...override}));assert.equal(C.serialize(m),text);}
- for(const [y,v]of [[0,0],[0,221],[2,2],[7,1],[24,2],[25,1],[26,1],[27,1],[3,10],[5,7],[6,100]]){const {C,m,text}=setup();m.original.data[1][y][7]=v;assert.throws(()=>C.setEquipmentLevel(m,{itemId:1,plane:7,level:4}));assert.equal(C.serialize(m),text);}
+ for(const [y,v]of [[0,0],[0,221],[2,2],[7,1],[24,2],[25,1],[26,1],[27,1],[3,10],[5,7],[6,100]]){const {C,m,text}=setup();C.KNOWLEDGE.verification.backpackEquipmentLevelAdvanced=false;m.original.data[1][y][7]=v;assert.throws(()=>C.setEquipmentLevel(m,{itemId:1,plane:7,level:4}));assert.equal(C.serialize(m),text);}
  const {C,m}=setup();m.original.data[1][7][9]=1;m.original.data[1][18][2]=1;C.setEquipmentAffix(m,opt);assert.equal(C.get(m,{x:1,y:7,z:7}),0);
 });
 test('first selection is explicit and atomic; same-value lock is meaningful, later same-value write is noop',()=>{
@@ -44,8 +44,8 @@ test('new write gates are independent and source-new markers cannot borrow old e
   assert.throws(action);assert.equal(m.changes.size,0);
  }
 });
-test('backpack normal caps remain bounded and cannot request advanced mode',()=>{
- for(let q=1;q<=6;q++){const {C,m}=setup(),d=m.original.data[1];d[5][7]=q;for(let y=9;y<=33;y++)d[y][7]=0;d[24][7]=q%2;
+test('backpack normal caps remain bounded and cannot request advanced mode while its gate is closed',()=>{
+ for(let q=1;q<=6;q++){const {C,m}=setup(),d=m.original.data[1];C.KNOWLEDGE.verification.backpackEquipmentLevelAdvanced=false;d[5][7]=q;for(let y=9;y<=33;y++)d[y][7]=0;d[24][7]=q%2;
   for(let slot=1;slot<q;slot++){d[8+slot][7]=12;d[14+slot][7]=10*(q-1);}const max=10+(q-1)*5;
   C.setEquipmentLevel(m,{itemId:1,plane:7,level:max});assert.throws(()=>C.setEquipmentLevel(m,{itemId:1,plane:7,level:max+1}));assert.throws(()=>C.setEquipmentLevel(m,{itemId:1,plane:7,level:max,advanced:true}));
   if(q===1)assert.throws(()=>C.setEquipmentAffix(m,{...opt,selectUnwashedSlot:true}));

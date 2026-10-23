@@ -83,3 +83,19 @@ IAB的確認框曾阻塞dialog API及後續命令；改以原生Windows工具辨
 - 正式欄位圖鑑標籤及摘要均顯示V1.0.10.2；瀏覽器未記錄error／warn。正式版本、更新等待、桌面／390px與遊戲UI截圖均保留repo外，沒有提交真實存檔或遊戲payload。
 
 本次PWA證據為IAB瀏覽器Worker離線與關閉重開交接，不宣稱另完成Windows獨立安裝視窗或其他瀏覽器全套驗收。直接file://新功能仍待人工。
+
+## 實作摘要（2026-10-24，v2.14 背包普通裝備等級超限）
+
+依[輕量開發流程](../maintenance/lightweight.md)實作，不建 SDD。
+
+**欄位與入口**：只寫背包 `[i,6,7]`，沿用 `editingInfo`／`setEquipmentLevel({plane:7,advanced:true})`。`editingInfo` 原本把 z7 的 `advancedVerified` 寫死為 false，改成與 z9 同樣讀 `群組+'Advanced'`，即新旗標 `backpackEquipmentLevelAdvanced`（登記在 `equipmentWorkflow` family）。上限沿用 `editingLimits.equipment.max=1000`，升級公式有限性檢查與 z9 相同；z7 等階 1–9、品質 1–6 在 1000 時兩條成本公式都有限。
+
+**拒絕條件**：背包結構檢查（數量 1、歸屬 0、普通／非套裝、slot≤4、等階與範本一致、y24–27、詞條槽範圍）照舊；改過詞條係數或 ID 的裝備不能升到一般上限以上；超限背包裝備的詞條、品質與批次升滿維持停用（`ordinaryEquipment` 預設仍擋超限，批次顯示「不會自動降級」）。旗標開啟時，`setEditingValue` 對 z7 呼叫 `ordinaryEquipment(..., overLimitLevel=true)`，讓已超限的背包列（例如原生從裝備庫取出的）也能調低或再調高；旗標關閉時行為與 v2.4 相同（UI 顯示「背包僅一般模式」，超限列唯讀）。
+
+**原生行為（靜態）**：`升级最大装备` SID `290240793057956` 是「等級 < `装备等级上限` 才 +1」的迴圈，超限件不會被拉回上限；`升级装备` 同樣只在上限內升級。
+
+**合成測試**：`tests/backpack-equipment-level-advanced.test.cjs`（旗標獨立於 z9、上限+1／1000／1001 與非整數、只改 y6 與 undo／restore、已超限列調低再調高、結構拒絕、詞條已改不能超限、T9Q6 在 1000、批次不降級、自訂座標不可繞過）；`equipment-workflow`／`equipment-ui` 舊測試改為在旗標關閉時驗證原行為。
+
+**隔離遊戲冒煙（2026-10-24，V1.0.11.2 完整快取，通過）**：基準存檔同 v2.13（SHA-256 `ebb0a4a2…`）。`verify-game.cjs` 以目前 core 把背包 #3 鐮刀（T1 Q1）1→1000、#6 礦鍬（T1 Q1）1→11；雲存檔載入、原版存檔、停止、新 PID 讀回一致。接著 `verify-native-lifecycle.cjs` 的 `backpackOverLimit`：#3 原生存入裝備庫，上限下對照（9→10）會升級扣費，1000 時 `升级装备`／`升级最大装备` 不改等級、不扣貨幣魂魄，取出回背包 50 欄不變；#6 由背包直接穿上角色 1，主屬性有限且等於 `装备主属性`，卸下回背包除 y7 外不變。再存檔、新 PID 讀回一致；最終原版存檔以修改器讀回，搬移後的新列號可降回 10、再升 1000、拒絕 1001。結果檔留在 repo 外，雜湊記於 `verification.json` 的 `lightweight`。
+
+**工具教訓**：`穿戴装备` 後要等一拍（500 ms）再讀角色指標，同一次 evaluate 內讀到的是空列（y0=0）；`装备库存入`／`装备库取出` 則可在同一次呼叫後立即以 50 欄內容定位新列。

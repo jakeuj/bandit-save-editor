@@ -65782,6 +65782,7 @@
     "equipmentQualityUpgrade": true,
     "equipmentQualityDowngrade": true,
     "backpackEquipmentLevel": true,
+    "backpackEquipmentLevelAdvanced": true,
     "backpackEquipmentAffixCoefficient": true,
     "backpackEquipmentAffixReplacement": true,
     "equipmentAffixInitialSelection": true,

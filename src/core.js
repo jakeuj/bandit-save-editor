@@ -256,12 +256,13 @@
   }else throw Error('未知的修改類型。');
   const current=get(m,coordinate);if(!Number.isSafeInteger(current)||current<0||kind==='equipment'&&current<1)throw Error('現有數值與欄位型別不符。');
   const group=kind==='equipment'&&plane===7?'backpackEquipmentLevel':EDIT_GROUPS[kind],limits=KNOWLEDGE.editingLimits?.[kind];
-  return {kind,id,plane,name,coordinate,current,min,normalMax,advancedMax:limits?.maxById?.[id]??limits?.max??0,verified:!!KNOWLEDGE.verification[group],advancedVerified:!(kind==='equipment'&&plane===7)&&!!KNOWLEDGE.verification[group+'Advanced']};
+  return {kind,id,plane,name,coordinate,current,min,normalMax,advancedMax:limits?.maxById?.[id]??limits?.max??0,verified:!!KNOWLEDGE.verification[group],advancedVerified:!!KNOWLEDGE.verification[group+'Advanced']};
  }
  function setEditingValue(m,kind,id,value,advanced=false,plane=9){
   if(typeof advanced!=='boolean')throw Error('進階模式參數不正確。');
   const info=editingInfo(m,kind,id,plane);
-  if(kind==='equipment'&&plane===7&&!info.isSet&&!info.isTreasure)ordinaryEquipment(m,id,plane);
+  // Backpack over-limit (z7 advanced) keeps the structural checks but lets an already over-limit row be edited.
+  if(kind==='equipment'&&plane===7&&!info.isSet&&!info.isTreasure)ordinaryEquipment(m,id,plane,info.advancedVerified);
   if(!info.verified||advanced&&!info.advancedVerified)throw Error('此修改模式尚未完成隔離遊戲驗證，目前停用。');
   if(!Number.isSafeInteger(value)||value<info.min)throw Error(`請輸入不小於 ${info.min} 的安全整數；操練上限不得低於角色現有職業等級。`);
   const max=advanced?info.advancedMax:Math.min(info.normalMax,info.advancedMax);
@@ -295,10 +296,10 @@
  // Batch-two operations intentionally have no advanced mode.
  const aptitudeNames=['力量','敏捷','智力'];
  const decimal2=value=>typeof value==='number'&&Number.isFinite(value)&&Math.abs(value)<=Number.MAX_SAFE_INTEGER/100&&Math.abs(value*100-Math.round(value*100))<1e-8;
- function ordinaryEquipment(m,itemId,plane=9){
+ function ordinaryEquipment(m,itemId,plane=9,overLimitLevel=false){
   const info=editingInfo(m,'equipment',itemId,plane),item=catalogMaps.items.get(get(m,C(itemId,1,plane))),rules=KNOWLEDGE.batch2Data?.items[item.id];
   const q=get(m,C(itemId,5,plane)),tier=get(m,C(itemId,3,plane));
-  if(item.kind!=='普通'||!rules||rules.setLink!==0||item.slot>4||q>6||!Number.isSafeInteger(tier)||tier<1||tier>9||tier!==rules.tier||info.current>info.normalMax)throw Error('只支援原版等階、品質與等級範圍的一般裝備；套裝、寶物、內丹與超限裝備停用。');
+  if(item.kind!=='普通'||!rules||rules.setLink!==0||item.slot>4||q>6||!Number.isSafeInteger(tier)||tier<1||tier>9||tier!==rules.tier||!overLimitLevel&&info.current>info.normalMax)throw Error('只支援原版等階、品質與等級範圍的一般裝備；套裝、寶物、內丹與超限裝備停用。');
   const newItemMarker=get(m,C(itemId,24,plane));
   if(![0,1].includes(newItemMarker)||[25,26,27].some(y=>get(m,C(itemId,y,plane))!==0))throw Error('裝備包含特殊狀態，尚未涵蓋飛升或套裝轉換。');
   if(plane===9&&newItemMarker===1&&!KNOWLEDGE.verification.equipmentNewItemMarker)throw Error('新取得裝備狀態尚待隔離驗證。');

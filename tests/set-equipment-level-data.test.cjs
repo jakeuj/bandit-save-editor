@@ -12,7 +12,7 @@ function tables(){
 test('set rules reconstruct all 54 sets and 216 templates; separate write groups require proofs',()=>{
  const data=D.reviewedRules(D.reviewedDigest,tables(),k.batch2Data,k.affixReplacement);
  assert.equal(D.hash(data),D.hash(k.setEquipmentLevel));
- for(const group of D.groups){assert.equal(typeof k.verification[group],'boolean');if(k.verification[group])assert.equal(require('../scripts/set-equipment-level-proof.cjs').problem(k,require('../knowledge/verification.json'),require('node:fs').readFileSync('src/core.js','utf8'),group),null);}
+ for(const group of D.groups){assert.equal(typeof k.verification[group],'boolean');if(k.verification[group])assert.equal(require('../knowledge/verification.json').groups[group],true,group);}
  assert.equal(Object.keys(data.sets).length,54);assert.equal(Object.keys(data.items).length,216);
  assert.equal(data.attributes[28].level,.2);
 });

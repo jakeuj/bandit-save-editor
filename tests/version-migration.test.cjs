@@ -156,6 +156,24 @@ test('native follow-up actions send compilable page code and check each native r
   }finally{require.cache[gamePath].exports = real; delete require.cache[lifecyclePath];}
 });
 
+test('backpack over-limit follow-up sends compilable page code and rejects any native change to the row',async()=>{
+  const gamePath = require.resolve('../scripts/verify-game.cjs'), lifecyclePath = require.resolve('../scripts/verify-native-lifecycle.cjs');
+  const real = require(gamePath), answers = [];
+  const fake = {...real, waitMain: async () => {}, evaluate: async (state, expression) => { new Function('return ' + expression); return answers.shift()(expression); }};
+  delete require.cache[lifecyclePath]; require.cache[gamePath] = {...require.cache[gamePath], exports: fake};
+  try{
+    const {backpackOverLimit} = require(lifecyclePath), row = Array.from({length: 50}, (_, y) => y === 6 ? 1000 : y === 7 ? 0 : y + 100), worn = row.map((v, y) => y === 6 ? 11 : v);
+    const scenario = {backpackOverLimit: {stored: {id: 3}, worn: {id: 6, character: 1}}}, zero = Array(50).fill(0);
+    const run = upgraded => {answers.push(() => ({before: row, id: 40, moved: row, source: zero}),
+      () => ({cap: 10, control: {from: 9, to: 10, copper: 5}, before: row, single: upgraded, maximum: upgraded, copper: 1e12, souls: 1e9}),
+      () => ({id: 3, record: row}), () => ({slot: 4, before: worn}), () => ({slot: 4, before: worn, id: 41, record: worn.map((v, y) => y === 7 ? 1 : v), effects: [{attr: 1, actual: 12, main: 10}]}),
+      () => true, () => ({id: 6, record: worn, pointer: 0}));};
+    const state = {cells: []};run(row);await backpackOverLimit(state, scenario);
+    assert.ok(state.cells.some(([x, y, z]) => x === 40 && y === 6 && z === 9) && state.cells.some(([x, y, z]) => x === 1 && y === 19 && z === 2));
+    run(row.map((v, y) => y === 6 ? 10 : v));await assert.rejects(backpackOverLimit({cells: []}, scenario), /changed an over-limit row/);
+  }finally{require.cache[gamePath].exports = real; delete require.cache[lifecyclePath];}
+});
+
 test('every suite oracle and lifecycle script exists and marked copies run each family lifecycle',()=>{
   const S = require('../scripts/verification-suite.cjs');
   for (const [name, family] of Object.entries(S.families)) for (const script of [family.oracle, ...(family.lifecycle || [])].filter(Boolean)) assert.ok(fs.existsSync(path.join(root, 'scripts', script)), name + ': ' + script);
@@ -247,7 +265,7 @@ test('write-back opens proven groups on a new build, compares on the proven buil
     const compared = M.writeBack({dir, catalog, proof, results: {...results(catalog.gameVersion), ui: {}}});
     assert.equal(compared.action, 'compared');
     assert.equal(compared.consistent, false, 'quality UI pending must differ from the native proof');
-    assert.deepEqual(compared.comparison.filter(c => c.existing !== c.migrated).map(c => c.group).sort(), [...R.sections.equipmentQuality.groups,...['randomCharacterBaseAptitudes','pillAptitudeBonusDecimal'].filter(g=>!catalog.verification[g])].sort());
+    assert.deepEqual(compared.comparison.filter(c => c.existing !== c.migrated).map(c => c.group).sort(), [...R.sections.equipmentQuality.groups,...['randomCharacterBaseAptitudes','pillAptitudeBonusDecimal','backpackEquipmentLevelAdvanced'].filter(g=>!catalog.verification[g])].sort());
     assert.deepEqual(snapshot(), same);
     const reordered = {...catalog, fingerprints: Object.fromEntries(Object.entries(catalog.fingerprints).reverse()), batch2Fingerprints: Object.fromEntries(Object.entries(catalog.batch2Fingerprints).reverse())};
     assert.equal(M.writeBack({dir, catalog: reordered, proof, results: {...results(catalog.gameVersion), ui: {}}, exec: () => { throw Error('same fingerprint must not build after key reordering'); }}).action, 'compared');

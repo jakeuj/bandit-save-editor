@@ -21,7 +21,11 @@ test('first-selection checkbox enables one atomic lock and is cleared after appl
 });
 test('changing plane/target and position filter never retains first-selection confirmation',()=>{
  const {ctx,$,m}=setup();$('affixFirst').checked=true;$('affixItem').value='9:1';$('affixItem').onchange();assert.equal($('affixFirst').checked,false);assert.equal($('affixReplace').disabled,true);assert.equal(m.changes.size,0);
- $('inventoryPlane').value='7';$('inventoryPlane').onchange();assert.match($('affixItem').innerHTML,/背包 #1/);assert.doesNotMatch($('affixItem').innerHTML,/9:1/);assert.doesNotMatch($('equipmentEditor').innerHTML,/value="9:1"/);assert.match($('equipmentEditor').innerHTML,/背包僅一般模式/);
+ $('inventoryPlane').value='7';$('inventoryPlane').onchange();assert.match($('affixItem').innerHTML,/背包 #1/);assert.doesNotMatch($('affixItem').innerHTML,/9:1/);assert.doesNotMatch($('equipmentEditor').innerHTML,/value="9:1"/);assert.match($('equipmentEditor').innerHTML,/進階驗證上限 1000/);assert.doesNotMatch($('equipmentEditor').innerHTML,/data-edit-mode="equipment"\s+disabled/);
+});
+test('backpack advanced checkbox stays disabled while its own gate is closed',()=>{
+ const {ctx,$,C}=setup();C.KNOWLEDGE.verification.backpackEquipmentLevelAdvanced=false;$('inventoryPlane').value='7';$('inventoryPlane').onchange();
+ assert.match($('equipmentEditor').innerHTML,/背包僅一般模式/);assert.match($('equipmentEditor').innerHTML,/data-edit-mode="equipment"\s+disabled/);assert.match($('equipmentEditor').innerHTML,/max="15"/);
 });
 test('missing selection UI proof keeps candidate and apply disabled even after checkbox',()=>{
  const {$,m}=setup(false);assert.match($('affixTarget').innerHTML,/首次選槽尚待原生遊戲 UI 驗證/);$('affixFirst').checked=true;$('affixFirst').onchange();assert.equal($('affixReplace').disabled,true);assert.equal(m.changes.size,0);

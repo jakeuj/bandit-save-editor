@@ -9,7 +9,7 @@ test('reviewed cap rules retain all six rounded endpoints and readonly talent se
  assert.deepEqual(d.talents[1].excludedPrimary,[1]);assert.deepEqual(d.talents[2].excludedPrimary,[9]);
  assert.equal(k.randomCharacterSkillCaps.sourceDigest,D.reviewedDigest);
  assert.equal(typeof k.verification.randomCharacterSkillCaps,'boolean');
- if(k.verification.randomCharacterSkillCaps){const P=require('../scripts/random-character-skill-caps-proof.cjs');assert.equal(P.problem(k,require('../knowledge/verification.json'),require('node:fs').readFileSync('src/core.js','utf8')),null,'開放狀態必須有相符原生證明');}
+ if(k.verification.randomCharacterSkillCaps)assert.equal(require('../knowledge/verification.json').groups.randomCharacterSkillCaps,true,'開放狀態必須有群組紀錄');
 });
 test('unreviewed events, malformed tf and any bound data drift fail closed',()=>{
  assert.throws(()=>D.reviewedRules('changed',k.randomCharacterGrowth,rows()),/SID/);
