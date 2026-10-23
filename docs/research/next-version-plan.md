@@ -30,6 +30,7 @@
 | v2.9 天賦等級 | 已發布，首次原生證明及瀏覽器驗收見任務；尚未驗證範圍仍保留 | [研究](random-character-talents.md)、[任務](../../sdd/random-character-talents/tasks.md) |
 | v2.10 套裝等級 | 已發布並驗收歸檔；兩庫各自首次證明及 Node／瀏覽器驗收通過，對應 SHA 的 Pages build／deploy 成功 | [研究](set-equipment-level.md)、[提案](../../sdd/archive/2026-10-23-set-equipment-level/proposal.md)、[任務](../../sdd/archive/2026-10-23-set-equipment-level/tasks.md) |
 | 寶物等級 | 研究完成、SDD 待實作；經驗候選經查證排除 | [研究](treasure-level.md)、[任務](../../sdd/treasure-level/tasks.md) |
+| 原生重證成本 | 提案待核准：core 依 family 切片綁定、獨立入口開發規範、並行副本與「開發中不選跑」規範；不影響寶物任務 9 | [提案](../../sdd/core-slice-reproof/proposal.md) |
 | 其他候選 | 小數丹藥、套裝品質／詞條、結丹丹藥、靈物等依目前優先順序評估 | [路線圖](feature-roadmap.md) |
 
 ## 尚待驗收
