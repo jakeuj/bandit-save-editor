@@ -149,8 +149,8 @@ test('progress refuses duplicates, not-applicable results, relabeled native evid
  const done=S.emptyProgress(manifest);for(const x of S.shard(manifest,{groups:[BU],kinds:['reject']}))S.recordResult(manifest,done,x,{passed:true,observation:{nativeCompared:false}});
  const part=S.summary(manifest,done).groups;assert.equal(part[BU].syntheticComplete,false);assert.equal(part[BD].passed,0);
 });
-test('groups stay closed, unregistered and the scenario module reads no core or native source',()=>{
- for(const g of groups)assert.equal(k.verification[g],false);
+test('groups open only with their merged first proofs and the scenario module reads no core or native source',()=>{
+ require('./helpers/set-quality-shipped.cjs').assertShipped(k);
  const src=fs.readFileSync(path.join(__dirname,'../scripts/set-equipment-quality-scenarios.cjs'),'utf8');
  assert.deepEqual([...src.matchAll(/require\(([^)]*)\)/g)].map(m=>m[1]).sort(),["'./set-equipment-quality-data.cjs'","'./set-equipment-quality-effects-oracle.cjs'","'./set-equipment-quality-oracle.cjs'","'node:assert/strict'","'node:fs'","'node:path'"].sort());
  assert.ok(!/SaveCore|runInNewContext|vm\./.test(src));

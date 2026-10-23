@@ -17,17 +17,18 @@ function results(group,src=source){
 }
 const legacy=()=>({schemaVersion:1,groups:{}});
 
-test('the four quality groups are registered everywhere but stay closed',()=>{
+test('the four quality groups are registered everywhere and open only with their merged first proofs',()=>{
  assert.deepEqual(P.groups,['backpackSetEquipmentQualityUpgrade','backpackSetEquipmentQualityDowngrade','setEquipmentQualityUpgrade','setEquipmentQualityDowngrade']);
  for(const g of P.groups){
-  assert.equal(k.verification[g],false);assert.equal(R.sectionOf(g),'setEquipmentQuality');assert.equal(S.familyOf(g),'setEquipmentQuality');
-  assert.deepEqual(R.requiredChecks(g),['load','save','restart','originalHashes','nativeEffects','lifecycle']);assert.ok(!proof.groups[g]);
+  assert.equal(R.sectionOf(g),'setEquipmentQuality');assert.equal(S.familyOf(g),'setEquipmentQuality');
+  assert.deepEqual(R.requiredChecks(g),['load','save','restart','originalHashes','nativeEffects','lifecycle']);
  }
  assert.equal(S.families.setEquipmentQuality.initialProofRequired,true);assert.deepEqual(S.uncovered(P.groups),[]);
  for(const script of [S.families.setEquipmentQuality.oracle,...S.families.setEquipmentQuality.lifecycle])assert.ok(fs.existsSync(path.join(__dirname,'../scripts',script)),script);
  assert.deepEqual(A.coreRoots.setEquipmentQuality.slice(-4),['setEquipmentQualityCandidateInfo','previewSetEquipmentQualityCandidate','applySetEquipmentQualityCandidate','setEquipmentQualityCandidateEffects']);
  assert.ok(A.dependencies.setEquipmentQuality&&A.regions.setEquipmentQuality);
- assert.equal(P.problem(k,proof,source),null);
+ require('./helpers/set-quality-shipped.cjs').assertShipped(k,proof,source);
+ assert.equal(P.problem(k,proof,source,undefined,{pendingUi:require('./helpers/set-quality-shipped.cjs').undelivered()}),null);
 });
 test('the matrix runner and the artifact-less lifecycle runner refuse to report any result without --output',()=>{
  const {spawnSync}=require('node:child_process');
@@ -89,8 +90,9 @@ test('representative migration evidence and bare checks=true cannot open a group
  // Opening the flag without a record is refused by every gate.
  const open=clone(k);open.verification[g]=true;
  assert.match(P.problem(open,legacy(),source,g),/缺少相符的獨立首次證明/);
- assert.ok(P.problem(open,proof,source,g));
- assert.ok(require('../scripts/migration-proof.cjs').problem(open,proof,source,g));
+ const bare=clone(proof);delete bare.migration.qualityInitialVerification?.[g];
+ assert.ok(P.problem(open,bare,source,g,{pendingUi:true}));
+ assert.ok(require('../scripts/migration-proof.cjs').problem(open,bare,source,g,{pendingUi:true}));
 });
 test('merging opens only the merged group; the other three keep no proof and the input is untouched',()=>{
  const g='backpackSetEquipmentQualityUpgrade',before=JSON.stringify(proof);

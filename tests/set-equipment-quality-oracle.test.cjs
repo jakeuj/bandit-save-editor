@@ -150,5 +150,6 @@ test('oracle is independent: it does not load SaveCore, core.js or any preview, 
  assert.doesNotMatch(src,/require\([^)]*(core|ui|build-editor|save-fixture|child_process)/);
  assert.doesNotMatch(src,/SaveCore|previewEquipmentQuality|setEquipmentQualityCandidateInfo|verification\.json/);
  assert.doesNotMatch(src,/\bnative(Compared|Result|Observation)\b/);
- for(const group of ['backpackSetEquipmentQualityUpgrade','backpackSetEquipmentQualityDowngrade','setEquipmentQualityUpgrade','setEquipmentQualityDowngrade'])assert.ok(!k.verification[group],'oracle 不開放品質群組：'+group);
+ // The oracle opens nothing: a group is open only with its merged first proof (checked against the composite proof).
+ assert.doesNotMatch(src,/verification\[/);require('./helpers/set-quality-shipped.cjs').assertShipped(k);
 });

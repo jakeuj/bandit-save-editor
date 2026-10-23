@@ -1,11 +1,13 @@
 'use strict';
 // A frozen release from before the treasure-level core change: its legacy-shaped proof, migration baseline and the exact
 // core they bind. The repository itself now carries the composite (schema 2) proof; tests that exercise legacy-proof
-// machinery use this matching trio instead of the live files. The treasure groups stay closed in every overlay.
+// machinery use this matching trio instead of the live files. Groups opened after it (treasure, set quality and the set-level
+// cross-pool scope) stay closed in every overlay.
 const fs=require('node:fs'),path=require('node:path'),{spawnSync}=require('node:child_process');
 const fixtures=path.join(__dirname,'../fixtures/legacy-release'),root=path.join(__dirname,'../..');
 const text=name=>fs.readFileSync(path.join(fixtures,name),'utf8');
-const treasureGroups=['backpackTreasureLevel','treasureLevel'];
+const Q=require('../../scripts/set-equipment-quality-data.cjs');
+const treasureGroups=['backpackTreasureLevel','treasureLevel',...Q.groups,...Q.crossPoolGroups];
 const legacy={
  core:text('core.js'),
  proof:()=>JSON.parse(text('verification.json')),

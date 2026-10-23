@@ -2,7 +2,7 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 const {saveFixture,renderSave}=require('./helpers/save-fixture.cjs');
 const O=require('../scripts/set-equipment-quality-effects-oracle.cjs');
-const catalog=require('../knowledge/catalog.json'),templateId=28,originId=2;
+const catalog=require('../knowledge/catalog.json'),templateId=28,originId=2,S=require('./helpers/set-quality-shipped.cjs');
 const L=catalog.setEquipmentLevel,t=L.items[templateId],P原=L.origins[originId].affixIds,P套=catalog.setEquipmentQuality.pools[templateId].affixIds;
 const setOnly=P套.filter(a=>!P原.includes(a));
 const UP={7:'backpackSetEquipmentQualityUpgrade',9:'setEquipmentQualityUpgrade'},DOWN={7:'backpackSetEquipmentQualityDowngrade',9:'setEquipmentQualityDowngrade'};
@@ -20,7 +20,8 @@ function setup({open=[],quality=3,level=3,flags={},plane=9}={}){
   for(const m of html.matchAll(/<(input|select|label|p|div|button)\b([^>]*)>/g)){const id=attr(m[2],'id'),edit=attr(m[2],'data-edit-value');if(!id&&!edit)continue;const e=make();e.hidden=/\bhidden\b/.test(m[2]);e.disabled=/\bdisabled\b/.test(m[2]);e.checked=/\bchecked\b/.test(m[2]);e.value=attr(m[2],'value')||'';elements.set(id||'edit-'+edit,e);if(m[1]==='select'){const rest=html.slice(m.index+m[0].length);e.innerHTML=rest.slice(0,rest.indexOf('</select>'));}}
  }};}
  const $=id=>{if(!elements.has(id))elements.set(id,make());return elements.get(id);};
- const k=structuredClone(catalog);for(const g of ['backpackSetEquipmentLevel','setEquipmentLevel'])k.verification[g]=true;for(const g of open)k.verification[g]=true;
+ // The card is tested from a copy with every set-quality group closed; `open` opens groups in that copy only.
+ const k=S.closed(catalog);for(const g of ['backpackSetEquipmentLevel','setEquipmentLevel'])k.verification[g]=true;for(const g of open)k.verification[g]=true;
  const ctx={document:{addEventListener:(n,fn)=>(listeners[n]??=[]).push(fn),querySelector:s=>elements.get('edit-'+s.match(/="(.*?)"/)?.[1])},$,knowledgePages:{inventory:0,settlement:0,atlas:0,catalog:0},K:k,fmt:String,htmlValue:String,esc:s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;'),toast:(message,error)=>toasts.push({message,error}),showTab(){}};
  vm.runInNewContext(coreSource.replace('/*__KNOWLEDGE__*/null',JSON.stringify(k)),ctx);ctx.C=ctx.SaveCore;
  const {data}=saveFixture({characters:2}),row=record({plane,quality,level,flags});
@@ -34,7 +35,7 @@ function setup({open=[],quality=3,level=3,flags={},plane=9}={}){
 const pick=(h,slot,id,coef)=>{h.$('setQualityAffix'+slot).value=String(id);if(coef!==undefined)h.$('setQualityCoefficient'+slot).value=String(coef);h.$('setQualityAffix'+slot).onchange();};
 const target=(h,q)=>{h.$('setQualityTarget').value=String(q);h.$('setQualityTarget').onchange();};
 
-test('shipped catalog: set card previews but every Apply stays disabled with the reason',()=>{
+test('closed groups: set card previews but every Apply stays disabled with the reason',()=>{
  const h=setup({plane:9});
  assert.match(h.$('setQualityItem').innerHTML,/9:20/);assert.doesNotMatch(h.$('setQualityItem').innerHTML,/9:21/);
  assert.match(h.$('setQualityInfo').textContent,/升品 待驗證/);assert.match(h.$('setQualityInfo').textContent,/降品 待驗證/);
@@ -121,7 +122,7 @@ test('setEquipmentQualityCandidateEffects rejects what the preview rejects and t
  const q=setup({quality:3,level:12}),ok=q.C.setEquipmentQualityCandidateEffects(q.m,{itemId:20,plane:9,quality:4,addedAffixes:[{slot:3,attributeId:P原[5],coefficient:45}]});
  const attack=ok.effects.find(e=>e.attributeId===4);assert.ok(attack.after>attack.before);
 });
-test('catalog gates stay closed and the shipped candidate names are the only new exports',()=>{
- const h=setup();for(const g of Object.values(UP).concat(Object.values(DOWN)))assert.notEqual(h.ctx.K.verification[g],true);
+test('shipped gates open only with their merged first proofs and the candidate names are the only new exports',()=>{
+ const h=setup();for(const g of Object.values(UP).concat(Object.values(DOWN)))assert.notEqual(h.ctx.K.verification[g],true);S.assertShipped(catalog);
  assert.ok(['setEquipmentQualityCandidateInfo','previewSetEquipmentQualityCandidate','applySetEquipmentQualityCandidate','setEquipmentQualityCandidateEffects'].every(n=>typeof h.C[n]==='function'));
 });

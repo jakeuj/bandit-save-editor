@@ -4,14 +4,15 @@ const {saveFixture,renderSave}=require('./helpers/save-fixture.cjs');
 const source=fs.readFileSync(require.resolve('../src/core.js'),'utf8');
 const D=require('../scripts/set-equipment-quality-data.cjs');
 const catalog=require('../knowledge/catalog.json'),templateId=28,originId=2;
+const S=require('./helpers/set-quality-shipped.cjs');
 const L=catalog.setEquipmentLevel,t=L.items[templateId],P原=L.origins[originId].affixIds,P套=catalog.setEquipmentQuality.pools[templateId].affixIds;
 const setOnly=P套.filter(a=>!P原.includes(a));
 const UP={7:'backpackSetEquipmentQualityUpgrade',9:'setEquipmentQualityUpgrade'},DOWN={7:'backpackSetEquipmentQualityDowngrade',9:'setEquipmentQualityDowngrade'};
 const ALL=[UP[7],UP[9],DOWN[7],DOWN[9]];
-// Quality gates open only inside this isolated knowledge copy; the shipped catalog keeps all four groups unregistered.
+// Quality gates open only inside this isolated knowledge copy, which starts with every set-quality and cross-pool group closed.
 function fixture({plane=9,owner=0,quality=5,level=3,affixes,flags={},open=ALL}={}){
- const k=structuredClone(catalog);for(const g of ['backpackSetEquipmentLevel','setEquipmentLevel'])k.verification[g]=true;
- D.requireClosed(structuredClone(catalog));for(const g of open)k.verification[g]=true;
+ const k=S.closed(catalog);for(const g of ['backpackSetEquipmentLevel','setEquipmentLevel'])k.verification[g]=true;
+ D.requireClosed(structuredClone(k));for(const g of open)k.verification[g]=true;
  const ctx={};vm.runInNewContext(source.replace('/*__KNOWLEDGE__*/null',JSON.stringify(k)),ctx);const C=ctx.SaveCore;
  const {data}=saveFixture({characters:2}),id=20,row=Array(60).fill(0);
  Object.assign(row,{0:5,1:templateId,2:1,3:t.tier,5:quality,6:level,7:owner,8:95+30*(quality-1),23:3,24:1,26:1.7,27:originId});
@@ -64,10 +65,12 @@ test('unconfirmed removal, removed selected slot, target cap and closed gates ar
   assert.throws(()=>apply(cap,{quality:2,confirmRemovedAffixes:true}),/等級超過目標品質上限/);untouched(cap);
   for(const open of [[],[UP[7],UP[9]],[DOWN[plane===7?9:7]]]){const f=fixture({plane,open});assert.throws(()=>apply(f,{quality:3,confirmRemovedAffixes:true}),/尚未完成獨立遊戲驗證/);untouched(f);}
  }
+ // The shipped catalog opens a direction only with its merged first proof; while closed, the real knowledge refuses.
+ S.assertShipped(catalog);
  const ctx={};vm.runInNewContext(source.replace('/*__KNOWLEDGE__*/null',JSON.stringify(catalog)),ctx);
- const f=fixture(),real=ctx.SaveCore,m=real.parse(f.text);
- assert.throws(()=>real.applySetEquipmentQualityCandidate(m,{itemId:f.id,quality:3,confirmRemovedAffixes:true}),/尚未完成獨立遊戲驗證/);
- assert.equal(real.serialize(m),f.text);assert.equal(m.history.length,0);
+ const f=fixture(),real=ctx.SaveCore,m=real.parse(f.text),run=()=>real.applySetEquipmentQualityCandidate(m,{itemId:f.id,quality:3,confirmRemovedAffixes:true});
+ if(catalog.verification[DOWN[9]]){run();assert.notEqual(real.serialize(m),f.text);assert.equal(m.history.length,1);}
+ else{assert.throws(run,/尚未完成獨立遊戲驗證/);assert.equal(real.serialize(m),f.text);assert.equal(m.history.length,0);}
 });
 test('quality→level→quality interleaves on one editing group; cap tracks the current quality',()=>{
  const f=fixture({quality:3,level:3}),tail={slot:3,attributeId:P原[2],coefficient:45};

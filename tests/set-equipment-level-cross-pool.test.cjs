@@ -4,7 +4,8 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const B6=require('../scripts/verify-set-equipment-level-cross-pool.cjs'),O=require('../scripts/set-equipment-quality-oracle.cjs'),L=require('../scripts/set-equipment-level-oracle.cjs'),
  M=require('../scripts/set-equipment-quality-scenarios.cjs'),Q=require('../scripts/set-equipment-quality-data.cjs'),X=require('../scripts/set-equipment-quality-matrix.cjs');
-const k=require('../knowledge/catalog.json'),source=fs.readFileSync(path.join(__dirname,'../src/core.js'),'utf8');
+// The runner refuses shipped knowledge with an open cross-pool group, so its mechanics run on a copy with the six groups closed.
+const H=require('./helpers/set-quality-shipped.cjs'),shipped=require('../knowledge/catalog.json'),k=H.closed(shipped),source=fs.readFileSync(path.join(__dirname,'../src/core.js'),'utf8');
 const filler=Object.fromEntries(['baselineHash','runtimeHash','sourceManifestHash','runtimeManifestHash'].map(n=>[n,'0'.repeat(64)]));
 const census=O.reachabilityCensus(k.setEquipmentQuality,k.setEquipmentLevel);
 function baseline(templateId,q){
@@ -21,12 +22,12 @@ const placed=(core,row,plane,slot)=>{const m=X.sandbox(core);X.place(m,[{record:
 const loadWith=knowledge=>{const ctx={};require('node:vm').runInNewContext(source.replace('/*__KNOWLEDGE__*/null',JSON.stringify(knowledge)),ctx);return ctx.SaveCore;};
 const saveText=()=>{const data=Array.from({length:221},()=>Array.from({length:60},()=>Array(22).fill(0)));data[0][0][1]='szmnqea';data[1][0][2]=1;data[1][1][2]='驗證角色';return JSON.stringify({c2array:true,size:[221,60,22],data});};
 
-test('the cross-pool level policy is gated by its own closed groups: shipped knowledge refuses, an opened copy is the candidate',()=>{
- for(const g of Q.crossPoolGroups)assert.equal(k.verification[g],false);
+test('the cross-pool level policy is gated by its own groups: a closed copy refuses, an opened copy is the candidate, shipped opens only with first proofs',()=>{
+ H.assertShipped(shipped);for(const g of Q.crossPoolGroups)assert.equal(k.verification[g],false);
  const opened=structuredClone(k);opened.verification[Q.crossPoolGroups[0]]=true;assert.throws(()=>B6.cores(opened,source),/必須關閉/);
  for(const spec of Object.values(specs)){
   const start=refined(spec);B6.formalRefuses(F,start,spec.plane,spec.slot);
-  // Shipped knowledge keeps the four quality groups closed.
+  // The closed copy keeps the four quality groups closed.
   for(const g of Q.groups)assert.notEqual(k.verification[g],true);
  }
 });

@@ -3,7 +3,7 @@
 // No game, no real save: the engine is a small in-memory stand-in with the move semantics observed in B2 (y0–49 only).
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const R=require('../scripts/verify-set-equipment-quality-migration-lifecycle.cjs'),O=require('../scripts/set-equipment-quality-oracle.cjs'),M=require('../scripts/set-equipment-quality-scenarios.cjs'),Q=require('../scripts/set-equipment-quality-data.cjs');
-const k=require('../knowledge/catalog.json'),source=fs.readFileSync(path.join(__dirname,'../src/core.js'),'utf8');
+const S=require('./helpers/set-quality-shipped.cjs'),k=require('../knowledge/catalog.json'),source=fs.readFileSync(path.join(__dirname,'../src/core.js'),'utf8');
 const filler=Object.fromEntries(['baselineHash','runtimeHash','sourceManifestHash','runtimeManifestHash'].map(n=>[n,'0'.repeat(64)]));
 const census=O.reachabilityCensus(k.setEquipmentQuality,k.setEquipmentLevel);
 // A valid native-shaped baseline record for a template at quality q (slots from P原, flag 0, materials at 3 points).
@@ -33,8 +33,9 @@ test('start bytes come from the candidate transaction and agree with both indepe
   assert.deepEqual(b.pointers,c.state==='equipped'?Array.from({length:6},(_,s)=>s+1===c.slot?1:0):Array(6).fill(0));
   assert.notEqual(b.startText,b.editedText);
  }
- const ctx={};require('node:vm').runInNewContext(source.replace('/*__KNOWLEDGE__*/null',JSON.stringify(k)),ctx);const shipped=ctx.SaveCore;
- assert.throws(()=>R.buildStart(shipped,k,saveText(),R.planCopies(k,results)[0]),/尚未完成/);
+ // A closed copy of the knowledge refuses; the shipped catalog opens a group only with its merged first proof.
+ const ctx={};require('node:vm').runInNewContext(source.replace('/*__KNOWLEDGE__*/null',JSON.stringify(S.closed(k))),ctx);const closed=ctx.SaveCore;
+ assert.throws(()=>R.buildStart(closed,k,saveText(),R.planCopies(k,results)[0]),/尚未完成/);S.assertShipped(k);
 });
 
 // ---- mock engine ---------------------------------------------------------------------------------------------------------
@@ -118,10 +119,10 @@ test('calibration results cannot be merged as proof: partial coverage is refused
  const group=all[0].group,native={coverage:'initial-matrix',manifestHash:manifest.manifestHash,cases:cases.filter(c=>manifest.cases.find(v=>v.id===c.id).group===group),io:{rounds:2,newPidReadback:true,shiftedColumns:50,tailColumns:10},ui:{}};
  assert.throws(()=>P.validateResults(k,source,{completed:true,checks:{[group]:{}},native:{[group]:native}},group));
 });
-test('runner stays outside the repo and keeps the shipped flags closed',()=>{
+test('runner stays outside the repo and the shipped flags open only with their merged first proofs',()=>{
  const src=fs.readFileSync(path.join(__dirname,'../scripts/verify-set-equipment-quality-migration-lifecycle.cjs'),'utf8');
  assert.match(src,/Artifacts must stay outside the repo/);
- for(const g of Q.groups)assert.equal(k.verification[g],false);
+ S.assertShipped(k);
 });
 
 // ---- B4: one copy per executable lifecycle case ---------------------------------------------------------------------------------

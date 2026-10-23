@@ -4,11 +4,12 @@ const {saveFixture,renderSave}=require('./helpers/save-fixture.cjs');
 const source=fs.readFileSync(require.resolve('../src/core.js'),'utf8');
 const D=require('../scripts/set-equipment-quality-data.cjs');
 const catalog=require('../knowledge/catalog.json'),templateId=28,originId=2;
+const S=require('./helpers/set-quality-shipped.cjs');
 const L=catalog.setEquipmentLevel,t=L.items[templateId],P原=L.origins[originId].affixIds,P套=catalog.setEquipmentQuality.pools[templateId].affixIds;
 const originOnly=P原.filter(a=>!P套.includes(a)),setOnly=P套.filter(a=>!P原.includes(a)),both=P原.filter(a=>P套.includes(a));
-// Candidate tests open level gates only to show formal entries still reject the new range; quality groups stay unregistered.
+// Candidate tests open level gates only to show formal entries still reject the new range; quality and cross-pool groups start closed in this copy.
 function fixture({plane=9,owner=0,quality=3,affixes,flags={},origin=originId,levelGates=true}={}){
- const k=structuredClone(catalog);for(const g of ['backpackSetEquipmentLevel','setEquipmentLevel'])k.verification[g]=levelGates;
+ const k=S.closed(catalog);for(const g of ['backpackSetEquipmentLevel','setEquipmentLevel'])k.verification[g]=levelGates;
  D.requireClosed(k);
  const ctx={};vm.runInNewContext(source.replace('/*__KNOWLEDGE__*/null',JSON.stringify(k)),ctx);const C=ctx.SaveCore;
  const {data}=saveFixture({characters:2}),id=20,row=Array(60).fill(0);

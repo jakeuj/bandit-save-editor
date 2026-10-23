@@ -11,6 +11,13 @@ const codeHash=f=>hash(fs.readFileSync(path.join(root,'scripts',f),'utf8').repla
 const ui=Object.fromEntries(P.uiKeys.map(x=>[x,true])),io={rounds:2,newPidReadback:true,shiftedColumns:50,tailColumns:10};
 const checks=g=>({[g]:Object.fromEntries(R.requiredChecks(g).map(c=>[c,true]))});
 const b4Run=()=>({label:'B4',manifestHash:E.B4.from.manifestHash,coreHash:E.B4.from.coreHash,evidenceSha256:E.B4.a10ResultsSha256,bindingSha256:E.B4.bindingSha256,equivalence:E.describe(k,source)});
+// The composite proof as it was before any of the six groups merged, whatever the checkout currently carries.
+function unmerged(p){
+ const u=clone(p),six=[...P.groups,...CP.groups];
+ for(const g of six){delete u.groups[g];delete u.migration.evidence[g];delete u.migration.snapshot.dataHashes[g];delete u.setEquipmentQuality?.initialVerification?.[g];delete u.migration.qualityInitialVerification?.[g];delete u.migration.crossPoolInitialVerification?.[g];}
+ u.migration.enabledBefore=u.migration.enabledBefore.filter(g=>!six.includes(g));
+ return u;
+}
 const finalRun=e=>({label:'B6',manifestHash:e.manifestHash,coreHash:P.textHash(source),evidenceSha256:hex('6')});
 // Same shape as the real merge: the group's own cases from B4 (old core, via the equivalence), the level regression from B6.
 function quality(g,{pending=true}={}){
@@ -102,7 +109,7 @@ test('each cross-pool group has its own record from its own library on the curre
  assert.ok(CP.problem({...k,verification:{...k.verification,[g]:true}},{schemaVersion:1,groups:{}},source));
 });
 test('merging all six groups into the composite proof: quality records never open cross-pool, and the gates read each record',()=>{
- const before=JSON.stringify(proof);let p=clone(proof);
+ const before=JSON.stringify(proof);let p=unmerged(proof);
  for(const g of P.groups)p=P.mergeProof({catalog:k,proof:p,group:g,results:quality(g),source});
  const open=clone(k);for(const g of [...P.groups,...CP.groups])open.verification[g]=true;
  for(const g of CP.groups){assert.notEqual(p.groups[g],true);assert.match(MP.problem(open,p,source,g,{pendingUi:true}),/缺少既有群組|跨池/);}
@@ -121,7 +128,7 @@ test('the snapshot build marks its outputs undelivered; plain builds and --check
   for(const file of ['scripts','src','knowledge','assets','index.html','sw.js','manifest.webmanifest'])fs.cpSync(path.join(root,file),path.join(dir,file),{recursive:true});
   const build=(...args)=>spawnSync(process.execPath,['scripts/build-editor.cjs',...args],{cwd:dir,encoding:'utf8'});
   const catalogPath=path.join(dir,'knowledge/catalog.json'),proofPath=path.join(dir,'knowledge/verification.json'),html=()=>fs.readFileSync(path.join(dir,'index.html'),'utf8'),sw=()=>fs.readFileSync(path.join(dir,'sw.js'),'utf8');
-  let p=clone(proof);const open=clone(k);
+  let p=unmerged(proof);const open=clone(k);
   for(const g of P.groups){p=P.mergeProof({catalog:k,proof:p,group:g,results:quality(g),source});open.verification[g]=true;}
   for(const g of CP.groups){p=CP.mergeProof({catalog:k,proof:p,group:g,results:crossPool(g),source});open.verification[g]=true;}
   fs.writeFileSync(catalogPath,JSON.stringify(open,null,2)+'\n');fs.writeFileSync(proofPath,JSON.stringify(p,null,2)+'\n');
@@ -148,8 +155,10 @@ test('driver digests accept only the LF and CRLF forms of the same function sour
  const {driverDigests}=require('../scripts/merge-set-equipment-quality-proof.cjs'),f=new Function('a','return a+1'),g=new Function('a','return a+2');
  const [a,b]=driverDigests(f);assert.notEqual(a,b);assert.ok(!driverDigests(g).includes(a)&&!driverDigests(g).includes(b));
 });
-test('the shipped catalog keeps all six groups closed and the merge tool refuses to write on main',()=>{
- for(const g of [...P.groups,...CP.groups])assert.equal(k.verification[g],false,g);
+test('the six groups are closed or carry their merged records; outputs are marked undelivered exactly while UI is owed to B9',()=>{
+ const S=require('./helpers/set-quality-shipped.cjs');S.assertShipped(k,proof,source);
+ const records=[...Object.values(proof.migration.qualityInitialVerification||{}),...Object.values(proof.migration.crossPoolInitialVerification||{})];
+ const owed=records.some(r=>P.uiPending(r.ui));
+ for(const file of ['index.html','sw.js'])assert.equal(fs.readFileSync(path.join(root,file),'utf8').includes('bandit-delivery:undelivered-pending-ui'),owed,file);
  assert.match(fs.readFileSync(path.join(root,'scripts/merge-set-equipment-quality-proof.cjs'),'utf8'),/只能在不推送的快照分支寫入開閘結果/);
- for(const file of ['index.html','sw.js'])assert.doesNotMatch(fs.readFileSync(path.join(root,file),'utf8'),/bandit-delivery/);
 });

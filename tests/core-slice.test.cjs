@@ -66,13 +66,20 @@ test('a family-private edit selects only that family; a hub edit or an unsliceab
  const r=Report.report(edit('qualityAttributeEffect'),previous,catalog);assert.deepEqual(r.changed,['equipmentQuality']);assert.equal(r.copies,4);
 });
 test('the composite gate binds open groups by slice: unrelated code may change, owned code may not',()=>{
- assert.equal(P.problem(catalog,proof,core),null);
- assert.equal(P.problem(catalog,proof,edit('undo')),null,'UI 專用程式變動不需重證');
- assert.equal(P.problem(catalog,proof,core.replace("'use strict';","'use strict';\n // comment only")),null);
- assert.match(P.problem(catalog,proof,edit('qualityAttributeEffect')),/不相符/);
- assert.match(P.problem(catalog,proof,edit('editingInfo')),/不相符/);
- assert.match(P.problem(catalog,proof,core+'\nglobalThis.semanticChange=true;'),/不相符/);
+ // Set-quality and cross-pool first proofs bind the whole core text through their A10 manifest, so once open they are refused
+ // by any core edit; every other open group is bound by its slice. A record owing B9 UI is read only by the snapshot gate.
+ const S=require('./helpers/set-quality-shipped.cjs'),opts={pendingUi:S.undelivered()};
+ const open=Object.keys(catalog.verification).filter(g=>catalog.verification[g]),whole=open.filter(g=>S.groups.includes(g)),sliced=open.filter(g=>!S.groups.includes(g));
+ assert.equal(P.problem(catalog,proof,core,undefined,opts),null);
+ for(const edited of [edit('undo'),core.replace("'use strict';","'use strict';\n // comment only")]){
+  for(const g of sliced)assert.equal(P.problem(catalog,proof,edited,g,opts),null,'UI 專用程式或註解變動不需重證：'+g);
+  for(const g of whole)assert.ok(P.problem(catalog,proof,edited,g,opts),'整份 core 綁定：'+g);
+  if(!whole.length)assert.equal(P.problem(catalog,proof,edited,undefined,opts),null);
+ }
+ assert.match(P.problem(catalog,proof,edit('qualityAttributeEffect'),undefined,opts),/不相符/);
+ assert.match(P.problem(catalog,proof,edit('editingInfo'),undefined,opts),/不相符/);
+ assert.match(P.problem(catalog,proof,core+'\nglobalThis.semanticChange=true;',undefined,opts),/不相符/);
  // Only the groups whose families own the edited code are refused when checked one at a time.
- assert.equal(P.problem(catalog,proof,edit('setCharacterSkillCaps'),'randomCharacterTalents'),null);
- assert.match(P.problem(catalog,proof,edit('setCharacterSkillCaps'),'randomCharacterSkillCaps'),/不相符/);
+ assert.equal(P.problem(catalog,proof,edit('setCharacterSkillCaps'),'randomCharacterTalents',opts),null);
+ assert.match(P.problem(catalog,proof,edit('setCharacterSkillCaps'),'randomCharacterSkillCaps',opts),/不相符/);
 });

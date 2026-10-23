@@ -9,14 +9,14 @@ function tables(){
  return {wp,batch2,digests,setLevel:structuredClone(k.setEquipmentLevel)};
 }
 const build=t=>D.reviewedRules(t.digests,{wp:t.wp},t.batch2,t.setLevel);
-test('quality rules reconstruct 216 pools and Q1-Q10 dependency digests; four groups stay closed',()=>{
+test('quality rules reconstruct 216 pools and Q1-Q10 dependency digests; groups open only with their first proofs',()=>{
  const data=build(tables());
  assert.equal(D.hash(data),D.hash(k.setEquipmentQuality));
  assert.equal(Object.keys(data.pools).length,216);assert.deepEqual(Object.keys(data.dependencies),['Q1','Q2','Q3','Q4','Q5','Q6','Q7','Q8','Q9','Q10']);
  assert.deepEqual(D.sourceSids,[...new Set(Object.values(D.dependencies).flatMap(d=>d.sids))]);
  assert.equal(data.quality.mainBase+data.quality.mainStep*5,230);
- assert.deepEqual(D.groups.map(g=>k.verification[g]),[false,false,false,false]);D.requireClosed(k);
- const open=structuredClone(k);open.verification.setEquipmentQualityUpgrade=true;assert.throws(()=>D.requireClosed(open),/首次證明/);
+ require('./helpers/set-quality-shipped.cjs').assertShipped(k);const closed=require('./helpers/set-quality-shipped.cjs').closed(k);D.requireClosed(closed);
+ const open=structuredClone(closed);open.verification.setEquipmentQualityUpgrade=true;assert.throws(()=>D.requireClosed(open),/首次證明/);
 });
 test('missing sources, changed events and changed templates fail closed',()=>{
  for(const mutate of [t=>t.digests.Q4='x',t=>delete t.digests.Q10,t=>{t.setLevel=null;},t=>{t.batch2=null;},t=>{const id=Object.keys(t.batch2.items)[0];t.batch2.items[id].affixIds=[];},
