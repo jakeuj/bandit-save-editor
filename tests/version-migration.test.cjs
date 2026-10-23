@@ -54,30 +54,6 @@ test('migration suite proves every required check of every catalog write group',
   assert.throws(() => R.requiredChecks('futureGroup'), /缺少驗證需求定義/);
 });
 
-test('build gating rejects an enabled group without requirements and proofs missing a required check',()=>{
-  const os = require('node:os'), {spawnSync} = require('node:child_process');
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'bandit-build-'));
-  try{
-    fs.cpSync(root, dir, {recursive: true, filter: source => !/[\\/](\.git|graphify-out|node_modules)([\\/]|$)/.test(source)});L.overlay(dir);
-    const catalogPath = path.join(dir, 'knowledge/catalog.json'), proofPath = path.join(dir, 'knowledge/verification.json');
-    const build = () => spawnSync(process.execPath, ['scripts/build-editor.cjs'], {cwd: dir, encoding: 'utf8'});
-    const k = JSON.parse(fs.readFileSync(catalogPath, 'utf8')), p = JSON.parse(fs.readFileSync(proofPath, 'utf8'));
-    fs.writeFileSync(catalogPath, JSON.stringify({...k, verification: {...k.verification, futureGroup: true}}));
-    assert.match(build().stderr, /缺少驗證需求定義：futureGroup/);
-    fs.writeFileSync(catalogPath, JSON.stringify(k));
-    const {rebirthClears, ...batch2Checks} = p.batch2.checks;
-    fs.writeFileSync(proofPath, JSON.stringify({...p, batch2: {...p.batch2, checks: batch2Checks}}));
-    assert.match(build().stderr, /第二批來源、規則或值域缺少相符驗證/);
-    const {subsequentResearchAndTrainingStartStop, ...baseChecks} = p.checks;
-    fs.writeFileSync(proofPath, JSON.stringify({...p, checks: baseChecks}));
-    assert.match(build().stderr, /基礎與進階修改缺少必要的遊戲驗證項目/);
-    const quality = structuredClone(p.equipmentQuality);
-    delete quality.groups.equipmentQualityDowngrade.uiEvidence;
-    fs.writeFileSync(proofPath, JSON.stringify({...p, equipmentQuality: quality}));
-    assert.match(build().stderr, /UI 證據缺少相符的事件摘要：equipmentQualityDowngrade/);
-  }finally{fs.rmSync(dir, {recursive: true, force: true});}
-});
-
 test('event digest ignores renumbering between builds but changes with logic',()=>{
   const {eventDigest} = require('../scripts/extract-game.cjs');
   const objects = Array.from({length: 13}, (_, i) => [i === 12 ? 'save' : 'object' + i]);

@@ -48,7 +48,7 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 | 使用者明確要求遊戲 UI | `docs/game-ui-testing.md` 快速開始與目標路徑，再讀當次 computer-use 技能 |
 | Mac／CrossOver／Steam／存檔位置 | [Mac 參考](references/macos.md)、`launcher/README.md`、`docs/research/macos-runtime-investigation.md` |
 
-日常推送先依[待提交快照檢查](../../../docs/maintenance/release.md#待提交快照檢查)驗證暫存區 Git bytes；工作目錄的 `--check` 不代替此檢查；推送成功即結束（含功能發布），不追蹤 Pages；Wiki／Project／公告預設不同步，使用者要求才處理。功能收尾依發布指引的[最短流程](../../../docs/maintenance/release.md#功能收尾預設最短流程)。完整驗收與部署追蹤條件依發布指引。新功能的驗證、改 core 與遊戲改版時要跑什麼，依[輕量開發流程](../../../docs/maintenance/lightweight.md)；新寫入功能在冒煙通過前維持關閉。建置閘門尚未簡化，改 core 會讓既有群組的證明失效而建置失敗，見該頁「過渡事項」。
+日常推送先依[待提交快照檢查](../../../docs/maintenance/release.md#待提交快照檢查)驗證暫存區 Git bytes；工作目錄的 `--check` 不代替此檢查；推送成功即結束（含功能發布），不追蹤 Pages；Wiki／Project／公告預設不同步，使用者要求才處理。功能收尾依發布指引的[最短流程](../../../docs/maintenance/release.md#功能收尾預設最短流程)。完整驗收與部署追蹤條件依發布指引。新功能的驗證、改 core 與遊戲改版時要跑什麼，依[輕量開發流程](../../../docs/maintenance/lightweight.md)；新寫入功能在冒煙通過前維持關閉。建置閘門只核對每個開啟旗標在 `knowledge/verification.json` 的紀錄、遊戲版本與資料指紋，改 core 不會讓它失敗，見該頁「建置閘門」。
 
 ## 編輯來源
 

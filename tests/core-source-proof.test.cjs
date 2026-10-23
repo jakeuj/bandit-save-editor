@@ -49,20 +49,3 @@ test('real core comments and indentation carry; every shared dependency edit sti
   assert.ok(P.problem(catalog,proof,changed),name);
  }
 });
-test('actual builder accepts cosmetic core rebuilds without rewriting native evidence, and rejects executable changes',t=>{
- const path=require('node:path'),os=require('node:os'),{spawnSync}=require('node:child_process');
- const root=path.resolve(__dirname,'..'),dir=fs.mkdtempSync(path.join(os.tmpdir(),'bandit-core-ast-'));
- t.after(()=>fs.rmSync(dir,{recursive:true,force:true}));
- for(const name of ['scripts','src','knowledge','assets','index.html','sw.js','manifest.webmanifest'])fs.cpSync(path.join(root,name),path.join(dir,name),{recursive:true});
- L.overlay(dir);
- const nativeBefore=fs.readFileSync(path.join(dir,'knowledge/verification.json'));
- const baselineBefore=fs.readFileSync(path.join(dir,'knowledge/migration-baseline.json'));
- const run=args=>spawnSync(process.execPath,['scripts/build-editor.cjs',...args],{cwd:dir,encoding:'utf8'});
- fs.writeFileSync(path.join(dir,'src/core.js'),core.replace('function skillCapCombinations(', '/* cosmetic */ function skillCapCombinations('));
- const built=run([]);assert.equal(built.status,0,built.stderr);
- assert.equal(run(['--check']).status,0);
- assert.deepEqual(fs.readFileSync(path.join(dir,'knowledge/verification.json')),nativeBefore);
- assert.deepEqual(fs.readFileSync(path.join(dir,'knowledge/migration-baseline.json')),baselineBefore);
- fs.appendFileSync(path.join(dir,'src/core.js'),'\nglobalThis.semanticChange=true;');
- const rejected=run([]);assert.notEqual(rejected.status,0);assert.match(rejected.stderr,/技藝上限|套裝等級/);
-});

@@ -57,22 +57,6 @@ test('migration scenario wires batch input and independent lifecycle while initi
  const family=S.families[P.group],lifecycle=family.lifecycle;try{delete family.lifecycle;assert.ok(S.uncovered([P.group]).some(s=>s.includes('nativeRecruitment')));}finally{family.lifecycle=lifecycle;}
 });
 
-test('builder rejects all-true synthetic proof; same-fingerprint migration never writes or first-opens the group',()=>{
- const dir=directory();
- try{
-  copyRepo(dir);
-  const kp=path.join(dir,'knowledge/catalog.json'),pp=path.join(dir,'knowledge/verification.json'),candidate=structuredClone(k);candidate.verification[P.group]=true;
-  fs.writeFileSync(kp,JSON.stringify(candidate));const build=()=>spawnSync(process.execPath,['scripts/build-editor.cjs'],{cwd:dir,encoding:'utf8'});
-  assert.match(build().stderr,/技藝上限缺少相符/);
-  const fabricated={...P.binding(k,core),groups:{[P.group]:{checks:checks()}}};
-  fs.writeFileSync(pp,JSON.stringify({...old,groups:{...old.groups,[P.group]:true},[P.group]:fabricated}));assert.match(build().stderr,/技藝上限缺少相符/);
-  const proofBytes=fs.readFileSync(pp,'utf8'),results={completed:true,checks:Object.fromEntries(Object.keys(k.verification).map(g=>[g,Object.fromEntries(R.requiredChecks(g).map(c=>[c,true]))]))};
-  const compared=M.writeBack({dir,catalog:k,proof:old,results,exec:()=>{throw Error('must not build');}});
-  assert.equal(compared.action,'compared');assert.equal(compared.comparison.find(c=>c.group===P.group).migrated,false);assert.equal(fs.readFileSync(pp,'utf8'),proofBytes);
-  assert.equal(M.writeBack({dir,catalog:candidate,proof:old,results}).action,'skipped');
- }finally{fs.rmSync(dir,{recursive:true,force:true});}
-});
-
 function resultFixture({representative=false,catalog=k}={}){
  const {buildSkillCapScenarios}=require('../scripts/random-character-skill-caps-scenarios.cjs'),{saveFixture}=require('./helpers/save-fixture.cjs'),{createEffects,createLifecycle}=require('./helpers/skill-caps-proof-fixture.cjs');
  const copies=buildSkillCapScenarios({catalog,saveText:saveFixture({characters:120}).raw,representative});

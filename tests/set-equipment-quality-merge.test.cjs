@@ -122,35 +122,6 @@ test('merging all six groups into the composite proof: quality records never ope
  assert.ok(MP.problem(open,p,source.replace('let selected=0;','let selected=0; '),undefined,{pendingUi:true}),'core 再變就失效');
  assert.equal(JSON.stringify(proof),before,'合併不改輸入');
 });
-test('the snapshot build marks its outputs undelivered; plain builds and --check (pre-push, Pages) refuse them',()=>{
- const dir=fs.mkdtempSync(path.join(os.tmpdir(),'bandit-b8-snapshot-'));
- try{
-  for(const file of ['scripts','src','knowledge','assets','index.html','sw.js','manifest.webmanifest'])fs.cpSync(path.join(root,file),path.join(dir,file),{recursive:true});
-  const build=(...args)=>spawnSync(process.execPath,['scripts/build-editor.cjs',...args],{cwd:dir,encoding:'utf8'});
-  const catalogPath=path.join(dir,'knowledge/catalog.json'),proofPath=path.join(dir,'knowledge/verification.json'),html=()=>fs.readFileSync(path.join(dir,'index.html'),'utf8'),sw=()=>fs.readFileSync(path.join(dir,'sw.js'),'utf8');
-  let p=unmerged(proof);const open=clone(k);
-  for(const g of P.groups){p=P.mergeProof({catalog:k,proof:p,group:g,results:quality(g),source});open.verification[g]=true;}
-  for(const g of CP.groups){p=CP.mergeProof({catalog:k,proof:p,group:g,results:crossPool(g),source});open.verification[g]=true;}
-  fs.writeFileSync(catalogPath,JSON.stringify(open,null,2)+'\n');fs.writeFileSync(proofPath,JSON.stringify(p,null,2)+'\n');
-  let r=build();assert.notEqual(r.status,0);assert.match(r.stderr,/首次/);
-  r=build('--pending-ui-snapshot');assert.equal(r.status,0,r.stderr);
-  assert.match(html(),/<meta name="bandit-delivery" content="bandit-delivery:undelivered-pending-ui">/);assert.match(sw(),/^\/\/ bandit-delivery:undelivered-pending-ui\n/);
-  r=build('--check');assert.equal(r.status,1);assert.match(r.stderr,/未交付快照產物/);
-  assert.equal(build('--check','--pending-ui-snapshot').status,0);
-  // B9 completes the UI part of every record; then only the normal build is in sync and the marker is gone.
-  const finalize=(m,mod)=>{for(const g of Object.keys(m))m[g]=mod.finalizeUi(m[g],{...ui,evidenceHash:hex('8')});};
-  finalize(p.migration.qualityInitialVerification,P);finalize(p.migration.crossPoolInitialVerification,CP);
-  for(const g of P.groups)p.setEquipmentQuality.initialVerification[g]=p.migration.qualityInitialVerification[g];
-  fs.writeFileSync(proofPath,JSON.stringify(p,null,2)+'\n');
-  r=build();assert.equal(r.status,0,r.stderr);assert.doesNotMatch(html(),/bandit-delivery/);assert.doesNotMatch(sw(),/bandit-delivery/);
-  assert.equal(build('--check').status,0);
-  // The snapshot mode refuses to run on main.
-  if(spawnSync('git',['--version']).status===0){
-   assert.equal(spawnSync('git',['init','-q','-b','main'],{cwd:dir}).status,0);
-   r=build('--pending-ui-snapshot');assert.notEqual(r.status,0);assert.match(r.stderr,/main/);
-  }
- }finally{fs.rmSync(dir,{recursive:true,force:true});}
-});
 test('driver digests accept only the LF and CRLF forms of the same function source',()=>{
  const {driverDigests}=require('../scripts/merge-set-equipment-quality-proof.cjs'),f=new Function('a','return a+1'),g=new Function('a','return a+2');
  const [a,b]=driverDigests(f);assert.notEqual(a,b);assert.ok(!driverDigests(g).includes(a)&&!driverDigests(g).includes(b));

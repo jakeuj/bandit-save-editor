@@ -17,19 +17,6 @@ test('new growth gate binds all 15 sources, rules, relevant tables and actual ca
  const rules=structuredClone(k);rules.randomCharacterGrowth.totals[0][0]++;assert.ok(P.problem(rules,p,core));
  assert.ok(P.problem(k,p,core.replace(' // Exact recruitment feasibility.',' // Exact recruitment feasibility. changed')));
 });
-test('real build rejects a candidate flag without new proof and rejects changed formula or rules',()=>{
- const dir=fs.mkdtempSync(path.join(os.tmpdir(),'bandit-growth-gate-'));
- try{
-  fs.cpSync(root,dir,{recursive:true,filter:p=>!/[\\/](\.git|graphify-out|node_modules)([\\/]|$)/.test(p)});L.overlay(dir);
-  const kp=path.join(dir,'knowledge/catalog.json'),pp=path.join(dir,'knowledge/verification.json');
-  const merged=mergeProof({catalog:k,proof:old,results:results(),coreSource:core});fs.writeFileSync(kp,JSON.stringify(merged.catalog));
-  const missing=structuredClone(old);delete missing.randomCharacterGrowth;fs.writeFileSync(pp,JSON.stringify(missing));
-  const build=()=>spawnSync(process.execPath,['scripts/build-editor.cjs'],{cwd:dir,encoding:'utf8'});
-  assert.match(build().stderr,/獨立驗證/);fs.writeFileSync(pp,JSON.stringify(merged.proof));assert.equal(build().status,0);
-  const changed=structuredClone(merged.catalog);changed.randomCharacterGrowth.totals[0][0]++;fs.writeFileSync(kp,JSON.stringify(changed));assert.match(build().stderr,/獨立驗證/);
- }finally{fs.rmSync(dir,{recursive:true,force:true});}
-});
-
 test('migration oracle uses the selected candidate catalog from private state',()=>{
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'bandit-growth-candidate-'));
  try{const file=path.join(dir,'candidate.json');fs.writeFileSync(file,JSON.stringify({...k,gameVersion:'candidate-only'}));const {loadStateCore}=require('../scripts/verify-random-character-growth.cjs');assert.equal(loadStateCore({catalogPath:file}).KNOWLEDGE.gameVersion,'candidate-only');assert.equal(loadStateCore({}).KNOWLEDGE.gameVersion,k.gameVersion);}

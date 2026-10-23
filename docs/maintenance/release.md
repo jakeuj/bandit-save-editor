@@ -53,8 +53,6 @@ print('Verified tree: ' + snapshot)
 
 成功且暫存區 tree 未改變才提交；提交後確認 `git rev-parse 'HEAD^{tree}'` 等於已驗證 tree，再推送。若重新 stage，須重做快照檢查。
 
-未交付快照（兩段式首次證明）：首次證明的原生部分已合併、但編輯器 UI 驗收要等下一段時，只能在不推送的快照分支用 `node scripts/build-editor.cjs --pending-ui-snapshot` 建置。這個模式只接受 UI 標為待補（`{"pending":"B9"}`）的紀錄，其他檢查不放寬；在 `main` 上會拒絕執行。產出的 `index.html` 帶 `<meta name="bandit-delivery">`、`sw.js` 首行帶同一標記。一般建置和 `--check`（上方快照檢查與 Pages）都拒絕這類紀錄與標記，所以不能提交或推送。快照內的檢查改用 `--check --pending-ui-snapshot`，瀏覽器測試用 `npm run test:browser -- --pending-ui-snapshot`。補上 UI 證據（`finalizeUi`）後，以一般建置重建，再走正常流程。
-
 換行差異的處理：
 
 - 編輯文字時保留 `.gitattributes` 指定的 LF；Python 寫入可用 `newline='\n'`。屬性只約束 Git 轉換，不能防止編輯工具先將工作檔寫成 CRLF。

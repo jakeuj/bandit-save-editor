@@ -33,6 +33,14 @@
 - 啟動隔離遊戲、computer use、發布、Wiki／Project／公告同步，仍需使用者當次同意。
 - 每完成一個功能，主動把可重用的教訓（工具陷阱、踩過的坑）寫回技能或對應的維護文件。
 
-## 過渡事項：建置閘門尚未簡化
+## 建置閘門
 
-目前的建置閘門（`scripts/build-editor.cjs` 及各 `*-proof.cjs`）仍要求每個已開放群組的證明紀錄與**整份 core 摘要**相符。只要改 `src/core.js`，即使是新增無關的函式，建置也會失敗。閘門程式簡化成「旗標＋輕量紀錄」之前，任何改 core 的工作都會被它擋下；這是下一個要處理的工作，見[下一步與目前進度](../research/next-version-plan.md)。
+`scripts/build-editor.cjs` 對每個開啟的旗標（`knowledge/catalog.json` 的 `verification`）只核對三件事，任何一項不符就拒絕建置：
+
+1. `knowledge/verification.json` 的 `groups` 有該群組，且為 `true`。
+2. `verification.json` 的 `gameVersion` 等於知識的 `gameVersion`。
+3. `verification.json` 的 `fingerprints` 等於知識的遊戲資料指紋。
+
+不再核對 core 摘要、證明內容、manifest 或工具雜湊，所以改 `src/core.js` 不會讓建置失敗。新功能冒煙通過後，在 `groups` 加上該群組並打開旗標。遊戲改版時，對受影響的功能跑冒煙，再更新 `gameVersion` 與 `fingerprints`。測試見 `tests/build-gate.test.cjs`。
+
+`scripts/*-proof.cjs` 與 `verification.json` 裡較早的首次證明紀錄仍保留作為歷史證據與遷移工具，但不再是建置條件。
