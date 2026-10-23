@@ -25,6 +25,8 @@ Linux CI另加`--with-deps`安裝系統函式庫。Playwright版本由package與
 
 ## 證據分工
 
+開發中修改 core 時，原生成本依 family 切片決定；先跑 `node scripts/core-slice-report.cjs` 看影響，再依[開發中的原生驗證](maintenance/migration.md#開發中的原生驗證)決定是否需要選跑。
+
 - 核心及Node UI事件：共用合成資料與獨立token renderer，不由待測serialize或changes反推預期。UI harness實際執行src處理函式，捕捉Blob的arrayBuffer，逐byte核對BOM、空白、指數、大型整數literal、MIME與檔名。這層不宣稱真實DOM排版或瀏覽器下載已驗收。
 - HTTP headless：在127.0.0.1隨機port只提供發布用HTML／PWA資產，測試真正建置HTML與DOM控制項。桌面／390px各有完整尺寸基礎資質及批次代表案例，核對搜尋、分頁、套用、還原／復原、下載及重載。基礎資質覆蓋有名／在監停用、非法組合與預覽過期；批次跨頁選51名，以50筆分頁並檢查一次復原整批。
 - file headless：直接導覽暫存HTML的file URL，完成完整尺寸預覽、下載及重載，確認PWA入口隱藏。這是直接開檔的Chromium網頁流程，沒有操作macOS／Windows原生選檔對話框。

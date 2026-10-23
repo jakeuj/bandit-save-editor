@@ -40,3 +40,19 @@ node scripts/prepare-core-ast-baseline.cjs --source EXACT_LEGACY_CORE --output N
 獨立 proof 與 selective migration 測試同步覆蓋註解沿用、程式變更阻擋、舊格式對照、未知版本拒絕，以及既有的偽造 checks、缺矩陣、錯來源／證據、首次開放限制和寫回回滾。原生遊戲與瀏覽器 UI 本次未重驗；沒有修改產品 core 或產物，不新增遊戲實測宣稱。
 
 本輪驗證：186 項 Node 全部通過（包含實際 builder 的註解沿用／語法變動阻擋案例），建置同步及技能格式檢查通過。既有 `verification.json`、遷移基準、catalog、core、HTML 與 service worker 均未修改；原始工作樹的套裝開發未納入。
+
+## 第二階段：功能切片
+
+2026-10-23 依[降低原生重證成本提案](../../sdd/core-slice-reproof/proposal.md)實作，演算法識別 `core-slice-acorn-8.15.0-es2024-v1`（`scripts/core-source-proof.cjs` 的 `slices`）。第一階段的整份 AST 摘要不變，仍記在快照與證明；切片是額外的比對方式。
+
+- **切片**：同一鎖版 Acorn 解析 core 的單一 IIFE；頂層函式宣告與 `const`／`let` 識別字宣告各為一個節點，其他頂層敘述（指令序言、繁體化與索引迴圈、解構宣告）歸入共用前導。family 切片＝從 `scripts/migration-analysis.cjs` 的 `coreRoots`（經 `SaveCore` 匯出對照）與前導出發，靜態識別字參照可到達的所有頂層綁定；非計算成員屬性名、物件鍵與標籤不算參照，內層同名遮蔽一律視為參照（安全的過度近似）。摘要納入前導、根名稱→綁定名稱配對與排序後的節點 AST，因此註解與排版仍不影響。
+- **退回整份 core**：`eval`、`Function`、`with`、`import()`、對頂層函式 `.toString()`、IIFE 以外的頂層敘述、非單純的 `SaveCore` 匯出或重複頂層名稱，任何一項出現即整份不可切片，規劃與閘門改用第一階段整份 AST 比對。
+- **規劃層**：快照記錄 `coreSlices`；`checkDigest` 以「該檢查所有 owner family 的切片」取代整份 core 識別。
+- **閘門**：`migration-proof.cjs` 的 `problem` 只要求開放群組所屬 owner family 的切片與快照相同；沒有任何開放 family 到達的程式（UI 專用的 `undo`、`restore`、`listEntities` 等）可修改而不需原生重證。
+- **既有快照**：v2.11 的快照早於切片，由 `scripts/prepare-core-slice-baseline.cjs` 以 AST 完全相符的已證明 core 計算切片，寫入 `knowledge/core-slice-baselines.json`（只接受精確相符原文、拒絕重複）。之後新寫回的快照直接帶 `coreSlices`。
+- **影響報告**：`node scripts/core-slice-report.cjs` 秒級比對目前 core 與證明快照，列出切片改變的 family 與預估代表副本數。
+- **根集合覆蓋**：`tests/core-slice-roots.test.cjs` 核對每份代表副本的操作、批次請求、`verify-game.cjs` 的共用步驟與各 family 的 oracle／lifecycle／情境模組使用的 `SaveCore` 方法都在對應 family 的根集合。
+
+實測（每個頂層函式各插入一個無作用敘述）：UI 專用 6 個函式 0 份；品質專屬 4 個函式只選品質 family（4 份）；技藝上限／天賦專屬 19 個函式各 1 個 family（2 份）；`setEditingValue` 5 個 family（10 份）；`ordinaryEquipment` 10 個 family；`parse`、`editingInfo`、`resolveField`、`put` 等 14 個樞紐仍選全部。並行副本（提案第 3 節）尚未實作。
+
+技藝上限、套裝等級、寶物等級的舊式（非複合）證明 binding 仍綁整份 core；目前證明為複合格式，建置閘門統一經 `migration-proof.cjs` 判斷，因此不受影響。天賦、成長資質、品質的文字區段摘要不變。

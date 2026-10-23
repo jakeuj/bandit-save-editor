@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "algorithm": "core-slice-acorn-8.15.0-es2024-v1",
+  "coreAlgorithm": "core-estree-acorn-8.15.0-es2024-v1",
+  "bindings": [
+    {
+      "coreHash": "ae4bbdb76cdf419c2b93d634b1945c5001165020fe72e97ab9c8671bde1faf9d",
+      "slices": {
+        "advanced": "bd96b7693015ae3b361730e5449669ce8e88e1d652881672f11215eded140d98",
+        "affixReplacement": "554ad3b20269751f2c4883eefb2ac63d34a8372eb818bbb444da33df3cd72e44",
+        "batch2": "c14d7e1ce659d7cdfb025147d92ae681a2a02d0df60ba8d23dfd157d87a94126",
+        "equipmentQuality": "845e4c23ca944dad8b5e9dad319a75c25a84528b24f58aedf070d4870b0fe7df",
+        "equipmentWorkflow": "fe168677754ad1ba61e412251409c1a49a40fbdca0e3cafcacf59f666ef35e70",
+        "growth": "2ac22ddbb1d0962247e072fdbba54539d90f4c29bd1f280bd30f879ca4aca2c5",
+        "randomCharacterGrowth": "efe061f063771d31269b71c3c28737e93132429168f528caa397e49d5bf06fd7",
+        "randomCharacterSkillCaps": "8982568e4390a767d74ea417a32272b9725e6f22e44fb8a602a3e7d3b3368ca7",
+        "randomCharacterTalents": "4914bf190233691596d98e12f316dcdef9d52f776741cefb1895f9e21bbf4ce0",
+        "setEquipmentLevel": "e6a7751e7960e705ed427331d5b6782be5a0b25b69f99473abe26552e9cbc85b",
+        "treasureLevel": "e6a7751e7960e705ed427331d5b6782be5a0b25b69f99473abe26552e9cbc85b"
+      }
+    }
+  ]
+}

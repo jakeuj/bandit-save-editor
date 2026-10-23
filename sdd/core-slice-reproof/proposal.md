@@ -1,6 +1,6 @@
 # 降低原生重證成本：core 功能切片與執行層
 
-類型：研究提案（尚未核准實作）。2026-10-23 建立；只新增本文件與進度入口一行，沒有修改程式、證明、基準、旗標或產物，也沒有執行原生遊戲。寶物等級任務 9 的進行中重證不受本提案影響，也不得以本提案的結論改寫其範圍。
+類型：提案；2026-10-23 使用者核准並實作第 1、2、4 節（切片三層、開發規範、開發迴圈），第 3 節並行副本尚未實作，見文末執行紀錄。原始內容：2026-10-23 建立；只新增本文件與進度入口一行，沒有修改程式、證明、基準、旗標或產物，也沒有執行原生遊戲。寶物等級任務 9 的進行中重證不受本提案影響，也不得以本提案的結論改寫其範圍。
 
 ## 為什麼做
 
@@ -185,3 +185,14 @@
 ## 影響範圍
 
 `scripts/core-source-proof.cjs`、`migration-analysis.cjs`、`migration-proof.cjs`、`migration-cli.cjs`、`verify-migration.cjs`、`verify-game.cjs`（`connect`）、技藝上限與套裝等級 proof、相應測試與維護文件。不改 `src/core.js` 的行為、不改遊戲寫入、不改首次證明；真實來源、存檔與原始結果仍留在 repo 外。
+
+## 執行紀錄
+
+2026-10-23 實作並推送：
+
+- 切片演算法、不可分析構造檢查與根集合：`scripts/core-source-proof.cjs`（`slices`、`sliceBridge`）、`scripts/migration-analysis.cjs`（`sharedCoreRoots`、`coreRoots`、`sliceTable`、`coreIdentity`）。
+- 三層：規劃層 `checkDigest` 用 owner family 切片；複合閘門 `migration-proof.cjs` 的 `coreMatches` 依開放群組的 owner family 切片比對。技藝上限、套裝、寶物的群組 proof 在複合格式下都委派給此閘門，因此不另加切片欄位（與草案第 3 項不同）。0 副本時不需重寫快照：切片未變即沿用，閘門照樣通過。
+- 首次採用：v2.11 已證明的 core 與快照 AST 完全相符，以 `scripts/prepare-core-slice-baseline.cjs` 建立 `knowledge/core-slice-baselines.json`，**不需原生重證**（草案原預估須全量重跑一次）。
+- 工具與測試：`scripts/core-slice-report.cjs`、`tests/core-slice.test.cjs`、`tests/core-slice-roots.test.cjs`。實作中發現 `const` 箭頭函式的參照未被追蹤（例如 `setEquipmentLevel → setEditingValue`），已修正並加回歸測試。
+- 文件：開發規範寫入 `docs/maintenance/core.md`、開發迴圈寫入 `docs/maintenance/migration.md`、技能與 `docs/testing.md` 加指向；切片說明見 `docs/research/core-ast-proof.md` 第二階段。
+- 未做：第 3 節並行副本（PID／profile 核對、非同步 worker、Steam 探針）。

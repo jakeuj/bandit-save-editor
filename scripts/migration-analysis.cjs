@@ -25,6 +25,22 @@ const dependencies = {
   randomCharacterSkillCaps: {effects:['新刷新招募数据','数值更新','获得技艺经验','技艺升级经验'], lifecycle:[...characterLife,'招募随机角色2','获得职业经验'], tables:['js','tf','wp','sx','zy','yx','tz']}
 };
 const sharedIo = ['存档','存档备份','读取进度'];
+// SaveCore methods each family's native evidence depends on: verify-game's shared editSave steps, the scenario operations,
+// batch requests and the family's own Node validators. tests/core-slice-roots.test.cjs keeps this list complete.
+const sharedCoreRoots = ['parse','serialize','transaction','setField','addExperience','get','KNOWLEDGE','experienceNeed'];
+const coreRoots = Object.fromEntries(Object.entries({
+  setEquipmentLevel:['setEquipmentLevel'],
+  treasureLevel:['setEquipmentLevel'],
+  growth:[],
+  advanced:['setEquipmentLevel','setProfessionTrainingCap','setAdvancedTechnologyLevel','editingInfo'],
+  batch2:['setEquipmentAffixCoefficient','setPillAptitudeBonus','pillInfo'],
+  affixReplacement:['setEquipmentAffix','equipmentAffixReplacementInfo','previewEquipmentAffixReplacement'],
+  equipmentWorkflow:['setEquipmentAffixCoefficient','setEquipmentAffix','setEquipmentLevel','equipmentAffixReplacementInfo','previewEquipmentAffixReplacement'],
+  equipmentQuality:['setEquipmentQuality','previewEquipmentQualityChange'],
+  randomCharacterGrowth:['setCharacterBaseAptitudes','randomCharacterGrowthInfo'],
+  randomCharacterTalents:['setCharacterTalents','previewCharacterTalents','randomCharacterTalentsInfo','randomCharacterGrowthInfo','talentEffect'],
+  randomCharacterSkillCaps:['setCharacterSkillCaps','previewCharacterSkillCaps','randomCharacterSkillCapsInfo','skillCapCombinations','previewBatch','applyBatch']
+}).map(([family,roots])=>[family,[...sharedCoreRoots,...roots]]));
 // Existing editable save regions. Additional writers are dependencies even when no declared entry point calls them.
 const regions = {
   setEquipmentLevel:[[7,'*',[0,59]],[9,'*',[0,59]],[2,'*',[16,21]]],
@@ -128,7 +144,7 @@ function snapshot(game, coreSource) {
   }
   const ui = Object.fromEntries(Object.entries(R.uiEvents).map(([check,sids])=>[check,index.digest(sids,{omitPresentation:false})]));
   for (const [name,d] of Object.entries(ui)) roles[name] = d.digest;
-  return {version:2,fingerprints:{...game.fingerprints,...Object.fromEntries(['yx','tz'].map(t=>[t+'.json',sha(fs.readFileSync(path.join(game.root,t+'.json')))]))},coreHash:Core.hash(coreSource),coreHashAlgorithm:Core.algorithm,roles,unknown:[...new Set(unknown)]};
+  return {version:2,fingerprints:{...game.fingerprints,...Object.fromEntries(['yx','tz'].map(t=>[t+'.json',sha(fs.readFileSync(path.join(game.root,t+'.json')))]))},coreHash:Core.hash(coreSource),coreHashAlgorithm:Core.algorithm,...(Core.slices(coreSource,coreRoots)?{coreSlices:Core.slices(coreSource,coreRoots)}:{}),roles,unknown:[...new Set(unknown)]};
 }
 function owners(group,check) {
   const own=S.familyOf(group);
@@ -140,11 +156,22 @@ function role(check, family) {
   if (step === 'ui') return 'ui';
   return step === 'lifecycle' ? 'lifecycle' : /^oracle/.test(step) ? 'effects' : 'io';
 }
+// Slices recorded in the snapshot, or bridged from knowledge/core-slice-baselines.json for a proven pre-slice snapshot.
+function sliceTable(snap) {
+  if (snap.coreSlices) return snap.coreSlices.algorithm===Core.sliceAlgorithm ? snap.coreSlices : null;
+  return Core.sliceBridge(snap.coreHash,snap.coreHashAlgorithm);
+}
+// Core identity a check depends on: the slices of its owner families, else the full core (unsliceable or unknown).
+function coreIdentity(snap,families) {
+  const full = Core.identity(snap.coreHash,snap.coreHashAlgorithm), table = sliceTable(snap);
+  if (table && families.every(f=>/^[a-f0-9]{64}$/.test(table.hashes[f]||''))) return {algorithm:table.algorithm,slices:[...new Set(families)].sort().map(f=>[f,table.hashes[f]])};
+  return full;
+}
 function checkDigest(snap,group,check) {
   if (R.uiChecks[group] === check) return snap.roles[check];
   const deps = owners(group,check).map(f=>{const part=role(check,f),r=snap.roles[f];return [f,part,part==='io'&&r?.io&&r?.effects?sha({io:r.io,effects:r.effects}):part==='lifecycle'&&r?.io&&r?.lifecycle?sha({io:r.io,lifecycle:r.lifecycle}):r?.[part]];});
   if (!deps.length || deps.some(d=>!d[2])) throw Error('缺少檢查相依資訊：' + group + ':' + check);
-  return sha({coreHash:Core.identity(snap.coreHash,snap.coreHashAlgorithm),deps});
+  return sha({coreHash:coreIdentity(snap,deps.map(d=>d[0])),deps});
 }
 function plan(previous, current, groups, {mode='auto'}={}) {
   if (!['auto','full'].includes(mode)) throw Error('Unknown migration mode: ' + mode);
@@ -166,4 +193,4 @@ function plan(previous, current, groups, {mode='auto'}={}) {
   }
   return {version:2,mode,blocked:false,sameSource:same(previous.fingerprints,current.fingerprints),families,checks,computerUse:false};
 }
-module.exports = {sha,same,dependencies,regions,semanticIndex,semanticDigest,snapshot,checkDigest,owners,role,plan};
+module.exports = {sha,same,dependencies,regions,sharedCoreRoots,coreRoots,sliceTable,coreIdentity,semanticIndex,semanticDigest,snapshot,checkDigest,owners,role,plan};

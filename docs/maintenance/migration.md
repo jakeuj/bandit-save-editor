@@ -2,11 +2,19 @@
 
 [維護索引](../maintenance.md)；只讀本次任務相關章節。版本與日期標示的實測紀錄只證明當時範圍，現行開放狀態以 catalog／verification 與相應 SDD 為準。
 
-> 整份 core 摘要現採[語法樹格式](../research/core-ast-proof.md)：一般註解／排版不影響綁定，可執行語法仍全檔保護。下列舊版整檔文字摘要與實測數字保留歷史脈絡；其他功能的區段摘要沒有在本階段改造。
+> 整份 core 摘要現採[語法樹格式](../research/core-ast-proof.md)：一般註解／排版不影響綁定，可執行語法改依 family 切片保護（[第二階段](../research/core-ast-proof.md#第二階段功能切片)），無法切片時退回整份 core。下列舊版整檔文字摘要與實測數字保留歷史脈絡；其他功能的區段摘要沒有在本階段改造。
 
 ## 版本遷移重驗
 
 2026-10-23 起依[已核准規格](../../sdd/selective-migration/proposal.md)按影響選跑。預設 `auto`：語意未變沿用，只有相關功能改變才啟動隱藏、靜音的隔離遊戲。例行更新不使用 computer use；UI 疑慮先記錄，實際故障再針對性複查，使用者明確要求才操作桌面。此次成本與重播結果見[精簡流程紀錄](../research/selective-migration.md)。
+
+### 開發中的原生驗證
+
+1. 開發分支修改 core 期間**不跑代表選跑**；只跑 Node／合成測試、新功能自己的原生探針（首次證明所需），以及 `node scripts/core-slice-report.cjs` 靜態影響評估。
+2. 既有群組的重證每版只跑一次：功能 SDD 的「最終 core 確定後重證」任務；之後若再改 core，依切片報告只補跑受影響的 family，不重跑切片未變的副本。
+3. 開發期間既有證明失效、`build-editor` 拒絕建置屬預期：只在本機分支提交，不推送，也不以關閉旗標繞過。需要瀏覽器驗收時，用 `tests/browser/site.cjs` 的候選站（`createSite({candidate})`），不寫入正式 `index.html`／`sw.js`。
+4. 每個 SDD 停點記錄切片報告的變動 family 與預估副本數，讓原生成本在重證前就可見。
+5. 選跑規劃、複合證明閘門都以 family 切片核對 core（[切片綁定](../research/core-ast-proof.md#第二階段功能切片)）；切片無法分析時退回整份 core。
 
 ### 本機開發快取
 

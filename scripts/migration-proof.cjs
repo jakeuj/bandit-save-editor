@@ -107,10 +107,19 @@ function mergeInitial(catalog,proof,group,record,results,source) {
   if(require('./treasure-level-data.cjs').groups.includes(group))m.treasureInitialVerification={...m.treasureInitialVerification,[group]:record.initialVerification[group]};
   return proof;
 }
+// The source must match the snapshot on every family that owns a check of an open group: by slice when both sides can be
+// sliced, otherwise by the full core. Code no open family reaches may change without a new native run.
+function coreMatches(source,snapshot,k,onlyGroup) {
+  const table=A.sliceTable(snapshot),current=table&&Core.slices(source,A.coreRoots);
+  if(!table||!current||current.algorithm!==table.algorithm)return Core.matches(source,snapshot.coreHash,snapshot.coreHashAlgorithm);
+  const groups=onlyGroup?[onlyGroup]:Object.keys(k.verification).filter(g=>k.verification[g]);
+  const families=[...new Set(groups.flatMap(g=>R.requiredChecks(g).filter(c=>c!==R.uiChecks[g]).flatMap(c=>A.owners(g,c))))];
+  return families.every(f=>/^[a-f0-9]{64}$/.test(table.hashes[f]||'')&&table.hashes[f]===current.hashes[f]);
+}
 function problem(k,proof,source,onlyGroup) {
   try {
     const m=proof.migration;
-    if(proof.schemaVersion!==2||m?.version!==2||m.policy!=='selective-existing-v1'||proof.gameVersion!==k.gameVersion||Object.keys(allSources(k)).length!==15||!Object.values(allSources(k)).every(h=>hashPattern.test(h))||!A.same(allSources(k),m.snapshot?.fingerprints)||!A.same(proof.fingerprints,k.fingerprints)||!A.same(proof.batch2Fingerprints,k.batch2Fingerprints)||!Core.matches(source,m.snapshot.coreHash,m.snapshot.coreHashAlgorithm)||!Array.isArray(m.snapshot.unknown)||m.snapshot.unknown.length) throw Error('複合證明與來源或程式不相符');
+    if(proof.schemaVersion!==2||m?.version!==2||m.policy!=='selective-existing-v1'||proof.gameVersion!==k.gameVersion||Object.keys(allSources(k)).length!==15||!Object.values(allSources(k)).every(h=>hashPattern.test(h))||!A.same(allSources(k),m.snapshot?.fingerprints)||!A.same(proof.fingerprints,k.fingerprints)||!A.same(proof.batch2Fingerprints,k.batch2Fingerprints)||!coreMatches(source,m.snapshot,k,onlyGroup)||!Array.isArray(m.snapshot.unknown)||m.snapshot.unknown.length) throw Error('複合證明與來源或程式不相符');
     const groups=onlyGroup?[onlyGroup]:Object.keys(k.verification).filter(g=>k.verification[g]);
     for(const group of groups) {
       if(!proof.groups[group]||!m.enabledBefore.includes(group)||m.snapshot.dataHashes?.[group]!==dataHash(k,group))throw Error('缺少既有群組或規則證據：'+group);

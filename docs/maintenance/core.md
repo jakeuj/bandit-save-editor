@@ -65,6 +65,17 @@ node scripts/build-editor.cjs
 
 玩家名稱與其他存檔字串進入 HTML 時使用文字節點或 HTML 跳脫；序列化則使用 JSON 字串跳脫，兩者用途不同。預覽、比對及唯讀檢視也要保留這項處理。
 
+## 新功能的 core 開發規範
+
+既有群組的原生證據依 family 的 core 切片綁定（見[切片綁定](../research/core-ast-proof.md#第二階段功能切片)）。只有修改落在少數 family 專屬函式時才省得到選跑；碰到共用樞紐就等同整份 core 變動，全部重證。新功能依下列規範設計：
+
+1. 以**獨立具名入口**提供資格、預覽與交易（例如 `xxxInfo`／`previewXxx`／`setXxx`），UI 直接呼叫該入口；不在 `editingInfo`、`setEditingValue`、`resolveField` 等樞紐新增分支。寶物等級（v2.11）接入 `editingInfo`／`setEditingValue`，因此付了全部 19 份重證，是反例。
+2. 新入口只新增 `globalThis.SaveCore` 匯出名稱；新增名稱不影響既有 family，改變既有名稱的指向則會影響。
+3. 新功能的唯讀保護若必須進入 `resolveField`（例如自訂座標不可繞過），先排在一次本來就要全跑的時點（遊戲改版或發布前），把分類改成資料驅動；不在開發中修改樞紐。
+4. 共用工具（座標、格存取、`put`、`transaction`、`parse`／`serialize`）只在發布前批次修改；新功能需要的輔助函式放在自己的區塊。
+5. 新 family 必須在 `scripts/migration-analysis.cjs` 的 `coreRoots` 宣告其原生情境與驗證腳本使用的 `SaveCore` 方法；`tests/core-slice-roots.test.cjs` 會核對漏列。
+6. 每次修改 core 後先跑 `node scripts/core-slice-report.cjs`（純靜態、秒級），看本次修改會讓哪些 family 的切片改變；在 SDD 停點記錄結果。
+
 ## 重建知識與開放寫入
 
 遊戲更新資訊以 [Steam 最新消息](https://store.steampowered.com/news/app/4267800)為入口，核對公告日期、版本及正式／測試／相容分支，並在研究筆記保留當次公告的永久連結。頁面無法取得正文時可用 [Steam 官方新聞 API](https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=4267800&count=5&maxlength=0&feeds=steam_community_announcements)。本機安裝版本另核對 `appmanifest_4267800.acf` 的 `buildid` 及來源指紋，包內個別版本文字可能落後；公告與靜態分析不能作為新增群組的首次隔離遊戲證明；既有群組則可依[版本遷移規則](migration.md#相依與證據)合法沿用原始證據，並明示本版未重新實測。

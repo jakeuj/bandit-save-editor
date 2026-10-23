@@ -18,7 +18,7 @@
 | --- | --- | --- | --- |
 | 既有小數丹藥增量 | 研究完成（[集中研究](candidate-sweep-2026-10-23.md)）；尚未建立 SDD | 建立縮限 SDD（限無結丹）：定義十進位輸入與原始浮點保留政策，建立三項資質邊界案例 | 要改（資質／天賦共同資格、還原驗證）；要，新群組須首次獨立原生證明，並牽動基礎資質與天賦既有群組的相依核對 |
 | 套裝品質／詞條 | 研究與 [A／B 子 SDD](../../sdd/set-equipment-quality/tasks.md) 已拆分，A／B 全部未執行 | A1 來源與重用工具盤點（A 階段為靜態候選與準備，不擴權、四品質群組維持關閉） | A 階段盡量不動可執行語法；B 階段要改 core 並跑原生補證（原生基準、IO、生命週期）與首次證明，且 core 變動會牽動整份 core 重證 |
-| 降低原生重證成本 | [提案](../../sdd/core-slice-reproof/proposal.md)已寫，待核准；尚未實作 | 核准後依任務草案：core 依 family 切片綁定、開發規範、並行副本與情境合併 | 不改 `src/core.js` 的行為，改的是 `scripts/` 的選跑規劃與證明綁定；採用時要一次全量原生重證（目前 19 份、約 10–13 分鐘）建立切片基準，之後局部修改只選跑受影響 family |
+| 降低原生重證成本 | 第 1、2、4 節已實作並推送：core 依 family 切片綁定、獨立入口開發規範、開發中不選跑；以 v2.11 已證明 core 建立切片基準，未重跑原生 | 剩第 3 節：並行副本（先做 PID／profile 核對與 2 份 Steam 探針） | 只改 `scripts/` 與文件；並行需要實際跑原生副本驗證 |
 
 其他候選（靈物、結丹丹藥、內丹與渡劫、城市與城牆、建築、超限）排序與理由見[路線圖](feature-roadmap.md)；候選不等於排程或實作授權。
 
@@ -33,7 +33,7 @@
 | v2.9 天賦等級 | 已發布，首次原生證明及瀏覽器驗收見任務；尚未驗證範圍仍保留 | [研究](random-character-talents.md)、[任務](../../sdd/random-character-talents/tasks.md) |
 | v2.10 套裝等級 | 已發布並驗收歸檔；兩庫各自首次證明及 Node／瀏覽器驗收通過，對應 SHA 的 Pages build／deploy 成功 | [研究](set-equipment-level.md)、[提案](../../sdd/archive/2026-10-23-set-equipment-level/proposal.md)、[任務](../../sdd/archive/2026-10-23-set-equipment-level/tasks.md) |
 | v2.11 寶物等級 | 已發布並歸檔；兩庫首次證明已合併並開啟，經驗候選經查證排除 | [研究](treasure-level.md)、[提案](../../sdd/archive/2026-10-23-treasure-level/proposal.md)、[任務](../../sdd/archive/2026-10-23-treasure-level/tasks.md) |
-| 原生重證成本 | 提案待核准：core 依 family 切片綁定、獨立入口開發規範、並行副本與「開發中不選跑」規範（收尾不重跑原生已寫入發布指引） | [提案](../../sdd/core-slice-reproof/proposal.md) |
+| 原生重證成本 | 切片綁定與開發規範已實作；並行副本待做 | [提案](../../sdd/core-slice-reproof/proposal.md) |
 | 其他候選 | 小數丹藥、套裝品質／詞條、結丹丹藥、靈物等依目前優先順序評估 | [路線圖](feature-roadmap.md) |
 
 ## 尚待驗收
