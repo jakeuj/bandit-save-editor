@@ -11,7 +11,7 @@
 - [ ] A5. 實作候選升品交易：明選新增 P原 尾槽且旗標 0、禁止新增重複，保留原有重複及非交易欄；精確 token 與失敗回滾有合成案例。
 - [ ] A6. 實作候選降品與整件還原：刪尾槽確認、刪已選槽／目標超 cap 拒絕；品質→等級→品質、undo、累計還原與無變更合成案例通過。
 - [x] A7. 建立獨立交易與生成可達性預期：不讀被測 core 預覽，明列來源生成規則與原生見證待辦；不杜撰原生升品函式或偽造生成結果。
-- [ ] A8. 建立獨立效果及生命週期預期：涵蓋攻擊 L×Q、取整、主副重疊、舊效果移除、S／N，列兩輪 IO、搬移 50 欄及尾十欄斷言。
+- [x] A8. 建立獨立效果及生命週期預期：涵蓋攻擊 L×Q、取整、主副重疊、舊效果移除、S／N，列兩輪 IO、搬移 50 欄及尾十欄斷言。
 - [ ] A9. 固定 manifest 與分片契約：列 19,440 基礎案、至少 864 組效果及母規格全部額外維度，拆四群組分母、合法／拒絕／未知／不適用，checkpoint 綁精確輸入。
 - [ ] A10. 接線拒絕未證明的 proof 流程：requirements／suite／migration／摘要綁定測試拒絕漏案、重複、錯方向、過期、缺 IO／UI 及僅代表遷移；四群組關閉，交付 B 準備清單。
 
@@ -73,3 +73,9 @@
 - 新增 `scripts/set-equipment-quality-oracle.cjs`：不引入 SaveCore／core／預覽／fixture；規則以來源式（Q1 區間 80+30(Q-1)..80+30Q、10(Q-1)..60+10Q、槽數 Q-1；Q2 上限 10+5(Q-1)）自行計算，池資料以參數傳入。含來源有效性檢查、`transition`（主 +30ΔQ／保留槽 +10ΔQ 的百分之一整數運算、明選 P原 尾槽旗標 0、降品清尾槽、拒絕理由）、30 種轉換列舉、保留欄斷言、可達性普查（216 範本 × 同階同部位原裝備，共 1,458 列；本版資料有 486 列缺原池專有 ID、486 列缺套裝池專有 ID，不假設每套三池）及 `witnessTodo`（W1–W7，全為 pending-native）。`nativeFunctionKnown=null`，不杜撰原生升降品函式，也不產生生成結果。
 - 新增 `tests/set-equipment-quality-oracle.test.cjs`（14 項）：區間公式對照 catalog、升降平移與清槽、兩位小數精確、端點平移、30 轉換、拒絕案、雙池、既有重複、失敗不改來源、往返、普查、待辦、獨立性。
 - 未改 src／catalog／index.html／sw.js／verification；未跑原生；四品質群組仍關閉。
+
+### A8（2026-10-23）
+
+- 新增 `scripts/set-equipment-quality-effects-oracle.cjs`：不讀被測 core、預覽或原生觀測；單件效果沿用獨立的套裝等級 oracle，品質規則（Q1 主／副係數區間與槽數、Q2 等級上限）、平移、尾槽與 S／N 不變式在本檔另寫。涵蓋 `transition`（主係數 +30·ΔQ、保留槽 +10·ΔQ 以百分之一整數運算、升品明選連續尾槽且旗標 0、降品需確認、拒絕刪已選槽／超目標 cap／新增重複／超範圍或超過兩位小數係數／品質外槽資料）、攻擊 L×Q、取整、主副重疊累加、移除槽的舊效果消失，以及 `assertSetInvariant`（y1／y23、S、N、部位數與額外套裝效果不隨品質或槽內容變動）。
+- 生命週期預期：`ioRounds` 列兩輪 IO（編輯後載入→存原格式→停止→重啟→新 PID 讀回；搬移週期後同樣一輪），`validateIO` 檢查兩輪皆為不同 PID 且讀回相同、首輪等於預期；`validateCycle` 斷言搬移 y0–49（owner 依階段）與來源清除，`validateTail`／`monitorTail` 斷言尾十欄 y50–59 留在來源、不進目的列；`lifecycleStarts` 列 3 狀態×升降 6 類起點，加 T1／T9、Q1↔Q6、Q5↔Q6、池、選槽與兩種原位合成路徑等額外軸（實際副本數留 A9）。
+- 新增 `tests/set-equipment-quality-effects.test.cjs`（合成紀錄，含正反案例）。這些都是預期值與驗證器，**沒有原生執行，不宣稱原生通過**；原生生成／洗練見證仍待 B。與 A7 的 `set-equipment-quality-oracle` 互不重疊（A7 管交易／可達性，本段管效果／生命週期，檔名加 `-effects`）。未改 src、catalog、index.html、sw.js、verification。
