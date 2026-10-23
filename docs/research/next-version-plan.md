@@ -4,15 +4,15 @@
 
 ## 現在接哪一案
 
-**目前主線：套裝品質／詞條。階段：A1–A5、A7–A9 已完成（來源核對、最小資料、獨立候選資格／預覽／升品交易入口 `setEquipmentQualityCandidateInfo`、`previewSetEquipmentQualityCandidate`、`applySetEquipmentQualityCandidate`，獨立交易／可達性、效果／生命週期 oracle 與 manifest 分片契約；未註冊旗標、core 切片未變），其餘待逐段授權。** 2026-10-23 由使用者選定；寶物等級已作為 v2.11 發布，背包與裝備庫（含穿戴）兩庫的首次證明已合併並開啟。更新日期：2026-10-23。
+**目前主線：套裝品質／詞條。階段：A1–A9 已完成（來源核對、最小資料、獨立候選資格／預覽／升降品交易入口 `setEquipmentQualityCandidateInfo`、`previewSetEquipmentQualityCandidate`、`applySetEquipmentQualityCandidate`，獨立交易／可達性、效果／生命週期 oracle 與 manifest 分片契約；未註冊旗標、core 切片未變），A10 待授權。** 2026-10-23 由使用者選定；寶物等級已作為 v2.11 發布，背包與裝備庫（含穿戴）兩庫的首次證明已合併並開啟。更新日期：2026-10-23。
 
 | 要知道什麼 | 目前答案 |
 | --- | --- |
 | 剛完成 | v2.11 寶物等級：只改等級、不扣魂魄、不提供經驗修改；SDD 十項完成並[歸檔](../../sdd/archive/2026-10-23-treasure-level/tasks.md)，研究見[寶物等級研究](treasure-level.md)，發布說明見[各版紀錄](../releases.md#v211-寶物等級) |
 | 目前主線 | 套裝品質／詞條：[母規格](../../sdd/set-equipment-quality/proposal.md)、[A 任務](../../sdd/set-equipment-quality-a/tasks.md)、[B 任務](../../sdd/set-equipment-quality-b/tasks.md)。A 為候選資格、交易、oracle、manifest 與 proof 接線（不跑原生、四品質群組關閉）；B 為原生證明、合併與正式入口 |
-| 下一步 | [A6](../../sdd/set-equipment-quality-a/tasks.md)（A1–A5、A7–A9 已完成）：候選降品與整件還原，擴充 `applySetEquipmentQualityCandidate` 的降品方向並依[core 開發規範](../maintenance/core.md#新功能的-core-開發規範)不改共用函式；四群組保持關閉 |
-| 授權 | A1–A5、A7–A9 已授權並完成；其餘與 B 階段逐段明確授權 |
-| 分派 | 依 [A 任務的分派表](../../sdd/set-equipment-quality-a/tasks.md#分派)：A6 用 Opus、思考程度高；A10（Sonnet）等 A6。各段 prompt 與交棒規則見[任務分派](../maintenance/dispatch.md) |
+| 下一步 | [A10](../../sdd/set-equipment-quality-a/tasks.md)（A1–A9 已完成）：接線拒絕未證明的 proof 流程（requirements／suite／migration／proof 與 `coreRoots`），四群組旗標維持關閉；完成後由 Haiku 做 A 階段交接 |
+| 授權 | A1–A9 已授權並完成；A10 與 B 階段逐段明確授權 |
+| 分派 | 依 [A 任務的分派表](../../sdd/set-equipment-quality-a/tasks.md#分派)：A10 用 Sonnet、思考程度中；A 階段交接（Haiku）等 A10。各段 prompt 與交棒規則見[任務分派](../maintenance/dispatch.md) |
 | 開放狀態 | 以目前 catalog／verification 為準；候選尚未實作，未證明的群組維持關閉 |
 
 ### 其他候選
@@ -24,7 +24,7 @@
 
 其他候選（靈物、結丹丹藥、內丹與渡劫、城市與城牆、建築、超限）排序與理由見[路線圖](feature-roadmap.md)；候選不等於排程或實作授權。
 
-套裝品質已於 2026-10-23 選為主線，A1–A5、A7–A9 已授權並完成。2026-10-23 的[後續候選集中研究](candidate-sweep-2026-10-23.md)補查了小數丹藥的跨 API 限制、靈物共同生成／平均值、結丹相依、內丹空經驗函式及城市／城牆，交付限研究文件，沒有功能發布或新增原生證明。
+套裝品質已於 2026-10-23 選為主線，A1–A9 已授權並完成。2026-10-23 的[後續候選集中研究](candidate-sweep-2026-10-23.md)補查了小數丹藥的跨 API 限制、靈物共同生成／平均值、結丹相依、內丹空經驗函式及城市／城牆，交付限研究文件，沒有功能發布或新增原生證明。
 
 ## 已交付與候選概況
 

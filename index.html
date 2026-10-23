@@ -360,21 +360,22 @@
    level:info.level,normalMax,previousMax:info.normalMax,targetSlots,previousSlots:currentSlots,mainCoefficient:{before:before[8],after:after[8]},selectedSlot:info.selectedSlot,slots,changes,
    pools:info.pools,requiresRemovalConfirmation:targetSlots<currentSlots,unchanged:changes.length===0,metadataStatus:info.metadataStatus};
  }
- // Set-quality candidate transaction (A5: upgrade only). Writes exactly the preview changes under its own closed group; downgrade waits for A6.
- function applySetEquipmentQualityCandidate(m,{itemId,plane=9,quality,addedAffixes=[],advanced=false}){
+ // Set-quality candidate transaction (A5 upgrade, A6 downgrade). Writes exactly the preview changes under the item's editing group, gated per plane and direction.
+ function applySetEquipmentQualityCandidate(m,{itemId,plane=9,quality,addedAffixes=[],confirmRemovedAffixes=false,advanced=false}){
   const fail=reason=>{throw Error('套裝品質候選：'+reason);};
   if(advanced!==false)fail('未開放超限模式。');
+  if(typeof confirmRemovedAffixes!=='boolean')fail('刪槽確認格式不正確。');
   const preview=previewSetEquipmentQualityCandidate(m,{itemId,plane,quality,addedAffixes});
   if(preview.unchanged)return preview;
-  if(preview.direction!=='upgrade')fail('降品交易尚未實作。');
   if(!preview.verified)fail('此庫別與方向尚未完成獨立遊戲驗證。');
+  if(preview.requiresRemovalConfirmation&&!confirmRemovedAffixes)fail('請確認移除預覽中的尾端詞條槽。');
   const previous=m.currentGroup;m.currentGroup=`editing:equipment:${plane}:${itemId}`;
   try{transaction(m,()=>{
    for(const c of preview.changes)put(m,c.coordinate,c.after,c.label);
    // Re-read the written record; any mismatch throws and the transaction rolls back.
    const after=setEquipmentQualityCandidateInfo(m,{itemId,plane});
    if(after.quality!==quality||preview.changes.some(c=>!Object.is(get(m,c.coordinate),c.after)))fail('寫入後檢查不符。');
-  },'套裝品質候選升品');}finally{m.currentGroup=previous;}
+  },preview.direction==='upgrade'?'套裝品質候選升品':'套裝品質候選降品');}finally{m.currentGroup=previous;}
   return preview;
  }
  function editingInfo(m,kind,id,plane=9){

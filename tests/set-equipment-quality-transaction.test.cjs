@@ -56,11 +56,11 @@ test('selected P套 slot keeps its id and flag, existing duplicates stay, and ne
   assert.throws(()=>apply(g,{quality:4,addedAffixes:[{slot:3,attributeId:id,coefficient:50}]}),/重複|原裝備詞條/);untouched(g);
  }
 });
-test('each upgrade gate is independent; closed gates, downgrade and advanced mode are refused without writing',()=>{
+test('each upgrade gate is independent; closed gates, a closed downgrade gate and advanced mode are refused without writing',()=>{
  for(const plane of [7,9]){
   const closed=fixture({plane,open:[]});assert.throws(()=>apply(closed,{quality:4,addedAffixes:tails(3,4,[P原[2]])}),/尚未完成獨立遊戲驗證/);untouched(closed);
   const other=fixture({plane,open:[UP[plane===7?9:7],DOWN[plane]]});assert.throws(()=>apply(other,{quality:4,addedAffixes:tails(3,4,[P原[2]])}),/尚未完成獨立遊戲驗證/);untouched(other);
-  const down=fixture({plane,open:[UP[plane],DOWN[plane]]});assert.throws(()=>apply(down,{quality:2}),/降品交易尚未實作/);untouched(down);
+  const down=fixture({plane,open:[UP[plane]]});assert.throws(()=>apply(down,{quality:2,confirmRemovedAffixes:true}),/尚未完成獨立遊戲驗證/);untouched(down);
   const adv=fixture({plane});assert.throws(()=>apply(adv,{quality:4,addedAffixes:tails(3,4,[P原[2]]),advanced:true}),/超限/);untouched(adv);
  }
  // The shipped catalog never registers the four groups, so the real knowledge refuses every upgrade.
