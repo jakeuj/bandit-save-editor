@@ -1,8 +1,8 @@
 # 寶物等級任務
 
-狀態：2026-10-23 **研究完成／待開始實作**。提案：[proposal.md](proposal.md)；證據：[研究](../../docs/research/treasure-level.md)；目前入口：[下一步與目前進度](../../docs/research/next-version-plan.md)。
+狀態：2026-10-23 **研究完成／待開始實作**。提案：[proposal.md](proposal.md)；證據：[研究](../../../docs/research/treasure-level.md)；目前入口：[下一步與目前進度](../../../docs/research/next-version-plan.md)。
 
-目前十項全部完成，並已作為 v2.11 發布（2026-10-23）；下一步是改選主線。任務 2–3 只新增規格、manifest、規則資料與合成測試，沒有改核心、註冊旗標或執行原生測試。
+2026-10-23 十項全部完成，已作為 v2.11 發布並歸檔；下一步見[進度入口](../../../docs/research/next-version-plan.md)。任務 2–3 只新增規格、manifest、規則資料與合成測試，沒有改核心、註冊旗標或執行原生測試。
 
 以下每條為一個可檢查的開發切片，目標 30–60 分鐘；完整自動矩陣執行另分片記錄。若單條實作超過此粒度，先拆 A／B 子提案並回寫進度入口，不能把大項打勾當作全案完成。
 
@@ -38,7 +38,7 @@
 
 任務 4 完成（2026-10-23，僅本機工作樹、未提交）：`src/core.js` 新增 `treasureLevelInfo`，`editingInfo` 對寶物分派到獨立兩庫群組（backpackTreasureLevel／treasureLevel，旗標未註冊＝停用）；既有 `setEquipmentLevel` 入口只改 y6，沿用 setEditingValue 的 token、undo、還原與回滾，普通裝備與套裝路徑未擴權。資格：範本、數量 1、等階一致、y4=0、y22∈{0,1}、全欄位為有限數值、品質 1–6、等級 1–cap、背包 owner=0、穿戴第 6 槽與 owner 唯一互指。`tests/treasure-level.test.cjs` 4 項通過（含 T1–T6×Q1–Q6 邊界、拒絕原子性、閘門與唯讀繞過），`advanced-editing` 舊斷言改為寶物改走自身閘門。
 
-**阻擋／不可推送：** core 可執行語法已變，使整份 core 綁定的既有證明失效，12 項既有測試（套裝首次證明、技藝上限 AST、建置閘門等）失敗，`build-editor` 因套裝等級證明不符拒絕建置。依維護規則不得以此狀態推送；須在任務 9 以最終 core 依[重開流程](../../docs/maintenance/talents.md#v29-的技藝上限重開)重驗套裝／技藝上限／天賦等既有群組（需原生）後才能恢復綠燈。在此之前 core 變更只留本機，任務 5–8 在同一工作樹累積。
+**阻擋／不可推送：** core 可執行語法已變，使整份 core 綁定的既有證明失效，12 項既有測試（套裝首次證明、技藝上限 AST、建置閘門等）失敗，`build-editor` 因套裝等級證明不符拒絕建置。依維護規則不得以此狀態推送；須在任務 9 以最終 core 依[重開流程](../../../docs/maintenance/talents.md#v29-的技藝上限重開)重驗套裝／技藝上限／天賦等既有群組（需原生）後才能恢復綠燈。在此之前 core 變更只留本機，任務 5–8 在同一工作樹累積。
 
 任務 5 完成（2026-10-23，僅本機）：`scripts/treasure-level-oracle.cjs`（魂魄逐級成本、封頂／最大升級、固定分解與批次鎖定、搬移 y0–49、僅 y6 斷言、百分比主屬性效果）預期不取自被測 core；`scripts/treasure-level-synthetic.cjs` 對 manifest 案例跑候選 core 並恆標 nativeCompared=false；`scripts/treasure-level-native.cjs` 為免執行的原生 driver（generate／level／costs／decompose／effects／observe，引數依函式標頭，首次執行在任務 6／9）。`tests/treasure-level-oracle.test.cjs` 5 項通過；全套 208 通過，仍是任務 4 造成的同 12 項證明綁定失敗。
 

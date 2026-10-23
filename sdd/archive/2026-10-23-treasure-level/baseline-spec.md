@@ -1,6 +1,6 @@
 # 寶物等級：原生基準準備規格（任務 2）
 
-狀態：2026-10-23 規格與候選 manifest 完成；**沒有原生執行、沒有首次證明、兩庫旗標關閉**。研究：[treasure-level.md](../../docs/research/treasure-level.md)；任務：[tasks.md](tasks.md)。
+狀態：2026-10-23 規格與候選 manifest 完成；**沒有原生執行、沒有首次證明、兩庫旗標關閉**。研究：[treasure-level.md](../../../docs/research/treasure-level.md)；任務：[tasks.md](tasks.md)。
 
 ## 基準與來源
 
@@ -9,7 +9,7 @@
 
 ## 候選 manifest
 
-實作：[treasure-level-scenarios.cjs](../../scripts/treasure-level-scenarios.cjs)；測試：[treasure-level-matrix.test.cjs](../../tests/treasure-level-matrix.test.cjs)。共 12,420 案，綁定 15 指紋、wp 範本摘要、腳本摘要與本機基準／runtime／來源 manifest 雜湊（repo 外）。
+實作：[treasure-level-scenarios.cjs](../../../scripts/treasure-level-scenarios.cjs)；測試：[treasure-level-matrix.test.cjs](../../../tests/treasure-level-matrix.test.cjs)。共 12,420 案，綁定 15 指紋、wp 範本摘要、腳本摘要與本機基準／runtime／來源 manifest 雜湊（repo 外）。
 
 | 類型 | 數量 | 群組 | 分類 |
 | --- | ---: | --- | --- |
