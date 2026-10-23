@@ -2,7 +2,7 @@
 
 狀態：2026-10-23 **研究完成／待開始實作**。提案：[proposal.md](proposal.md)；證據：[研究](../../docs/research/treasure-level.md)；目前入口：[下一步與目前進度](../../docs/research/next-version-plan.md)。
 
-目前停在任務 6 完成（僅本機、不可推送 core）；下一個未完成為 **任務 7**。任務 2–3 只新增規格、manifest、規則資料與合成測試，沒有改核心、註冊旗標或執行原生測試。
+目前停在任務 7 完成（僅本機分支、不可推送 core）；下一個未完成為 **任務 8**。任務 2–3 只新增規格、manifest、規則資料與合成測試，沒有改核心、註冊旗標或執行原生測試。
 
 以下每條為一個可檢查的開發切片，目標 30–60 分鐘；完整自動矩陣執行另分片記錄。若單條實作超過此粒度，先拆 A／B 子提案並回寫進度入口，不能把大項打勾當作全案完成。
 
@@ -12,7 +12,7 @@
 - [x] 4. 實作資格、預覽與 y6 原子交易：兩庫分派及 owner 互指、型別／上下界／非法類型、無變更、精確 token、undo／累計還原及回滾測試；既有路徑不擴權。
 - [x] 5. 建立獨立原生計算 oracle 與矩陣執行器：合法取得、效果、單次／最大升級成本、低等級對照、固定分解返還；預期不來自被測 core，分片可續跑且能偵測漏案。
 - [x] 6. 建立穿卸／搬移／分解 IO suite：實際返回列、替換第 6 槽、owner、y0–59、鎖定篩選、原版存檔與新 PID 讀回、來源原檔雜湊。範圍與缺口可對帳。
-- [ ] 7. 接上兩庫 proof 與遷移需求：獨立首次群組、suite／family／操作白名單、來源／規則／核心摘要、代表情境及合併拒絕條件；缺首次證明不能由代表遷移開閘。
+- [x] 7. 接上兩庫 proof 與遷移需求：獨立首次群組、suite／family／操作白名單、來源／規則／核心摘要、代表情境及合併拒絕條件；缺首次證明不能由代表遷移開閘。
 - [ ] 8. 完成候選介面與瀏覽器案例：預覽／套用／拒絕原因／還原，桌面與 390px、真實下載重載、直接 file、PWA 離線與更新交接；未證明入口維持停用。
 - [ ] 9. 分片執行並核對完整首次矩陣／生命週期：每庫案例全部可對帳，原生反證回寫規格；核對最終 core 的既有群組相依與技藝上限重驗，保存具體失敗／續跑位置。
 - [ ] 10. 合併有效證明並完成本功能驗收、建置與交付文件：相關 Node／瀏覽器／proof 檢查及首次完整驗收通過，更新目前進度；提交、推送、外部同步及發布依當次授權另記，未發布不寫已發布。
@@ -66,3 +66,11 @@
 - **原生取出**保留儲存 owner（含舊 owner）；只有卸下清為 0；穿戴後第 6 槽指標與 owner 唯一互指；背包案目的列與保留 y0 不同（不以 y0 為列號）。
 - **批次分解**（`verify-treasure-level-batch.cjs`，8 件混合等階／品質／鎖定／舊 owner）：品質參數為「小於等於」上限，y22=1 的鎖定列保留，舊 owner 列照常分解；Q≤2 一次移除 4 件共 1,240、Q≤4 再移除 1 件 20，皆等於固定等階表加總，與 oracle `batchDecompose` 一致。
 - 限制：這些結果以任務 4–5 當下的 core 產生編輯；最終 core 確定後須在任務 9 重跑（綁最終 core 雜湊的首次證明），目前不計入首次證明。未涵蓋：170 範本 × Q1–Q6 全矩陣的原生取得覆蓋、效果 oracle 的另外 32 種屬性、穿戴後效果對照。
+
+任務 7 完成（2026-10-23，本機分支 wip/treasure-level-tasks-4-6）：
+- 登記：`backpackTreasureLevel`／`treasureLevel` 以 false 加入 catalog 與 `extract-game.cjs` 的 verification（原位插入，不重排）；`verification-requirements.cjs` 新增 `treasureLevel` 區段（每群組獨立，六項原生檢查）；`verification-suite.cjs` 新增 `treasureLevel` family（`initialProofRequired`、oracle `verify-treasure-level.cjs`、lifecycle `verify-treasure-level-migration-lifecycle.cjs`）；`migration-analysis.cjs` 登記相依函式（含魂魄升級、分解、批量分解、獲得魂魄）與讀寫範圍（z7／z9 y0–59、角色第 16–21 欄）；`migration-proof.cjs` 加入規則摘要、`treasureInitialVerification` 的匯入／輸出／合併／檢查。操作白名單沿用 `setEquipmentLevel`，未新增入口。
+- `scripts/treasure-level-proof.cjs`：binding（來源指紋、規則、AST 核心、oracle 摘要）、`initialProblem`（每群組固定分母：背包 4,080 級別案例／6 生命週期／72 分解／12 拒絕，穿戴庫 8,160／10／72 成本／24 拒絕，170 範本效果）、`validateMigrationCopy`、`problem`（建置閘門；`build-editor.cjs` 已呼叫）、`mergeProof`（舊式與複合證明皆只合併該群組、拒絕不完整紀錄／過期規則／未完成檢查／核心綁定不同）。**首次矩陣的完整驗證與記錄產生器屬任務 9**；代表遷移只重驗已有首次證明的群組，缺證明時 `verify-migration.cjs` 的 `needsInitial` 維持關閉。
+- 代表情境：`treasure-level-migration-scenarios.cjs` 產生 7／9 兩庫各 2 件（T1 Q1 1→2、T6 Q6 35→34）；`verify-treasure-level.cjs` 唯讀原生主屬性觀察並與 oracle 比對（百分比屬性比公式，其餘只檢查有限值並記為 native-only）；`verify-treasure-level-migration-lifecycle.cjs` 原生穿卸往返、寫檔與新 PID 讀回比對。`verify-migration.cjs` 接上證據讀取、`provenChecks` 與 `buildProof`，`migration-scenarios.cjs` 登記兩個副本名。
+- 驗證：於隱藏靜音隔離副本以實際 `runMigration` 流程跑兩個代表副本，各 6 項檢查（load／save／restart／originalHashes／nativeEffects／lifecycle）全過、無殘留 game.exe；**這是代表遷移驗證，不是首次證明，兩個旗標仍為 false**。過程發現新 lifecycle 腳本未登記為可新 PID 後比對，已補進 `comparable`，並加測試。
+- 測試：新增 `tests/treasure-level-proof.test.cjs`（8 項）；`advanced-editing` 測試設定讓寶物兩庫維持關閉；`version-migration` 預期清單納入兩個代表副本與兩個關閉群組。全套 228 項，216 通過，失敗的仍是任務 4 造成的同 12 項既有證明綁定測試。
+- 限制：`index.html`／`sw.js` 內嵌 catalog 尚未同步新增的兩個 false 旗標——`build-editor` 因套裝等級證明與 core 不符而拒絕建置，須待任務 9 重驗後一併重建。

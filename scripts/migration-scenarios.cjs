@@ -74,7 +74,7 @@ function requireBuilding(saveData, templateId, label, put) {
   return placed.x;
 }
 
-const availableCopies = {'set-level-7-representative':'setEquipmentLevel','set-level-9-representative':'setEquipmentLevel',growth:'growth','advanced-normal':'advanced','advanced-overcap':'advanced','advanced-followup':'advanced',batch2:'batch2','affix-replacement':'affixReplacement','equipment-workflow':'equipmentWorkflow','quality-7-Upgrade':'equipmentQuality','quality-7-Downgrade':'equipmentQuality','quality-9-Upgrade':'equipmentQuality','quality-9-Downgrade':'equipmentQuality','random-talents-representative':'randomCharacterTalents','random-talents-lifecycle':'randomCharacterTalents','random-skill-caps-representative':'randomCharacterSkillCaps','random-skill-caps-lifecycle':'randomCharacterSkillCaps','random-growth-matrix':'randomCharacterGrowth','random-growth-lifecycle':'randomCharacterGrowth'};
+const availableCopies = {'set-level-7-representative':'setEquipmentLevel','set-level-9-representative':'setEquipmentLevel','treasure-level-7-representative':'treasureLevel','treasure-level-9-representative':'treasureLevel',growth:'growth','advanced-normal':'advanced','advanced-overcap':'advanced','advanced-followup':'advanced',batch2:'batch2','affix-replacement':'affixReplacement','equipment-workflow':'equipmentWorkflow','quality-7-Upgrade':'equipmentQuality','quality-7-Downgrade':'equipmentQuality','quality-9-Upgrade':'equipmentQuality','quality-9-Downgrade':'equipmentQuality','random-talents-representative':'randomCharacterTalents','random-talents-lifecycle':'randomCharacterTalents','random-skill-caps-representative':'randomCharacterSkillCaps','random-skill-caps-lifecycle':'randomCharacterSkillCaps','random-growth-matrix':'randomCharacterGrowth','random-growth-lifecycle':'randomCharacterGrowth'};
 function validateNames(names) {
   if(names&&(!names.length||new Set(names).size!==names.length||names.some(n=>!Object.hasOwn(availableCopies,n))))throw Error('Unknown or duplicate migration copy: '+names.join(','));
 }
@@ -217,6 +217,7 @@ function buildScenarios({catalog, saveText, names}) {
   if(Object.keys(availableCopies).some(n=>availableCopies[n]==='randomCharacterSkillCaps'&&wants(n)))copies.push(...require('./random-character-skill-caps-scenarios.cjs').buildSkillCapScenarios({catalog,saveText}).filter(c=>wants(c.name)));
   if(Object.keys(availableCopies).some(n=>availableCopies[n]==='randomCharacterGrowth'&&wants(n)))copies.push(...require('./random-character-growth-scenarios.cjs').buildGrowthScenarios({catalog,saveText,representative:true}).filter(c=>wants(c.name)));
   if(catalog.setEquipmentLevel&&Object.keys(availableCopies).some(n=>availableCopies[n]==='setEquipmentLevel'&&wants(n)))copies.push(...require('./set-level-migration-scenarios.cjs').build({catalog,saveText}).filter(c=>wants(c.name)));
+  if(catalog.treasureLevel&&Object.keys(availableCopies).some(n=>availableCopies[n]==='treasureLevel'&&wants(n)))copies.push(...require('./treasure-level-migration-scenarios.cjs').build({catalog,saveText}).filter(c=>wants(c.name)));
   return copies;
 }
 

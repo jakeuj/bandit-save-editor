@@ -65766,6 +65766,8 @@
   "verification": {
     "backpackSetEquipmentLevel": true,
     "setEquipmentLevel": true,
+    "backpackTreasureLevel": false,
+    "treasureLevel": false,
     "randomCharacterTalents": true,
     "randomCharacterSkillCaps": true,
     "randomCharacterBaseAptitudes": true,

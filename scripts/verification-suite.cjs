@@ -13,6 +13,7 @@ const growthChecks = {
 const nativeLifecycleChecks = {load: 'load', save: 'save', restart: 'reload', originalHashes: 'assert', nativeEffects: 'oracleCompare', lifecycle: 'lifecycle'};
 const families = {
   setEquipmentLevel: {groups:['backpackSetEquipmentLevel','setEquipmentLevel'],initialProofRequired:true,oracle:'verify-set-equipment-level.cjs',lifecycle:['verify-set-level-migration-lifecycle.cjs'],checks:nativeLifecycleChecks},
+  treasureLevel: {groups:['backpackTreasureLevel','treasureLevel'],initialProofRequired:true,oracle:'verify-treasure-level.cjs',lifecycle:['verify-treasure-level-migration-lifecycle.cjs'],checks:nativeLifecycleChecks},
   randomCharacterTalents: {
     groups:['randomCharacterTalents'],
     initialProofRequired:true,

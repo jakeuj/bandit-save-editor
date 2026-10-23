@@ -11,11 +11,11 @@ const R = require('./verification-requirements.cjs');
 const Caps = require('./random-character-skill-caps-proof.cjs');
 const Talents = require('./random-character-talents-proof.cjs');
 // First-opening proofs that representative migrations may carry forward but never create.
-const SetLevel=require('./set-equipment-level-proof.cjs');
-const initialProblemOf = group => require('./set-equipment-level-data.cjs').groups.includes(group) ? v=>SetLevel.initialProblem(v,group) : group === Caps.group ? Caps.initialProblem : group === Talents.group ? Talents.initialProblem : () => '缺少首次證明檢查';
+const SetLevel=require('./set-equipment-level-proof.cjs'),Treasure=require('./treasure-level-proof.cjs');
+const initialProblemOf = group => require('./set-equipment-level-data.cjs').groups.includes(group) ? v=>SetLevel.initialProblem(v,group) : Treasure.expected[group] ? v=>Treasure.initialProblem(v,group) : group === Caps.group ? Caps.initialProblem : group === Talents.group ? Talents.initialProblem : () => '缺少首次證明檢查';
 const root = path.resolve(__dirname, '..');
 // Lifecycle scripts that can re-read their results after the new-PID restart.
-const comparable = new Set(['verify-set-level-migration-lifecycle.cjs','verify-talents-lifecycle.cjs','verify-skill-caps-lifecycle.cjs','verify-random-character-lifecycle.cjs', 'verify-equipment-workflow.cjs', 'verify-quality-lifecycle.cjs']);
+const comparable = new Set(['verify-set-level-migration-lifecycle.cjs','verify-treasure-level-migration-lifecycle.cjs','verify-talents-lifecycle.cjs','verify-skill-caps-lifecycle.cjs','verify-random-character-lifecycle.cjs', 'verify-equipment-workflow.cjs', 'verify-quality-lifecycle.cjs']);
 
 // Ordered CLI steps for one copy. '{state}' is replaced by the state path that setup prints.
 function steps(copy, setupArgs) {
@@ -53,6 +53,7 @@ function provenChecks(copies, ui = {}, skillCapsBinding, catalog) {
     const owners=check=>require('./migration-analysis.cjs').owners(group,check);
     if (!familyRan(family)&&!R.requiredChecks(group).some(check=>owners(check).some(familyRan))) continue;
     if(family==='setEquipmentLevel'){const selected=copies.filter(c=>c.family===family&&c.name==='set-level-'+(group==='backpackSetEquipmentLevel'?7:9)+'-representative');result[group]=Object.fromEntries(R.requiredChecks(group).map(check=>[check,selected.length===1&&selected.every(c=>{try{return SetLevel.validateMigrationCopy(c,catalog)[check]===true;}catch{return false;}})]));continue;}
+    if(family==='treasureLevel'){const selected=copies.filter(c=>c.family===family&&c.name==='treasure-level-'+(group==='backpackTreasureLevel'?7:9)+'-representative');result[group]=Object.fromEntries(R.requiredChecks(group).map(check=>[check,selected.length===1&&selected.every(c=>{try{return Treasure.validateMigrationCopy(c,catalog)[check]===true;}catch{return false;}})]));continue;}
     if (family === Caps.group) {
       const derived = copies.filter(c => c.family === family).map(c => { try { return catalog&&c.evidence?.scenario?.skillCapCoverage==='representative'?Caps.validateMigrationCopy(c,catalog,skillCapsBinding):Caps.copyChecks(c, skillCapsBinding); } catch { return null; } });
       result[group] = Object.fromEntries(R.requiredChecks(group).map(check => {
@@ -123,6 +124,7 @@ async function runCopy(copy, setupArgs, {exec, sleep, log, skillCapsBinding, cat
     } catch (error) { record.ok = false; record.steps.push({step: 'evidence', ok: false, error: error.message}); log(`${copy.name} evidence FAILED: ${error.message}`); }
   }
   if(copy.family==='setEquipmentLevel'&&record.ok){try{const s=JSON.parse(fs.readFileSync(state)),read=n=>JSON.parse(fs.readFileSync(path.join(s.dir,n)));record.evidence={scenario:copy.scenario,effects:read('set-level-effects.json'),lifecycle:read('set-level-lifecycle.json'),steam:read('steam-init.json'),source:{fingerprints:s.fingerprints,sourceHashes:s.sourceHashes,assertions:s.assertions,originalHashes:Object.values(s.before)}};SetLevel.validateMigrationCopy(record,catalog);}catch(e){record.ok=false;record.steps.push({step:'evidence',ok:false,error:e.message});}}
+  if(copy.family==='treasureLevel'&&record.ok){try{const s=JSON.parse(fs.readFileSync(state)),read=n=>JSON.parse(fs.readFileSync(path.join(s.dir,n)));record.evidence={scenario:copy.scenario,effects:read('treasure-level-effects.json'),lifecycle:read('treasure-level-lifecycle.json'),steam:read('steam-init.json'),source:{fingerprints:s.fingerprints,sourceHashes:s.sourceHashes,assertions:s.assertions,originalHashes:Object.values(s.before)}};Treasure.validateMigrationCopy(record,catalog);}catch(e){record.ok=false;record.steps.push({step:'evidence',ok:false,error:e.message});}}
   return record;
 }
 
@@ -204,7 +206,8 @@ function buildProof({catalog, results, coreSource, steamBuild, previous}) {
   const caps = !Caps.initialProblem(previous[Caps.group]?.initialVerification) ? Caps.validateResults(catalog, coreSource, results, {initial: false}) : null;
   const talents = !Talents.initialProblem(previous[Talents.group]?.initialVerification) ? (() => { try { return Talents.validateResults(catalog, coreSource, results, {initial: false}); } catch { return null; } })() : null;
   const setRecord=previous.setEquipmentLevel&&require('./set-equipment-level-data.cjs').groups.every(g=>!SetLevel.initialProblem(previous.setEquipmentLevel.initialVerification?.[g],g))&&results.copies.filter(c=>c.family==='setEquipmentLevel').length===2?(()=>{try{results.copies.filter(c=>c.family==='setEquipmentLevel').forEach(c=>SetLevel.validateMigrationCopy(c,catalog));return {...previous.setEquipmentLevel,...SetLevel.binding(catalog,coreSource),coverage:'representative',date};}catch{return null;}})():null;
-  const opened = group => (!require('./set-equipment-level-data.cjs').groups.includes(group)||!!setRecord) && (group !== Caps.group || !!caps) && (group !== Talents.group || !!talents) && !S.families[S.familyOf(group)].pendingReason && R.requiredChecks(group).every(c=>checks[group]?.[c]===true);
+  const treasureRecord=previous.treasureLevel&&Object.keys(Treasure.expected).every(g=>!Treasure.initialProblem(previous.treasureLevel.initialVerification?.[g],g))&&results.copies.filter(c=>c.family==='treasureLevel').length===2?(()=>{try{results.copies.filter(c=>c.family==='treasureLevel').forEach(c=>Treasure.validateMigrationCopy(c,catalog));return {...previous.treasureLevel,...Treasure.binding(catalog,coreSource),coverage:'representative',date};}catch{return null;}})():null;
+  const opened = group => (!require('./set-equipment-level-data.cjs').groups.includes(group)||!!setRecord) && (!Treasure.expected[group]||!!treasureRecord) && (group !== Caps.group || !!caps) && (group !== Talents.group || !!talents) && !S.families[S.familyOf(group)].pendingReason && R.requiredChecks(group).every(c=>checks[group]?.[c]===true);
   const coverage = family => ({coverage: 'representative', copies: results.copies.filter(c => c.family === family).map(c => ({name: c.name, operations: c.cases}))});
   const formulasPassed = results.copies.some(c => c.family === 'equipmentQuality' && c.steps.some(s => s.step === 'formulas' && s.ok));
   const uiRecord = group => R.uiChecks[group] ? {uiEvidence: results.ui[R.uiChecks[group]]} : {};
@@ -226,6 +229,7 @@ function buildProof({catalog, results, coreSource, steamBuild, previous}) {
     affixReplacement: {date, gameVersion: catalog.gameVersion, fingerprints: all, limits: catalog.affixReplacementLimits, dataHash: sha({rules: catalog.affixReplacement, items}), checks: checks.equipmentAffixReplacement, ...coverage('affixReplacement')},
     equipmentWorkflow: {date, platform: results.platform, gameVersion: catalog.gameVersion, fingerprints: all, limits: catalog.equipmentWorkflowLimits, dataHash: sha({rules: catalog.equipmentWorkflowLimits, items, formulas: catalog.affixReplacement}), groups: perGroup('equipmentWorkflow'), ...coverage('equipmentWorkflow')},
     ...(setRecord?{setEquipmentLevel:setRecord}:{}),
+    ...(treasureRecord?{treasureLevel:treasureRecord}:{}),
     ...(caps ? {randomCharacterSkillCaps:Caps.record(catalog,coreSource,{date,platform:results.platform,...caps,initialVerification:previous[Caps.group].initialVerification,...coverage(Caps.group)})} : {}),
     ...(talents ? {randomCharacterTalents:Talents.record(catalog,coreSource,{date,platform:results.platform,...talents,initialVerification:previous[Talents.group].initialVerification,coverage:'representative'})} : {}),
     randomCharacterGrowth: require('./random-character-growth-proof.cjs').record(catalog,coreSource,{date,platform:results.platform,checks:checks.randomCharacterBaseAptitudes,...coverage('randomCharacterGrowth')}),
@@ -236,7 +240,7 @@ function buildProof({catalog, results, coreSource, steamBuild, previous}) {
 // Writes the new proof and gates only when every native check passed on a build the current proof does not cover;
 // a build failure restores every touched file. On the proven build it only compares, keeping the existing proof.
 function writeBack({dir = root, catalog, proof, results, steamBuild, exec = (script, args) => spawnSync(process.execPath, [path.join(dir, 'scripts', script), ...args], {cwd: dir, encoding: 'utf8'})}) {
-  const needsInitial = group => S.families[S.familyOf(group)]?.initialProofRequired && initialProblemOf(group)((R.sectionOf(group)==='setEquipmentLevel'?proof.setEquipmentLevel?.initialVerification?.[group]:proof[group]?.initialVerification));
+  const needsInitial = group => S.families[S.familyOf(group)]?.initialProofRequired && initialProblemOf(group)((R.sectionOf(group)==='setEquipmentLevel'?proof.setEquipmentLevel?.initialVerification?.[group]:R.sectionOf(group)==='treasureLevel'?proof.treasureLevel?.initialVerification?.[group]:proof[group]?.initialVerification));
   const allGroups=Object.keys(catalog.verification),groups=allGroups.filter(g=>!S.families[S.familyOf(g)]?.pendingReason&&!needsInitial(g));
   if(allGroups.some(g=>S.families[S.familyOf(g)]?.pendingReason&&catalog.verification[g]))return {action:'skipped',reason:'未完成的原生群組不可開啟'};
   if(allGroups.some(g=>needsInitial(g)&&catalog.verification[g]))return {action:'skipped',reason:'缺少首次完整矩陣證明；代表遷移不可首次開放'};

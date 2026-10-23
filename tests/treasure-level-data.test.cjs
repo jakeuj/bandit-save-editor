@@ -10,7 +10,7 @@ test('treasure rules reconstruct 170 templates; both write groups stay closed',(
  const data=D.reviewedRules(D.reviewedDigest,tables());
  assert.equal(D.hash(data),D.hash(k.treasureLevel));assert.equal(Object.keys(data.items).length,170);
  assert.equal(data.limits.experience,false);assert.deepEqual(Object.values(data.decompose.byTier),[20,200,1000,10000,50000,500000]);
- for(const g of D.groups)assert.equal(k.verification[g],undefined,'尚未註冊遷移，旗標不存在');D.requireClosed(k);
+ for(const g of D.groups)assert.equal(k.verification[g],false,'已註冊旗標但沒有首次證明，維持關閉');D.requireClosed(k);
  const open=structuredClone(k);open.verification.treasureLevel=true;assert.throws(()=>D.requireClosed(open),/首次證明/);
 });
 test('unknown events, changed templates and tier counts fail closed',()=>{
