@@ -145,6 +145,41 @@
    groups,verified:{upgrade:KNOWLEDGE.verification[groups.upgrade]===true,downgrade:KNOWLEDGE.verification[groups.downgrade]===true},
    pools:{origin:[...origin.affixIds],set:[...pool.affixIds]},policies:{...rules.policies},record,template:t,metadataStatus:'candidate-only; independent-native-proof-required'};
  }
+ // Set-quality candidate preview (A4): read-only shift/slot/cap/pool plan dispatched to one of four groups; never writes or opens a transaction.
+ function previewSetEquipmentQualityCandidate(m,{itemId,plane=9,quality,addedAffixes=[]}){
+  const fail=reason=>{throw Error('套裝品質候選：'+reason);},info=setEquipmentQualityCandidateInfo(m,{itemId,plane}),q=KNOWLEDGE.setEquipmentQuality.quality;
+  if(!Number.isSafeInteger(quality)||quality<q.min||quality>q.max)fail(`目標品質須為 ${q.min}–${q.max} 的整數。`);
+  const delta=quality-info.quality,direction=delta>0?'upgrade':delta<0?'downgrade':'none',group=direction==='none'?null:info.groups[direction];
+  const currentSlots=info.quality-1,targetSlots=quality-1,normalMax=q.levelCapBase+q.levelCapStep*(quality-1);
+  // Quality never lowers level implicitly; the set-level entry must reduce it first.
+  if(info.level>normalMax)fail('等級超過目標品質上限，請先用套裝等級功能降低。');
+  if(info.selectedSlot&&info.selectedSlot>targetSlots)fail('已選洗練槽會被移除，不能降至此品質。');
+  if(!Array.isArray(addedAffixes))fail('新增詞條資料格式不正確。');
+  if(addedAffixes.length!==Math.max(0,targetSlots-currentSlots))fail('請明確指定每個新增尾槽，不能增減其他槽。');
+  // Existing duplicates are kept; added tails come from P原 only and may not duplicate any kept slot.
+  const before=info.record,bySlot=new Map(),ids=new Set(before.slice(9,9+Math.min(currentSlots,targetSlots)));
+  for(const a of addedAffixes){
+   if(!a||!Number.isSafeInteger(a.slot)||a.slot<=currentSlots||a.slot>targetSlots||bySlot.has(a.slot))fail('新增槽須為連續尾槽且不得重複。');
+   if(!Number.isSafeInteger(a.attributeId)||!info.pools.origin.includes(a.attributeId))fail('新增尾槽只能使用原裝備詞條。');
+   if(ids.has(a.attributeId))fail('不能新增與其他槽重複的詞條。');
+   if(!decimal2(a.coefficient)||a.coefficient<q.subStep*(quality-1)||a.coefficient>q.subSpan+q.subStep*quality)fail('新增詞條係數超出目標品質範圍或超過兩位小數。');
+   ids.add(a.attributeId);bySlot.set(a.slot,a);
+  }
+  const after=before.slice();after[5]=quality;after[8]=before[8]+q.shift.main*delta;
+  const slots=[];
+  for(let slot=1;slot<=Math.max(currentSlots,targetSlots);slot++){
+   const kind=slot>currentSlots?'added':slot>targetSlots?'removed':'retained';
+   if(kind==='retained')after[14+slot]=delta?(Math.round(before[14+slot]*100)+q.shift.sub*100*delta)/100:before[14+slot];
+   else if(kind==='added'){const a=bySlot.get(slot);after[8+slot]=a.attributeId;after[14+slot]=a.coefficient;after[27+slot]=0;}
+   else{after[8+slot]=0;after[14+slot]=0;after[27+slot]=0;}
+   const source=kind==='added'?'origin':info.slots[slot-1].source;
+   slots.push({slot,kind,source,before:{attributeId:before[8+slot],coefficient:before[14+slot],flag:before[27+slot]},after:{attributeId:after[8+slot],coefficient:after[14+slot],flag:after[27+slot]}});
+  }
+  const name=plane===7?'背包':'裝備庫',changes=after.flatMap((value,y)=>value!==before[y]?[{coordinate:C(itemId,y,plane),before:before[y],after:value,label:`${name} #${itemId}・套裝品質候選・${y===5?'品質':y===8?'主係數':y>=28?'槽 '+(y-27)+' 旗標':y>=15?'槽 '+(y-14)+' 係數':'槽 '+(y-8)+' 詞條'}`}]:[]);
+  return {kind:'setEquipmentQualityCandidatePreview',candidate:true,itemId,plane,quality,previousQuality:info.quality,direction,group,verified:group?info.verified[direction]:false,
+   level:info.level,normalMax,previousMax:info.normalMax,targetSlots,previousSlots:currentSlots,mainCoefficient:{before:before[8],after:after[8]},selectedSlot:info.selectedSlot,slots,changes,
+   pools:info.pools,requiresRemovalConfirmation:targetSlots<currentSlots,unchanged:changes.length===0,metadataStatus:info.metadataStatus};
+ }
  function editingInfo(m,kind,id,plane=9){
   if(kind==='equipment'&&![7,9].includes(plane))throw Error('裝備庫別只接受 7 或 9。');
   if(!Number.isSafeInteger(id)||id<1||id>=m.original.size[0])throw Error('無效的資料編號。');
@@ -925,5 +960,5 @@
   if(patches.length!==m.changes.size)throw Error('部分修改座標未能定位，已停止匯出。');
   const parts=[];let previous=0;for(const p of patches){parts.push(m.text.slice(previous,p.start),p.value);previous=p.end;}parts.push(m.text.slice(previous));return parts.join('');
  }
- globalThis.SaveCore={setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
+ globalThis.SaveCore={setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,previewSetEquipmentQualityCandidate,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
 })();
