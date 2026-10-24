@@ -71,7 +71,8 @@
     "cityLayerLevel": true,
     "ascensionQuality": true,
     "backpackInnerPillLevel": true,
-    "innerPillLevel": true
+    "innerPillLevel": true,
+    "ascendedInnerPillLevel": true
   },
   "lightweight": {
     "randomCharacterBaseAptitudesAscended": {
@@ -245,6 +246,20 @@
       ],
       "baselineSaveSha256": "431a4edd09e5d1d7fe4f9df0a4116e50990ff6a951a2173ba30a3e48cc707338",
       "resultSha256": "a606c552fc62d0c4e54e308554626c420b3c17712c3b0f87ed2803e593ae1e2f",
+      "passed": true
+    },
+    "ascendedInnerPillLevel": {
+      "date": "2026-10-24",
+      "gameVersion": "V1.0.11.2",
+      "flow": "docs/maintenance/lightweight.md",
+      "smoke": "沿用 v2.22 冒煙第二輪遊戲寫出的存檔（角色 8 結丹 3 次）當基準，verify-game.cjs 以 setAscendedInnerPillLevel 編輯（隔離副本、雲存檔載入、原版存檔、新 PID 讀回），再以 verify-native-lifecycle.cjs ascendedInnerPillLevel 做原生核對，第二輪原版存檔、新 PID 讀回，最後以修改器重讀遊戲寫出的存檔",
+      "cases": [
+        "入體內丹 z17：第 1 次掠奪內丹 T1 Q1 1→10（上限）、第 3 次蠻力內丹 T2 Q2 15→3；第 2 次悟道內丹 Lv1 不動；雲存檔載入、原版存檔、新 PID 讀回一致",
+        "原生核對：三列皆以編輯後等級載入、owner 8；内丹属性计算(8, 主屬性) 等於原生 装备主属性 在該等級的值（7.5／5.7／1.29，Lv1 時為 5.7／5.7／1.2）；角色资质上限倍率 維持 6",
+        "第二輪原版存檔、新 PID 讀回一致（3 個 PID、4 次 assert）；修改器重讀遊戲寫出檔：三顆入體內丹仍可編輯、倍率 6"
+      ],
+      "baselineSaveSha256": "cdd686d64783feb082dcce6de12cb8b1a4b99b5a8653811a1568098b1850d6f4",
+      "resultSha256": "73315a62f83c5409ac890ab8b6233ba657e5a319e9770a9aec0b2d1ab5e3ff42",
       "passed": true
     }
   },

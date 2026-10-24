@@ -46,7 +46,7 @@
 
 不再核對 core 摘要、證明內容、manifest 或工具雜湊，所以改 `src/core.js` 不會讓建置失敗。新功能冒煙通過後，在 `groups` 加上該群組、在 `verification.json` 的 `lightweight` 加一筆冒煙紀錄（日期、遊戲版本、代表案例、基準存檔與 repo 外結果檔的 SHA-256），並打開旗標。
 
-`lightweight` 裡的群組不進舊的複合遷移證明（`scripts/migration-proof.cjs` 的 `composite`）：選跑、`problem` 與 `compose` 都略過它們，所以版本遷移寫回後這些旗標會關閉，要在新版重跑冒煙再開。沒有這筆紀錄的已開群組仍照舊要求複合證據。冒煙可沿用 `verify-game.cjs --scenario`（`setPillAptitudeBonus`、`setEquipmentLevel` 等具名操作）加 `verify-native-lifecycle.cjs`（`ascend`、`followup`、`pills`、`backpackOverLimit`、`relics`、`relicTakeOff`、`wall`、`city`、`ascensionQuality`、`innerPillPrepare`、`innerPillLevel` 等動作，以 `main()` 的清單為準；`pills` 可用 `pillCharacter` 指定角色；擺放類動作要在存檔重啟後另跑一次取下，才算驗過兩輪 IO；`穿戴装备` 後要等一拍再讀角色指標，同一次 evaluate 內讀到的是空列）；固定基準存檔先複製到 repo 外的新資料夾，步驟依 `.local/game-sources.json` 的 `nativeSmoke` 紀錄（雲存檔載入 → 存檔 → assert → stop → restart → 存檔載入 → assert）。遊戲改版時，對受影響的功能跑冒煙，再更新 `gameVersion` 與 `fingerprints`。測試見 `tests/build-gate.test.cjs`。
+`lightweight` 裡的群組不進舊的複合遷移證明（`scripts/migration-proof.cjs` 的 `composite`）：選跑、`problem` 與 `compose` 都略過它們，所以版本遷移寫回後這些旗標會關閉，要在新版重跑冒煙再開。沒有這筆紀錄的已開群組仍照舊要求複合證據。冒煙可沿用 `verify-game.cjs --scenario`（`setPillAptitudeBonus`、`setEquipmentLevel` 等具名操作）加 `verify-native-lifecycle.cjs`（`ascend`、`followup`、`pills`、`backpackOverLimit`、`relics`、`relicTakeOff`、`wall`、`city`、`ascensionQuality`、`innerPillPrepare`、`innerPillLevel`、`ascendedInnerPillLevel` 等動作，以 `main()` 的清單為準；`pills` 可用 `pillCharacter` 指定角色；擺放類動作要在存檔重啟後另跑一次取下，才算驗過兩輪 IO；`穿戴装备` 後要等一拍再讀角色指標，同一次 evaluate 內讀到的是空列）；固定基準存檔先複製到 repo 外的新資料夾，步驟依 `.local/game-sources.json` 的 `nativeSmoke` 紀錄（雲存檔載入 → 存檔 → assert → stop → restart → 存檔載入 → assert）。遊戲改版時，對受影響的功能跑冒煙，再更新 `gameVersion` 與 `fingerprints`。測試見 `tests/build-gate.test.cjs`。
 
 `scripts/*-proof.cjs` 與 `verification.json` 裡較早的首次證明紀錄仍保留作為歷史證據與遷移工具，但不再是建置條件。
 
@@ -103,3 +103,9 @@
 - **原生備料與編輯分兩支腳本**：先用 `innerPillPrepare` 以 `获得物品` 的品質／等級參數做出要測的物品（這是原生取得路徑，不是手寫欄位），存檔讀回後把 `game/save/ea1save.dat` 複製出來當基準，再跑編輯冒煙。被搬過的列 y0 可能重複（兩顆內丹都是 7），不要要求 y0 唯一。
 - **「從修改值繼續」的原生對照**：降級後直接呼叫原生 `升级装备`，比對等級 +1 與魂魄扣除量＝`升级装备魂魄`；升到上限的再呼叫一次，確認等級與魂魄都不動。
 - **同一面板、不同入口**：新功能要放進既有面板（例如裝備等級）時，在 UI 依範本種類分派到新的具名入口，不改共用的 `editingInfo`／`setEditingValue`。
+
+### 函式參數、沿用冒煙存檔與面板內的獨立資格（v2.23 教訓）
+
+- **函式參數要數全**：Construct 函式把迴圈計數等區域變數也宣告成參數（`内丹属性计算` 有 9 個，後 7 個是計數）。`call()` 少傳時不會報錯，而是回傳 null。先從 `g.project[6]` 找 `v[0]===4` 且 `v[1][0]` 為函式名的節點，讀 `v[1][2]` 的參數清單，或照抄 `属性计算` 裡的呼叫式，再寫冒煙。
+- **沿用上一版冒煙的遊戲寫出存檔**：上一版冒煙最後由原版存檔寫出的 `game/save/ea1save.dat`（連同 `saveinfo.dat`）已經有要測的狀態（例如結丹 3 次），就直接複製到新資料夾的 `savedir/ea3save.dat` 當 `--save-file`，不用重新備料。
+- **同一面板、不同資格**：新功能放進既有面板，但資格比原功能寬（例如有名角色也能改入體內丹等級，結丹品質卻只開範本 0）時，新入口自己判斷資格，不要依賴原功能的 info；面板在原功能不適用時，改用新入口的資料產生共用的選擇器。

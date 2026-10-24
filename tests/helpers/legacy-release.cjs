@@ -7,7 +7,7 @@ const fs=require('node:fs'),path=require('node:path'),{spawnSync}=require('node:
 const fixtures=path.join(__dirname,'../fixtures/legacy-release'),root=path.join(__dirname,'../..');
 const text=name=>fs.readFileSync(path.join(fixtures,name),'utf8');
 const Q=require('../../scripts/set-equipment-quality-data.cjs');
-const treasureGroups=['backpackTreasureLevel','treasureLevel',...Q.groups,...Q.crossPoolGroups,'pillAptitudeBonusDecimal','pillAptitudeBonusAscended','backpackEquipmentLevelAdvanced','relicAttributes','randomCharacterBaseAptitudesAscended','randomCharacterTalentsAscended','randomCharacterSkillCapsAscended','wallEnhancementLevel','cityLayerLevel','ascensionQuality','backpackInnerPillLevel','innerPillLevel'];
+const treasureGroups=['backpackTreasureLevel','treasureLevel',...Q.groups,...Q.crossPoolGroups,'pillAptitudeBonusDecimal','pillAptitudeBonusAscended','backpackEquipmentLevelAdvanced','relicAttributes','randomCharacterBaseAptitudesAscended','randomCharacterTalentsAscended','randomCharacterSkillCapsAscended','wallEnhancementLevel','cityLayerLevel','ascensionQuality','backpackInnerPillLevel','innerPillLevel','ascendedInnerPillLevel'];
 const legacy={
  core:text('core.js'),
  proof:()=>JSON.parse(text('verification.json')),

@@ -66150,6 +66150,7 @@
     "ascensionQuality": true,
     "backpackInnerPillLevel": true,
     "innerPillLevel": true,
+    "ascendedInnerPillLevel": true,
     "names": true,
     "characterExperience": true,
     "professionExperience": true,

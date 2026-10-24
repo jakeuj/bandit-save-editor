@@ -320,11 +320,33 @@ async function innerPillLevel(state, s) {
   return out;
 }
 
+// Edited ascended inner pill levels after a restart. Every z16-referenced z17 row loads at its level; the only reader,
+// 内丹属性计算, must equal the native 装备主属性 at that level (each stored template has its own single main attribute), and
+// 角色资质上限倍率 must not move.
+async function ascendedInnerPillLevel(state, s) {
+  const {character, rows, multiplier} = s.ascendedInnerPillLevel;
+  const native = await evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);const c=${character},wp=r.GetObjectClassByName('wp').GetInstances()[0].GetSdkInstance();
+    return {multiplier:call('角色资质上限倍率',c,0,0),rows:${JSON.stringify(rows)}.map(v=>{const row=a.At(c,2*v.round,16),p=record(row,17),attr=wp.At(p[1],8,0),main=L=>call('装备主属性',L,p[3],attr,p[8],wp.At(p[1],11,0),'主属性',0,p[5]);
+      return {...v,stored:row,record:p,attr,cap:call('装备等级上限',p[5]),reader:call('内丹属性计算',c,attr,0,0,0,0,0,0,0),main:main(p[6]),atOne:main(1)};})};})()`);
+  for (const v of native.rows) {
+    assert.equal(v.stored, v.row, `Round ${v.round} row`);
+    assert.deepEqual([v.record[6], v.record[7]], [v.level, character], `Edited level or owner not loaded for round ${v.round}`);
+    assert.ok(v.level <= v.cap, 'Level above 装备等级上限');
+    assert.equal(v.reader, v.main, `内丹属性计算 for round ${v.round}`);
+    if (v.level > 1) assert.ok(v.main > v.atOne, 'Main attribute did not follow the level');
+    for (let y = 0; y < 50; y++) state.cells.push([v.row, y, 17]);
+  }
+  assert.equal(native.multiplier, multiplier, 'Native cap multiplier moved');
+  for (let y = 1; y <= 16; y++) state.cells.push([character, y, 16]);
+  state.cells.push([character, 50, 2]);
+  return native;
+}
+
 async function main() {
   const statePath = opt('--state'), state = JSON.parse(fs.readFileSync(statePath)), scenario = JSON.parse(fs.readFileSync(opt('--scenario')));
   const rel = path.relative(path.resolve(__dirname, '..'), state.dir), child = path.relative(state.dir, state.game);
   if (!rel || (!path.isAbsolute(rel) && rel !== '..' && !rel.startsWith('..' + path.sep)) || !child || path.isAbsolute(child) || child.startsWith('..')) throw Error('External disposable state required');
-  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.backpackOverLimit && !scenario.relics && !scenario.relicTakeOff && !scenario.wall && !scenario.city && !scenario.ascensionQuality && !scenario.innerPillPrepare && !scenario.innerPillLevel) throw Error('Scenario has no native follow-up actions');
+  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.backpackOverLimit && !scenario.relics && !scenario.relicTakeOff && !scenario.wall && !scenario.city && !scenario.ascensionQuality && !scenario.innerPillPrepare && !scenario.innerPillLevel && !scenario.ascendedInnerPillLevel) throw Error('Scenario has no native follow-up actions');
   await waitMain(state);
   const result = {};
   if (scenario.ascend && !scenario.pills) result.ascend = await ascend(state, scenario);
@@ -338,10 +360,11 @@ async function main() {
   if (scenario.ascensionQuality) result.ascensionQuality = await ascensionQuality(state, scenario);
   if (scenario.innerPillPrepare) result.innerPillPrepare = await innerPillPrepare(state, scenario);
   if (scenario.innerPillLevel) result.innerPillLevel = await innerPillLevel(state, scenario);
+  if (scenario.ascendedInnerPillLevel) result.ascendedInnerPillLevel = await ascendedInnerPillLevel(state, scenario);
   state.expected = await evaluate(state, `(()=>{${prefix}return ${JSON.stringify(state.cells)}.map(([x,y,z])=>a.At(x,y,z));})()`);
   fs.writeFileSync(statePath, JSON.stringify(state, null, 2));
   fs.writeFileSync(path.join(state.dir, 'native-lifecycle.json'), JSON.stringify(result, null, 2));
   console.log('PASS: native ' + Object.keys(result).join(' and ') + ' follow-up actions');
 }
 if (require.main === module) main().catch(e => { console.error(e.stack); process.exitCode = 1; });
-module.exports = {ascend, followup, pillsAndRebirth, backpackOverLimit, relicPlacement, relicTakeOff, wallUpgrade, cityLayer, ascensionQuality, innerPillPrepare, innerPillLevel};
+module.exports = {ascend, followup, pillsAndRebirth, backpackOverLimit, relicPlacement, relicTakeOff, wallUpgrade, cityLayer, ascensionQuality, innerPillPrepare, innerPillLevel, ascendedInnerPillLevel};
