@@ -87132,6 +87132,7 @@
     "basicTechnologyLevel": true,
     "buildingLevel": true,
     "placedRelicAttributes": true,
-    "pillAptitudeBonusAdvanced": true
+    "pillAptitudeBonusAdvanced": true,
+    "recruitTechnologyAdvanced": true
   }
 }

@@ -5,6 +5,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const root = path.resolve(__dirname, '..');
 const L = require('./helpers/legacy-release.cjs'), catalog = L.catalog();
+// Family registration follows the live catalog: groups added after the V1.0.11.2 freeze are not in the frozen one.
+const liveGroups = Object.keys(require('../knowledge/catalog.json').verification);
 
 test('Mac preparation tool reviews the runtime the catalog was built from',()=>{
   const tool = fs.readFileSync(path.join(root, 'launcher/prepare-macos.py'), 'utf8');
@@ -38,7 +40,7 @@ test('isolated setup accepts a patched Mac runtime only when it derives from the
 
 test('migration suite proves every required check of every catalog write group',()=>{
   const R = require('../scripts/verification-requirements.cjs'), S = require('../scripts/verification-suite.cjs');
-  const groups = Object.keys(catalog.verification);
+  const groups = liveGroups;
   assert.deepEqual(S.uncovered(groups), []);
   for (const group of groups) assert.ok(R.sectionOf(group), 'requirement section missing: ' + group);
   const listed = Object.values(S.families).flatMap(f => f.groups);
@@ -112,7 +114,7 @@ test('representative scenarios replay on the base save and together cover every 
   const covered = copies.flatMap(c => c.groups || S.families[c.family].groups);
   // The four set-equipment quality groups and the two cross-pool level groups are closed and have no representative copies: only an independent first proof may open them.
   const {groups: qualityGroups, crossPoolGroups} = require('../scripts/set-equipment-quality-data.cjs'), closedQuality = [...qualityGroups, ...crossPoolGroups];
-  assert.deepEqual([...new Set(covered)].sort(), Object.keys(catalog.verification).filter(g => !closedQuality.includes(g)).sort());
+  assert.deepEqual([...new Set(covered)].sort(), liveGroups.filter(g => !closedQuality.includes(g)).sort());
   const byName = Object.fromEntries(copies.map(c => [c.name, c]));
   const level = (c, x, y, z) => c.scenario.baseline.filter(([a, b, d]) => a === x && b === y && d === z).at(-1)?.[3];
   assert.equal(level(byName['advanced-normal'], 4, 5, 1), 1);
@@ -218,6 +220,28 @@ test('basic technology follow-up sends compilable page code and rejects research
     assert.deepEqual(state.cells.slice(-2), [[9, 3, 21], [1, 2, 0]]);assert.equal(state.cells.length, 11);
     answers.push({...good, refused: [2, 0, 0, 0]});await assert.rejects(basicTechnology({cells: []}, scenario), /An unlocked basic tech started research/);
     answers.push({...good, buildings: [{b: 7, expected: 1, unlock: 0}]});await assert.rejects(basicTechnology({cells: []}, scenario), /建筑等级解锁判断/);
+  }finally{require.cache[gamePath].exports = real; delete require.cache[lifecyclePath];}
+});
+
+test('recruit technology follow-up sends compilable page code and rejects a search the countdown should have refused',async()=>{
+  const gamePath = require.resolve('../scripts/verify-game.cjs'), lifecyclePath = require.resolve('../scripts/verify-native-lifecycle.cjs');
+  const real = require(gamePath), answers = [];
+  const fake = {...real, waitMain: async () => {}, evaluate: async (state, expression) => { new Function('return ' + expression); return /主动寻访/.test(expression) ? answers.shift() : true; }};
+  delete require.cache[lifecyclePath]; require.cache[gamePath] = {...require.cache[gamePath], exports: fake};
+  try{
+    const {recruitTechnology} = require(lifecyclePath), r = (level, countdown, money, marker = 0) => ({level, bonus: level, countdown, money, marker});
+    const first = level => ({before: r(level, 440, 10000), cap: 299, fee: 3000, paused: 0, searched: r(level, 600 - level, 7000)}), tick = (ticked, after) => ({ticked, after, pausedAfter: 0});
+    answers.push(first(599), tick(r(599, 1, 7000), r(599, 1, 7000)));
+    const state = {cells: []};await recruitTechnology(state, {recruitTechnology: {level: 599, seconds: 0.01}});
+    assert.deepEqual(state.cells, [[33, 4, 0]]);
+    answers.push(first(450), tick(r(450, 148, 7000, 7), r(450, 150, 4000, 7)));
+    await recruitTechnology({cells: []}, {recruitTechnology: {level: 450, seconds: 0.01}});
+    answers.push(first(599), tick(r(599, 1, 7000), r(599, 1, 4000)));
+    await assert.rejects(recruitTechnology({cells: []}, {recruitTechnology: {level: 599, seconds: 0.01}}), /countdown at 1/);
+    answers.push(first(450), tick(r(450, 150, 7000, 7), r(450, 150, 7000, 7)));
+    await assert.rejects(recruitTechnology({cells: []}, {recruitTechnology: {level: 450, seconds: 0.01}}), /run down/);
+    answers.push({...first(599), before: {...r(599, 440, 10000), bonus: 299}}, tick(r(599, 1, 7000), r(599, 1, 7000)));
+    await assert.rejects(recruitTechnology({cells: []}, {recruitTechnology: {level: 599, seconds: 0.01}}), /加成属性效果/);
   }finally{require.cache[gamePath].exports = real; delete require.cache[lifecyclePath];}
 });
 

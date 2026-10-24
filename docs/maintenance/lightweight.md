@@ -61,7 +61,7 @@
 
 不再核對 core 摘要、證明內容、manifest 或工具雜湊，所以改 `src/core.js` 不會讓建置失敗。新功能冒煙通過後，在 `groups` 加上該群組、在 `verification.json` 的 `lightweight` 加一筆冒煙紀錄（日期、遊戲版本、代表案例、基準存檔與 repo 外結果檔的 SHA-256），並打開旗標。
 
-`lightweight` 裡的群組不進舊的複合遷移證明（`scripts/migration-proof.cjs` 的 `composite`）：選跑、`problem` 與 `compose` 都略過它們，所以版本遷移寫回後這些旗標會關閉，要在新版重跑冒煙再開。沒有這筆紀錄的已開群組仍照舊要求複合證據。冒煙可沿用 `verify-game.cjs --scenario`（`setPillAptitudeBonus`、`setEquipmentLevel` 等具名操作）加 `verify-native-lifecycle.cjs`（`ascend`、`followup`、`pills`、`pillOverLimit`、`backpackOverLimit`、`relics`、`relicTakeOff`、`relicStandPrepare`、`placedRelicAura`、`wall`、`city`、`ascensionQuality`、`innerPillPrepare`、`innerPillLevel`、`ascendedInnerPillLevel`、`relicCrafting` 等動作，以 `main()` 的清單為準；`pills` 可用 `pillCharacter` 指定角色；擺放類動作要在存檔重啟後另跑一次取下，才算驗過兩輪 IO；`穿戴装备` 後要等一拍再讀角色指標，同一次 evaluate 內讀到的是空列）；固定基準存檔先複製到 repo 外的新資料夾，步驟依 `.local/game-sources.json` 的 `nativeSmoke` 紀錄（雲存檔載入 → 存檔 → assert → stop → restart → 存檔載入 → assert）。遊戲改版時，對受影響的功能跑冒煙，再更新 `gameVersion` 與 `fingerprints`。測試見 `tests/build-gate.test.cjs`。
+`lightweight` 裡的群組不進舊的複合遷移證明（`scripts/migration-proof.cjs` 的 `composite`）：選跑、`problem` 與 `compose` 都略過它們，所以版本遷移寫回後這些旗標會關閉，要在新版重跑冒煙再開。沒有這筆紀錄的已開群組仍照舊要求複合證據。冒煙可沿用 `verify-game.cjs --scenario`（`setPillAptitudeBonus`、`setEquipmentLevel` 等具名操作）加 `verify-native-lifecycle.cjs`（`ascend`、`followup`、`pills`、`pillOverLimit`、`backpackOverLimit`、`relics`、`relicTakeOff`、`relicStandPrepare`、`placedRelicAura`、`wall`、`city`、`ascensionQuality`、`innerPillPrepare`、`innerPillLevel`、`ascendedInnerPillLevel`、`relicCrafting`、`recruitTechnology` 等動作，以 `main()` 的清單為準；`pills` 可用 `pillCharacter` 指定角色；擺放類動作要在存檔重啟後另跑一次取下，才算驗過兩輪 IO；`穿戴装备` 後要等一拍再讀角色指標，同一次 evaluate 內讀到的是空列）；固定基準存檔先複製到 repo 外的新資料夾，步驟依 `.local/game-sources.json` 的 `nativeSmoke` 紀錄（雲存檔載入 → 存檔 → assert → stop → restart → 存檔載入 → assert）。遊戲改版時，對受影響的功能跑冒煙，再更新 `gameVersion` 與 `fingerprints`。測試見 `tests/build-gate.test.cjs`。
 
 `scripts/*-proof.cjs` 與 `verification.json` 裡較早的首次證明紀錄仍保留作為歷史證據與遷移工具，但不再是建置條件。
 
@@ -69,7 +69,7 @@
 
 2026-10-24 第一次在輕量流程下改 core（小數丹藥）時，有 21 項舊測試失敗：它們斷言「已開放群組的首次證明、B7 等價或 core 切片基準必須對上目前的 `src/core.js`」。依使用者決定已刪除這些斷言（`tests/helpers/set-quality-shipped.cjs` 的 `assertShipped` 只核對旗標與群組紀錄存在）；切片選取機制測試改以目前 core 當基準。之後新增測試不要再把歷史證明綁到目前 core 文字或切片。
 
-新增旗標時，除了 `extract-game.cjs` 的預設值與 `catalog.json`，也要登記到 `scripts/verification-requirements.cjs` 與 `scripts/verification-suite.cjs` 對應 family 的 `groups`，否則 `version-migration` 測試會報「no family」；旗標開啟前，`version-migration.test.cjs` 的 write-back 比對清單也要列入它（開啟後自動排除）；但 family 設有 `initialProofRequired`（例如 randomCharacterTalents）時，write-back 不會開它，不要列入（v2.17 教訓）。core 以 `vm` 載入，回傳的陣列屬另一個 realm，`assert.deepEqual` 會報「same structure but are not reference-equal」；先展開（`[...x]`）或只比長度再比較。
+新增旗標時，除了 `extract-game.cjs` 的預設值與 `catalog.json`，也要登記到 `scripts/verification-requirements.cjs` 與 `scripts/verification-suite.cjs` 對應 family 的 `groups`，否則 `version-migration` 測試會報「no family」。v2.28 起 `version-migration.test.cjs` 的 write-back 比對用凍結的 V1.0.11.2 catalog（`tests/fixtures/v1.0.11.2-release`），凍結後新增的旗標（v2.29 起，例如 `recruitTechnologyAdvanced`）不在裡面，不要加進 write-back 比對清單；family 登記檢查與代表情境覆蓋改讀目前的 `knowledge/catalog.json`（`liveGroups`）。凍結前的旗標維持原規則：開啟前列入、開啟後自動排除；family 設有 `initialProofRequired`（例如 randomCharacterTalents）時不要列入（v2.17 教訓）。core 以 `vm` 載入，回傳的陣列屬另一個 realm，`assert.deepEqual` 會報「same structure but are not reference-equal」；先展開（`[...x]`）或只比長度再比較。
 
 `verify-game.cjs` 的操作白名單新增具名方法時，也要把它（與對應的 info／preview 入口）列進 `scripts/migration-analysis.cjs` 該 family 的 `coreRoots`，否則 `tests/core-slice-roots.test.cjs` 報「不屬於任何 family」。新的 UI 模組（例如 v2.15 的 `src/relic-ui.js`）要在 `build-editor.cjs` 加佔位替換、在 `tests/skill-caps-ui.test.cjs`／`tests/talent-levels-ui.test.cjs` 兩個完整 UI 測試台注入，並在 `knowledge-ui.js` 呼叫處加 `typeof` 防護（單獨載入 knowledge-ui 的測試沒有該函式）。重抽 `catalog.json` 時鍵順序可能和既有檔不同，以語意比對確認沒有其他差異即可。
 
@@ -165,3 +165,11 @@
 - **超限後原生會怎麼反應，用對照組證明**：只斷言「服藥被拒」可能是工具呼叫錯；同一個動作裡加一項仍在上限內的資質，確認同樣的呼叫會扣丹藥、加增量，拒絕才有意義。
 - **既有小數旗標會改一般模式的上限**：`pillAptitudeBonusDecimal` 開啟時，`pillInfo.max` 是一位小數（例如 15.5），不是整數 15。測試斷言一般上限前先確認哪些旗標開著。
 - **反引號第四次**：想用 `String.raw` 拼出含 `${}` 的 UI 範本，外層模板會先求值，腳本直接語法錯誤。改 UI 一律用 Edit 工具逐段替換。
+
+### 隨時間跑的原生效果、暫停與凍結後的新旗標（v2.29 招募科技超限教訓）
+
+- **讀取者先找效果函式的所有參數值**：科技等級只經 `加成属性效果(24)` 進招募倒數，但 `加成属性效果` 也被 `属性计算` 以 `sx` 第 12 欄的變數參數呼叫。把 `all.txt` 裡 `fn:加成属性效果(…)` 的參數全列出來，再查變數參數的資料表有沒有指到同一個編號，才算讀取者找齊。
+- **上限可能只在研究入口**：`科技等级上限` 只擋 `科技研究` 與提示，效果端 `进阶科技属性` 不夾；表格上限（`kj` 第 5 欄）也不等於效果上限。超限值的意義看效果式本身（`600−L` 沒有下限），再看其他入口的條件（`主动寻访` 要倒數 >1）。
+- **布林全域變數是 0／1**：`SetBoolVar` 寫進去的是數字，`global('游戏暂停').GetValue()` 回 0，不是 false。用 `assert.equal(x,false)` 會誤判成「暫停中」，連跑兩輪冒煙都失敗；斷言一律看真假值。先在現場讀值（repo 外 `probe-pause.cjs`）才發現。`System.Every` 下的每秒事件只在 `游戏暂停` 為否時跑，原生動作要 `SetTimeScale(1)` 再 `pause()` 讓時間走。
+- **看不出差別的重設用標記**：L=599 時每秒都重設成 1，倒數值本身無法分辨「有沒有跑」。在只有重設分支會寫的欄位（`[11,1,0]`）先寫標記 7，跑時間後確認被清成 0；對照組（L=450）標記保持 7，結束時寫回原值。
+- **刷新會改的計數不要斷言**：`新刷新招募数据` 抽到目標品質時會把 `[等階,43,0]` 保底計數歸零，`主动寻访` 加的 1 不一定留得住；只在同一次 evaluate 內比對銅錢扣除。

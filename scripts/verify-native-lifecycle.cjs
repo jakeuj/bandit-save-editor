@@ -509,6 +509,37 @@ async function basicTechnology(state, s) {
   return out;
 }
 
+// Recruitment technology #33 over 299 (recruitTechnologyAdvanced) after a restart: 加成属性效果(24) returns the edited L, and
+// 科技等级上限 still stops research at 299. A native 主动寻访 charges its fee and resets the countdown to 600−L; a few seconds of
+// game time then run the per-second countdown. It runs only while 游戏暂停 is off; SetBoolVar stores 0/1, so the check is
+// on truthiness, not on false. At L=599 every tick resets it to 1 and
+// refreshes the candidates (the marker in [11,1,0] is cleared), so a second 主动寻访 is refused without a charge; lower L
+// counts down and the second search goes through. The refresh can reset the [tier,43] pity count, so only the fee is compared;
+// the countdown and copper change with time and stay out of state.cells.
+async function recruitTechnology(state, s) {
+  const {level, tier = 1, seconds = 3.5} = s.recruitTechnology, interval = 600 - level;
+  const read = `const read=()=>({level:a.At(33,4,0),bonus:call('加成属性效果',24),countdown:a.At(1,17,0),money:a.At(1,2,0),marker:a.At(11,1,0)});`;
+  const first = await evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);${read}const before=read(),cap=call('科技等级上限',33,4),fee=call('主动寻访费用',${tier}),paused=global('游戏暂停').GetValue();
+    call('主动寻访',${tier});const searched=read();a.Set(11,1,0,7);r.SetTimeScale(1);return {before,cap,fee,paused,searched,originalMarker:before.marker};})()`);
+  await pause(seconds * 1000);
+  const second = await evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);${read}const ticked=read(),pausedAfter=global('游戏暂停').GetValue();call('主动寻访',${tier});const after=read();if(ticked.marker===7)a.Set(11,1,0,${first.before.marker});return {ticked,after,pausedAfter};})()`);
+  const {before, cap, fee, paused, searched} = first, {ticked, after, pausedAfter} = second;
+  assert.ok(!paused && !pausedAfter, '游戏暂停 is on; the countdown would not run');
+  assert.deepEqual([before.level, before.bonus], [level, level], '加成属性效果(24) does not return the edited level');
+  assert.equal(cap, 299, '科技等级上限 for #33');
+  assert.ok(before.countdown > 1, 'Countdown already at the refresh point before the first search');
+  assert.deepEqual([searched.countdown, before.money - searched.money], [interval, fee], 'Native 主动寻访 did not reset the countdown to 600−L');
+  if (interval === 1) {
+    assert.deepEqual([ticked.countdown, ticked.marker], [1, 0], 'The per-second tick did not reset and refresh at L=599');
+    assert.deepEqual([after.countdown, after.money], [ticked.countdown, ticked.money], '主动寻访 went through with the countdown at 1');
+  } else {
+    assert.ok(ticked.countdown < interval && ticked.countdown >= interval - Math.ceil(seconds) - 1 && ticked.marker === 7, 'The countdown did not run down from 600−L');
+    assert.deepEqual([after.countdown, ticked.money - after.money], [interval, fee], 'Control 主动寻访 was refused');
+  }
+  state.cells.push([33, 4, 0]);
+  return {before, cap, fee, searched, ticked, after};
+}
+
 // Edited building levels after a restart: the facility and research caps follow the new level, 建筑升阶 starts the next tier
 // from it (work 建造工程量(t, L+1), materials deducted) and 取消升阶 returns both, and at the tech cap it refuses. The walls
 // rise at once, so their edited level is checked at the cap (refused, nothing spent) and through the wider enhancement cap.
@@ -540,7 +571,7 @@ async function main() {
   const statePath = opt('--state'), state = JSON.parse(fs.readFileSync(statePath)), scenario = JSON.parse(fs.readFileSync(opt('--scenario')));
   const rel = path.relative(path.resolve(__dirname, '..'), state.dir), child = path.relative(state.dir, state.game);
   if (!rel || (!path.isAbsolute(rel) && rel !== '..' && !rel.startsWith('..' + path.sep)) || !child || path.isAbsolute(child) || child.startsWith('..')) throw Error('External disposable state required');
-  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.pillOverLimit && !scenario.backpackOverLimit && !scenario.relics && !scenario.relicTakeOff && !scenario.relicStandPrepare && !scenario.placedRelicAura && !scenario.wall && !scenario.city && !scenario.ascensionQuality && !scenario.innerPillPrepare && !scenario.innerPillLevel && !scenario.ascendedInnerPillLevel && !scenario.basicTechnology && !scenario.buildingLevel && !scenario.relicCrafting) throw Error('Scenario has no native follow-up actions');
+  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.pillOverLimit && !scenario.backpackOverLimit && !scenario.relics && !scenario.relicTakeOff && !scenario.relicStandPrepare && !scenario.placedRelicAura && !scenario.wall && !scenario.city && !scenario.ascensionQuality && !scenario.innerPillPrepare && !scenario.innerPillLevel && !scenario.ascendedInnerPillLevel && !scenario.basicTechnology && !scenario.buildingLevel && !scenario.relicCrafting && !scenario.recruitTechnology) throw Error('Scenario has no native follow-up actions');
   await waitMain(state);
   const result = {};
   if (scenario.ascend && !scenario.pills) result.ascend = await ascend(state, scenario);
@@ -559,6 +590,7 @@ async function main() {
   if (scenario.innerPillLevel) result.innerPillLevel = await innerPillLevel(state, scenario);
   if (scenario.ascendedInnerPillLevel) result.ascendedInnerPillLevel = await ascendedInnerPillLevel(state, scenario);
   if (scenario.basicTechnology) result.basicTechnology = await basicTechnology(state, scenario);
+  if (scenario.recruitTechnology) result.recruitTechnology = await recruitTechnology(state, scenario);
   if (scenario.buildingLevel) result.buildingLevel = await buildingLevel(state, scenario);
   if (scenario.relicCrafting) result.relicCrafting = await relicCrafting(state, scenario);
   state.expected = await evaluate(state, `(()=>{${prefix}return ${JSON.stringify(state.cells)}.map(([x,y,z])=>a.At(x,y,z));})()`);
@@ -567,4 +599,4 @@ async function main() {
   console.log('PASS: native ' + Object.keys(result).join(' and ') + ' follow-up actions');
 }
 if (require.main === module) main().catch(e => { console.error(e.stack); process.exitCode = 1; });
-module.exports = {ascend, followup, pillsAndRebirth, pillOverLimit, backpackOverLimit, relicPlacement, relicTakeOff, relicStandPrepare, placedRelicAura, wallUpgrade, cityLayer, ascensionQuality, innerPillPrepare, innerPillLevel, ascendedInnerPillLevel, basicTechnology, buildingLevel, relicCrafting};
+module.exports = {ascend, followup, pillsAndRebirth, pillOverLimit, backpackOverLimit, relicPlacement, relicTakeOff, relicStandPrepare, placedRelicAura, wallUpgrade, cityLayer, ascensionQuality, innerPillPrepare, innerPillLevel, ascendedInnerPillLevel, basicTechnology, buildingLevel, recruitTechnology, relicCrafting};

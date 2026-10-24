@@ -311,6 +311,22 @@
  const setEquipmentLevel=(m,{itemId,level,advanced=false,plane=9})=>setEditingValue(m,'equipment',itemId,level,advanced,plane);
  const setProfessionTrainingCap=(m,{professionId,cap,advanced=false})=>setEditingValue(m,'training',professionId,cap,advanced);
  const setAdvancedTechnologyLevel=(m,{technologyId,level,advanced=false})=>setEditingValue(m,'technology',technologyId,level,advanced);
+ // Recruitment technology #33 over its 299 cap (recruitTechnologyAdvanced). Only 加成属性效果(24)=L reads it for effect, and
+ // every refresh resets [1,17,0] to 600−L with no lower clamp; 科技等级上限 still stops research at 299 and 招募處 already
+ // reaches tier 4 at 239. 300–599 keeps the interval ≥1 s; at 598–599 主动寻访 (needs a countdown >1) is partly or always
+ // refused. Only [33,4,0] is written; the running countdown is left as a finished research would leave it.
+ const recruitTechnologyRange=[300,599];
+ function recruitTechnologyInfo(m){
+  const info=editingInfo(m,'technology',33),countdown=get(m,C(1,17,0)),[min,max]=recruitTechnologyRange;
+  return {technologyId:33,name:info.name,coordinate:info.coordinate,current:info.current,min,max,interval:Math.max(0,600-info.current),countdown:typeof countdown==='number'&&Number.isFinite(countdown)?countdown:null,verified:!!KNOWLEDGE.verification.recruitTechnologyAdvanced};
+ }
+ function setRecruitTechnologyLevel(m,{level}){
+  const info=recruitTechnologyInfo(m);
+  if(!info.verified)throw Error('招募科技超限尚未完成隔離遊戲冒煙。');
+  if(!Number.isSafeInteger(level)||level<info.min||level>info.max)throw Error(`招募科技超限須為 ${info.min}–${info.max} 的整數；299 以下請用一般或進階模式。`);
+  if(level===info.current)return {...info,value:level,unchanged:true};
+  return {...batch2Put(m,info,level,'editing:technology:33',`${info.name}・等級（超限）`),interval:600-level};
+ }
  // Batch-two operations intentionally have no advanced mode.
  const aptitudeNames=['力量','敏捷','智力'];
  const decimal2=value=>typeof value==='number'&&Number.isFinite(value)&&Math.abs(value)<=Number.MAX_SAFE_INTEGER/100&&Math.abs(value*100-Math.round(value*100))<1e-8;
@@ -1520,5 +1536,5 @@
   if(patches.length!==m.changes.size)throw Error('部分修改座標未能定位，已停止匯出。');
   const parts=[];let previous=0;for(const p of patches){parts.push(m.text.slice(previous,p.start),p.value);previous=p.end;}parts.push(m.text.slice(previous));return parts.join('');
  }
- globalThis.SaveCore={listPlacedRelics,placedRelicAttributesInfo,previewPlacedRelicAttributes,setPlacedRelicAttributes,buildingLevelsInfo,previewBuildingLevel,setBuildingLevel,basicTechnologiesInfo,previewBasicTechnology,setBasicTechnology,ascendedInnerPillLevelInfo,previewAscendedInnerPillLevel,setAscendedInnerPillLevel,innerPillLevelInfo,previewInnerPillLevel,setInnerPillLevel,ascensionQualityInfo,previewAscensionQuality,setAscensionQuality,cityLayersInfo,previewCityLayer,setCityLayer,wallEnhancementInfo,previewWallEnhancementLevel,setWallEnhancementLevel,relicAttributesInfo,previewRelicAttributes,setRelicAttributes,listRelics,setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,previewSetEquipmentQualityCandidate,applySetEquipmentQualityCandidate,setEquipmentQualityCandidateEffects,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,pillAdvancedInfo,setPillAptitudeBonusAdvanced,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
+ globalThis.SaveCore={listPlacedRelics,placedRelicAttributesInfo,previewPlacedRelicAttributes,setPlacedRelicAttributes,buildingLevelsInfo,previewBuildingLevel,setBuildingLevel,basicTechnologiesInfo,previewBasicTechnology,setBasicTechnology,ascendedInnerPillLevelInfo,previewAscendedInnerPillLevel,setAscendedInnerPillLevel,innerPillLevelInfo,previewInnerPillLevel,setInnerPillLevel,ascensionQualityInfo,previewAscensionQuality,setAscensionQuality,cityLayersInfo,previewCityLayer,setCityLayer,wallEnhancementInfo,previewWallEnhancementLevel,setWallEnhancementLevel,relicAttributesInfo,previewRelicAttributes,setRelicAttributes,listRelics,setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,previewSetEquipmentQualityCandidate,applySetEquipmentQualityCandidate,setEquipmentQualityCandidateEffects,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,recruitTechnologyInfo,setRecruitTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,pillAdvancedInfo,setPillAptitudeBonusAdvanced,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
 })();

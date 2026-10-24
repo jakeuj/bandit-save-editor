@@ -76,7 +76,8 @@
     "basicTechnologyLevel": true,
     "buildingLevel": true,
     "placedRelicAttributes": true,
-    "pillAptitudeBonusAdvanced": true
+    "pillAptitudeBonusAdvanced": true,
+    "recruitTechnologyAdvanced": true
   },
   "lightweight": {
     "randomCharacterBaseAptitudesAscended": {
@@ -361,6 +362,27 @@
       "passed": true,
       "smokeGameVersion": "V1.0.11.2",
       "gameUpdate": "V1.0.12.2 靜態核對沿用（來源事件只差編號位移與刷新參數）"
+    },
+    "recruitTechnologyAdvanced": {
+      "date": "2026-10-25",
+      "gameVersion": "V1.0.12.2",
+      "flow": "docs/maintenance/lightweight.md",
+      "smoke": "v1.0.12.2 完整來源、兩份隔離副本；verify-game.cjs 以 setRecruitTechnologyLevel 編輯（雲存檔載入、原版存檔、新 PID 讀回），verify-native-lifecycle.cjs recruitTechnology 原生核對，再存檔、新 PID 讀回，修改器重讀遊戲寫出檔",
+      "cases": [
+        "科技 #33 1→599：讀回後 加成属性效果(24)＝599、科技等级上限＝299；主动寻访(1) 扣 3000 銅錢、倒數 439→1；遊戲時間走 3.5 秒，每秒重設為 1 並刷新（[11,1,0] 標記 7→0）；第二次 主动寻访 被拒、不扣銅錢",
+        "科技 #33 1→450（對照）：加成属性效果(24)＝450；主动寻访 倒數 440→150，走 3.5 秒降到 146、標記不變；第二次 主动寻访 照常扣 3000、倒數回到 150",
+        "兩份都在第二輪原版存檔、新 PID 讀回後保持 599／450（每份 3 個 PID、4 次 assert）；修改器重讀遊戲寫出檔：等級 599／450、間隔 1／150 秒，且可再編輯"
+      ],
+      "baselineSaveSha256": "ebb0a4a28791218986c594d3b3819a066482bc11ff75aac99f8498c4ce4b84c5",
+      "resultSha256": {
+        "l599": "c264693926791d4f8d082bc9ec397d9fb3217c1099256638ea1fd9c6e82a2fd8",
+        "l450": "6b9e5a3218bb49e483c97f043c487de0da5181a1814d6b7f7ac4c9953727f496"
+      },
+      "nativeResultSha256": {
+        "l599": "94e1e44a108d51f151c51285a873082c6b6d36f75fe1397841aa560993744f5e",
+        "l450": "a262bfb8c4e1522d97a8eabf3c2aad31b4f8d02dbd565aa303d035d25a965dd8"
+      },
+      "passed": true
     }
   },
   "method": "按功能相依選跑；原生、沿用與 UI 未重驗分開記錄",
