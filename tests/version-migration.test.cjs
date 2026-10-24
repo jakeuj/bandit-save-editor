@@ -221,6 +221,21 @@ test('basic technology follow-up sends compilable page code and rejects research
   }finally{require.cache[gamePath].exports = real; delete require.cache[lifecyclePath];}
 });
 
+test('building level follow-up sends compilable page code and rejects an upgrade that ignores the edited level',async()=>{
+  const gamePath = require.resolve('../scripts/verify-game.cjs'), lifecyclePath = require.resolve('../scripts/verify-native-lifecycle.cjs');
+  const real = require(gamePath), answers = [];
+  const fake = {...real, waitMain: async () => {}, evaluate: async (state, expression) => { new Function('return ' + expression); assert.match(expression, /建筑升阶/); return answers.shift(); }};
+  delete require.cache[lifecyclePath]; require.cache[gamePath] = {...require.cache[gamePath], exports: fake};
+  try{
+    const {buildingLevel} = require(lifecyclePath), scenario = {buildingLevel: {building: 4, template: 5, level: 2, technology: 40, wall: 1}};
+    const row = (level, work, upgrading) => ({level, work, upgrading});
+    const good = {before: row(2, 0, 0), facilities: 4, research: 179, work: 900, cost: [10, 20], stock: [100, 100], started: row(2, 900, 1), spent: [90, 80], cancelled: row(2, 0, 0), refunded: [100, 100], wall: {before: row(1, 0, 0), cap: 120, enhancement: 60, refused: row(1, 0, 0), stock: [0, 0], enhanced: 61}};
+    answers.push(good);const state = {cells: []};await buildingLevel(state, scenario);assert.equal(state.cells.length, 6);
+    answers.push({...good, started: row(3, 0, 0)});await assert.rejects(buildingLevel({cells: []}, scenario), /did not start the next tier/);
+    answers.push({...good, wall: {...good.wall, refused: row(2, 0, 0)}});await assert.rejects(buildingLevel({cells: []}, scenario), /Walls rose past the tech cap/);
+  }finally{require.cache[gamePath].exports = real; delete require.cache[lifecyclePath];}
+});
+
 test('every suite oracle and lifecycle script exists and marked copies run each family lifecycle',()=>{
   const S = require('../scripts/verification-suite.cjs');
   for (const [name, family] of Object.entries(S.families)) for (const script of [family.oracle, ...(family.lifecycle || [])].filter(Boolean)) assert.ok(fs.existsSync(path.join(root, 'scripts', script)), name + ': ' + script);
@@ -312,7 +327,7 @@ test('write-back opens proven groups on a new build, compares on the proven buil
     const compared = M.writeBack({dir, catalog, proof, results: {...results(catalog.gameVersion), ui: {}}});
     assert.equal(compared.action, 'compared');
     assert.equal(compared.consistent, false, 'quality UI pending must differ from the native proof');
-    assert.deepEqual(compared.comparison.filter(c => c.existing !== c.migrated).map(c => c.group).sort(), [...R.sections.equipmentQuality.groups,...['randomCharacterBaseAptitudes','pillAptitudeBonusDecimal','pillAptitudeBonusAscended','backpackEquipmentLevelAdvanced','relicAttributes','randomCharacterBaseAptitudesAscended','wallEnhancementLevel','cityLayerLevel','ascensionQuality','backpackInnerPillLevel','innerPillLevel','ascendedInnerPillLevel','basicTechnologyLevel'].filter(g=>!catalog.verification[g])].sort());
+    assert.deepEqual(compared.comparison.filter(c => c.existing !== c.migrated).map(c => c.group).sort(), [...R.sections.equipmentQuality.groups,...['randomCharacterBaseAptitudes','pillAptitudeBonusDecimal','pillAptitudeBonusAscended','backpackEquipmentLevelAdvanced','relicAttributes','randomCharacterBaseAptitudesAscended','wallEnhancementLevel','cityLayerLevel','ascensionQuality','backpackInnerPillLevel','innerPillLevel','ascendedInnerPillLevel','basicTechnologyLevel','buildingLevel'].filter(g=>!catalog.verification[g])].sort());
     assert.deepEqual(snapshot(), same);
     const reordered = {...catalog, fingerprints: Object.fromEntries(Object.entries(catalog.fingerprints).reverse()), batch2Fingerprints: Object.fromEntries(Object.entries(catalog.batch2Fingerprints).reverse())};
     assert.equal(M.writeBack({dir, catalog: reordered, proof, results: {...results(catalog.gameVersion), ui: {}}, exec: () => { throw Error('same fingerprint must not build after key reordering'); }}).action, 'compared');

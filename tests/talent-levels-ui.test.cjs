@@ -44,6 +44,7 @@ async function setup({gate=false,mutate}={}){
   .replace('/*__WALL_UI__*/',()=>fs.readFileSync(path.join(root,'src/wall-ui.js'),'utf8'))
   .replace('/*__CITY_UI__*/',()=>fs.readFileSync(path.join(root,'src/city-ui.js'),'utf8'))
   .replace('/*__TECH_UI__*/',()=>fs.readFileSync(path.join(root,'src/tech-ui.js'),'utf8'))
+  .replace('/*__BUILDING_UI__*/',()=>fs.readFileSync(path.join(root,'src/building-ui.js'),'utf8'))
   .replace('/*__ASCENSION_UI__*/',()=>fs.readFileSync(path.join(root,'src/ascension-ui.js'),'utf8'))
   .replace("showTab('resources');renderFooter();","globalThis.uiTest={get model(){return model;}};showTab('resources');renderFooter();");
  vm.runInNewContext(source,context);

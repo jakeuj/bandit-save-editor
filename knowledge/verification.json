@@ -73,7 +73,8 @@
     "backpackInnerPillLevel": true,
     "innerPillLevel": true,
     "ascendedInnerPillLevel": true,
-    "basicTechnologyLevel": true
+    "basicTechnologyLevel": true,
+    "buildingLevel": true
   },
   "lightweight": {
     "randomCharacterBaseAptitudesAscended": {
@@ -276,6 +277,22 @@
       ],
       "baselineSaveSha256": "c259c6d181ca8a274b211ef5f2f13728bb1b9eb0092132038a82ffb9763dd029",
       "resultSha256": "431156dce5dc5ee15a0364f5cf689b50c5b8127c7b8f21c8623fe33f2ffcae75",
+      "passed": true
+    },
+    "buildingLevel": {
+      "date": "2026-10-24",
+      "gameVersion": "V1.0.11.2",
+      "flow": "docs/maintenance/lightweight.md",
+      "smoke": "沿用 v2.24 冒煙第二輪遊戲寫出的存檔（建築全為 0 級、進階科技多為 0）當基準，verify-game.cjs 先以既有進階模式把研究技術調到 179、城牆技術調到 59，再以 setBuildingLevel 編輯（隔離副本、雲存檔載入、原版存檔、新 PID 讀回），接著以 verify-native-lifecycle.cjs buildingLevel 做原生核對，第二輪原版存檔、新 PID 讀回，最後以修改器重讀遊戲寫出檔",
+      "cases": [
+        "書院 #4 0→2（研究技術 179，上限 3）、城牆 #0 0→1（城牆技術 59，上限 1）；雲存檔載入、原版存檔、新 PID 讀回一致",
+        "原生核對：建筑设施上限(書院)=4、科技等级上限(研究技術, 2)=179、城墙强化上限=120",
+        "建筑升阶(書院) 從 2 開始升 3 階：升階旗標 1、工程量＝建造工程量(5,3)、扣除青剛木 5500／秘銀 4300；取消升阶 後等級仍為 2、工程量與旗標歸零、材料退回",
+        "建筑升阶(城牆) 在科技上限被拒（等級與材料不變）；城墙升级 在放寬後的強化上限內 60→61",
+        "第二輪原版存檔、新 PID 讀回一致（3 個 PID、4 次 assert）；修改器重讀遊戲寫出檔：書院 Lv 2 可升到 3、城牆 Lv 1、強化 61/120"
+      ],
+      "baselineSaveSha256": "7ea007caca07bd5e383c26f502b6704505e12562f3c5f1eb8f59b892c2edbfee",
+      "resultSha256": "064d00d2b8f915fb299634cf42efb3ce27aeeb342a1da4600692faf14b022104",
       "passed": true
     }
   },

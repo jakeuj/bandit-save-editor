@@ -54,6 +54,24 @@
   for(let x=1;x<m.original.size[0];x++)if(get(m,C(x,0,1))===x&&get(m,C(x,1,1))===template){const n=get(m,C(x,5,1));if(!Number.isSafeInteger(n)||n<0)throw Error('建築等級資料不符。');level=Math.max(level,n);}
   return level;
  }
+ // Normal caps that follow 校場 (操练等级上限) and 書院 (科技等级上限); 0 keeps the editor's earlier refusal without the building.
+ function buildingNormalMax(kind,id,building){
+  if(kind==='training')return building?5+(building+1)*5:0;
+  return building?Math.min(catalogMaps.technologies.get(id).tableLimit-1,Math.max(1,(building+1)*60-1)):0;
+ }
+ // A training cap or advanced tech that only fits under a raised 校場／書院 joins that building's restore group, so restoring
+ // the building never leaves it above the original cap. Values within the original cap, or past the new one (advanced mode,
+ // which never depended on the building), keep their own group.
+ function raisedBuildingGroup(m,kind,id,value,normalMax){
+  if(kind!=='training'&&kind!=='technology')return null;
+  const template=kind==='training'?6:5;let original=0,raised=null;
+  for(let x=1;x<m.original.size[0];x++)if(cell(m.original,C(x,0,1))===x&&cell(m.original,C(x,1,1))===template){
+   const before=cell(m.original,C(x,5,1)),after=get(m,C(x,5,1));
+   if(Number.isSafeInteger(before))original=Math.max(original,before);
+   if(after>before&&(!raised||after>raised.after))raised={x,after};
+  }
+  return raised&&value>buildingNormalMax(kind,id,original)&&value<=normalMax?`building:${raised.x}`:null;
+ }
  function busyFacility(m,target,buildingTemplate){
   for(let x=1;x<m.original.size[0];x++)if(get(m,C(x,0,21))===x&&get(m,C(x,3,21))===target){
    const parent=get(m,C(x,2,21));if(Number.isSafeInteger(parent)&&parent>0&&parent<m.original.size[0]&&get(m,C(parent,1,1))===buildingTemplate)return true;
@@ -248,11 +266,11 @@
    const profession=catalogMaps.professions.get(id);if(!profession)throw Error('無效的職業編號。');
    if(get(m,C(id,15,0))!==0||busyFacility(m,id,6))throw Error('此職業正在操練，請先在遊戲內停止。');
    for(let x=1;x<m.original.size[0];x++)if(activeCharacter(m,x)){const level=get(m,C(x,id,4));if(!Number.isSafeInteger(level)||level<0)throw Error('角色職業等級資料不符。');min=Math.max(min,level);}
-   coordinate=C(id,5,0);const building=buildingLevel(m,6);normalMax=building?5+(building+1)*5:0;name=profession.name;
+   coordinate=C(id,5,0);normalMax=buildingNormalMax('training',id,buildingLevel(m,6));name=profession.name;
   }else if(kind==='technology'){
    const technology=catalogMaps.technologies.get(id);if(!technology?.advanced)throw Error('只支援有效的進階科技（31–44）。');
    if(get(m,C(id,13,0))!==0||busyFacility(m,id,5))throw Error('此科技正在研究，請先在遊戲內停止。');
-   coordinate=C(id,4,0);const building=buildingLevel(m,5);normalMax=building?Math.min(technology.tableLimit-1,Math.max(1,(building+1)*60-1)):0;name=technology.name;
+   coordinate=C(id,4,0);normalMax=buildingNormalMax('technology',id,buildingLevel(m,5));name=technology.name;
   }else throw Error('未知的修改類型。');
   const current=get(m,coordinate);if(!Number.isSafeInteger(current)||current<0||kind==='equipment'&&current<1)throw Error('現有數值與欄位型別不符。');
   const group=kind==='equipment'&&plane===7?'backpackEquipmentLevel':EDIT_GROUPS[kind],limits=KNOWLEDGE.editingLimits?.[kind];
@@ -286,7 +304,7 @@
    const d=value+6,cost=35*d**1.9*1.0375**d,currency=150*d**1.7*1.009**d;
    if(!Number.isFinite(cost)||!Number.isFinite(currency))throw Error('科技公式超出可計算範圍。');
   }
-  const previous=m.currentGroup;m.currentGroup=kind==='equipment'?`editing:equipment:${plane}:${id}`:`editing:${kind}:${id}`;
+  const previous=m.currentGroup;m.currentGroup=raisedBuildingGroup(m,kind,id,value,info.normalMax)||(kind==='equipment'?`editing:equipment:${plane}:${id}`:`editing:${kind}:${id}`);
   try{transaction(m,()=>put(m,info.coordinate,value,`${info.name}・${kind==='training'?'操練上限':'等級'}`),`${advanced?'進階・':''}${info.name}調整`);}finally{m.currentGroup=previous;}
   return {...info,value};
  }
@@ -1140,6 +1158,53 @@
   try{transaction(m,()=>{for(const c of preview.changes)put(m,c.coordinate,c.after,c.label);},`${preview.technology.name}・基礎科技解鎖`);}finally{m.currentGroup=previous;}
   return preview;
  }
+ // Building levels (buildingLevel). z1 row x: y1 template, y4 work left, y5 level (0 基础 … 4 大师), y7 occupant, y10 upgrading.
+ // 建筑升阶 adds one to y5 when (advanced tech jz[t,34] + 1) ≥ (L+1)×60 (建筑满足检测) and the button only shows below 4; the
+ // walls (row 0, template 21) rise at once, other rows after their work y4 runs out (建筑建造成功 adds one while y10=1). Every
+ // reader computes live from y5: facility cap, barracks population, recruitment, 聚义厅 expansion, research／training caps,
+ // crafting tiers, 置物台 spirit (re-run by OnLayoutStart), 破境值 and the wall caps. So only y5 is written, upward only.
+ // Rows under construction or upgrade are refused (completion and refunds read y5), as are occupied rows (native upgrades
+ // refuse 占用角色). 建造局 has no upgrade tech and no art past level 2, so it stays at 0 as in the game.
+ const BUILDING_MAX_LEVEL=4,BUILDING_TECH_STEP=60;
+ function buildingLevelsInfo(m){
+  const g=c=>exists(m.original,c)?get(m,c):undefined,rows=[];
+  for(let x=0;x<m.original.size[0];x++){
+   const template=g(C(x,1,1)),building=catalogMaps.buildings.get(template);
+   if(!building?.upgradeTechnology||(x===0?template!==21:g(C(x,0,1))!==x||template===21))continue;
+   const level=g(C(x,5,1)),work=g(C(x,4,1)),upgrading=g(C(x,10,1)),occupant=g(C(x,7,1)),tech=g(C(building.upgradeTechnology,4,0));
+   const row={x,template,name:building.name,level,technology:{id:building.upgradeTechnology,name:catalogName('technologies',building.upgradeTechnology),level:tech}};
+   if(!Number.isSafeInteger(level)||level<0||level>BUILDING_MAX_LEVEL)row.reason='建築等級不是原版的 0–4 整數。';
+   else if(typeof work!=='number'||!Number.isFinite(work)||work<0||![0,1].includes(upgrading))row.reason='施工資料不是原版數值。';
+   else if(!Number.isSafeInteger(occupant)||occupant<0)row.reason='佔用角色欄位不是有效整數。';
+   else if(!Number.isSafeInteger(tech)||tech<0)row.reason=`${row.technology.name}等級不是有效整數。`;
+   else{
+    row.cap=Math.min(BUILDING_MAX_LEVEL,Math.floor((tech+1)/BUILDING_TECH_STEP));
+    if(upgrading===1)row.reason='升階中，請先在遊戲內完成或取消。';
+    else if(work>0)row.reason='施工中，請先在遊戲內完成建造。';
+    else if(occupant>0)row.reason='有角色佔用，請先在遊戲內移除。';
+    else if(level>=BUILDING_MAX_LEVEL)row.reason='已是最高等級。';
+    else if(row.cap<=level)row.reason=`${row.technology.name}需達 Lv ${(level+1)*BUILDING_TECH_STEP} 才能升到下一階。`;
+   }
+   rows.push(row);
+  }
+  return {rows,maxLevel:BUILDING_MAX_LEVEL,verified:!!KNOWLEDGE.verification.buildingLevel};
+ }
+ function previewBuildingLevel(m,{x,level}){
+  const info=buildingLevelsInfo(m),row=info.rows.find(r=>r.x===x);
+  if(!row)throw Error('只能調整已建造且可升階的建築（建造局與裝飾不在範圍）。');
+  if(row.reason)throw Error(`${row.name}：${row.reason}`);
+  if(!Number.isSafeInteger(level)||level<=row.level||level>row.cap)throw Error(`${row.name}等級只能升高，須為 ${row.level+1}–${row.cap} 的整數（上限依${row.technology.name} Lv ${row.technology.level}）。`);
+  const group=row.template===21?'wall:enhancement':`building:${x}`;
+  return {building:{x,template:row.template,name:row.name},level:{before:row.level,after:level},cap:row.cap,group,changes:[{coordinate:C(x,5,1),before:row.level,after:level,label:`${row.name} #${x}・建築等級`}],verified:info.verified};
+ }
+ function setBuildingLevel(m,options){
+  const preview=previewBuildingLevel(m,options);
+  if(!preview.verified)throw Error('建築等級尚未完成隔離遊戲驗證。');
+  // The walls share the enhancement group: restoring either never leaves enhancement above the restored wall cap.
+  const previous=m.currentGroup;m.currentGroup=preview.group;
+  try{transaction(m,()=>{for(const c of preview.changes)put(m,c.coordinate,c.after,c.label);},`${preview.building.name}・建築等級調整`);}finally{m.currentGroup=previous;}
+  return preview;
+ }
  /** @returns {FieldDescriptor} */
  function resolveField(m,c){
   if(!exists(m.original,c))throw Error('座標超出這份存檔的範圍。');
@@ -1155,6 +1220,7 @@
   else if(z===0&&[11,21,38,44].includes(y)&&cityRows.has(x))named({11:'城市層數',21:'掛機層數',38:'佔領旗標',44:'首次進入旗標'}[y],{entity:cityRows.get(x),reason:'請使用城市層數具名操作；總聲望與掛機層數一起結算',related:[C(x,11,0),C(x,21,0),C(8,1,0)]});
   else if(z===0&&[4,12,13].includes(y)&&catalogMaps.technologies.has(x))named({4:'科技等級',12:'科技研究點數',13:'科技研究狀態'}[y],{entity:catalogName('technologies',x),...(basicTechnologyIds.includes(x)?{reason:'請使用基礎科技解鎖具名操作；前置科技與研究點數一起結算',related:[C(x,4,0),C(x,12,0),C(x,13,0)]}:{})});
   else if(z===0&&y===5&&catalogMaps.professions.has(x))named('職業操練上限',{entity:catalogName('professions',x)});
+  else if(z===1&&[4,5,7,10,11].includes(y)&&(x===0?get(m,C(0,1,1))===21:get(m,C(x,0,1))===x&&catalogMaps.buildings.has(get(m,C(x,1,1))))&&(y!==11||x===0))named({4:'剩餘工程量',5:'建築等級',7:'佔用角色',10:'升階中旗標',11:'城牆目前生命'}[y],{entity:`${catalogName('buildings',get(m,C(x,1,1)))} #${x}`,reason:y===11?'請使用城牆強化等級具名操作；下調時一起結算':'請使用建築等級具名操作；只能升高，施工與升階中不修改',related:[C(x,4,1),C(x,5,1),C(x,10,1)]});
   else if(z===2&&y>=10&&y<=12)named(`${aptitudeNames[y-10]}基礎資質`,{reason:'請由角色養成的三項基礎資質具名操作修改；有名角色載入時會依範本回填',related:[10,11,12,13,14,15].map(y=>C(x,y,2)),verification:'randomCharacterBaseAptitudes'});
   else if(z===2&&y>=13&&y<=15)named(`${aptitudeNames[y-13]}丹藥累積增量`,{reason:'請由角色養成的丹藥增量具名操作修改；每 1 等於資質 0.1 點',related:[10,11,12,13,14,15].map(y=>C(x,y,2))});
   else if(z===2&&y>=22&&y<=48){const k=y<=30?y-21:y<=39?y-30:y-39;named(`${SKILLS[k-1]}${y<=30?'等級上限':y<=39?'等級':'經驗餘額'}`,{entity:activeCharacter(m,x)?get(m,C(x,1,2)):`角色 #${x}`,reason:y<=30?'技藝上限須使用九項具名預覽操作；有名角色依範本回填':'請由角色養成增加經驗，等級與餘額一起結算',related:skillModes(m).has(x)?Array.from({length:27},(_,i)=>C(x,22+i,2)):[C(x,21+k,2),C(x,30+k,2),C(x,39+k,2)]});}
@@ -1391,5 +1457,5 @@
   if(patches.length!==m.changes.size)throw Error('部分修改座標未能定位，已停止匯出。');
   const parts=[];let previous=0;for(const p of patches){parts.push(m.text.slice(previous,p.start),p.value);previous=p.end;}parts.push(m.text.slice(previous));return parts.join('');
  }
- globalThis.SaveCore={basicTechnologiesInfo,previewBasicTechnology,setBasicTechnology,ascendedInnerPillLevelInfo,previewAscendedInnerPillLevel,setAscendedInnerPillLevel,innerPillLevelInfo,previewInnerPillLevel,setInnerPillLevel,ascensionQualityInfo,previewAscensionQuality,setAscensionQuality,cityLayersInfo,previewCityLayer,setCityLayer,wallEnhancementInfo,previewWallEnhancementLevel,setWallEnhancementLevel,relicAttributesInfo,previewRelicAttributes,setRelicAttributes,listRelics,setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,previewSetEquipmentQualityCandidate,applySetEquipmentQualityCandidate,setEquipmentQualityCandidateEffects,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
+ globalThis.SaveCore={buildingLevelsInfo,previewBuildingLevel,setBuildingLevel,basicTechnologiesInfo,previewBasicTechnology,setBasicTechnology,ascendedInnerPillLevelInfo,previewAscendedInnerPillLevel,setAscendedInnerPillLevel,innerPillLevelInfo,previewInnerPillLevel,setInnerPillLevel,ascensionQualityInfo,previewAscensionQuality,setAscensionQuality,cityLayersInfo,previewCityLayer,setCityLayer,wallEnhancementInfo,previewWallEnhancementLevel,setWallEnhancementLevel,relicAttributesInfo,previewRelicAttributes,setRelicAttributes,listRelics,setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,previewSetEquipmentQualityCandidate,applySetEquipmentQualityCandidate,setEquipmentQualityCandidateEffects,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
 })();

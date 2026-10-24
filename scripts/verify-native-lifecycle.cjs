@@ -363,11 +363,38 @@ async function basicTechnology(state, s) {
   return out;
 }
 
+// Edited building levels after a restart: the facility and research caps follow the new level, 建筑升阶 starts the next tier
+// from it (work 建造工程量(t, L+1), materials deducted) and 取消升阶 returns both, and at the tech cap it refuses. The walls
+// rise at once, so their edited level is checked at the cap (refused, nothing spent) and through the wider enhancement cap.
+async function buildingLevel(state, s) {
+  const {building, template, level, technology, wall} = s.buildingLevel;
+  const row = `const row=x=>({level:a.At(x,5,1),work:a.At(x,4,1),upgrading:a.At(x,10,1)}),stock=[1,2].map(i=>a.At(call('建造材料编号',${template},${level + 1},i),6,0));`;
+  const out = await evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);${row}
+    const out={before:row(${building}),facilities:call('建筑设施上限',${building}),research:call('科技等级上限',${technology},a.At(${building},5,1)),work:call('建造工程量',${template},${level + 1}),cost:[1,2].map(i=>call('建造材料数量',${template},${level + 1},i)),stock};
+    call('建筑升阶',${building});out.started=row(${building});out.spent=[1,2].map(i=>a.At(call('建造材料编号',${template},${level + 1},i),6,0));
+    call('取消升阶',${building});out.cancelled=row(${building});out.refunded=[1,2].map(i=>a.At(call('建造材料编号',${template},${level + 1},i),6,0));
+    const wallStock=[1,2].map(i=>a.At(call('建造材料编号',21,${wall + 1},i),6,0)),enhancement=a.At(19,1,0);out.wall={before:row(0),cap:call('城墙强化上限'),enhancement};
+    call('建筑升阶',0);out.wall.refused=row(0);out.wall.stock=[1,2].map(i=>a.At(call('建造材料编号',21,${wall + 1},i),6,0)).map((v,i)=>v-wallStock[i]);
+    call('城墙升级');out.wall.enhanced=a.At(19,1,0);return out;})()`);
+  assert.deepEqual(out.before, {level, work: 0, upgrading: 0}, 'Edited building level not loaded');
+  assert.equal(out.facilities, level + 2, '建筑设施上限 does not follow the edited level');
+  assert.equal(out.research, Math.min((level + 1) * 60 - 1, 299), '科技等级上限 does not follow the edited level');
+  assert.deepEqual(out.started, {level, work: out.work, upgrading: 1}, '建筑升阶 did not start the next tier from the edited level');
+  assert.deepEqual(out.spent, out.stock.map((v, i) => v - out.cost[i]), '建筑升阶 did not take the next tier materials');
+  assert.deepEqual([out.cancelled, out.refunded], [{level, work: 0, upgrading: 0}, out.stock], '取消升阶 did not restore the edited level and materials');
+  assert.deepEqual(out.wall.before, {level: wall, work: 0, upgrading: 0}, 'Edited wall level not loaded');
+  assert.equal(out.wall.cap, (wall + 1) * 60, '城墙强化上限 does not follow the edited wall level');
+  assert.deepEqual([out.wall.refused, out.wall.stock], [out.wall.before, [0, 0]], 'Walls rose past the tech cap');
+  assert.equal(out.wall.enhanced, out.wall.enhancement + 1, '城墙升级 refused under the wider cap');
+  for (const c of [[building, 4, 1], [building, 5, 1], [building, 10, 1], [0, 5, 1], [19, 1, 0], [1, 2, 0]]) state.cells.push(c);
+  return out;
+}
+
 async function main() {
   const statePath = opt('--state'), state = JSON.parse(fs.readFileSync(statePath)), scenario = JSON.parse(fs.readFileSync(opt('--scenario')));
   const rel = path.relative(path.resolve(__dirname, '..'), state.dir), child = path.relative(state.dir, state.game);
   if (!rel || (!path.isAbsolute(rel) && rel !== '..' && !rel.startsWith('..' + path.sep)) || !child || path.isAbsolute(child) || child.startsWith('..')) throw Error('External disposable state required');
-  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.backpackOverLimit && !scenario.relics && !scenario.relicTakeOff && !scenario.wall && !scenario.city && !scenario.ascensionQuality && !scenario.innerPillPrepare && !scenario.innerPillLevel && !scenario.ascendedInnerPillLevel && !scenario.basicTechnology) throw Error('Scenario has no native follow-up actions');
+  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.backpackOverLimit && !scenario.relics && !scenario.relicTakeOff && !scenario.wall && !scenario.city && !scenario.ascensionQuality && !scenario.innerPillPrepare && !scenario.innerPillLevel && !scenario.ascendedInnerPillLevel && !scenario.basicTechnology && !scenario.buildingLevel) throw Error('Scenario has no native follow-up actions');
   await waitMain(state);
   const result = {};
   if (scenario.ascend && !scenario.pills) result.ascend = await ascend(state, scenario);
@@ -383,10 +410,11 @@ async function main() {
   if (scenario.innerPillLevel) result.innerPillLevel = await innerPillLevel(state, scenario);
   if (scenario.ascendedInnerPillLevel) result.ascendedInnerPillLevel = await ascendedInnerPillLevel(state, scenario);
   if (scenario.basicTechnology) result.basicTechnology = await basicTechnology(state, scenario);
+  if (scenario.buildingLevel) result.buildingLevel = await buildingLevel(state, scenario);
   state.expected = await evaluate(state, `(()=>{${prefix}return ${JSON.stringify(state.cells)}.map(([x,y,z])=>a.At(x,y,z));})()`);
   fs.writeFileSync(statePath, JSON.stringify(state, null, 2));
   fs.writeFileSync(path.join(state.dir, 'native-lifecycle.json'), JSON.stringify(result, null, 2));
   console.log('PASS: native ' + Object.keys(result).join(' and ') + ' follow-up actions');
 }
 if (require.main === module) main().catch(e => { console.error(e.stack); process.exitCode = 1; });
-module.exports = {ascend, followup, pillsAndRebirth, backpackOverLimit, relicPlacement, relicTakeOff, wallUpgrade, cityLayer, ascensionQuality, innerPillPrepare, innerPillLevel, ascendedInnerPillLevel, basicTechnology};
+module.exports = {ascend, followup, pillsAndRebirth, backpackOverLimit, relicPlacement, relicTakeOff, wallUpgrade, cityLayer, ascensionQuality, innerPillPrepare, innerPillLevel, ascendedInnerPillLevel, basicTechnology, buildingLevel};

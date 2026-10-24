@@ -47544,17 +47544,20 @@
       {
         "id": 1,
         "name": "聚義堂",
-        "category": "功能"
+        "category": "功能",
+        "upgradeTechnology": 31
       },
       {
         "id": 2,
         "name": "營房",
-        "category": "功能"
+        "category": "功能",
+        "upgradeTechnology": 32
       },
       {
         "id": 3,
         "name": "招募處",
-        "category": "功能"
+        "category": "功能",
+        "upgradeTechnology": 33
       },
       {
         "id": 4,
@@ -47564,42 +47567,50 @@
       {
         "id": 5,
         "name": "書院",
-        "category": "功能"
+        "category": "功能",
+        "upgradeTechnology": 40
       },
       {
         "id": 6,
         "name": "校場",
-        "category": "功能"
+        "category": "功能",
+        "upgradeTechnology": 41
       },
       {
         "id": 7,
         "name": "林場",
-        "category": "資源"
+        "category": "資源",
+        "upgradeTechnology": 34
       },
       {
         "id": 8,
         "name": "農莊",
-        "category": "資源"
+        "category": "資源",
+        "upgradeTechnology": 35
       },
       {
         "id": 9,
         "name": "礦坑",
-        "category": "資源"
+        "category": "資源",
+        "upgradeTechnology": 36
       },
       {
         "id": 10,
         "name": "鍛造屋",
-        "category": "生產"
+        "category": "生產",
+        "upgradeTechnology": 37
       },
       {
         "id": 11,
         "name": "工藝所",
-        "category": "生產"
+        "category": "生產",
+        "upgradeTechnology": 38
       },
       {
         "id": 12,
         "name": "煉丹坊",
-        "category": "生產"
+        "category": "生產",
+        "upgradeTechnology": 39
       },
       {
         "id": 13,
@@ -47629,7 +47640,8 @@
       {
         "id": 21,
         "name": "城牆",
-        "category": "城牆"
+        "category": "城牆",
+        "upgradeTechnology": 43
       },
       {
         "id": 22,
@@ -47854,12 +47866,14 @@
       {
         "id": 66,
         "name": "渡劫台",
-        "category": "功能"
+        "category": "功能",
+        "upgradeTechnology": 42
       },
       {
         "id": 67,
         "name": "置物台",
-        "category": "功能"
+        "category": "功能",
+        "upgradeTechnology": 44
       },
       {
         "id": 68,
@@ -66189,7 +66203,8 @@
     "professionTrainingCapAdvanced": true,
     "advancedTechnologyLevel": true,
     "advancedTechnologyLevelAdvanced": true,
-    "basicTechnologyLevel": true
+    "basicTechnologyLevel": true,
+    "buildingLevel": true
   },
   "setEquipmentLevel": {
     "version": 1,
