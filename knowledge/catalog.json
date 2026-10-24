@@ -66205,7 +66205,8 @@
     "advancedTechnologyLevelAdvanced": true,
     "basicTechnologyLevel": true,
     "buildingLevel": true,
-    "placedRelicAttributes": true
+    "placedRelicAttributes": true,
+    "pillAptitudeBonusAdvanced": true
   },
   "setEquipmentLevel": {
     "version": 1,

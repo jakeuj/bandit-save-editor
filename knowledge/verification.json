@@ -75,7 +75,8 @@
     "ascendedInnerPillLevel": true,
     "basicTechnologyLevel": true,
     "buildingLevel": true,
-    "placedRelicAttributes": true
+    "placedRelicAttributes": true,
+    "pillAptitudeBonusAdvanced": true
   },
   "lightweight": {
     "randomCharacterBaseAptitudesAscended": {
@@ -311,6 +312,20 @@
       "baselineSaveSha256": "7ea007caca07bd5e383c26f502b6704505e12562f3c5f1eb8f59b892c2edbfee",
       "preparedSaveSha256": "5262993e80cfa6d673ddcf676b09cf3d62cb01175ac3333b763087f36f5817aa",
       "resultSha256": "d3434b31b89995e826f7c2cc85c5dce857eaa56a2158b34fa54c2e2ea39b1d12",
+      "passed": true
+    },
+    "pillAptitudeBonusAdvanced": {
+      "date": "2026-10-25",
+      "gameVersion": "V1.0.11.2",
+      "flow": "docs/maintenance/lightweight.md",
+      "smoke": "沿用 v2.13 小數丹藥冒煙基準；verify-game.cjs 以 setPillAptitudeBonusAdvanced 編輯（隔離副本、雲存檔載入、原版存檔、新 PID 讀回），verify-native-lifecycle.cjs pillOverLimit 原生核對，兩輪存讀與修改器重讀",
+      "cases": [
+        "角色 1（範本 0、無結丹）力量 0→1000（總資質 104.3，上限 6.45）、敏捷 0→17（一般上限 16 加一，總 4.9＞4.8）；角色 4 力量 0→500（總 56.8）；雲存檔載入、原版存檔、新 PID 讀回一致",
+        "原生核對：角色资质计算 三筆都等於修改器預測，属性计算 有限；超限的力量／敏捷呼叫 服用普通丹药 不扣丹藥、B 不變；對照組智力仍可服用（0→15，夾到上限 4.5）",
+        "角色重生 把角色 1 的三項清零；第二輪原版存檔、新 PID 讀回後角色 4 仍為 500（3 個 PID、4 次 assert）；修改器重讀遊戲寫出檔：角色 4 總資質 56.8 且可再編輯"
+      ],
+      "baselineSaveSha256": "ebb0a4a28791218986c594d3b3819a066482bc11ff75aac99f8498c4ce4b84c5",
+      "resultSha256": "b66c6e8020e62918efca0389dd9886f750876c2f78a1c6dd1d1ce37c593554d9",
       "passed": true
     }
   },

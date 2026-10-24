@@ -46,7 +46,7 @@
 
 不再核對 core 摘要、證明內容、manifest 或工具雜湊，所以改 `src/core.js` 不會讓建置失敗。新功能冒煙通過後，在 `groups` 加上該群組、在 `verification.json` 的 `lightweight` 加一筆冒煙紀錄（日期、遊戲版本、代表案例、基準存檔與 repo 外結果檔的 SHA-256），並打開旗標。
 
-`lightweight` 裡的群組不進舊的複合遷移證明（`scripts/migration-proof.cjs` 的 `composite`）：選跑、`problem` 與 `compose` 都略過它們，所以版本遷移寫回後這些旗標會關閉，要在新版重跑冒煙再開。沒有這筆紀錄的已開群組仍照舊要求複合證據。冒煙可沿用 `verify-game.cjs --scenario`（`setPillAptitudeBonus`、`setEquipmentLevel` 等具名操作）加 `verify-native-lifecycle.cjs`（`ascend`、`followup`、`pills`、`backpackOverLimit`、`relics`、`relicTakeOff`、`relicStandPrepare`、`placedRelicAura`、`wall`、`city`、`ascensionQuality`、`innerPillPrepare`、`innerPillLevel`、`ascendedInnerPillLevel`、`relicCrafting` 等動作，以 `main()` 的清單為準；`pills` 可用 `pillCharacter` 指定角色；擺放類動作要在存檔重啟後另跑一次取下，才算驗過兩輪 IO；`穿戴装备` 後要等一拍再讀角色指標，同一次 evaluate 內讀到的是空列）；固定基準存檔先複製到 repo 外的新資料夾，步驟依 `.local/game-sources.json` 的 `nativeSmoke` 紀錄（雲存檔載入 → 存檔 → assert → stop → restart → 存檔載入 → assert）。遊戲改版時，對受影響的功能跑冒煙，再更新 `gameVersion` 與 `fingerprints`。測試見 `tests/build-gate.test.cjs`。
+`lightweight` 裡的群組不進舊的複合遷移證明（`scripts/migration-proof.cjs` 的 `composite`）：選跑、`problem` 與 `compose` 都略過它們，所以版本遷移寫回後這些旗標會關閉，要在新版重跑冒煙再開。沒有這筆紀錄的已開群組仍照舊要求複合證據。冒煙可沿用 `verify-game.cjs --scenario`（`setPillAptitudeBonus`、`setEquipmentLevel` 等具名操作）加 `verify-native-lifecycle.cjs`（`ascend`、`followup`、`pills`、`pillOverLimit`、`backpackOverLimit`、`relics`、`relicTakeOff`、`relicStandPrepare`、`placedRelicAura`、`wall`、`city`、`ascensionQuality`、`innerPillPrepare`、`innerPillLevel`、`ascendedInnerPillLevel`、`relicCrafting` 等動作，以 `main()` 的清單為準；`pills` 可用 `pillCharacter` 指定角色；擺放類動作要在存檔重啟後另跑一次取下，才算驗過兩輪 IO；`穿戴装备` 後要等一拍再讀角色指標，同一次 evaluate 內讀到的是空列）；固定基準存檔先複製到 repo 外的新資料夾，步驟依 `.local/game-sources.json` 的 `nativeSmoke` 紀錄（雲存檔載入 → 存檔 → assert → stop → restart → 存檔載入 → assert）。遊戲改版時，對受影響的功能跑冒煙，再更新 `gameVersion` 與 `fingerprints`。測試見 `tests/build-gate.test.cjs`。
 
 `scripts/*-proof.cjs` 與 `verification.json` 裡較早的首次證明紀錄仍保留作為歷史證據與遷移工具，但不再是建置條件。
 
@@ -143,3 +143,10 @@
 - **銅錢與材料數量不要放進 `state.cells`**：讀檔到凍結時間之間的每秒事件可能改動它們，只在動作裡比對扣除量。
 - **`--stop` 之後馬上 `--restart` 可能失敗**：`taskkill /F` 回來時程序可能還沒退出，`--restart` 會報 `Stop the disposable process before restarting`。冒煙腳本裡要重試 restart（例如最多 10 次、每次間隔 1 秒）；半途失敗就清掉 stage，從 `--setup` 重跑。`--artifacts` 目錄要先建好。
 - **反引號第三次**：這次在 heredoc 產生的 JS 範本字串裡放了沒跳脫的反引號；語法錯誤讓腳本整個沒執行，所以沒寫壞檔案。含反引號的文件段落直接用 Edit 工具寫。
+
+### 放寬上限、包裝函式的呼叫者與對照組（v2.27 丹藥超限教訓）
+
+- **讀取者要追到包裝函式的呼叫者**：欄位只被 `角色资质计算` 讀，但「上限」藏在呼叫它的地方（`刷新丹药` 的條件、主事件服藥按鈕、`服用普通丹药` 的前置條件）。`g.reads` 只看到包裝函式本身，所以要再 grep `building-level-20261024/all.txt` 的 `fn:包裝函式名`，逐一確認每個呼叫者遇到超限值是夾住、拒絕還是照算。
+- **超限後原生會怎麼反應，用對照組證明**：只斷言「服藥被拒」可能是工具呼叫錯；同一個動作裡加一項仍在上限內的資質，確認同樣的呼叫會扣丹藥、加增量，拒絕才有意義。
+- **既有小數旗標會改一般模式的上限**：`pillAptitudeBonusDecimal` 開啟時，`pillInfo.max` 是一位小數（例如 15.5），不是整數 15。測試斷言一般上限前先確認哪些旗標開著。
+- **反引號第四次**：想用 `String.raw` 拼出含 `${}` 的 UI 範本，外層模板會先求值，腳本直接語法錯誤。改 UI 一律用 Edit 工具逐段替換。

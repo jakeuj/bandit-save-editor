@@ -842,6 +842,25 @@
   }else if(!Number.isSafeInteger(bonus)||bonus<0||bonus>info.max)throw Error(`累積增量須為 0–${info.max} 的整數（每 1 等於資質 0.1 點）。`);
   return batch2Put(m,info,bonus,`aptitude:${characterId}`,`${get(m,C(characterId,1,2))}・${info.name}丹藥累積增量`);
  }
+ // Over-cap pill bonus (pillAptitudeBonusAdvanced). Only 角色资质计算 reads y13–15 and adds B/10 without a cap; 属性计算 1–3
+ // passes the total on, the panel bars clamp their width, and 服用普通丹药 (and 刷新丹药) refuse further pills while the total
+ // is at or above C or P, so an over-cap B stays until 角色重生 clears it. Integer B 0–1000 (+100 aptitude), no pill needed,
+ // characters without ascension or rebirth-stage records only; it shares the aptitude restore group.
+ const pillAdvancedMax=1000;
+ function pillAdvancedInfo(m,{characterId,aptitude}){
+  if(!Number.isInteger(aptitude)||aptitude<1||aptitude>3)throw Error('無效的資質類型。');
+  const {base}=characterAptitudeSource(m,characterId,aptitude,undefined,false),cap=aptitudeCap(base,null),coordinate=C(characterId,12+aptitude,2),current=get(m,coordinate);
+  if(!Number.isFinite(base)||base<=0||!pillBonusReadable(current))throw Error('現有增量或資質來源尚未涵蓋。');
+  const total=Math.round(100*(base+current/10))/100;
+  return {characterId,aptitude,coordinate,current,display:pillGrid(current),step:1,min:0,max:pillAdvancedMax,base,cap,capMax:Math.max(0,Math.floor((cap-base)*10+1e-8)),total,overCap:total>cap,name:aptitudeNames[aptitude-1],verified:!!KNOWLEDGE.verification.pillAptitudeBonusAdvanced};
+ }
+ function setPillAptitudeBonusAdvanced(m,{characterId,aptitude,bonus}){
+  const info=pillAdvancedInfo(m,{characterId,aptitude});
+  if(!info.verified)throw Error('丹藥超限尚未完成隔離遊戲冒煙。');
+  if(!Number.isSafeInteger(bonus)||bonus<0||bonus>info.max)throw Error(`超限累積增量須為 0–${info.max} 的整數（每 1 等於資質 0.1 點）。`);
+  if(bonus===info.current)return {...info,value:info.current,unchanged:true};
+  return batch2Put(m,info,bonus,`aptitude:${characterId}`,`${get(m,C(characterId,1,2))}・${info.name}丹藥累積增量（超限）`);
+ }
  // Ascension quality (ascensionQuality). 渡劫结束 writes z16[c,2k−1]=q and the k-th stored pill's z17 y15–17 =
  // 结丹资质提升系数(q,k); nothing else writes them after the ascension, and only 角色资质上限倍率 reads y15. A new q rewrites
  // all four cells together, matching an ascension at that quality, and moves only M. Template-0 characters only; a lower
@@ -1501,5 +1520,5 @@
   if(patches.length!==m.changes.size)throw Error('部分修改座標未能定位，已停止匯出。');
   const parts=[];let previous=0;for(const p of patches){parts.push(m.text.slice(previous,p.start),p.value);previous=p.end;}parts.push(m.text.slice(previous));return parts.join('');
  }
- globalThis.SaveCore={listPlacedRelics,placedRelicAttributesInfo,previewPlacedRelicAttributes,setPlacedRelicAttributes,buildingLevelsInfo,previewBuildingLevel,setBuildingLevel,basicTechnologiesInfo,previewBasicTechnology,setBasicTechnology,ascendedInnerPillLevelInfo,previewAscendedInnerPillLevel,setAscendedInnerPillLevel,innerPillLevelInfo,previewInnerPillLevel,setInnerPillLevel,ascensionQualityInfo,previewAscensionQuality,setAscensionQuality,cityLayersInfo,previewCityLayer,setCityLayer,wallEnhancementInfo,previewWallEnhancementLevel,setWallEnhancementLevel,relicAttributesInfo,previewRelicAttributes,setRelicAttributes,listRelics,setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,previewSetEquipmentQualityCandidate,applySetEquipmentQualityCandidate,setEquipmentQualityCandidateEffects,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
+ globalThis.SaveCore={listPlacedRelics,placedRelicAttributesInfo,previewPlacedRelicAttributes,setPlacedRelicAttributes,buildingLevelsInfo,previewBuildingLevel,setBuildingLevel,basicTechnologiesInfo,previewBasicTechnology,setBasicTechnology,ascendedInnerPillLevelInfo,previewAscendedInnerPillLevel,setAscendedInnerPillLevel,innerPillLevelInfo,previewInnerPillLevel,setInnerPillLevel,ascensionQualityInfo,previewAscensionQuality,setAscensionQuality,cityLayersInfo,previewCityLayer,setCityLayer,wallEnhancementInfo,previewWallEnhancementLevel,setWallEnhancementLevel,relicAttributesInfo,previewRelicAttributes,setRelicAttributes,listRelics,setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,previewSetEquipmentQualityCandidate,applySetEquipmentQualityCandidate,setEquipmentQualityCandidateEffects,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,pillAdvancedInfo,setPillAptitudeBonusAdvanced,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
 })();

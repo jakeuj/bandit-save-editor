@@ -109,6 +109,36 @@ async function pillsAndRebirth(state, s) {
   return {pills, rebirth, cleared};
 }
 
+// Over-cap pill bonuses (pillAptitudeBonusAdvanced). 角色资质计算 must equal the editor's predicted total (A+B/10, no cap) and
+// 属性计算 1–3 must stay finite; 服用普通丹药 must refuse another pill while the total is above 角色资质上限, leaving B and the
+// pill count alone, while a control aptitude still inside the cap consumes one. Rebirth then clears B as usual.
+async function pillOverLimit(state, s) {
+  const {character: c, over, control, others = [], rebirth = true} = s.pillOverLimit, names = ['力量', '敏捷', '智力'];
+  const reads = await evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);const names=${JSON.stringify(names)};const read=(c,aptitude)=>({total:call('角色资质计算',c,aptitude),cap:call('角色资质上限',c,names[aptitude-1]),attribute:call('属性计算',c,aptitude),bonus:a.At(c,12+aptitude,2)});
+    const take=(c,aptitude,pillId)=>{const before={count:a.At(pillId,6,0),bonus:a.At(c,12+aptitude,2)};call('服用普通丹药',pillId,c,1);return {before,after:{count:a.At(pillId,6,0),bonus:a.At(c,12+aptitude,2)}};};
+    return {over:${JSON.stringify(over)}.map(o=>({...read(${c},o.aptitude),pill:take(${c},o.aptitude,o.pillId)})),control:take(${c},${control.aptitude},${control.pillId}),others:${JSON.stringify(others)}.map(o=>read(o.character,o.aptitude))};})()`);
+  for (const [i, o] of [...over.map(o => ({...o, character: c})), ...others].entries()) {
+    const got = i < over.length ? reads.over[i] : reads.others[i - over.length];
+    assert.equal(got.bonus, o.bonus, `Stored bonus ${o.character}/${o.aptitude}`);
+    assert.equal(got.total, o.total, `角色资质计算 ${o.character}/${o.aptitude}`);
+    assert.ok(got.total > got.cap, `Total is not above 角色资质上限 for ${o.character}/${o.aptitude}`);
+    assert.ok(Number.isFinite(got.attribute), `属性计算 not finite for ${o.character}/${o.aptitude}`);
+  }
+  for (const p of reads.over) assert.deepEqual(p.pill.after, p.pill.before, 'A pill was taken above the cap');
+  assert.equal(reads.control.after.count, reads.control.before.count - 1, 'Control pill not consumed');
+  assert.ok(reads.control.after.bonus > reads.control.before.bonus, 'Control pill bonus unchanged');
+  let cleared = null;
+  if (rebirth) {
+    await evaluate(state, `(()=>{${prefix}call('角色重生',${c},0,0);return true;})()`);
+    await pause(500);
+    cleared = await evaluate(state, `(()=>{${prefix}return [13,14,15].map(y=>a.At(${c},y,2));})()`);
+    assert.deepEqual(cleared, [0, 0, 0], 'Rebirth did not clear over-cap pill bonuses');
+  }
+  for (const y of [3, 4, 13, 14, 15, 50, 56]) state.cells.push([c, y, 2]);
+  for (const o of others) state.cells.push([o.character, 12 + o.aptitude, 2]);
+  return {...reads, cleared};
+}
+
 // Over-limit backpack rows: one is stored into z9, a native level-up below the cap still works (control), both native
 // upgrades leave the over-limit level, money and souls untouched, and it comes back out; the other is worn straight from
 // the backpack with finite equipment effects and unequipped. Moved rows must keep every field except the owner.
@@ -510,12 +540,13 @@ async function main() {
   const statePath = opt('--state'), state = JSON.parse(fs.readFileSync(statePath)), scenario = JSON.parse(fs.readFileSync(opt('--scenario')));
   const rel = path.relative(path.resolve(__dirname, '..'), state.dir), child = path.relative(state.dir, state.game);
   if (!rel || (!path.isAbsolute(rel) && rel !== '..' && !rel.startsWith('..' + path.sep)) || !child || path.isAbsolute(child) || child.startsWith('..')) throw Error('External disposable state required');
-  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.backpackOverLimit && !scenario.relics && !scenario.relicTakeOff && !scenario.relicStandPrepare && !scenario.placedRelicAura && !scenario.wall && !scenario.city && !scenario.ascensionQuality && !scenario.innerPillPrepare && !scenario.innerPillLevel && !scenario.ascendedInnerPillLevel && !scenario.basicTechnology && !scenario.buildingLevel && !scenario.relicCrafting) throw Error('Scenario has no native follow-up actions');
+  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.pillOverLimit && !scenario.backpackOverLimit && !scenario.relics && !scenario.relicTakeOff && !scenario.relicStandPrepare && !scenario.placedRelicAura && !scenario.wall && !scenario.city && !scenario.ascensionQuality && !scenario.innerPillPrepare && !scenario.innerPillLevel && !scenario.ascendedInnerPillLevel && !scenario.basicTechnology && !scenario.buildingLevel && !scenario.relicCrafting) throw Error('Scenario has no native follow-up actions');
   await waitMain(state);
   const result = {};
   if (scenario.ascend && !scenario.pills) result.ascend = await ascend(state, scenario);
   if (scenario.followup) result.followup = await followup(state, scenario);
   if (scenario.pills) result.pills = await pillsAndRebirth(state, scenario);
+  if (scenario.pillOverLimit) result.pillOverLimit = await pillOverLimit(state, scenario);
   if (scenario.backpackOverLimit) result.backpackOverLimit = await backpackOverLimit(state, scenario);
   if (scenario.relics) result.relics = await relicPlacement(state, scenario);
   if (scenario.relicStandPrepare) result.relicStandPrepare = await relicStandPrepare(state, scenario);
@@ -536,4 +567,4 @@ async function main() {
   console.log('PASS: native ' + Object.keys(result).join(' and ') + ' follow-up actions');
 }
 if (require.main === module) main().catch(e => { console.error(e.stack); process.exitCode = 1; });
-module.exports = {ascend, followup, pillsAndRebirth, backpackOverLimit, relicPlacement, relicTakeOff, relicStandPrepare, placedRelicAura, wallUpgrade, cityLayer, ascensionQuality, innerPillPrepare, innerPillLevel, ascendedInnerPillLevel, basicTechnology, buildingLevel, relicCrafting};
+module.exports = {ascend, followup, pillsAndRebirth, pillOverLimit, backpackOverLimit, relicPlacement, relicTakeOff, relicStandPrepare, placedRelicAura, wallUpgrade, cityLayer, ascensionQuality, innerPillPrepare, innerPillLevel, ascendedInnerPillLevel, basicTechnology, buildingLevel, relicCrafting};
