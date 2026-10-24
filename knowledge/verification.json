@@ -74,7 +74,8 @@
     "innerPillLevel": true,
     "ascendedInnerPillLevel": true,
     "basicTechnologyLevel": true,
-    "buildingLevel": true
+    "buildingLevel": true,
+    "placedRelicAttributes": true
   },
   "lightweight": {
     "randomCharacterBaseAptitudesAscended": {
@@ -293,6 +294,23 @@
       ],
       "baselineSaveSha256": "7ea007caca07bd5e383c26f502b6704505e12562f3c5f1eb8f59b892c2edbfee",
       "resultSha256": "064d00d2b8f915fb299634cf42efb3ce27aeeb342a1da4600692faf14b022104",
+      "passed": true
+    },
+    "placedRelicAttributes": {
+      "date": "2026-10-24",
+      "gameVersion": "V1.0.11.2",
+      "flow": "docs/maintenance/lightweight.md",
+      "smoke": "沿用 v2.25 冒煙基準（v2.24 第二輪遊戲寫出、沒有置物台）原生備料：verify-native-lifecycle.cjs relicStandPrepare 以 生成单体建筑(67) 在空地塊蓋置物台、照 采集核心碰撞 的完成路徑把工程量歸零並呼叫 建筑建造成功，再以 摆放灵物 擺上背包靈物 #6，原版存檔、新 PID 讀回後複製遊戲寫出檔當編輯基準；verify-game.cjs 先以既有進階模式把靈物技術調到 119、以 setBuildingLevel 把置物台升到 Lv 2，再以 setPlacedRelicAttributes 編輯（隔離副本、雲存檔載入、原版存檔、新 PID 讀回），接著 placedRelicAura 原生核對、兩輪存讀與 relicTakeOff",
+      "cases": [
+        "備料：置物台 #15（10023,10004），靈物 #6 幻魅狐印 Q5 L4 搬到 z19 #1，互指正確；原版存檔、新 PID 讀回一致（2 個 PID、2 次 assert）",
+        "置物台 #15 0→2（靈物技術 119）、z19 #1 五行 [5.1,8,1.8,3.2,2.4]／4.1 → 木最高預設 [4,9.4,1.7,3.4,2.3]／4.2；雲存檔載入、原版存檔、新 PID 讀回一致",
+        "原生核對：讓遊戲時間走 5 秒等地圖生成後，範圍內 25 個山寨地塊的 地块灵气 都是總 5.5、金木水火土 5.2／12.2／2.2／4.4／3（修改器預測的 ×1.3 取整），範圍外全為 0；重新呼叫 刷新地块灵气 結果相同",
+        "取下灵物 後 z18 #5 帶回修改值、建築 y9 歸零；再 摆放灵物 回 z19 #1，地塊靈氣不變",
+        "第二輪原版存檔、新 PID 讀回後再取下，第三輪原版存檔、新 PID 讀回一致（4 個 PID、6 次 assert）；修改器重讀遊戲寫出檔：背包 #5 五行為修改值且可由原版生成"
+      ],
+      "baselineSaveSha256": "7ea007caca07bd5e383c26f502b6704505e12562f3c5f1eb8f59b892c2edbfee",
+      "preparedSaveSha256": "5262993e80cfa6d673ddcf676b09cf3d62cb01175ac3333b763087f36f5817aa",
+      "resultSha256": "d3434b31b89995e826f7c2cc85c5dce857eaa56a2158b34fa54c2e2ea39b1d12",
       "passed": true
     }
   },

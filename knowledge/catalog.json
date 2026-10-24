@@ -66204,7 +66204,8 @@
     "advancedTechnologyLevel": true,
     "advancedTechnologyLevelAdvanced": true,
     "basicTechnologyLevel": true,
-    "buildingLevel": true
+    "buildingLevel": true,
+    "placedRelicAttributes": true
   },
   "setEquipmentLevel": {
     "version": 1,

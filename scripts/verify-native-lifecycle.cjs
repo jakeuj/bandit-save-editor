@@ -192,6 +192,71 @@ async function relicTakeOff(state) {
   return off;
 }
 
+// verify-game freezes time on reaching 主界面, before 生成主地图建筑 (it waits between buildings) has spawned the cores and
+// 刷新地块灵气 has run; let a few seconds of game time pass first.
+async function settleMap(state) {
+  await evaluate(state, `(()=>{${prefix}r.SetTimeScale(1);return true;})()`);
+  await pause(5000);
+  return evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);return r.GetObjectClassByName('建筑核心').GetInstances().length;})()`);
+}
+// A base save without a 置物台: build one natively on the free camp tile with the most tiles in range, finish it the way
+// 采集核心碰撞 does (work y4 to 0, then 建筑建造成功) and place a backpack relic on it with 摆放灵物. The stand and the
+// placement are native; only the builders' walk is skipped.
+const standTiles = `const start=global('主地图编号起始').GetValue(),grounds=r.GetObjectClassByName('地面').GetInstances(),v=(i,n)=>i.GetInstanceVariableValue(n);const camp=grounds.filter(g=>v(g,8)==='山寨'&&v(g,18));`;
+async function relicStandPrepare(state, s) {
+  const {relic} = s.relicStandPrepare;
+  await settleMap(state);
+  const built = await evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);${standTiles}
+    if(!(a.At(${relic},1,18)>0))throw Error('No backpack relic at row ${relic}');
+    const used=new Set(r.GetObjectClassByName('地图建筑').GetInstances().map(i=>v(i,4)+','+v(i,5)));
+    const free=camp.filter(g=>!v(g,0)&&!v(g,13)&&!v(g,16)&&!used.has(v(g,3)+','+v(g,4))&&!(a.At(v(g,3)-start+150,v(g,4)-start,6)>0));
+    if(!free.length)throw Error('No free camp tile');
+    const score=g=>camp.filter(t=>call('地块范围判定',v(g,3),v(g,4),v(t,3),v(t,4),0,0,0)===1).length,tile=free.map(g=>[score(g),v(g,3),v(g,4)]).sort((p,q)=>q[0]-p[0])[0];
+    const before=new Set();for(let x=1;x<a.GetWidth();x++)if(a.At(x,1,1)>0)before.add(x);
+    const ok=call('建筑满足检测',67,0,0,0),limit=call('建筑数量上限',67);
+    call('生成单体建筑',67,0,0,3,'主地图',true,tile[1],tile[2],false,false,false,0,false,false);
+    let b=0;for(let x=1;x<a.GetWidth();x++)if(!before.has(x)&&a.At(x,1,1)===67)b=x;if(!b)throw Error('置物台 row missing');
+    return {building:b,tile,ok,limit,work:a.At(b,4,1)};})()`);
+  await pause(500);
+  const done = await evaluate(state, `(()=>{${prefix}const b=${built.building};if(typeof a.Set!=='function')throw Error('Array Set missing');a.Set(b,4,1,0);call('建筑建造成功',b);return {work:a.At(b,4,1),level:a.At(b,5,1),row:Array.from({length:11},(_,y)=>a.At(b,y,1))};})()`);
+  assert.deepEqual([done.work, done.level, done.row[0], done.row[1]], [0, 0, built.building, 67], 'Stand not finished');
+  const before = await evaluate(state, `(()=>{${prefix}return record(${relic},18);})()`);
+  const placed = await placeRelic(state, relic, built.building); checkPlaced(placed, before, built.building);
+  state.relicStand = {building: built.building, slot: placed.slot};
+  for (let y = 0; y < 11; y++) state.cells.push([built.building, y, 1]);
+  for (let y = 0; y < 50; y++) state.cells.push([placed.slot, y, 19], [relic, y, 18]);
+  return {built, done, before, placed};
+}
+// An edited placed relic after loading: every camp tile in the stand's range carries round(10·a·(1+0.15L))/10 per element and
+// for the mean, as the editor predicted, tiles outside carry nothing, a fresh 刷新地块灵气 agrees, and take-off and
+// re-placement keep the edited y5–10. state.relic is left for relicTakeOff after the next restart.
+async function placedRelicAura(state, s) {
+  const {building, slot, values, average, aura} = s.placedRelicAura;
+  await settleMap(state);
+  const read = `${standTiles}const core=r.GetObjectClassByName('建筑核心').GetInstances().find(i=>v(i,3)===${building});if(!core)throw Error('Stand core missing');
+    const tiles=()=>camp.map(g=>({x:v(g,3),y:v(g,4),inRange:call('地块范围判定',v(core,1),v(core,2),v(g,3),v(g,4),0,0,0)===1,aura:[0,1,2,3,4,5].map(i=>Number(call('地块灵气',v(g,3),v(g,4),i)))}));`;
+  const out = await evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);${read}
+    const out={link:[a.At(${building},9,1),a.At(${slot},12,19),a.At(${building},1,1)],stored:Array.from({length:6},(_,i)=>a.At(${slot},5+i,19)),level:a.At(${building},5,1),loaded:tiles()};
+    call('刷新地块灵气');out.refreshed=tiles();return out;})()`);
+  assert.deepEqual(out.link, [slot, building, 67], 'Stand and relic do not point at each other');
+  assert.deepEqual(out.stored, [...values, average], 'Edited placed relic not loaded');
+  const want = [aura.total, ...aura.elements], check = list => {
+    const inRange = list.filter(t => t.inRange);
+    assert.ok(inRange.length > 0, 'No camp tile in the stand range');
+    for (const t of list) assert.deepEqual(t.aura, t.inRange ? want : [0, 0, 0, 0, 0, 0], `Tile aura at ${t.x},${t.y}`);
+    return inRange.length;
+  };
+  out.tiles = check(out.loaded); check(out.refreshed);
+  const record = await evaluate(state, `(()=>{${prefix}return record(${slot},19);})()`);
+  const off = await takeOffRelic(state, building, record); checkTakenOff(off, record);
+  const again = await placeRelic(state, off.id, building); checkPlaced(again, record.map((x, y) => y === 12 ? 0 : x), building);
+  const after = await evaluate(state, `(()=>{${prefix}${read}return tiles();})()`); check(after);
+  state.relic = {building, record: again.placed.map((x, y) => y === 12 ? 0 : x)};
+  for (const [x, z] of [[off.id, 18], [again.slot, 19]]) for (let y = 0; y < 50; y++) state.cells.push([x, y, z]);
+  state.cells.push([building, 9, 1]);
+  return {link: out.link, stored: out.stored, level: out.level, tiles: out.tiles, off: {id: off.id, slot: off.slot}, again: {slot: again.slot}};
+}
+
 // An edited wall level after a restart: 城墙最大生命 (with 加成属性效果) must stay at or above the edited HP, one native 城墙升级
 // charges 城墙强化货币 and adds one level without touching HP, and a few seconds of game time regenerate HP toward the maximum.
 async function wallUpgrade(state, s) {
@@ -394,7 +459,7 @@ async function main() {
   const statePath = opt('--state'), state = JSON.parse(fs.readFileSync(statePath)), scenario = JSON.parse(fs.readFileSync(opt('--scenario')));
   const rel = path.relative(path.resolve(__dirname, '..'), state.dir), child = path.relative(state.dir, state.game);
   if (!rel || (!path.isAbsolute(rel) && rel !== '..' && !rel.startsWith('..' + path.sep)) || !child || path.isAbsolute(child) || child.startsWith('..')) throw Error('External disposable state required');
-  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.backpackOverLimit && !scenario.relics && !scenario.relicTakeOff && !scenario.wall && !scenario.city && !scenario.ascensionQuality && !scenario.innerPillPrepare && !scenario.innerPillLevel && !scenario.ascendedInnerPillLevel && !scenario.basicTechnology && !scenario.buildingLevel) throw Error('Scenario has no native follow-up actions');
+  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.backpackOverLimit && !scenario.relics && !scenario.relicTakeOff && !scenario.relicStandPrepare && !scenario.placedRelicAura && !scenario.wall && !scenario.city && !scenario.ascensionQuality && !scenario.innerPillPrepare && !scenario.innerPillLevel && !scenario.ascendedInnerPillLevel && !scenario.basicTechnology && !scenario.buildingLevel) throw Error('Scenario has no native follow-up actions');
   await waitMain(state);
   const result = {};
   if (scenario.ascend && !scenario.pills) result.ascend = await ascend(state, scenario);
@@ -402,6 +467,8 @@ async function main() {
   if (scenario.pills) result.pills = await pillsAndRebirth(state, scenario);
   if (scenario.backpackOverLimit) result.backpackOverLimit = await backpackOverLimit(state, scenario);
   if (scenario.relics) result.relics = await relicPlacement(state, scenario);
+  if (scenario.relicStandPrepare) result.relicStandPrepare = await relicStandPrepare(state, scenario);
+  if (scenario.placedRelicAura) result.placedRelicAura = await placedRelicAura(state, scenario);
   if (scenario.relicTakeOff) result.relicTakeOff = await relicTakeOff(state);
   if (scenario.wall) result.wall = await wallUpgrade(state, scenario);
   if (scenario.city) result.city = await cityLayer(state, scenario);
@@ -417,4 +484,4 @@ async function main() {
   console.log('PASS: native ' + Object.keys(result).join(' and ') + ' follow-up actions');
 }
 if (require.main === module) main().catch(e => { console.error(e.stack); process.exitCode = 1; });
-module.exports = {ascend, followup, pillsAndRebirth, backpackOverLimit, relicPlacement, relicTakeOff, wallUpgrade, cityLayer, ascensionQuality, innerPillPrepare, innerPillLevel, ascendedInnerPillLevel, basicTechnology, buildingLevel};
+module.exports = {ascend, followup, pillsAndRebirth, backpackOverLimit, relicPlacement, relicTakeOff, relicStandPrepare, placedRelicAura, wallUpgrade, cityLayer, ascensionQuality, innerPillPrepare, innerPillLevel, ascendedInnerPillLevel, basicTechnology, buildingLevel};

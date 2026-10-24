@@ -1009,19 +1009,20 @@
   for(let x=1;x<m.original.size[0];x++)if(catalogMaps.relics.has(get(m,C(x,1,18))))rows.push({id:x,name:catalogName('relics',get(m,C(x,1,18))),quality:get(m,C(x,4,18)),level:get(m,C(x,2,18))});
   return rows;
  }
- function relicAttributesInfo(m,{itemId}){
+ // Row checks and presets shared by backpack (z18) and placed (z19) relics; holder(record) rejects rows outside the caller's scope.
+ function relicRowInfo(m,itemId,z,{flag,empty,holder}){
   if(!Number.isSafeInteger(itemId)||itemId<1||itemId>=m.original.size[0])throw Error('無效的靈物列號。');
-  const record=Array.from({length:14},(_,y)=>get(m,C(itemId,y,18)));
-  if(!record[1])throw Error('此列沒有背包靈物。');
+  const record=Array.from({length:14},(_,y)=>get(m,C(itemId,y,z)));
+  if(!record[1])throw Error(empty);
   const relic=catalogMaps.relics.get(record[1]),bases=relic?.bases;
   if(!Number.isSafeInteger(record[0])||record[0]<1)throw Error('靈物列號資料不符。');
   if(!Array.isArray(bases)||bases.length!==5||!bases.every(b=>typeof b==='number'&&Number.isFinite(b)&&b>0))throw Error('此靈物範本的五行基底尚未核對。');
   const level=record[2],quality=record[4],values=record.slice(5,10);
   if(!Number.isSafeInteger(level)||level<0||level>1000||!Number.isSafeInteger(quality)||quality<1||quality>6)throw Error('靈物品質或等級不在已核對範圍。');
-  if(record[12]!==0)throw Error('此靈物仍記錄擺放建築，請先在遊戲中取下。');
+  const extra=holder(record);
   if(!values.every(v=>typeof v==='number'&&Number.isFinite(v)&&v>=0)||typeof record[10]!=='number'||!Number.isFinite(record[10]))throw Error('現有五行或平均值不是有效數值。');
   const totals=relicTotals(level,quality);
-  const info={itemId,record,template:record[1],name:relic.name,category:relic.category,level,quality,bases,elements:RELIC_ELEMENTS,values,average:record[10],totals,total:{min:totals.at(-1),max:totals[0]},verified:!!KNOWLEDGE.verification.relicAttributes};
+  const info={itemId,z,record,template:record[1],name:relic.name,category:relic.category,level,quality,bases,elements:RELIC_ELEMENTS,values,average:record[10],totals,total:{min:totals.at(-1),max:totals[0]},verified:!!KNOWLEDGE.verification[flag],...extra};
   // Natural rolls at the largest total: equal ratios keep the base proportions; one element near its full base with the
   // others near 60% is about the highest that element can roll. random(0.6,1) never reaches 1, so each preset steps
   // inside the box until the witness search accepts it.
@@ -1032,24 +1033,67 @@
   info.natural=values.every((v,i)=>Math.abs(v*10-k[i])<1e-8)&&!!relicSearch(info,k)&&relicAverage(values)===record[10];
   return info;
  }
- function previewRelicAttributes(m,{itemId,values}){
-  const info=relicAttributesInfo(m,{itemId});
+ function relicRowPreview(info,values,label){
   if(!Array.isArray(values)||values.length!==5)throw Error('請輸入金、木、水、火、土五項數值。');
   const k=values.map(v=>{if(typeof v!=='number'||!Number.isFinite(v)||v<0||v>1e6||Math.abs(v*10-Math.round(v*10))>1e-8)throw Error('五行數值須為非負數，最多一位小數。');return Math.round(v*10);});
   // Re-entering a displayed value keeps the native token.
   const after=k.map((n,i)=>Math.round(info.values[i]*10)===n?info.values[i]:n/10),unchanged=after.every((v,i)=>Object.is(v,info.values[i]));
   const witness=relicSearch(info,k);
   if(!unchanged&&!witness)throw Error(`這組五行無法由原版生成：同一總靈氣（${info.total.min}–${info.total.max}）須依基底比例 ${info.bases.join('：')} 分配，每項可在基底的 60%–100% 間浮動。`);
-  const average=unchanged?info.average:relicAverage(after),label=`背包靈物 #${itemId}・${info.name}`;
-  const changes=[...after.flatMap((v,i)=>Object.is(v,info.values[i])?[]:[{coordinate:C(itemId,5+i,18),before:info.values[i],after:v,label:`${label}・${RELIC_ELEMENTS[i]}`}]),...(Object.is(average,info.average)?[]:[{coordinate:C(itemId,10,18),before:info.average,after:average,label:`${label}・平均靈氣`}])];
+  const average=unchanged?info.average:relicAverage(after),{itemId,z}=info;
+  const changes=[...after.flatMap((v,i)=>Object.is(v,info.values[i])?[]:[{coordinate:C(itemId,5+i,z),before:info.values[i],after:v,label:`${label}・${RELIC_ELEMENTS[i]}`}]),...(Object.is(average,info.average)?[]:[{coordinate:C(itemId,10,z),before:info.average,after:average,label:`${label}・平均靈氣`}])];
   return {itemId,name:info.name,before:info.values,after,average:{before:info.average,after:average},witness,changes,unchanged,verified:info.verified};
+ }
+ function relicRowWrite(m,preview,group,operation){
+  const previous=m.currentGroup;m.currentGroup=group;
+  try{transaction(m,()=>{for(const c of preview.changes)put(m,c.coordinate,c.after,c.label);},operation);}finally{m.currentGroup=previous;}
+  return preview;
+ }
+ function relicAttributesInfo(m,{itemId}){
+  return relicRowInfo(m,itemId,18,{flag:'relicAttributes',empty:'此列沒有背包靈物。',holder:r=>{if(r[12]!==0)throw Error('此靈物仍記錄擺放建築，請先在遊戲中取下。');return {};}});
+ }
+ function previewRelicAttributes(m,{itemId,values}){
+  const info=relicAttributesInfo(m,{itemId});
+  return relicRowPreview(info,values,`背包靈物 #${itemId}・${info.name}`);
  }
  function setRelicAttributes(m,{itemId,values}){
   const preview=previewRelicAttributes(m,{itemId,values});
   if(!preview.verified)throw Error('靈物五行調整尚未完成隔離遊戲驗證。');
-  const previous=m.currentGroup;m.currentGroup=`relic:${itemId}`;
-  try{transaction(m,()=>{for(const c of preview.changes)put(m,c.coordinate,c.after,c.label);},`背包靈物 #${itemId}・五行調整`);}finally{m.currentGroup=previous;}
-  return preview;
+  return relicRowWrite(m,preview,`relic:${itemId}`,`背包靈物 #${itemId}・五行調整`);
+ }
+ // Placed relics (placedRelicAttributes). 摆放灵物 moves the whole z18 row into the first free z19 row and links both ways:
+ // building z1 y9 = z19 row, z19 y12 = building. Only 置物台 (template 67) offers the action, and 刷新地块灵气 adds
+ // round(10·a·(1+0.15L))/10 of each element (and of the y10 mean, as tile aura) to every tile in range on map entry,
+ // placement, take-off, build and move; nothing caches it in the save. 取下灵物 carries y5–10 back to z18 unchanged.
+ const RELIC_STAND=67;
+ const relicAura=(a,L)=>Math.round((10*a)*(1+(L*0.15)))/10;
+ const relicAuraOf=(values,average,L)=>({elements:values.map(a=>relicAura(a,L)),total:relicAura(average,L),factor:1+L*0.15});
+ function listPlacedRelics(m){
+  const rows=[];
+  for(let x=1;x<m.original.size[0];x++)if(catalogMaps.relics.has(get(m,C(x,1,19))))rows.push({id:x,name:catalogName('relics',get(m,C(x,1,19))),quality:get(m,C(x,4,19)),level:get(m,C(x,2,19)),building:get(m,C(x,12,19))});
+  return rows;
+ }
+ function placedRelicAttributesInfo(m,{itemId}){
+  const g=c=>exists(m.original,c)?get(m,c):undefined;
+  const info=relicRowInfo(m,itemId,19,{flag:'placedRelicAttributes',empty:'此列沒有擺放中的靈物。',holder:r=>{
+   const b=r[12];
+   if(!Number.isSafeInteger(b)||b<1||b>=m.original.size[0]||g(C(b,0,1))!==b)throw Error('此靈物記錄的建築不存在。');
+   if(g(C(b,1,1))!==RELIC_STAND)throw Error('此靈物不在置物台上；原版只有置物台能擺放靈物。');
+   if(g(C(b,9,1))!==itemId)throw Error('置物台與靈物的擺放紀錄沒有互相對應。');
+   const level=g(C(b,5,1));if(!Number.isSafeInteger(level)||level<0||level>BUILDING_MAX_LEVEL)throw Error('置物台等級不是原版的 0–4 整數。');
+   return {building:{id:b,level,x:g(C(b,2,1)),y:g(C(b,3,1))}};
+  }});
+  info.aura=relicAuraOf(info.values,info.average,info.building.level);
+  return info;
+ }
+ function previewPlacedRelicAttributes(m,{itemId,values}){
+  const info=placedRelicAttributesInfo(m,{itemId}),preview=relicRowPreview(info,values,`置物台 #${info.building.id}・${info.name}`);
+  return {...preview,building:info.building,aura:{before:info.aura,after:relicAuraOf(preview.after,preview.average.after,info.building.level)}};
+ }
+ function setPlacedRelicAttributes(m,{itemId,values}){
+  const preview=previewPlacedRelicAttributes(m,{itemId,values});
+  if(!preview.verified)throw Error('置物台靈物五行調整尚未完成隔離遊戲驗證。');
+  return relicRowWrite(m,preview,`relic:placed:${itemId}`,`置物台 #${preview.building.id}・靈物五行調整`);
  }
  // City wall enhancement level (wallEnhancementLevel). 城墙升级 adds one to [19,1,0] while it is below 城墙强化上限
  // (int(z1 #0 y5)+1)×60 and never touches the current wall HP z1 #0 y11; regeneration (+1%/s) and 采集核心 healing only run
@@ -1457,5 +1501,5 @@
   if(patches.length!==m.changes.size)throw Error('部分修改座標未能定位，已停止匯出。');
   const parts=[];let previous=0;for(const p of patches){parts.push(m.text.slice(previous,p.start),p.value);previous=p.end;}parts.push(m.text.slice(previous));return parts.join('');
  }
- globalThis.SaveCore={buildingLevelsInfo,previewBuildingLevel,setBuildingLevel,basicTechnologiesInfo,previewBasicTechnology,setBasicTechnology,ascendedInnerPillLevelInfo,previewAscendedInnerPillLevel,setAscendedInnerPillLevel,innerPillLevelInfo,previewInnerPillLevel,setInnerPillLevel,ascensionQualityInfo,previewAscensionQuality,setAscensionQuality,cityLayersInfo,previewCityLayer,setCityLayer,wallEnhancementInfo,previewWallEnhancementLevel,setWallEnhancementLevel,relicAttributesInfo,previewRelicAttributes,setRelicAttributes,listRelics,setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,previewSetEquipmentQualityCandidate,applySetEquipmentQualityCandidate,setEquipmentQualityCandidateEffects,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
+ globalThis.SaveCore={listPlacedRelics,placedRelicAttributesInfo,previewPlacedRelicAttributes,setPlacedRelicAttributes,buildingLevelsInfo,previewBuildingLevel,setBuildingLevel,basicTechnologiesInfo,previewBasicTechnology,setBasicTechnology,ascendedInnerPillLevelInfo,previewAscendedInnerPillLevel,setAscendedInnerPillLevel,innerPillLevelInfo,previewInnerPillLevel,setInnerPillLevel,ascensionQualityInfo,previewAscensionQuality,setAscensionQuality,cityLayersInfo,previewCityLayer,setCityLayer,wallEnhancementInfo,previewWallEnhancementLevel,setWallEnhancementLevel,relicAttributesInfo,previewRelicAttributes,setRelicAttributes,listRelics,setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,previewSetEquipmentQualityCandidate,applySetEquipmentQualityCandidate,setEquipmentQualityCandidateEffects,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
 })();

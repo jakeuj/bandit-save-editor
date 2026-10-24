@@ -4,17 +4,17 @@
 
 ## 現在接哪一案
 
-**目前沒有功能主線。** 建築等級已完成 v2.25（2026-10-24）；2026-10-24 起改採[輕量開發流程](../maintenance/lightweight.md)。
+**目前沒有功能主線。** 已擺放靈物五行已完成 v2.26（2026-10-24）；2026-10-24 起改採[輕量開發流程](../maintenance/lightweight.md)。
 
 | 要知道什麼 | 目前答案 |
 | --- | --- |
-| 剛完成 | v2.25 建築等級（2026-10-24）：唯讀呼叫閉包報告查清 z1 y5 原生 0–4（升階按鈕 `<4`、動畫只到 4），上限要求 `(jz 第 34 欄進階科技＋1) ≥ 等級×60`，讀取者全是即時計算（設施、人口、研究／操練上限、製作階數、置物台靈氣在進場時重算）；依使用者決定只升不降、上限 min(4, floor((科技＋1)/60))、排除建造局、拒絕施工／升階／渡劫台佔用、城牆併入 `wall:enhancement`、書院／校場下游超出舊上限的修改併入建築群組。冒煙（書院 0→2、城牆 0→1，原生設施／研究／強化上限、從修改值接續升階與取消、城牆在科技上限被拒、兩輪存讀）通過後開啟 `buildingLevel`。實作摘要見[集中研究](candidate-sweep-2026-10-23.md#實作摘要2026-10-24v225-建築等級) |
-| 前一版 | v2.24 基礎科技（2026-10-24）：唯讀呼叫閉包報告查清 kj 1–28 只有 0／1，讀取者全是介面閘門與研究流程，`建筑最高等级` 沒有呼叫者，建築升級上限讀進階科技，#8 只控制擴張按鈕；依使用者決定只能升、自動帶出前置、#1／#2 固定 1、研究點數歸零、#8 一併開放。冒煙（#14 單項、#26 帶前置 #15，原生解鎖判斷、建造選單、研究拒絕與接續研究、兩輪存讀）通過後開啟 `basicTechnologyLevel`。實作摘要見[集中研究](candidate-sweep-2026-10-23.md#實作摘要2026-10-24v224-基礎科技解鎖) |
+| 剛完成 | v2.26 已擺放靈物五行（2026-10-24）：唯讀呼叫閉包報告查清擺放中的靈物在 z19（`灵物库存入` 整列搬移），只有置物台能擺，`刷新地块灵气` 依 z19 y5–10 與置物台等級即時算地塊靈氣，存檔沒有快取，套裝合成與精煉只讀 z18；依使用者決定只收置物台且互指正確的列、沿用共同生成見證、UI 併入靈物面板。原生備料蓋置物台並擺放後冒煙（置物台升 Lv 2、木最高組合，範圍內 25 個地塊的原生地塊靈氣等於預測、取下與再擺放、三輪存讀）通過後開啟 `placedRelicAttributes`。實作摘要見[集中研究](candidate-sweep-2026-10-23.md#實作摘要2026-10-24v226-已擺放靈物五行) |
+| 前一版 | v2.25 建築等級（2026-10-24）：唯讀呼叫閉包報告查清 z1 y5 原生 0–4（升階按鈕 `<4`、動畫只到 4），上限要求 `(jz 第 34 欄進階科技＋1) ≥ 等級×60`，讀取者全是即時計算（設施、人口、研究／操練上限、製作階數、置物台靈氣在進場時重算）；依使用者決定只升不降、上限 min(4, floor((科技＋1)/60))、排除建造局、拒絕施工／升階／渡劫台佔用、城牆併入 `wall:enhancement`、書院／校場下游超出舊上限的修改併入建築群組。冒煙（書院 0→2、城牆 0→1，原生設施／研究／強化上限、從修改值接續升階與取消、城牆在科技上限被拒、兩輪存讀）通過後開啟 `buildingLevel`。實作摘要見[集中研究](candidate-sweep-2026-10-23.md#實作摘要2026-10-24v225-建築等級) |
 | 目前主線 | 無功能主線 |
-| 下一步 | 下一個功能從 roadmap 挑（剩其他超限、丹藥擴充、靈物後續），依[輕量開發流程](../maintenance/lightweight.md)做 |
-| 授權 | 建築等級已完成；提交／推送依當次對話授權，下一個功能待使用者指定 |
+| 下一步 | 下一個功能從 roadmap 挑（剩其他超限、丹藥擴充、靈物的套裝合成／精煉驗證），依[輕量開發流程](../maintenance/lightweight.md)做 |
+| 授權 | 已擺放靈物五行已完成；提交／推送依當次對話授權，下一個功能待使用者指定 |
 | 分派 | 預設在同一個 session 做完；查詢用子 agent，符合[分派判斷](../maintenance/dispatch.md#先判斷要不要分派)才開子 session |
-| 開放狀態 | 以目前 catalog／verification 為準；輕量開啟的群組（`pillAptitudeBonusDecimal`、`backpackEquipmentLevelAdvanced`、`relicAttributes`、`pillAptitudeBonusAscended`、`randomCharacterBaseAptitudesAscended`、`randomCharacterTalentsAscended`、`randomCharacterSkillCapsAscended`、`wallEnhancementLevel`、`cityLayerLevel`、`ascensionQuality`、`backpackInnerPillLevel`、`innerPillLevel`、`ascendedInnerPillLevel`、`basicTechnologyLevel`、`buildingLevel`）記在 `verification.json` 的 `lightweight` |
+| 開放狀態 | 以目前 catalog／verification 為準；輕量開啟的群組（`pillAptitudeBonusDecimal`、`backpackEquipmentLevelAdvanced`、`relicAttributes`、`pillAptitudeBonusAscended`、`randomCharacterBaseAptitudesAscended`、`randomCharacterTalentsAscended`、`randomCharacterSkillCapsAscended`、`wallEnhancementLevel`、`cityLayerLevel`、`ascensionQuality`、`backpackInnerPillLevel`、`innerPillLevel`、`ascendedInnerPillLevel`、`basicTechnologyLevel`、`buildingLevel`、`placedRelicAttributes`）記在 `verification.json` 的 `lightweight` |
 
 ### 其他候選
 
@@ -22,7 +22,7 @@
 | --- | --- | --- | --- |
 | 降低原生重證成本 | 第 1、2、4 節已實作並推送：core 依 family 切片綁定、獨立入口開發規範、開發中不選跑；以 v2.11 已證明 core 建立切片基準，未重跑原生 | 剩第 3 節：並行副本（先做 PID／profile 核對與 2 份 Steam 探針）；何時值得做由[重證成本紀錄](reproof-ledger.json)判斷，切片報告達門檻會印「提示：」 | 只改 `scripts/` 與文件；並行需要實際跑原生副本驗證 |
 
-其他候選（其餘超限，以及靈物的置物台效果／套裝合成驗證）排序與理由見[路線圖](feature-roadmap.md)；候選不等於排程或實作授權。
+其他候選（其餘超限，以及靈物的套裝合成／精煉驗證）排序與理由見[路線圖](feature-roadmap.md)；候選不等於排程或實作授權。
 
 套裝品質已於 2026-10-23 選為主線，A1–A10 已授權並完成。2026-10-23 的[後續候選集中研究](candidate-sweep-2026-10-23.md)補查了小數丹藥的跨 API 限制、靈物共同生成／平均值、結丹相依、內丹空經驗函式及城市／城牆，交付限研究文件，沒有功能發布或新增原生證明。
 

@@ -236,6 +236,25 @@ test('building level follow-up sends compilable page code and rejects an upgrade
   }finally{require.cache[gamePath].exports = real; delete require.cache[lifecyclePath];}
 });
 
+test('placed relic aura follow-up sends compilable page code and rejects tile aura that ignores the edit',async()=>{
+  const gamePath = require.resolve('../scripts/verify-game.cjs'), lifecyclePath = require.resolve('../scripts/verify-native-lifecycle.cjs');
+  const real = require(gamePath), answers = [];
+  const fake = {...real, waitMain: async () => {}, evaluate: async (state, expression) => { new Function('return ' + expression); return answers.shift(); }};
+  delete require.cache[lifecyclePath]; require.cache[gamePath] = {...require.cache[gamePath], exports: fake};
+  try{
+    const {placedRelicAura} = require(lifecyclePath), values = [4, 9.4, 1.7, 3.4, 2.3], aura = {elements: [5.2, 12.2, 2.2, 4.4, 3], total: 5.5};
+    const scenario = {placedRelicAura: {building: 15, slot: 1, values, average: 4.2, aura}}, zero = Array(50).fill(0);
+    const rec = holder => [6, 2, 4, 1, 5, ...values, 4.2, 0, holder, ...Array(37).fill(0)];
+    const tiles = [{x: 10023, y: 10004, inRange: true, aura: [5.5, ...aura.elements]}, {x: 10030, y: 10010, inRange: false, aura: [0, 0, 0, 0, 0, 0]}];
+    const loaded = {link: [1, 15, 67], stored: [...values, 4.2], level: 2, loaded: tiles, refreshed: tiles};
+    answers.push(true, 20, loaded, rec(15), 1, {slot: 1, id: 5, record: rec(0), pointer: 0, cleared: zero}, true, {slot: 1, placed: rec(15), source: zero}, tiles);
+    const state = {cells: []};const out = await placedRelicAura(state, scenario);
+    assert.equal(out.tiles, 1);assert.equal(state.cells.length, 101);assert.equal(state.relic.building, 15);assert.equal(state.relic.record[12], 0);
+    answers.length = 0;answers.push(true, 20, {...loaded, loaded: [{...tiles[0], aura: [4.1, 5.1, 8, 1.8, 3.2, 2.4]}]});
+    await assert.rejects(placedRelicAura({cells: []}, scenario), /Tile aura at 10023,10004/);
+  }finally{require.cache[gamePath].exports = real; delete require.cache[lifecyclePath];}
+});
+
 test('every suite oracle and lifecycle script exists and marked copies run each family lifecycle',()=>{
   const S = require('../scripts/verification-suite.cjs');
   for (const [name, family] of Object.entries(S.families)) for (const script of [family.oracle, ...(family.lifecycle || [])].filter(Boolean)) assert.ok(fs.existsSync(path.join(root, 'scripts', script)), name + ': ' + script);
@@ -327,7 +346,7 @@ test('write-back opens proven groups on a new build, compares on the proven buil
     const compared = M.writeBack({dir, catalog, proof, results: {...results(catalog.gameVersion), ui: {}}});
     assert.equal(compared.action, 'compared');
     assert.equal(compared.consistent, false, 'quality UI pending must differ from the native proof');
-    assert.deepEqual(compared.comparison.filter(c => c.existing !== c.migrated).map(c => c.group).sort(), [...R.sections.equipmentQuality.groups,...['randomCharacterBaseAptitudes','pillAptitudeBonusDecimal','pillAptitudeBonusAscended','backpackEquipmentLevelAdvanced','relicAttributes','randomCharacterBaseAptitudesAscended','wallEnhancementLevel','cityLayerLevel','ascensionQuality','backpackInnerPillLevel','innerPillLevel','ascendedInnerPillLevel','basicTechnologyLevel','buildingLevel'].filter(g=>!catalog.verification[g])].sort());
+    assert.deepEqual(compared.comparison.filter(c => c.existing !== c.migrated).map(c => c.group).sort(), [...R.sections.equipmentQuality.groups,...['randomCharacterBaseAptitudes','pillAptitudeBonusDecimal','pillAptitudeBonusAscended','backpackEquipmentLevelAdvanced','relicAttributes','randomCharacterBaseAptitudesAscended','wallEnhancementLevel','cityLayerLevel','ascensionQuality','backpackInnerPillLevel','innerPillLevel','ascendedInnerPillLevel','basicTechnologyLevel','buildingLevel','placedRelicAttributes'].filter(g=>!catalog.verification[g])].sort());
     assert.deepEqual(snapshot(), same);
     const reordered = {...catalog, fingerprints: Object.fromEntries(Object.entries(catalog.fingerprints).reverse()), batch2Fingerprints: Object.fromEntries(Object.entries(catalog.batch2Fingerprints).reverse())};
     assert.equal(M.writeBack({dir, catalog: reordered, proof, results: {...results(catalog.gameVersion), ui: {}}, exec: () => { throw Error('same fingerprint must not build after key reordering'); }}).action, 'compared');

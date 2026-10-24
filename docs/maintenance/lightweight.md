@@ -46,7 +46,7 @@
 
 不再核對 core 摘要、證明內容、manifest 或工具雜湊，所以改 `src/core.js` 不會讓建置失敗。新功能冒煙通過後，在 `groups` 加上該群組、在 `verification.json` 的 `lightweight` 加一筆冒煙紀錄（日期、遊戲版本、代表案例、基準存檔與 repo 外結果檔的 SHA-256），並打開旗標。
 
-`lightweight` 裡的群組不進舊的複合遷移證明（`scripts/migration-proof.cjs` 的 `composite`）：選跑、`problem` 與 `compose` 都略過它們，所以版本遷移寫回後這些旗標會關閉，要在新版重跑冒煙再開。沒有這筆紀錄的已開群組仍照舊要求複合證據。冒煙可沿用 `verify-game.cjs --scenario`（`setPillAptitudeBonus`、`setEquipmentLevel` 等具名操作）加 `verify-native-lifecycle.cjs`（`ascend`、`followup`、`pills`、`backpackOverLimit`、`relics`、`relicTakeOff`、`wall`、`city`、`ascensionQuality`、`innerPillPrepare`、`innerPillLevel`、`ascendedInnerPillLevel` 等動作，以 `main()` 的清單為準；`pills` 可用 `pillCharacter` 指定角色；擺放類動作要在存檔重啟後另跑一次取下，才算驗過兩輪 IO；`穿戴装备` 後要等一拍再讀角色指標，同一次 evaluate 內讀到的是空列）；固定基準存檔先複製到 repo 外的新資料夾，步驟依 `.local/game-sources.json` 的 `nativeSmoke` 紀錄（雲存檔載入 → 存檔 → assert → stop → restart → 存檔載入 → assert）。遊戲改版時，對受影響的功能跑冒煙，再更新 `gameVersion` 與 `fingerprints`。測試見 `tests/build-gate.test.cjs`。
+`lightweight` 裡的群組不進舊的複合遷移證明（`scripts/migration-proof.cjs` 的 `composite`）：選跑、`problem` 與 `compose` 都略過它們，所以版本遷移寫回後這些旗標會關閉，要在新版重跑冒煙再開。沒有這筆紀錄的已開群組仍照舊要求複合證據。冒煙可沿用 `verify-game.cjs --scenario`（`setPillAptitudeBonus`、`setEquipmentLevel` 等具名操作）加 `verify-native-lifecycle.cjs`（`ascend`、`followup`、`pills`、`backpackOverLimit`、`relics`、`relicTakeOff`、`relicStandPrepare`、`placedRelicAura`、`wall`、`city`、`ascensionQuality`、`innerPillPrepare`、`innerPillLevel`、`ascendedInnerPillLevel` 等動作，以 `main()` 的清單為準；`pills` 可用 `pillCharacter` 指定角色；擺放類動作要在存檔重啟後另跑一次取下，才算驗過兩輪 IO；`穿戴装备` 後要等一拍再讀角色指標，同一次 evaluate 內讀到的是空列）；固定基準存檔先複製到 repo 外的新資料夾，步驟依 `.local/game-sources.json` 的 `nativeSmoke` 紀錄（雲存檔載入 → 存檔 → assert → stop → restart → 存檔載入 → assert）。遊戲改版時，對受影響的功能跑冒煙，再更新 `gameVersion` 與 `fingerprints`。測試見 `tests/build-gate.test.cjs`。
 
 `scripts/*-proof.cjs` 與 `verification.json` 裡較早的首次證明紀錄仍保留作為歷史證據與遷移工具，但不再是建置條件。
 
@@ -125,3 +125,12 @@
 - **基準缺前置數值時用既有編輯補**：基準存檔的進階科技都太低，冒煙情境先用既有、已驗證的 `setAdvancedTechnologyLevel`（進階模式）調高，再做新功能的編輯；不要手寫存檔欄位。
 - **接續升階的原生對照**：`建筑升阶` 之後立刻 `取消升阶`，核對旗標、工程量（`建造工程量(t, L+1)`）、材料扣除與退回；城牆是立即升階，改用「在科技上限被拒」加上 `城墙升级` 在放寬後的上限內成功。
 - **既有一般上限的怪癖**：`editingInfo` 在書院／校場等級為 0 時給的一般上限是 0（原生是 59／10）。合成測試的建築從 1 級起算，才測得到群組判斷；要修這個怪癖要另外確認。
+
+### 狀態搬層、凍結的地圖與原生蓋建築（v2.26 教訓）
+
+- **先確認狀態在哪一層**：擺放中的靈物由 `灵物库存入` 整列搬到 z19，z18 那列清空；查「已擺放」不能只看 z18 y12。開工前用呼叫閉包列出搬移函式，再決定要改哪一層。
+- **凍結時間前地圖還沒生成完**：`verify-game.cjs` 一進 `主界面` 就把時間設成 0，`生成主地图建筑` 中途的 Wait 還沒跑完。剛載入時只有 3 個地圖建築、0 個建築核心，地塊實例變數（例如地塊靈氣）也還沒算。要讀地圖物件或地塊值、或要挑空地塊時，先呼叫 `verify-native-lifecycle.cjs` 的 `settleMap`（讓時間走 5 秒再凍結）。
+- **Array 寫入**：Construct Array 的 SDK 寫入是 `a.Set(x,y,z,val)`，沒有 `SetAt`。只在重現原生流程的結尾步驟時使用（例如 `采集核心碰撞` 把工程量歸零後呼叫 `建筑建造成功`），並在實作摘要寫明跳過了哪一段。
+- **原生蓋建築**：`生成单体建筑(範本,0,0,3,'主地图',true,X,Y,false,false,false,0,false,false)` 建出施工中的列；新列號從 z1 找新出現的範本。`relicStandPrepare` 是範例，備料後照常存檔、新 PID 讀回，再複製遊戲寫出檔當基準。
+- **效果核對用修改器預測當期望值**：產生情境的腳本用 core 的預覽（例如 `aura`）算出期望值寫進原生情境檔，原生端逐地塊比對，範圍外要求為 0；不要在工具裡另寫一份公式。
+- **反引號再提醒**：這次又在 Git Bash 的 `node -e "…"` 寫入含反引號的 Markdown，四份文件被寫壞，靠 `git checkout` 還原。含反引號的內容一律先用 Write 寫成腳本檔再執行。
