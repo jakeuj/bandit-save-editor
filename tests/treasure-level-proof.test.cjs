@@ -1,7 +1,8 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const P=require('../scripts/treasure-level-proof.cjs'),D=require('../scripts/treasure-level-data.cjs'),R=require('../scripts/verification-requirements.cjs'),S=require('../scripts/verification-suite.cjs'),M=require('../scripts/migration-proof.cjs');
-const k=JSON.parse(fs.readFileSync(path.join(__dirname,'../knowledge/catalog.json'),'utf8')),proof=JSON.parse(fs.readFileSync(path.join(__dirname,'../knowledge/verification.json'),'utf8')),source=fs.readFileSync(path.join(__dirname,'../src/core.js'),'utf8');
+// Proof machinery runs on the frozen V1.0.11.2 catalog and composite proof; the live files moved to V1.0.12.2 by smoke.
+const V=require('./helpers/release-v1.0.11.2.cjs'),k=V.catalog(),proof=V.proof(),source=fs.readFileSync(path.join(__dirname,'../src/core.js'),'utf8');
 const L=require('./helpers/legacy-release.cjs'),hex=c=>c.repeat(64);
 const record=(group,src=source)=>({group,coverage:'initial-matrix',fingerprints:{...k.fingerprints,...k.batch2Fingerprints},coreHash:require('../scripts/core-source-proof.cjs').hash(src),coreHashAlgorithm:require('../scripts/core-source-proof.cjs').algorithm,dataHash:D.hash(k.treasureLevel),manifestHash:hex('a'),evidenceHash:hex('b'),...P.expected[group]});
 const results=group=>({completed:true,checks:{[group]:Object.fromEntries(R.requiredChecks(group).map(c=>[c,true]))},copies:[{name:'initial'}]});

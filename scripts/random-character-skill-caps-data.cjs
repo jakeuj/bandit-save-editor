@@ -3,9 +3,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 // Reviewed static rules only. A matching digest is not a native verification result.
 const sourceSids = [390673545485827,907064845535449,890068128550912,360229107749216,858555530911324,884525457994003,940056460112238,180031394399295,748584357810010,176292127127652];
-const reviewedDigest = '752f9932ac9f233524c7af09a8e91e3c88f09a555090bdcb2692f43e72c42cc3';
-// V1.0.10.2 and V1.0.11.2: the reviewed skill rules agree after resolving bound-reference renumbering.
-const reviewedDigests = new Set(['1754eb477c345e31ef8251bc2f405b6299e0b780355bff57fbc526fa312e52d0', reviewedDigest]);
+const reviewedDigest = '54cc0530f54a82b96aea1823e270a7e34262b8357239b7c0514f4499bd027f0d';
+// V1.0.10.2, V1.0.11.2 and V1.0.12.2: the reviewed skill rules agree after resolving bound-reference renumbering.
+const reviewedDigests = new Set(['1754eb477c345e31ef8251bc2f405b6299e0b780355bff57fbc526fa312e52d0', '752f9932ac9f233524c7af09a8e91e3c88f09a555090bdcb2692f43e72c42cc3', reviewedDigest]);
 function reviewedRules(digest, growth, rows) {
   if (!reviewedDigests.has(digest)) throw Error('技藝上限來源事件／SID已改變，需重新核對');
   const talents = {};

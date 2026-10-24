@@ -2,11 +2,13 @@
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 // Reviewed static rules, not a native proof. Whole event subtrees include metadata producers and movement.
 const sourceSids=[713681756866045,605413626718369,290240793057956,648325761183486,179109980508468,797846367485481,240477057233049,661914404104909,131416746119248,773239288013696,360141429177377,503731874338191,791657421740250,654692930556623,924571110308816,501272375624196,601593514747018,699971245656002];
-const reviewedDigest='74f9e5772b73edbdcac8bf4c9111b23bb5b9a42ec86198500ae24a27917be598';
+// V1.0.12.2 differs only by object/bound-reference renumbering and the new delayed-refresh argument (false) of 刷新物品／刷新灵物.
+const reviewedDigest='aef31814fe92f015076d8d25c1edb910f2b31cc34bdabc51f0e9285c8f5ab377';
+const reviewedDigests=new Set(['74f9e5772b73edbdcac8bf4c9111b23bb5b9a42ec86198500ae24a27917be598',reviewedDigest]);
 const groups=['backpackSetEquipmentLevel','setEquipmentLevel'];
 const hash=value=>crypto.createHash('sha256').update(JSON.stringify(value)).digest('hex');
 function reviewedRules(digest,{wp,tz,sx},batch2,affix){
- if(digest!==reviewedDigest)throw Error('套裝來源事件已改變，需重新核對');
+ if(!reviewedDigests.has(digest))throw Error('套裝來源事件已改變，需重新核對');
  if(tz.length!==55||wp.filter(r=>r[4]==='套装').length!==216)throw Error('套裝資料規模尚未核對');
  const sets={},items={},origins={};
  for(const r of tz.slice(1)){

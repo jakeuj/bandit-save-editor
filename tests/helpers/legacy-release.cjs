@@ -6,20 +6,20 @@
 const fs=require('node:fs'),path=require('node:path'),{spawnSync}=require('node:child_process');
 const fixtures=path.join(__dirname,'../fixtures/legacy-release'),root=path.join(__dirname,'../..');
 const text=name=>fs.readFileSync(path.join(fixtures,name),'utf8');
-const Q=require('../../scripts/set-equipment-quality-data.cjs');
+const Q=require('../../scripts/set-equipment-quality-data.cjs'),release=require('./release-v1.0.11.2.cjs');
 const treasureGroups=['backpackTreasureLevel','treasureLevel',...Q.groups,...Q.crossPoolGroups,'pillAptitudeBonusDecimal','pillAptitudeBonusAscended','backpackEquipmentLevelAdvanced','relicAttributes','randomCharacterBaseAptitudesAscended','randomCharacterTalentsAscended','randomCharacterSkillCapsAscended','wallEnhancementLevel','cityLayerLevel','ascensionQuality','backpackInnerPillLevel','innerPillLevel','ascendedInnerPillLevel','basicTechnologyLevel','buildingLevel','placedRelicAttributes','pillAptitudeBonusAdvanced'];
 const legacy={
  core:text('core.js'),
  proof:()=>JSON.parse(text('verification.json')),
  baseline:()=>JSON.parse(text('migration-baseline.json')),
- // The live catalog with the unproven treasure groups closed, as it was when the legacy proof was written.
- catalog:()=>{const k=JSON.parse(fs.readFileSync(path.join(root,'knowledge/catalog.json'),'utf8'));for(const g of treasureGroups)if(Object.hasOwn(k.verification,g))k.verification[g]=false;return k;},
+ // The frozen V1.0.11.2 catalog with the unproven treasure groups closed, as it was when the legacy proof was written.
+ catalog:()=>{const k=release.catalog();for(const g of treasureGroups)if(Object.hasOwn(k.verification,g))k.verification[g]=false;return k;},
  // Lays the legacy trio over a copied tree and rebuilds it so HTML and worker agree with that core.
  overlay(dir,{build=true}={}){
   fs.writeFileSync(path.join(dir,'src/core.js'),legacy.core);
   fs.writeFileSync(path.join(dir,'knowledge/verification.json'),text('verification.json'));
   fs.writeFileSync(path.join(dir,'knowledge/migration-baseline.json'),text('migration-baseline.json'));
-  let catalog=fs.readFileSync(path.join(dir,'knowledge/catalog.json'),'utf8');
+  let catalog=release.catalogText();
   for(const g of treasureGroups)catalog=catalog.replace(`"${g}": true`,`"${g}": false`);
   fs.writeFileSync(path.join(dir,'knowledge/catalog.json'),catalog);
   if(build){const r=spawnSync(process.execPath,['scripts/build-editor.cjs'],{cwd:dir,encoding:'utf8'});if(r.status!==0)throw Error('legacy overlay build failed: '+(r.stderr||r.stdout));}

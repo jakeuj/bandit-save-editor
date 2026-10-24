@@ -4,16 +4,17 @@
 
 ## 現在接哪一案
 
-**目前沒有功能主線。** 丹藥超限已完成 v2.27（2026-10-25）；2026-10-24 起改採[輕量開發流程](../maintenance/lightweight.md)。
+**目前沒有功能主線。** v2.28 已把知識基準換成遊戲 V1.0.12.2（2026-10-25）；2026-10-24 起改採[輕量開發流程](../maintenance/lightweight.md)。
 
 | 要知道什麼 | 目前答案 |
 | --- | --- |
-| 剛完成 | v2.27 丹藥超限（2026-10-25）：丹藥面板的超限模式把 B 設成 0–1000 的整數，不需持有丹藥，只限無結丹紀錄的角色；原生 `角色资质计算` 不夾上限，超限後 `服用普通丹药` 拒絕、重生清零。冒煙（角色 1 力量 1000／敏捷 17、角色 4 力量 500，兩輪存讀與修改器重讀）通過後開啟 `pillAptitudeBonusAdvanced`。摘要見[第二批研究](advanced-editing-batch2.md#實作摘要2026-10-25v227-丹藥超限) |
-| 再前一項 | 靈物套裝合成與精煉的原生驗證（2026-10-25，只驗證、無新旗標）：`套装合成` 把靈物 y4 寫進裝備 y23、y10 寫進 y26（y26 沒有讀取者），`内丹精炼` 只用靈物 y4（品質＝floor((y4＋材料品質)/2)），完全不讀五行；材料、部位、靈物範本與配方解鎖只在選取介面檢查。冒煙（修改過的 #5 加穿戴中的竹槍合成土匪之槍、修改過的 #4 加練氣力量丹 Q6 精煉成 Q5 掠奪內丹、兩輪存讀、修改器重讀）通過。摘要見[集中研究](candidate-sweep-2026-10-23.md#原生驗證摘要2026-10-25修改後靈物用於套裝合成與內丹精煉) |
-| 前一版 | v2.26 已擺放靈物五行（2026-10-24）：擺放中的靈物在 z19，`刷新地块灵气` 依 z19 y5–10 與置物台等級即時計算；只收置物台且互指正確的列，冒煙通過後開啟 `placedRelicAttributes`。實作摘要見[集中研究](candidate-sweep-2026-10-23.md#實作摘要2026-10-24v226-已擺放靈物五行) |
+| 剛完成 | v2.28 遊戲 V1.0.12.2（2026-10-25）：新版只改角色排序、背包延遲刷新、卡頓、鐵匠鋪賣價與戰鬥修正；已審核事件只差編號位移與 `刷新物品`／`刷新灵物` 的延遲參數，公式編號 +4。裝備與靈物兩份代表冒煙通過，原有旗標全部維持開放，紀錄在 `verification.json` 的 `gameUpdate`。做法見[輕量流程](../maintenance/lightweight.md#遊戲改版v228-實例)、摘要見[各版紀錄](../releases.md#v228-遊戲-v10122) |
+| 再前一項 | v2.27 丹藥超限（2026-10-25）：丹藥面板的超限模式把 B 設成 0–1000 的整數，不需持有丹藥，只限無結丹紀錄的角色；原生 `角色资质计算` 不夾上限，超限後 `服用普通丹药` 拒絕、重生清零。冒煙（角色 1 力量 1000／敏捷 17、角色 4 力量 500，兩輪存讀與修改器重讀）通過後開啟 `pillAptitudeBonusAdvanced`。摘要見[第二批研究](advanced-editing-batch2.md#實作摘要2026-10-25v227-丹藥超限) |
+| 更早 | 靈物套裝合成與精煉的原生驗證（2026-10-25，只驗證、無新旗標）：`套装合成` 把靈物 y4 寫進裝備 y23、y10 寫進 y26（y26 沒有讀取者），`内丹精炼` 只用靈物 y4（品質＝floor((y4＋材料品質)/2)），完全不讀五行；材料、部位、靈物範本與配方解鎖只在選取介面檢查。冒煙（修改過的 #5 加穿戴中的竹槍合成土匪之槍、修改過的 #4 加練氣力量丹 Q6 精煉成 Q5 掠奪內丹、兩輪存讀、修改器重讀）通過。摘要見[集中研究](candidate-sweep-2026-10-23.md#原生驗證摘要2026-10-25修改後靈物用於套裝合成與內丹精煉) |
+| 再更早 | v2.26 已擺放靈物五行（2026-10-24）：擺放中的靈物在 z19，`刷新地块灵气` 依 z19 y5–10 與置物台等級即時計算；只收置物台且互指正確的列，冒煙通過後開啟 `placedRelicAttributes`。實作摘要見[集中研究](candidate-sweep-2026-10-23.md#實作摘要2026-10-24v226-已擺放靈物五行) |
 | 目前主線 | 無功能主線 |
 | 下一步 | 下一個功能從 roadmap 挑（剩超限的詞條係數、招募科技 #33 的 300–599、品質 7／第六槽），依[輕量開發流程](../maintenance/lightweight.md)做 |
-| 授權 | v2.27 已完成；提交／推送依當次對話授權，下一個功能待使用者指定 |
+| 授權 | v2.28 已完成；提交／推送依當次對話授權，下一個功能待使用者指定 |
 | 分派 | 預設在同一個 session 做完；查詢用子 agent，符合[分派判斷](../maintenance/dispatch.md#先判斷要不要分派)才開子 session |
 | 開放狀態 | 以目前 catalog／verification 為準；輕量開啟的群組（`pillAptitudeBonusDecimal`、`backpackEquipmentLevelAdvanced`、`relicAttributes`、`pillAptitudeBonusAscended`、`randomCharacterBaseAptitudesAscended`、`randomCharacterTalentsAscended`、`randomCharacterSkillCapsAscended`、`wallEnhancementLevel`、`cityLayerLevel`、`ascensionQuality`、`backpackInnerPillLevel`、`innerPillLevel`、`ascendedInnerPillLevel`、`basicTechnologyLevel`、`buildingLevel`、`placedRelicAttributes`、`pillAptitudeBonusAdvanced`）記在 `verification.json` 的 `lightweight` |
 
@@ -42,7 +43,7 @@
 ## 尚待驗收
 
 - 名稱、三類經驗與設定，以及 v2.1–v2.5 各功能的直接下載 HTML／file 流程仍依各 SDD 保留缺口；新版功能的 file 或 PWA 通過不代替舊功能驗收。
-- V1.0.11.2 的 Mac 啟動、本機存讀與新程序重啟仍待補驗，不能沿用舊版結果。
+- V1.0.11.2 與 V1.0.12.2 的 Mac 啟動、本機存讀與新程序重啟仍待補驗，不能沿用舊版結果；啟動器尚未登錄 V1.0.12.2 的 `c3runtime.js`。
 - 有名角色與自然職業上限的 [runtime 補丁](../../sdd/runtime-patch/proposal.md)另列研究候選，與網站修改器分開。
 
 ## 公開入口與追蹤

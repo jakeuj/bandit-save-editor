@@ -118,7 +118,8 @@ function createCatalog(game) {
   const reviewed = {
     '6661d77209c0e98069219965908fd4d6b9ee3dca84763c158dcd5f0a863df665': { version: 'V1.0.9.1', runtimes: ['b5bf45f38e8165bbd5093702695486fe77797a27914bba8b1fdd5f46658396bc','58d634814f9ee8145ad553ffde60a6a511b5f68cf27f7ba86933d66216901998'] },
     '32a36accc1b97e9bb3498eb3be76950e1e72b2e8f7a0cf9ce293b57aa5e0d820': { version: 'V1.0.10.2', runtimes: ['1e1643722efc032824881f03ce4d81df1135e6a8cd8e08d9fd87e56e480ac9f6'] },
-    'aac06ce18a840ae221d7683fba21182b0dcf4bb7ae1caf3431199264a1c5f62e': { version: 'V1.0.11.2', expressionOffset: 11, runtimes: ['3e0febeb8342138ed47d9e8499e3646f4e8ddc2ce89a9faa0bebbad9ba83280e'] }
+    'aac06ce18a840ae221d7683fba21182b0dcf4bb7ae1caf3431199264a1c5f62e': { version: 'V1.0.11.2', expressionOffset: 11, runtimes: ['3e0febeb8342138ed47d9e8499e3646f4e8ddc2ce89a9faa0bebbad9ba83280e'] },
+    '950a1c1d586617292e9c1497b09facd064988c1f720db4c2c262b0f9cd42adbf': { version: 'V1.0.12.2', expressionOffset: 15, runtimes: ['e6a6d629bf7320344445ac7e6e47085211496e5b6a9498aec13ab1a121abd04b'] }
   }[game.fingerprints['data.json']];
   if(!reviewed) {
     // Catalog coordinates and growth formulas must be reviewed when the event data changes.

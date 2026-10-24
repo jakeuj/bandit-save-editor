@@ -19,6 +19,6 @@ test('new growth gate binds all 15 sources, rules, relevant tables and actual ca
 });
 test('migration oracle uses the selected candidate catalog from private state',()=>{
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'bandit-growth-candidate-'));
- try{const file=path.join(dir,'candidate.json');fs.writeFileSync(file,JSON.stringify({...k,gameVersion:'candidate-only'}));const {loadStateCore}=require('../scripts/verify-random-character-growth.cjs');assert.equal(loadStateCore({catalogPath:file}).KNOWLEDGE.gameVersion,'candidate-only');assert.equal(loadStateCore({}).KNOWLEDGE.gameVersion,k.gameVersion);}
+ try{const file=path.join(dir,'candidate.json');fs.writeFileSync(file,JSON.stringify({...k,gameVersion:'candidate-only'}));const {loadStateCore}=require('../scripts/verify-random-character-growth.cjs');assert.equal(loadStateCore({catalogPath:file}).KNOWLEDGE.gameVersion,'candidate-only');assert.equal(loadStateCore({}).KNOWLEDGE.gameVersion,require('../knowledge/catalog.json').gameVersion);}
  finally{fs.rmSync(dir,{recursive:true,force:true});}
 });

@@ -14,14 +14,24 @@ const dependencies={
  Q10:{sids:[491911663973794,118557701104625,780562691790658,876108178253015,196601779910507,775039415186059,819450314280438,338766607025535],expressions:[2833,356,2834,2835,2836,4852,1576,2902,4869,4870,4865],topic:'slot generation, refine page limits and refresh'}
 };
 const reviewedDigests={
- Q1:'916742c43e8c93e948e571612d48bbd77139684953690315a3d5039bf16b5e71',
- Q2:'e4c0e5c90757e2ae4adc9aed52d50581808a72ffabdca12ab6171c4f267117d8',
- Q3:'b9a83c8c1bd4aaa0cec531d18fb0844dda5ec2f254e5e98af0bb4570df9ddfd6',
- Q4:'dc78d0aca36cc00b9fa75ce6ddfd58822562ead80c1a4edd1a972e9712029df3',
+ Q1:'3ca6d9b9dfc3b01c3b1da9f7dd8c79c3cf06e6f7064296f2290126301aeac30c',
+ Q2:'8e5e3e17aa815b0967bf9045f7a3f88d7e24ed4c270aa1cb6c282e0220607c57',
+ Q3:'746f9a73dfd09c9891c433506951e153be8469bd59a2da75e6efa76277eceb12',
+ Q4:'2d4529ff52d269bfaf8ab1f2795b7e0993399059fce5832e670fc4b2d381fa0e',
  Q5:'8bf7f8eb69b73d72a38ab555b4f6201adf4bca2e1ff9b2c615f7c4f624300cd9',
  Q6:'2b5c23a09bed9815cc76f542347911263bcaadf1eb3a3a6aa4be7d8c86bb44c9',
  Q7:'5f1719fe9bacb71e4949bf4e15ce8629c0336cade95625917579f4676a007ac4',
  Q8:'bf7e5df0b0e9e8d1462067909d181b96699577784811ac6126a6c9dd2148a80e',
+ Q9:'a93978f3e9ff9f8dac290eb2b85e0a02365794af54f1ef7d35f0be39dbd35e53',
+ Q10:'0dff003d8f73542180ec3777c4d1cf09ee09b83a5182a7f8d44032cd745ae1f6'
+};
+// V1.0.11.2 digests of the same reviewed events; V1.0.12.2 differs only by object/bound-reference renumbering and the
+// new delayed-refresh argument (false) of 刷新物品／刷新灵物 in Q9.
+const previousDigests={
+ Q1:'916742c43e8c93e948e571612d48bbd77139684953690315a3d5039bf16b5e71',
+ Q2:'e4c0e5c90757e2ae4adc9aed52d50581808a72ffabdca12ab6171c4f267117d8',
+ Q3:'b9a83c8c1bd4aaa0cec531d18fb0844dda5ec2f254e5e98af0bb4570df9ddfd6',
+ Q4:'dc78d0aca36cc00b9fa75ce6ddfd58822562ead80c1a4edd1a972e9712029df3',
  Q9:'bab445ef741acf27adc14d72b64d8166cf3552aa1c861da33657236b5d6fe3e1',
  Q10:'8af8f9bb5b6148718fe817f30f7e1b1c97486966380d44912917dc3de90e4cd7'
 };
@@ -32,7 +42,7 @@ const sourceSids=[...new Set(Object.values(dependencies).flatMap(d=>d.sids))];
 const quality={min:1,max:6,mainBase:80,mainStep:30,subStep:10,subSpan:60,slotsMin:0,levelCapBase:10,levelCapStep:5,shift:{main:30,sub:10},precision:'hundredths-integer'};
 const poolKinds=['通用','战斗','生产'];
 function reviewedRules(digests,{wp},batch2,setLevel){
- for(const q of Object.keys(dependencies))if(!reviewedDigests[q]||digests[q]!==reviewedDigests[q])throw Error('套裝品質來源事件已改變，需重新核對：'+q);
+ for(const q of Object.keys(dependencies))if(!reviewedDigests[q]||digests[q]!==reviewedDigests[q]&&digests[q]!==previousDigests[q])throw Error('套裝品質來源事件已改變，需重新核對：'+q);
  if(!setLevel?.items||!setLevel.origins||!batch2?.items)throw Error('缺少套裝等級或原裝備詞條來源');
  const pools={},counts={};
  for(const [key,item] of Object.entries(setLevel.items)){
