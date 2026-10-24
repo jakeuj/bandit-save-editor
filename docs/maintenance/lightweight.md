@@ -46,7 +46,7 @@
 
 不再核對 core 摘要、證明內容、manifest 或工具雜湊，所以改 `src/core.js` 不會讓建置失敗。新功能冒煙通過後，在 `groups` 加上該群組、在 `verification.json` 的 `lightweight` 加一筆冒煙紀錄（日期、遊戲版本、代表案例、基準存檔與 repo 外結果檔的 SHA-256），並打開旗標。
 
-`lightweight` 裡的群組不進舊的複合遷移證明（`scripts/migration-proof.cjs` 的 `composite`）：選跑、`problem` 與 `compose` 都略過它們，所以版本遷移寫回後這些旗標會關閉，要在新版重跑冒煙再開。沒有這筆紀錄的已開群組仍照舊要求複合證據。冒煙可沿用 `verify-game.cjs --scenario`（`setPillAptitudeBonus`、`setEquipmentLevel` 等具名操作）加 `verify-native-lifecycle.cjs`（`ascend`、`followup`、`pills`、`backpackOverLimit`、`relics`、`relicTakeOff`、`relicStandPrepare`、`placedRelicAura`、`wall`、`city`、`ascensionQuality`、`innerPillPrepare`、`innerPillLevel`、`ascendedInnerPillLevel` 等動作，以 `main()` 的清單為準；`pills` 可用 `pillCharacter` 指定角色；擺放類動作要在存檔重啟後另跑一次取下，才算驗過兩輪 IO；`穿戴装备` 後要等一拍再讀角色指標，同一次 evaluate 內讀到的是空列）；固定基準存檔先複製到 repo 外的新資料夾，步驟依 `.local/game-sources.json` 的 `nativeSmoke` 紀錄（雲存檔載入 → 存檔 → assert → stop → restart → 存檔載入 → assert）。遊戲改版時，對受影響的功能跑冒煙，再更新 `gameVersion` 與 `fingerprints`。測試見 `tests/build-gate.test.cjs`。
+`lightweight` 裡的群組不進舊的複合遷移證明（`scripts/migration-proof.cjs` 的 `composite`）：選跑、`problem` 與 `compose` 都略過它們，所以版本遷移寫回後這些旗標會關閉，要在新版重跑冒煙再開。沒有這筆紀錄的已開群組仍照舊要求複合證據。冒煙可沿用 `verify-game.cjs --scenario`（`setPillAptitudeBonus`、`setEquipmentLevel` 等具名操作）加 `verify-native-lifecycle.cjs`（`ascend`、`followup`、`pills`、`backpackOverLimit`、`relics`、`relicTakeOff`、`relicStandPrepare`、`placedRelicAura`、`wall`、`city`、`ascensionQuality`、`innerPillPrepare`、`innerPillLevel`、`ascendedInnerPillLevel`、`relicCrafting` 等動作，以 `main()` 的清單為準；`pills` 可用 `pillCharacter` 指定角色；擺放類動作要在存檔重啟後另跑一次取下，才算驗過兩輪 IO；`穿戴装备` 後要等一拍再讀角色指標，同一次 evaluate 內讀到的是空列）；固定基準存檔先複製到 repo 外的新資料夾，步驟依 `.local/game-sources.json` 的 `nativeSmoke` 紀錄（雲存檔載入 → 存檔 → assert → stop → restart → 存檔載入 → assert）。遊戲改版時，對受影響的功能跑冒煙，再更新 `gameVersion` 與 `fingerprints`。測試見 `tests/build-gate.test.cjs`。
 
 `scripts/*-proof.cjs` 與 `verification.json` 裡較早的首次證明紀錄仍保留作為歷史證據與遷移工具，但不再是建置條件。
 
@@ -134,3 +134,12 @@
 - **原生蓋建築**：`生成单体建筑(範本,0,0,3,'主地图',true,X,Y,false,false,false,0,false,false)` 建出施工中的列；新列號從 z1 找新出現的範本。`relicStandPrepare` 是範例，備料後照常存檔、新 PID 讀回，再複製遊戲寫出檔當基準。
 - **效果核對用修改器預測當期望值**：產生情境的腳本用 core 的預覽（例如 `aura`）算出期望值寫進原生情境檔，原生端逐地塊比對，範圍外要求為 0；不要在工具裡另寫一份公式。
 - **反引號再提醒**：這次又在 Git Bash 的 `node -e "…"` 寫入含反引號的 Markdown，四份文件被寫壞，靠 `git checkout` 還原。含反引號的內容一律先用 Write 寫成腳本檔再執行。
+
+### 只驗證不加功能、介面篩選與重啟競態（2026-10-25 靈物合成與精煉教訓）
+
+- **先查下游真正讀了哪一欄**：精煉只讀靈物 y4，完全不讀五行；合成把 y10 存進裝備 y26，但 y26 沒有讀取者。查清楚以後，冒煙只要斷言搬移與欄位寫入，不必另算效果。
+- **直接呼叫原生函式會跳過選取介面**：`套装合成`、`内丹精炼` 只檢查序號、類別與費用；材料種類、部位、靈物範本（`合成灵物编号`）與配方解鎖都只在 `刷新物品选择`／`刷新合成页面` 檢查。冒煙腳本要自己斷言這些條件，否則可能用介面選不到的組合跑出「通過」。
+- **基準存檔的靈物不一定對得上配方**：T1 內丹配方全部要求獸血（妖狐靈火），所以修改過的幻魅狐印不能拿去精煉。先用 wp 第 21 欄與 lw 第 3／5 欄對配方，再在同一個情境用修改器改一顆對得上的靈物。
+- **銅錢與材料數量不要放進 `state.cells`**：讀檔到凍結時間之間的每秒事件可能改動它們，只在動作裡比對扣除量。
+- **`--stop` 之後馬上 `--restart` 可能失敗**：`taskkill /F` 回來時程序可能還沒退出，`--restart` 會報 `Stop the disposable process before restarting`。冒煙腳本裡要重試 restart（例如最多 10 次、每次間隔 1 秒）；半途失敗就清掉 stage，從 `--setup` 重跑。`--artifacts` 目錄要先建好。
+- **反引號第三次**：這次在 heredoc 產生的 JS 範本字串裡放了沒跳脫的反引號；語法錯誤讓腳本整個沒執行，所以沒寫壞檔案。含反引號的文件段落直接用 Edit 工具寫。

@@ -257,6 +257,57 @@ async function placedRelicAura(state, s) {
   return {link: out.link, stored: out.stored, level: out.level, tiles: out.tiles, off: {id: off.id, slot: off.slot}, again: {slot: again.slot}};
 }
 
+// Edited backpack relics used up natively. 套装合成 turns a worn ordinary item (选择库序号 9) into the recipe set in place:
+// y27 keeps the old y1, y24=1, y23 takes the relic quality y4 and y26 its mean y10, other fields stay; 内丹精炼 makes a new
+// z7 inner pill of quality clamp(floor((relic y4 + material quality)/2),1,6) at the material tier and reads no element.
+// Both clear the relic row and charge copper (the second also 5 materials). The selection page's filters (ordinary item of
+// the same y7/y10, relic template 合成灵物编号, material kind, unlocked recipe) are asserted here, since the call skips the page.
+// Copper and material counts are compared in place only: per-second events can move them before verify-game freezes time.
+async function relicCrafting(state, s) {
+  const {synthesis, refine} = s.relicCrafting, tables = `const wp=r.GetObjectClassByName('wp').GetInstances()[0].GetSdkInstance(),cl=r.GetObjectClassByName('cl').GetInstances()[0].GetSdkInstance();`;
+  const out = {};
+  if (synthesis) {
+    const {relic, equipment, recipe} = synthesis;
+    const before = await evaluate(state, `(()=>{${prefix}${tables}r.SetTimeScale(0);const eq=record(${equipment},9),rel=record(${relic},18),slot=wp.At(${recipe},6,0),owner=eq[7];
+      return {eq,rel,slot,owner,pointer:a.At(owner,15+slot,2),ordinary:wp.At(eq[1],4,0),sameKind:wp.At(eq[1],7,0)===wp.At(${recipe},7,0)&&wp.At(eq[1],10,0)===wp.At(${recipe},10,0),
+        spirit:call('合成灵物编号',${recipe}),unlocked:a.At(${recipe},19,0),cost:call('合成费用',wp.At(${recipe},3,0)),copper:a.At(1,2,0)};})()`);
+    assert.deepEqual([before.ordinary, before.sameKind, before.rel[1], before.unlocked, before.pointer], ['普通', true, before.spirit, 1, equipment], 'Synthesis preconditions');
+    assert.ok(before.owner > 0 && before.copper >= before.cost, 'Synthesis owner or copper');
+    await evaluate(state, `(()=>{${prefix}global('合成配方装备序号').SetValue(${equipment});global('合成配方灵物序号').SetValue(${relic});global('选择库序号').SetValue(9);call('套装合成',${recipe});return true;})()`);
+    await pause(500);
+    const after = await evaluate(state, `(()=>{${prefix}return {eq:record(${equipment},9),rel:record(${relic},18),pointer:a.At(${before.owner},15+${before.slot},2),copper:a.At(1,2,0),globals:[global('合成配方装备序号').GetValue(),global('合成配方灵物序号').GetValue()]};})()`);
+    const want = before.eq.map((v, y) => ({1: recipe, 23: before.rel[4], 24: 1, 26: before.rel[10], 27: before.eq[1]})[y] ?? v);
+    assert.deepEqual(after.eq, want, 'Synthesized item fields');
+    assert.ok(after.rel.every(v => v === 0), 'Synthesis left the relic row');
+    assert.deepEqual([after.pointer, before.copper - after.copper, ...after.globals], [equipment, before.cost, 0, 0], 'Synthesis pointer, cost or selection');
+    for (let y = 0; y < 50; y++) state.cells.push([equipment, y, 9], [relic, y, 18]);
+    state.cells.push([before.owner, 15 + before.slot, 2]);
+    out.synthesis = {before: {equipment: before.eq, relic: before.rel}, after: after.eq, owner: before.owner, cost: before.cost};
+  }
+  if (refine) {
+    const {relic, pill, material} = refine;
+    const before = await evaluate(state, `(()=>{${prefix}${tables}r.SetTimeScale(0);const rel=record(${relic},18),seen=[];for(let x=1;x<a.GetWidth();x++)if(a.At(x,1,7)>0)seen.push(x);
+      return {rel,seen,spirit:call('合成灵物编号',${pill}),unlocked:a.At(${pill},19,0),kind:[cl.At(${material},3,0),cl.At(${material},5,0),wp.At(${pill},7,0)],quality:cl.At(${material},6,0),tier:cl.At(${material},2,0),
+        need:call('精炼材料数量',${pill}),count:a.At(${material},6,0),cost:call('精炼费用',cl.At(${material},2,0)),copper:a.At(1,2,0),room:call('物品数量',0)<call('背包容量上限')};})()`);
+    assert.deepEqual([before.rel[1], before.unlocked, before.kind[0], before.kind[1], before.room], [before.spirit, 1, before.kind[2], '丹药', true], 'Refine preconditions');
+    assert.ok(before.count >= before.need && before.copper >= before.cost, 'Refine materials or copper');
+    await evaluate(state, `(()=>{${prefix}global('精炼内丹灵物序号').SetValue(${relic});global('精炼内丹材料编号').SetValue(${material});call('内丹精炼',${pill});return true;})()`);
+    await pause(500);
+    const after = await evaluate(state, `(()=>{${prefix}const seen=new Set(${JSON.stringify(before.seen)}),rows=[];for(let x=1;x<a.GetWidth();x++)if(!seen.has(x)&&a.At(x,1,7)>0)rows.push(x);
+      return {rows,record:rows.length?record(rows[0],7):null,rel:record(${relic},18),count:a.At(${material},6,0),copper:a.At(1,2,0),globals:[global('精炼内丹灵物序号').GetValue(),global('精炼内丹材料编号').GetValue()]};})()`);
+    const q = Math.min(6, Math.max(1, Math.floor((before.rel[4] + before.quality) / 2)));
+    assert.equal(after.rows.length, 1, 'Refine must add exactly one z7 row');
+    const p = after.record;
+    assert.deepEqual([p[0], p[1], p[2], p[3], p[5], p[6], p[7]], [after.rows[0], pill, 1, before.tier, q, 1, 0], 'Refined inner pill');
+    assert.ok(p[8] >= 80 + 30 * (q - 1) && p[8] <= 80 + 30 * q, 'Refined main coefficient ' + p[8]);
+    assert.ok(after.rel.every(v => v === 0), 'Refine left the relic row');
+    assert.deepEqual([before.count - after.count, before.copper - after.copper, ...after.globals], [before.need, before.cost, 0, 0], 'Refine materials, cost or selection');
+    for (let y = 0; y < 50; y++) state.cells.push([after.rows[0], y, 7], [relic, y, 18]);
+    out.refine = {relic: before.rel, quality: q, materialQuality: before.quality, tier: before.tier, cost: before.cost, need: before.need, row: after.rows[0], pill: p};
+  }
+  return out;
+}
+
 // An edited wall level after a restart: 城墙最大生命 (with 加成属性效果) must stay at or above the edited HP, one native 城墙升级
 // charges 城墙强化货币 and adds one level without touching HP, and a few seconds of game time regenerate HP toward the maximum.
 async function wallUpgrade(state, s) {
@@ -459,7 +510,7 @@ async function main() {
   const statePath = opt('--state'), state = JSON.parse(fs.readFileSync(statePath)), scenario = JSON.parse(fs.readFileSync(opt('--scenario')));
   const rel = path.relative(path.resolve(__dirname, '..'), state.dir), child = path.relative(state.dir, state.game);
   if (!rel || (!path.isAbsolute(rel) && rel !== '..' && !rel.startsWith('..' + path.sep)) || !child || path.isAbsolute(child) || child.startsWith('..')) throw Error('External disposable state required');
-  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.backpackOverLimit && !scenario.relics && !scenario.relicTakeOff && !scenario.relicStandPrepare && !scenario.placedRelicAura && !scenario.wall && !scenario.city && !scenario.ascensionQuality && !scenario.innerPillPrepare && !scenario.innerPillLevel && !scenario.ascendedInnerPillLevel && !scenario.basicTechnology && !scenario.buildingLevel) throw Error('Scenario has no native follow-up actions');
+  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.backpackOverLimit && !scenario.relics && !scenario.relicTakeOff && !scenario.relicStandPrepare && !scenario.placedRelicAura && !scenario.wall && !scenario.city && !scenario.ascensionQuality && !scenario.innerPillPrepare && !scenario.innerPillLevel && !scenario.ascendedInnerPillLevel && !scenario.basicTechnology && !scenario.buildingLevel && !scenario.relicCrafting) throw Error('Scenario has no native follow-up actions');
   await waitMain(state);
   const result = {};
   if (scenario.ascend && !scenario.pills) result.ascend = await ascend(state, scenario);
@@ -478,10 +529,11 @@ async function main() {
   if (scenario.ascendedInnerPillLevel) result.ascendedInnerPillLevel = await ascendedInnerPillLevel(state, scenario);
   if (scenario.basicTechnology) result.basicTechnology = await basicTechnology(state, scenario);
   if (scenario.buildingLevel) result.buildingLevel = await buildingLevel(state, scenario);
+  if (scenario.relicCrafting) result.relicCrafting = await relicCrafting(state, scenario);
   state.expected = await evaluate(state, `(()=>{${prefix}return ${JSON.stringify(state.cells)}.map(([x,y,z])=>a.At(x,y,z));})()`);
   fs.writeFileSync(statePath, JSON.stringify(state, null, 2));
   fs.writeFileSync(path.join(state.dir, 'native-lifecycle.json'), JSON.stringify(result, null, 2));
   console.log('PASS: native ' + Object.keys(result).join(' and ') + ' follow-up actions');
 }
 if (require.main === module) main().catch(e => { console.error(e.stack); process.exitCode = 1; });
-module.exports = {ascend, followup, pillsAndRebirth, backpackOverLimit, relicPlacement, relicTakeOff, relicStandPrepare, placedRelicAura, wallUpgrade, cityLayer, ascensionQuality, innerPillPrepare, innerPillLevel, ascendedInnerPillLevel, basicTechnology, buildingLevel};
+module.exports = {ascend, followup, pillsAndRebirth, backpackOverLimit, relicPlacement, relicTakeOff, relicStandPrepare, placedRelicAura, wallUpgrade, cityLayer, ascensionQuality, innerPillPrepare, innerPillLevel, ascendedInnerPillLevel, basicTechnology, buildingLevel, relicCrafting};
