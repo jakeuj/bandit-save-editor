@@ -926,6 +926,47 @@
   try{transaction(m,()=>{for(const c of preview.changes)put(m,c.coordinate,c.after,c.label);},'城牆強化等級調整');}finally{m.currentGroup=previous;}
   return preview;
  }
+ // City layers (cityLayerLevel). Outside debug mode 挑战胜利 is the only writer of a city's layer y11 (+1, then 获得声望
+ // recomputes 山寨总声望 into the [8,1,0] cache). Nothing recomputes that cache on load and 山寨扩张 only reads it, so the
+ // total is rewritten here as round(Σ cities int(y11)+[y44=1]). 生成战斗地图 sets y44 on a city's first visit, so unvisited
+ // cities are refused. Waves start only below 城市层数上限, which caps y11 at maxLayer (149, where 攻城 opens); an occupied
+ // city (y38=1) stays there. Lowering clamps the idle layer y21 to the new layer as 生成战斗地图 does; raising leaves it.
+ const cityRows=new Map((KNOWLEDGE.cityLayers?.cities||[]).map(c=>[c.x,c.name]));
+ function cityLayersInfo(m){
+  const data=KNOWLEDGE.cityLayers;if(!data?.cities?.length)throw Error('知識目錄缺少城市資料。');
+  const g=c=>exists(m.original,c)?get(m,c):undefined,total=g(C(8,1,0));
+  if(typeof total!=='number'||!Number.isFinite(total))throw Error('山寨總聲望不是有效數值。');
+  let sum=0;
+  const cities=data.cities.map(({x,name})=>{
+   const layer=g(C(x,11,0)),visited=g(C(x,44,0));
+   if(!Number.isSafeInteger(layer)||layer<0)throw Error(`${name}的城市層數不是有效整數。`);
+   if(visited!==0&&visited!==1)throw Error(`${name}的首次進入旗標不是 0 或 1。`);
+   sum+=layer+visited;
+   return {x,name,layer,visited:visited===1,idle:g(C(x,21,0)),occupied:g(C(x,38,0))===1};
+  });
+  const computed=Math.round(sum);
+  return {cities,total,computed,consistent:total===computed,maxLayer:data.maxLayer,verified:!!KNOWLEDGE.verification.cityLayerLevel};
+ }
+ function previewCityLayer(m,{x,layer}){
+  const info=cityLayersInfo(m),city=info.cities.find(c=>c.x===x);
+  if(!city)throw Error('只能調整城市的層數。');
+  if(!city.visited)throw Error(`${city.name}尚未進入過，請先在遊戲內進城一次。`);
+  if(!Number.isSafeInteger(city.idle)||city.idle<0)throw Error(`${city.name}的掛機層數不是有效整數。`);
+  if(![0,1].includes(get(m,C(x,38,0))))throw Error(`${city.name}的佔領旗標不是 0 或 1。`);
+  if(!Number.isSafeInteger(layer)||layer<0||layer>info.maxLayer)throw Error(`城市層數須為 0–${info.maxLayer} 的整數。`);
+  if(city.occupied&&layer<info.maxLayer)throw Error(`${city.name}已佔領，層數不能低於 ${info.maxLayer}。`);
+  const idle=layer<city.layer&&city.idle>layer?layer:city.idle,total=layer===city.layer?info.total:info.computed-city.layer+layer;
+  const changes=layer===city.layer?[]:[{coordinate:C(x,11,0),before:city.layer,after:layer,label:`${city.name}・城市層數`},...(idle===city.idle?[]:[{coordinate:C(x,21,0),before:city.idle,after:idle,label:`${city.name}・掛機層數`}]),...(total===info.total?[]:[{coordinate:C(8,1,0),before:info.total,after:total,label:'山寨總聲望'}])];
+  return {city:{x,name:city.name},layer:{before:city.layer,after:layer},idle:{before:city.idle,after:idle},total:{before:info.total,after:total},consistent:info.consistent,maxLayer:info.maxLayer,changes,unchanged:!changes.length,verified:info.verified};
+ }
+ function setCityLayer(m,options){
+  const preview=previewCityLayer(m,options);
+  if(!preview.verified)throw Error('城市層數尚未完成隔離遊戲驗證。');
+  // One group for every city: restoring it also restores the shared reputation cache.
+  const previous=m.currentGroup;m.currentGroup='city:layers';
+  try{transaction(m,()=>{for(const c of preview.changes)put(m,c.coordinate,c.after,c.label);},`${preview.city.name}・城市層數調整`);}finally{m.currentGroup=previous;}
+  return preview;
+ }
  /** @returns {FieldDescriptor} */
  function resolveField(m,c){
   if(!exists(m.original,c))throw Error('座標超出這份存檔的範圍。');
@@ -938,6 +979,7 @@
   else if(key(c)==='1,1,0')named('山寨名稱',{type:'string',maxLength:6,verification:'names',editable:!!KNOWLEDGE.verification.names,reason:'名稱群組尚待遊戲驗證'});
   else if(z===0&&y===1){const labels={0:'存檔識別',2:'山寨等級',4:'目前地圖',6:'商店刷新時間',7:'引導任務編號',8:'山寨總聲望',12:'存檔年份',13:'存檔天數',14:'存檔小時',15:'累計遊玩秒數',19:'城牆等級',22:'支援者禮包紀錄'};if(labels[x])named(labels[x]);}
   else if(z===0&&y===17&&x===1)named('招募刷新倒數（秒）',{type:'decimal'});
+  else if(z===0&&[11,21,38,44].includes(y)&&cityRows.has(x))named({11:'城市層數',21:'掛機層數',38:'佔領旗標',44:'首次進入旗標'}[y],{entity:cityRows.get(x),reason:'請使用城市層數具名操作；總聲望與掛機層數一起結算',related:[C(x,11,0),C(x,21,0),C(8,1,0)]});
   else if(z===0&&[4,13].includes(y)&&catalogMaps.technologies.has(x))named(y===4?'科技等級':'科技研究狀態',{entity:catalogName('technologies',x)});
   else if(z===0&&y===5&&catalogMaps.professions.has(x))named('職業操練上限',{entity:catalogName('professions',x)});
   else if(z===2&&y>=10&&y<=12)named(`${aptitudeNames[y-10]}基礎資質`,{reason:'請由角色養成的三項基礎資質具名操作修改；有名角色載入時會依範本回填',related:[10,11,12,13,14,15].map(y=>C(x,y,2)),verification:'randomCharacterBaseAptitudes'});
@@ -1174,5 +1216,5 @@
   if(patches.length!==m.changes.size)throw Error('部分修改座標未能定位，已停止匯出。');
   const parts=[];let previous=0;for(const p of patches){parts.push(m.text.slice(previous,p.start),p.value);previous=p.end;}parts.push(m.text.slice(previous));return parts.join('');
  }
- globalThis.SaveCore={wallEnhancementInfo,previewWallEnhancementLevel,setWallEnhancementLevel,relicAttributesInfo,previewRelicAttributes,setRelicAttributes,listRelics,setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,previewSetEquipmentQualityCandidate,applySetEquipmentQualityCandidate,setEquipmentQualityCandidateEffects,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
+ globalThis.SaveCore={cityLayersInfo,previewCityLayer,setCityLayer,wallEnhancementInfo,previewWallEnhancementLevel,setWallEnhancementLevel,relicAttributesInfo,previewRelicAttributes,setRelicAttributes,listRelics,setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,previewSetEquipmentQualityCandidate,applySetEquipmentQualityCandidate,setEquipmentQualityCandidateEffects,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
 })();

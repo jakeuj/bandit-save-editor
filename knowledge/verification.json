@@ -67,7 +67,8 @@
     "advancedTechnologyLevel": true,
     "advancedTechnologyLevelAdvanced": true,
     "relicAttributes": true,
-    "wallEnhancementLevel": true
+    "wallEnhancementLevel": true,
+    "cityLayerLevel": true
   },
   "lightweight": {
     "randomCharacterBaseAptitudesAscended": {
@@ -181,6 +182,20 @@
       ],
       "baselineSaveSha256": "ebb0a4a28791218986c594d3b3819a066482bc11ff75aac99f8498c4ce4b84c5",
       "resultSha256": "9b5ea21f6f161692f25e2508fe6deb00b97be3b526859c153030d58e75d7a895",
+      "passed": true
+    },
+    "cityLayerLevel": {
+      "date": "2026-10-24",
+      "gameVersion": "V1.0.11.2",
+      "flow": "docs/maintenance/lightweight.md",
+      "smoke": "verify-game.cjs 以 setCityLayer 編輯（隔離副本、雲存檔載入、原版存檔、新 PID 讀回），再以 verify-native-lifecycle.cjs city 比對原生 山寨总声望 重算並接續原生流程，第二輪原版存檔、新 PID 讀回，最後以修改器重讀遊戲寫出的存檔",
+      "cases": [
+        "許昌 74→50（掛機層數 74 一起夾到 50）：總聲望 75→51；新 PID 讀回後原生 山寨总声望(0,1) 重算 51＝快取；原生 挑战胜利 接續為 51 層、掛機 51、總聲望 52，第二輪存讀一致",
+        "許昌 74→149（上限，掛機層數 74 不動）：總聲望 75→150，原生重算 150＝快取；原生 开始城市波次 不開新波次、層數與總聲望不變，第二輪存讀一致",
+        "修改器重讀兩份遊戲寫出檔：總聲望與公式一致，150 被拒絕"
+      ],
+      "baselineSaveSha256": "ebb0a4a28791218986c594d3b3819a066482bc11ff75aac99f8498c4ce4b84c5",
+      "resultSha256": "10aec9aae30dea515b4f66aaf647de555996ffd7736b91fbe9eb0de9820c0de1",
       "passed": true
     }
   },

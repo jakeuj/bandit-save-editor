@@ -23,6 +23,7 @@
 - 結丹角色技藝上限（v2.18，旗標 `randomCharacterSkillCapsAscended`）：讀同一節 v2.18 實作摘要。info 以 `ascensionRecord` 取代無結丹拒絕，其餘沿用 v2.8；`渡劫结束` 呼叫閉包不寫見證與技藝欄位，所以不讀穿戴件、不算倍率。
 - 背包靈物五行（v2.15，旗標 `relicAttributes`）：讀 repo `docs/research/candidate-sweep-2026-10-23.md` 第 3 節與其實作摘要。只改 z18 未擺放列的 y5–10，五行須能由 `获得灵物` 共同生成（見證搜尋），平均一律依原式重算；原生取下後 y0 會過期，以 y1 範本判定靈物，不得以 y0≠列號拒絕。置物台效果、套裝合成與精煉未原生驗證。
 - 城牆強化等級（v2.19，旗標 `wallEnhancementLevel`）：讀 repo `docs/research/candidate-sweep-2026-10-23.md` 第 4 節實作摘要。只改 `[19,1,0]`（0–cap，cap＝(z1 #0 y5+1)×60）；降級時 z1 #0 y11 目前生命夾到不含加成的最大生命，因為原生回血與治療不會把超上限的生命往下壓、加成 25 無法離線算準。升級不動生命、不扣退貨幣；城市層數與聲望另案。
+- 城市層數與聲望（v2.20，旗標 `cityLayerLevel`）：讀同一節 v2.20 實作摘要。只改進過的城市（zddt 類型「城市」x=1–27，y44=1）的 `[c,11,0]`，0–149；總聲望快取 `[8,1,0]` 讀檔不重算，所以同一交易依 round(Σ int(y11)+[y44=1]) 重寫；降低時 y21 掛機層數超過新值才夾；已佔領（y38=1）不低於 149。城市名稱在 catalog `cityLayers`（另記 `zddt.json` 雜湊，不併入 15 個來源指紋）。野外、魂塔層數不在範圍。
 - 精準洗練、替換已選槽詞條、單件裝備效果預覽或搬移識別：讀 repo 的 `docs/research/precise-affix-editing.md` 與 `sdd/precise-affix-editing/tasks.md`。v2.3 使用獨立替換驗證群組，不沿用係數證明；原生搬移後 y0 可不同於目前列號，不得據此拒絕合法裝備。
 - 背包裝備、首次洗練選槽或新取得標記：讀 repo `docs/research/equipment-workflow.md` 與 `sdd/equipment-workflow/tasks.md`。v2.4已正式發布並開放首次選槽；具備代表遊戲選槽UI、原版存檔／新PID讀回、桌面／390px精確下載及PWA離線／更新交接證據。詳細範圍與SHA以repo紀錄為準；直接file://新流程仍待人工。
 - 普通裝備品質升降、完整單件效果或y23語意：讀repo `docs/research/equipment-quality.md`、`sdd/equipment-quality/tasks.md`與 `docs/maintenance/equipment.md`。背包／z9的升品／降品有四個獨立證明，綁定15來源、規則／資料及公式雜湊；新增尾槽須明選，刪槽須確認且保留已選槽。取得事件分支與y23不可再簡化為目前品質。詳細公式、6,592組原生比對、UI及發布狀態留repo。

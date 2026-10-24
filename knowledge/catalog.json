@@ -5509,6 +5509,124 @@
       112
     ]
   },
+  "cityLayers": {
+    "source": {
+      "file": "zddt.json",
+      "sha256": "4d2bb4c4c3fd1903ec8afee2b195c56c83f9fd0583980cf2f73562eff5a60560"
+    },
+    "layerCap": 150,
+    "maxLayer": 149,
+    "cities": [
+      {
+        "x": 1,
+        "name": "許昌"
+      },
+      {
+        "x": 2,
+        "name": "洛陽"
+      },
+      {
+        "x": 3,
+        "name": "濮陽"
+      },
+      {
+        "x": 4,
+        "name": "廬江"
+      },
+      {
+        "x": 5,
+        "name": "合肥"
+      },
+      {
+        "x": 6,
+        "name": "建業"
+      },
+      {
+        "x": 7,
+        "name": "汝南"
+      },
+      {
+        "x": 8,
+        "name": "長安"
+      },
+      {
+        "x": 9,
+        "name": "漢中"
+      },
+      {
+        "x": 10,
+        "name": "武陵"
+      },
+      {
+        "x": 11,
+        "name": "南海"
+      },
+      {
+        "x": 12,
+        "name": "交趾"
+      },
+      {
+        "x": 13,
+        "name": "彭城"
+      },
+      {
+        "x": 14,
+        "name": "北海"
+      },
+      {
+        "x": 15,
+        "name": "下邳"
+      },
+      {
+        "x": 16,
+        "name": "常山"
+      },
+      {
+        "x": 17,
+        "name": "晉陽"
+      },
+      {
+        "x": 18,
+        "name": "北平"
+      },
+      {
+        "x": 19,
+        "name": "建安"
+      },
+      {
+        "x": 20,
+        "name": "會稽"
+      },
+      {
+        "x": 21,
+        "name": "夷洲"
+      },
+      {
+        "x": 22,
+        "name": "永昌"
+      },
+      {
+        "x": 23,
+        "name": "成都"
+      },
+      {
+        "x": 24,
+        "name": "建寧"
+      },
+      {
+        "x": 25,
+        "name": "天水"
+      },
+      {
+        "x": 26,
+        "name": "朔方"
+      },
+      {
+        "x": 27,
+        "name": "武威"
+      }
+    ]
+  },
   "fingerprints": {
     "data.json": "aac06ce18a840ae221d7683fba21182b0dcf4bb7ae1caf3431199264a1c5f62e",
     "scripts/c3runtime.js": "3e0febeb8342138ed47d9e8499e3646f4e8ddc2ce89a9faa0bebbad9ba83280e",
@@ -66028,6 +66146,7 @@
     "pillAptitudeBonusAscended": true,
     "relicAttributes": true,
     "wallEnhancementLevel": true,
+    "cityLayerLevel": true,
     "names": true,
     "characterExperience": true,
     "professionExperience": true,

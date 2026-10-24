@@ -211,11 +211,34 @@ async function wallUpgrade(state, s) {
   return {before, upgraded, paused, regen};
 }
 
+// An edited city layer after a restart: the native 山寨总声望 recount must equal the edited [8,1,0] cache. Below the
+// maximum one native 挑战胜利 adds a layer (the idle layer follows only when it was at the top) and 获得声望 rewrites
+// the cache one higher; at the maximum 开始城市波次 must refuse to start another wave.
+async function cityLayer(state, s) {
+  const {x, layer, idle} = s.city;
+  const read = `const layer=a.At(${x},11,0),idle=a.At(${x},21,0),visited=a.At(${x},44,0),total=a.At(8,1,0),recount=call('山寨总声望',0,1),map=global('当前地图编号').GetValue(),challenge=global('挑战城市开关').GetValue();`;
+  const ret = '{layer,idle,visited,total,recount,map,challenge}';
+  const before = await evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);${read}return ${ret};})()`);
+  assert.deepEqual([before.layer, before.idle, before.visited], [layer, idle, 1], 'Edited city not loaded');
+  assert.equal(before.recount, before.total, 'Native recount differs from the edited cache');
+  let after;
+  if (layer < 149) {
+    assert.equal(before.map, x, 'Current map is not the edited city');
+    after = await evaluate(state, `(()=>{${prefix}call('挑战胜利');${read}return ${ret};})()`);
+    assert.deepEqual([after.layer, after.idle, after.total, after.recount], [layer + 1, idle === layer ? idle + 1 : idle, before.total + 1, before.total + 1], 'Native challenge win');
+  } else {
+    after = await evaluate(state, `(()=>{${prefix}call('开始城市波次',${x});${read}return ${ret};})()`);
+    assert.deepEqual([after.layer, after.total, after.challenge], [layer, before.total, before.challenge], 'A wave started above the maximum');
+  }
+  for (const c of [[x, 11, 0], [x, 21, 0], [x, 44, 0], [8, 1, 0]]) state.cells.push(c);
+  return {before, after};
+}
+
 async function main() {
   const statePath = opt('--state'), state = JSON.parse(fs.readFileSync(statePath)), scenario = JSON.parse(fs.readFileSync(opt('--scenario')));
   const rel = path.relative(path.resolve(__dirname, '..'), state.dir), child = path.relative(state.dir, state.game);
   if (!rel || (!path.isAbsolute(rel) && rel !== '..' && !rel.startsWith('..' + path.sep)) || !child || path.isAbsolute(child) || child.startsWith('..')) throw Error('External disposable state required');
-  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.backpackOverLimit && !scenario.relics && !scenario.relicTakeOff && !scenario.wall) throw Error('Scenario has no native follow-up actions');
+  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.backpackOverLimit && !scenario.relics && !scenario.relicTakeOff && !scenario.wall && !scenario.city) throw Error('Scenario has no native follow-up actions');
   await waitMain(state);
   const result = {};
   if (scenario.ascend && !scenario.pills) result.ascend = await ascend(state, scenario);
@@ -225,10 +248,11 @@ async function main() {
   if (scenario.relics) result.relics = await relicPlacement(state, scenario);
   if (scenario.relicTakeOff) result.relicTakeOff = await relicTakeOff(state);
   if (scenario.wall) result.wall = await wallUpgrade(state, scenario);
+  if (scenario.city) result.city = await cityLayer(state, scenario);
   state.expected = await evaluate(state, `(()=>{${prefix}return ${JSON.stringify(state.cells)}.map(([x,y,z])=>a.At(x,y,z));})()`);
   fs.writeFileSync(statePath, JSON.stringify(state, null, 2));
   fs.writeFileSync(path.join(state.dir, 'native-lifecycle.json'), JSON.stringify(result, null, 2));
   console.log('PASS: native ' + Object.keys(result).join(' and ') + ' follow-up actions');
 }
 if (require.main === module) main().catch(e => { console.error(e.stack); process.exitCode = 1; });
-module.exports = {ascend, followup, pillsAndRebirth, backpackOverLimit, relicPlacement, relicTakeOff, wallUpgrade};
+module.exports = {ascend, followup, pillsAndRebirth, backpackOverLimit, relicPlacement, relicTakeOff, wallUpgrade, cityLayer};
