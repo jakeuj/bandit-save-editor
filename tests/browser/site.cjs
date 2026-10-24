@@ -4,6 +4,7 @@ const path = require('node:path');
 const os = require('node:os');
 const http = require('node:http');
 const {execFileSync} = require('node:child_process');
+const {configuredPort, listenLoopback} = require('./loopback.cjs');
 const root = path.resolve(__dirname, '../..');
 const mime = {'.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
   '.webmanifest': 'application/manifest+json', '.svg': 'image/svg+xml', '.png': 'image/png'};
@@ -23,8 +24,7 @@ async function buildCandidate(dir, spec) {
 }
 
 async function createSite({candidate} = {}) {
-  const port = Number(process.env.BANDIT_BROWSER_PORT || 0);
-  if (!Number.isInteger(port) || port < 0 || port > 65535) throw Error('Invalid BANDIT_BROWSER_PORT');
+  const port = configuredPort();
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'bandit-site-'));
   const files = ['index.html', 'sw.js', 'manifest.webmanifest', ...(await fs.readdir(path.join(root, 'assets'))).map(f => 'assets/' + f)];
   await fs.mkdir(path.join(dir, 'assets'));
@@ -40,9 +40,9 @@ async function createSite({candidate} = {}) {
       res.end(req.method === 'HEAD' ? undefined : bytes);
     } catch { res.writeHead(500); res.end(); }
   });
-  await new Promise((resolve, reject) => { server.once('error', reject); server.listen(port, '127.0.0.1', resolve); });
+  const bound = await listenLoopback(server, port);
   return {
-    dir, url: `http://127.0.0.1:${server.address().port}/`,
+    dir, url: `http://127.0.0.1:${bound}/`,
     async upgrade() {
       // Build a second release in the disposable copy using the production builder.
       if (!candidate) for (const folder of ['scripts', 'src', 'knowledge']) await fs.cp(path.join(root, folder), path.join(dir, folder), {recursive: true});

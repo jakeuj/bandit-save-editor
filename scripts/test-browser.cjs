@@ -4,6 +4,7 @@ const http = require('node:http');
 const os = require('node:os');
 const path = require('node:path');
 const {spawn, spawnSync} = require('node:child_process');
+const {configuredPort, listenLoopback} = require('../tests/browser/loopback.cjs');
 const root = path.resolve(__dirname, '..');
 const args = process.argv.slice(2);
 const check = spawnSync(process.execPath, ['scripts/build-editor.cjs', '--check'], {cwd: root, encoding: 'utf8'});
@@ -12,22 +13,21 @@ if (check.status !== 0) { console.error(check.stderr || check.stdout || check.er
 // A local filter (for example AdGuard) can rewrite HTML on loopback ports. The PWA hashes then never match and every offline
 // case fails as 「離線準備失敗」, so serve index.html once on the port the tests will use and stop before running them.
 async function loopbackServesExactBytes() {
-  const port = Number(process.env.BANDIT_BROWSER_PORT || 0);
-  if (!Number.isInteger(port) || port < 0 || port > 65535) throw Error('Invalid BANDIT_BROWSER_PORT');
+  const port = configuredPort();
   const bytes = fs.readFileSync(path.join(root, 'index.html'));
   const server = http.createServer((req, res) => {
     res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store'});
     res.end(bytes);
   });
-  await new Promise((resolve, reject) => { server.once('error', reject); server.listen(port, '127.0.0.1', resolve); });
+  const bound = await listenLoopback(server, port);
   try {
-    const url = `http://127.0.0.1:${server.address().port}/index.html`, rewritten = [];
+    const url = `http://127.0.0.1:${bound}/index.html`, rewritten = [];
     // A page navigation and a subresource fetch, like the page load and the service worker install.
     for (const [kind, headers] of [['頁面導覽', {accept: 'text/html,application/xhtml+xml', 'sec-fetch-dest': 'document', 'sec-fetch-mode': 'navigate'}], ['子資源請求', {accept: '*/*'}]]) {
       const served = Buffer.from(await (await fetch(url, {headers})).arrayBuffer());
       if (!served.equals(bytes)) rewritten.push(`${kind}（${served.length} bytes，原檔 ${bytes.length} bytes）`);
     }
-    return {port: server.address().port, fixed: port !== 0, rewritten};
+    return {port: bound, fixed: port !== 0, rewritten};
   } finally {
     await new Promise(resolve => { server.close(resolve); server.closeAllConnections(); });
   }
