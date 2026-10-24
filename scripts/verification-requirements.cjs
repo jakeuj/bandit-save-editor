@@ -22,7 +22,7 @@ const sections = {
     checks: ['loadedIntoMainLayout', 'nativeSaveWritten', 'processRestartedAndReloaded', 'allTenObservedCellsMatch', 'originalSaveHashesUnchanged', 'steamMutationsRedirectedToLocalMirror', 'allThirteenTestedSourceHashesMatch', 'realSteamInitialization', 'restartUsesDifferentProcess', 'advancedNormalAndOvercapNativeRoundtrip', 'nativeEquipmentAndTechnologyEffectsFinite', 'nativeEquipmentUnequipReequip', 'subsequentProfessionTransferAndExperience', 'subsequentResearchAndTrainingStartStop']
   },
   batch2: {
-    groups: ['equipmentAffixCoefficient', 'pillAptitudeBonus', 'pillAptitudeBonusDecimal', 'pillAptitudeBonusAscended', 'relicAttributes', 'wallEnhancementLevel', 'cityLayerLevel', 'ascensionQuality', 'backpackInnerPillLevel', 'innerPillLevel', 'ascendedInnerPillLevel', 'basicTechnologyLevel', 'buildingLevel', 'placedRelicAttributes', 'pillAptitudeBonusAdvanced', 'recruitTechnologyAdvanced'],
+    groups: ['equipmentAffixCoefficient', 'pillAptitudeBonus', 'pillAptitudeBonusDecimal', 'pillAptitudeBonusAscended', 'relicAttributes', 'wallEnhancementLevel', 'cityLayerLevel', 'ascensionQuality', 'backpackInnerPillLevel', 'innerPillLevel', 'ascendedInnerPillLevel', 'basicTechnologyLevel', 'buildingLevel', 'placedRelicAttributes', 'pillAptitudeBonusAdvanced', 'recruitTechnologyAdvanced', 'equipmentAffixCoefficientAdvanced'],
     checks: ['nativeLoad', 'nativeSave', 'stopAndRestart', 'originalHashesUnchanged', 'nativeEffects', 'coreNativeAptitudeAgreement', 'nativeRewash', 'unequipReequip', 'nativePillConsumption', 'rebirthClears']
   },
   affixReplacement: {

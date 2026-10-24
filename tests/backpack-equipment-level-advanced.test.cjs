@@ -37,7 +37,10 @@ test('an already over-limit backpack row (for example natively moved from z9) ca
  assert.throws(()=>C.setEquipmentLevel(m,{itemId:1,plane:7,level:21}),/一般模式/);
 });
 test('structural backpack checks still apply in advanced mode',()=>{
- for(const [y,v]of [[2,2],[7,1],[24,2],[25,1],[3,10],[5,7],[15,99]]){const {C,m,text}=setup();m.original.data[1][y][7]=v;assert.throws(()=>C.setEquipmentLevel(m,{itemId:1,plane:7,level:21,advanced:true}));assert.equal(C.serialize(m),text);}
+ for(const [y,v]of [[2,2],[7,1],[24,2],[25,1],[3,10],[5,7],[15,1000.01]]){const {C,m,text}=setup();m.original.data[1][y][7]=v;assert.throws(()=>C.setEquipmentLevel(m,{itemId:1,plane:7,level:21,advanced:true}));assert.equal(C.serialize(m),text);}
+ // An over-limit coefficient (Q3 tops out at 90) blocks the level only while equipmentAffixCoefficientAdvanced is closed.
+ const closed=setup({equipmentAffixCoefficientAdvanced:false});closed.m.original.data[1][15][7]=99;assert.throws(()=>closed.C.setEquipmentLevel(closed.m,{itemId:1,plane:7,level:21,advanced:true}),/已超限/);
+ const open=setup();open.m.original.data[1][15][7]=99;open.C.setEquipmentLevel(open.m,{itemId:1,plane:7,level:21,advanced:true});assert.equal(open.C.get(open.m,{x:1,y:6,z:7}),21);
 });
 test('affix-edited rows cannot be raised past the normal cap; over-limit rows keep affix and quality edits closed',()=>{
  const {C,m}=setup();C.setEquipmentAffixCoefficient(m,{itemId:1,plane:7,slot:1,coefficient:50});

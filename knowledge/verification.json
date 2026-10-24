@@ -77,7 +77,8 @@
     "buildingLevel": true,
     "placedRelicAttributes": true,
     "pillAptitudeBonusAdvanced": true,
-    "recruitTechnologyAdvanced": true
+    "recruitTechnologyAdvanced": true,
+    "equipmentAffixCoefficientAdvanced": true
   },
   "lightweight": {
     "randomCharacterBaseAptitudesAscended": {
@@ -382,6 +383,23 @@
         "l599": "94e1e44a108d51f151c51285a873082c6b6d36f75fe1397841aa560993744f5e",
         "l450": "a262bfb8c4e1522d97a8eabf3c2aad31b4f8d02dbd565aa303d035d25a965dd8"
       },
+      "passed": true
+    },
+    "equipmentAffixCoefficientAdvanced": {
+      "date": "2026-10-25",
+      "gameVersion": "V1.0.12.2",
+      "flow": "docs/maintenance/lightweight.md",
+      "smoke": "v1.0.12.2 完整來源、一份原生備料與一份編輯冒煙；備料以 verify-native-lifecycle.cjs affixPrepare 原生取得、穿戴、洗練一次後存檔、新 PID 讀回；編輯以 verify-game.cjs 的 setEquipmentAffixCoefficientAdvanced（雲存檔載入、原版存檔、新 PID 讀回），verify-native-lifecycle.cjs affixOverLimit 原生核對，再存檔、新 PID 讀回，修改器重讀遊戲寫出檔",
+      "cases": [
+        "z9 #7 柴斧 Q6（角色 2 穿戴）槽 2 採集加成 85.67→1000：讀回後原生 装备属性计算(2,53) 由 4.71 升到 55（差 50.29，等於修改器預測）、属性计算 55；卸下（z7 #8）再穿回整列 50 欄不變",
+        "z7 #2 竹槍 Q6 槽 3 等級經驗 79.54→555.55：兩輪原版存檔、新 PID 讀回後保持 555.55",
+        "z7 #7 獵弓 Q4 槽 1 小怪增傷 92.06→500：讀回後原生 词条洗练 重抽為 56.25（30–100 內），選槽旗標與已洗數維持 1，扣 词条洗练魂魄 100",
+        "修改器重讀遊戲寫出檔：1000／555.55／56.25；超限列的一般係數入口拒絕、超限入口可再編輯，穿戴者的丹藥入口照常"
+      ],
+      "baselineSaveSha256": "ebb0a4a28791218986c594d3b3819a066482bc11ff75aac99f8498c4ce4b84c5",
+      "preparedSaveSha256": "0d1798de365ac07886d01ceb7630b023e07291725d36082f48dab87cf06d8124",
+      "resultSha256": "3d7b2efff6362f2f0bd5e24020a610a18763d207d5489156b2787acaa47c0249",
+      "nativeResultSha256": "347d72fbd63ca5bc33b927040b76f53a6d0f6843663b1651605b23cdffcc9707",
       "passed": true
     }
   },

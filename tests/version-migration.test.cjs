@@ -245,6 +245,22 @@ test('recruit technology follow-up sends compilable page code and rejects a sear
   }finally{require.cache[gamePath].exports = real; delete require.cache[lifecyclePath];}
 });
 
+test('affix over-limit follow-up sends compilable page code and rejects a clamped effect or an out-of-range rewash',async()=>{
+  const gamePath = require.resolve('../scripts/verify-game.cjs'), lifecyclePath = require.resolve('../scripts/verify-native-lifecycle.cjs');
+  const real = require(gamePath), answers = [];
+  const fake = {...real, waitMain: async () => {}, evaluate: async (state, expression) => { new Function('return ' + expression); return /return true;\}\)\(\)$/.test(expression) ? true : answers.shift(); }};
+  delete require.cache[lifecyclePath]; require.cache[gamePath] = {...require.cache[gamePath], exports: fake};
+  try{
+    const {affixOverLimit} = require(lifecyclePath), row = Array(50).fill(0);Object.assign(row, {0: 30, 1: 1, 7: 2, 16: 1000, 29: 1});
+    const bagRow = Object.assign([...row], {7: 0}), washBefore = Object.assign(Array(50).fill(0), {1: 5, 3: 1, 5: 4, 9: 12, 15: 500, 28: 1});
+    const s = {affixOverLimit: {rows: [{id: 30, plane: 9, slot: 2, part: 1, character: 2, attributeId: 13, original: 70, coefficient: 1000, delta: 93}, {id: 40, plane: 7, slot: 3, coefficient: 555.55}], rewash: {id: 41, plane: 7, slot: 1, quality: 4}}};
+    const run = (effect, washed) => { answers.length = 0; answers.push([1000, 555.55], [{id: 30, now: 100, was: 100 - effect, total: 150, expected: 93, restored: 1000}], row, {id: 50, record: bagRow}, {id: 30, record: row}, {before: washBefore, after: Object.assign([...washBefore], {15: washed}), count: 1, countAfter: 1, cost: 20, spent: 20}); return affixOverLimit({cells: []}, s); };
+    const ok = await run(93, 55.5);assert.equal(ok.washed.after[15], 55.5);
+    await assert.rejects(run(80, 55.5), /editor predicted/);
+    await assert.rejects(run(93, 100.5), /in-range/);
+  }finally{require.cache[gamePath].exports = real; delete require.cache[lifecyclePath];}
+});
+
 test('building level follow-up sends compilable page code and rejects an upgrade that ignores the edited level',async()=>{
   const gamePath = require.resolve('../scripts/verify-game.cjs'), lifecyclePath = require.resolve('../scripts/verify-native-lifecycle.cjs');
   const real = require(gamePath), answers = [];

@@ -280,7 +280,8 @@
   if(typeof advanced!=='boolean')throw Error('進階模式參數不正確。');
   const info=editingInfo(m,kind,id,plane);
   // Backpack over-limit (z7 advanced) keeps the structural checks but lets an already over-limit row be edited.
-  if(kind==='equipment'&&plane===7&&!info.isSet&&!info.isTreasure)ordinaryEquipment(m,id,plane,info.advancedVerified);
+  // An over-limit affix coefficient does not enter the level formula (副词条 forces L=0), so it does not block level edits.
+  if(kind==='equipment'&&plane===7&&!info.isSet&&!info.isTreasure)ordinaryEquipment(m,id,plane,info.advancedVerified,affixOverLimitAccepted());
   if(!info.verified||advanced&&!info.advancedVerified)throw Error('此修改模式尚未完成隔離遊戲驗證，目前停用。');
   if(!Number.isSafeInteger(value)||value<info.min)throw Error(`請輸入不小於 ${info.min} 的安全整數；操練上限不得低於角色現有職業等級。`);
   const max=advanced?info.advancedMax:Math.min(info.normalMax,info.advancedMax);
@@ -330,7 +331,7 @@
  // Batch-two operations intentionally have no advanced mode.
  const aptitudeNames=['力量','敏捷','智力'];
  const decimal2=value=>typeof value==='number'&&Number.isFinite(value)&&Math.abs(value)<=Number.MAX_SAFE_INTEGER/100&&Math.abs(value*100-Math.round(value*100))<1e-8;
- function ordinaryEquipment(m,itemId,plane=9,overLimitLevel=false){
+ function ordinaryEquipment(m,itemId,plane=9,overLimitLevel=false,overLimitAffix=false){
   const info=editingInfo(m,'equipment',itemId,plane),item=catalogMaps.items.get(get(m,C(itemId,1,plane))),rules=KNOWLEDGE.batch2Data?.items[item.id];
   const q=get(m,C(itemId,5,plane)),tier=get(m,C(itemId,3,plane));
   if(item.kind!=='普通'||!rules||rules.setLink!==0||item.slot>4||q>6||!Number.isSafeInteger(tier)||tier<1||tier>9||tier!==rules.tier||!overLimitLevel&&info.current>info.normalMax)throw Error('只支援原版等階、品質與等級範圍的一般裝備；套裝、寶物、內丹與超限裝備停用。');
@@ -341,7 +342,10 @@
   for(let slot=1;slot<=6;slot++){
    const id=get(m,C(itemId,8+slot,plane)),coefficient=get(m,C(itemId,14+slot,plane)),flag=get(m,C(itemId,27+slot,plane));
    if(![0,1].includes(flag))throw Error('洗練旗標不符。');
-   if(slot<=slots){if(!rules.affixIds.includes(id)||!decimal2(coefficient)||coefficient<10*(q-1)||coefficient>60+10*q)throw Error('既有詞條或係數不在原版範圍內。');}
+   if(slot<=slots){
+    if(!rules.affixIds.includes(id)||!decimal2(coefficient)||coefficient<10*(q-1)||coefficient>affixOverLimitMax)throw Error('既有詞條或係數不在原版範圍內。');
+    if(coefficient>60+10*q&&!overLimitAffix)throw Error('詞條係數已超限，此操作停用；請用超限係數調整，或回遊戲重洗此槽。');
+   }
    else if(id!==0||coefficient!==0||flag!==0)throw Error('品質以外的詞條槽仍有資料。');
    if(flag){if(selected)throw Error('未涵蓋多個已洗練槽的裝備。');selected=slot;}
   }
@@ -369,6 +373,31 @@
   if(!info.verified)throw Error('詞條係數尚未完成隔離遊戲驗證。');
   if(!decimal2(coefficient)||coefficient<info.min||coefficient>info.max)throw Error(`係數須為 ${info.min}–${info.max}，最多兩位小數。`);
   return batch2Put(m,info,coefficient,`editing:equipment:${plane}:${itemId}`,`${info.name}・詞條 ${slot} 係數`);
+ }
+ // Affix coefficient over the native range (equipmentAffixCoefficientAdvanced), z7 and z9, selected wash slot only. The range
+ // lives only in 装备词条系数 (取得與洗練); 装备属性计算→装备主属性 is linear with no clamp, and the tips and wash-page bars
+ // clamp at 120 for display. A native rewash of the slot rolls a fresh in-range value. Over-limit levels stay excluded.
+ const affixOverLimitMax=1000,affixOverLimitAccepted=()=>!!KNOWLEDGE.verification.equipmentAffixCoefficientAdvanced;
+ function affixAdvancedInfo(m,itemId,slot,plane=9){
+  const info=ordinaryEquipment(m,itemId,plane,false,true);
+  if(!Number.isInteger(slot)||slot<1||slot>info.slots)throw Error('請選擇品質範圍內的既有詞條槽。');
+  if(!info.selected)throw Error('只可調整已選定的洗練槽；請先選槽洗練一次。');
+  if(info.selected!==slot)throw Error('只可調整已選定的洗練槽，不能更換選槽。');
+  return {...info,slot,coordinate:C(itemId,14+slot,plane),current:get(m,C(itemId,14+slot,plane)),attributeId:get(m,C(itemId,8+slot,plane)),min:10*(info.quality-1),normalMax:60+10*info.quality,max:affixOverLimitMax,verified:affixOverLimitAccepted()};
+ }
+ function previewEquipmentAffixCoefficientAdvanced(m,{itemId,slot,coefficient,plane=9}){
+  const info=affixAdvancedInfo(m,itemId,slot,plane);
+  if(!decimal2(coefficient)||coefficient<info.min||coefficient>info.max)throw Error(`超限係數須為 ${info.min}–${info.max}，最多兩位小數。`);
+  const calc={...info,id:itemId,currentLevel:get(m,C(itemId,6,plane))},id=info.attributeId;
+  let effect=null,effectError='';
+  try{const before=equipmentAffixEffect(m,calc,id),after=equipmentAffixEffect(m,calc,id,{slot,attributeId:id,coefficient});effect={attributeId:id,name:catalogName('attributes',id),unit:KNOWLEDGE.affixReplacement.attributes[id].unit,before,after,delta:after-before};}catch(e){effectError=e.message;}
+  return {...info,value:coefficient,unchanged:coefficient===info.current,overLimit:coefficient>info.normalMax,effect,effectError};
+ }
+ function setEquipmentAffixCoefficientAdvanced(m,{itemId,slot,coefficient,plane=9}){
+  const preview=previewEquipmentAffixCoefficientAdvanced(m,{itemId,slot,coefficient,plane});
+  if(!preview.verified)throw Error('詞條係數超限尚未完成隔離遊戲冒煙。');
+  if(preview.unchanged)return {...preview,unchanged:true};
+  return {...batch2Put(m,preview,coefficient,`editing:equipment:${plane}:${itemId}`,`${preview.name}・詞條 ${slot} 係數（超限）`),effect:preview.effect};
  }
  // Each slot is rounded by the game before addition. Secondary affixes force L=0.
  function affixEffect(attributeId,tier,level,coefficient){
@@ -768,11 +797,12 @@
   else{
    for(let slot=1;slot<=6;slot++){
     const itemId=get(m,C(characterId,15+slot,2));if(itemId===0)continue;
-    const equipment=ordinaryEquipment(m,itemId);
+    // Ordinary affix pools have no 104–106, so an over-limit coefficient leaves the aptitude sum alone.
+    const equipment=ordinaryEquipment(m,itemId,9,false,affixOverLimitAccepted());
     if(get(m,C(itemId,7,9))!==characterId||catalogMaps.items.get(get(m,C(itemId,1,9))).slot!==slot||equipment.rules.mainAttributes.some(id=>id>=104&&id<=106))throw Error('穿戴裝備的資質加成尚未涵蓋。');
    }
    // Also catch an orphan owner which is absent from the character's slot array.
-   for(let i=1;i<m.original.size[0];i++)if(get(m,C(i,7,9))===characterId&&get(m,C(i,0,9))>0)ordinaryEquipment(m,i);
+   for(let i=1;i<m.original.size[0];i++)if(get(m,C(i,7,9))===characterId&&get(m,C(i,0,9))>0)ordinaryEquipment(m,i,9,false,affixOverLimitAccepted());
   }
   let base=(baseRaw||template.base)[aptitude-1]/10;
   for(let i=0;i<3;i++){
@@ -1536,5 +1566,5 @@
   if(patches.length!==m.changes.size)throw Error('部分修改座標未能定位，已停止匯出。');
   const parts=[];let previous=0;for(const p of patches){parts.push(m.text.slice(previous,p.start),p.value);previous=p.end;}parts.push(m.text.slice(previous));return parts.join('');
  }
- globalThis.SaveCore={listPlacedRelics,placedRelicAttributesInfo,previewPlacedRelicAttributes,setPlacedRelicAttributes,buildingLevelsInfo,previewBuildingLevel,setBuildingLevel,basicTechnologiesInfo,previewBasicTechnology,setBasicTechnology,ascendedInnerPillLevelInfo,previewAscendedInnerPillLevel,setAscendedInnerPillLevel,innerPillLevelInfo,previewInnerPillLevel,setInnerPillLevel,ascensionQualityInfo,previewAscensionQuality,setAscensionQuality,cityLayersInfo,previewCityLayer,setCityLayer,wallEnhancementInfo,previewWallEnhancementLevel,setWallEnhancementLevel,relicAttributesInfo,previewRelicAttributes,setRelicAttributes,listRelics,setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,previewSetEquipmentQualityCandidate,applySetEquipmentQualityCandidate,setEquipmentQualityCandidateEffects,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,recruitTechnologyInfo,setRecruitTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,pillAdvancedInfo,setPillAptitudeBonusAdvanced,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
+ globalThis.SaveCore={listPlacedRelics,placedRelicAttributesInfo,previewPlacedRelicAttributes,setPlacedRelicAttributes,buildingLevelsInfo,previewBuildingLevel,setBuildingLevel,basicTechnologiesInfo,previewBasicTechnology,setBasicTechnology,ascendedInnerPillLevelInfo,previewAscendedInnerPillLevel,setAscendedInnerPillLevel,innerPillLevelInfo,previewInnerPillLevel,setInnerPillLevel,ascensionQualityInfo,previewAscensionQuality,setAscensionQuality,cityLayersInfo,previewCityLayer,setCityLayer,wallEnhancementInfo,previewWallEnhancementLevel,setWallEnhancementLevel,relicAttributesInfo,previewRelicAttributes,setRelicAttributes,listRelics,setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,previewSetEquipmentQualityCandidate,applySetEquipmentQualityCandidate,setEquipmentQualityCandidateEffects,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,recruitTechnologyInfo,setRecruitTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,affixAdvancedInfo,previewEquipmentAffixCoefficientAdvanced,setEquipmentAffixCoefficientAdvanced,setPillAptitudeBonus,pillAdvancedInfo,setPillAptitudeBonusAdvanced,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
 })();

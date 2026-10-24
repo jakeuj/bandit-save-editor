@@ -61,7 +61,7 @@
 
 不再核對 core 摘要、證明內容、manifest 或工具雜湊，所以改 `src/core.js` 不會讓建置失敗。新功能冒煙通過後，在 `groups` 加上該群組、在 `verification.json` 的 `lightweight` 加一筆冒煙紀錄（日期、遊戲版本、代表案例、基準存檔與 repo 外結果檔的 SHA-256），並打開旗標。
 
-`lightweight` 裡的群組不進舊的複合遷移證明（`scripts/migration-proof.cjs` 的 `composite`）：選跑、`problem` 與 `compose` 都略過它們，所以版本遷移寫回後這些旗標會關閉，要在新版重跑冒煙再開。沒有這筆紀錄的已開群組仍照舊要求複合證據。冒煙可沿用 `verify-game.cjs --scenario`（`setPillAptitudeBonus`、`setEquipmentLevel` 等具名操作）加 `verify-native-lifecycle.cjs`（`ascend`、`followup`、`pills`、`pillOverLimit`、`backpackOverLimit`、`relics`、`relicTakeOff`、`relicStandPrepare`、`placedRelicAura`、`wall`、`city`、`ascensionQuality`、`innerPillPrepare`、`innerPillLevel`、`ascendedInnerPillLevel`、`relicCrafting`、`recruitTechnology` 等動作，以 `main()` 的清單為準；`pills` 可用 `pillCharacter` 指定角色；擺放類動作要在存檔重啟後另跑一次取下，才算驗過兩輪 IO；`穿戴装备` 後要等一拍再讀角色指標，同一次 evaluate 內讀到的是空列）；固定基準存檔先複製到 repo 外的新資料夾，步驟依 `.local/game-sources.json` 的 `nativeSmoke` 紀錄（雲存檔載入 → 存檔 → assert → stop → restart → 存檔載入 → assert）。遊戲改版時，對受影響的功能跑冒煙，再更新 `gameVersion` 與 `fingerprints`。測試見 `tests/build-gate.test.cjs`。
+`lightweight` 裡的群組不進舊的複合遷移證明（`scripts/migration-proof.cjs` 的 `composite`）：選跑、`problem` 與 `compose` 都略過它們，所以版本遷移寫回後這些旗標會關閉，要在新版重跑冒煙再開。沒有這筆紀錄的已開群組仍照舊要求複合證據。冒煙可沿用 `verify-game.cjs --scenario`（`setPillAptitudeBonus`、`setEquipmentLevel` 等具名操作）加 `verify-native-lifecycle.cjs`（`ascend`、`followup`、`pills`、`pillOverLimit`、`backpackOverLimit`、`relics`、`relicTakeOff`、`relicStandPrepare`、`placedRelicAura`、`wall`、`city`、`ascensionQuality`、`innerPillPrepare`、`innerPillLevel`、`ascendedInnerPillLevel`、`relicCrafting`、`recruitTechnology`、`affixPrepare`、`affixOverLimit` 等動作，以 `main()` 的清單為準；`pills` 可用 `pillCharacter` 指定角色；擺放類動作要在存檔重啟後另跑一次取下，才算驗過兩輪 IO；`穿戴装备` 後要等一拍再讀角色指標，同一次 evaluate 內讀到的是空列）；固定基準存檔先複製到 repo 外的新資料夾，步驟依 `.local/game-sources.json` 的 `nativeSmoke` 紀錄（雲存檔載入 → 存檔 → assert → stop → restart → 存檔載入 → assert）。遊戲改版時，對受影響的功能跑冒煙，再更新 `gameVersion` 與 `fingerprints`。測試見 `tests/build-gate.test.cjs`。
 
 `scripts/*-proof.cjs` 與 `verification.json` 裡較早的首次證明紀錄仍保留作為歷史證據與遷移工具，但不再是建置條件。
 
@@ -173,3 +173,12 @@
 - **布林全域變數是 0／1**：`SetBoolVar` 寫進去的是數字，`global('游戏暂停').GetValue()` 回 0，不是 false。用 `assert.equal(x,false)` 會誤判成「暫停中」，連跑兩輪冒煙都失敗；斷言一律看真假值。先在現場讀值（repo 外 `probe-pause.cjs`）才發現。`System.Every` 下的每秒事件只在 `游戏暂停` 為否時跑，原生動作要 `SetTimeScale(1)` 再 `pause()` 讓時間走。
 - **看不出差別的重設用標記**：L=599 時每秒都重設成 1，倒數值本身無法分辨「有沒有跑」。在只有重設分支會寫的欄位（`[11,1,0]`）先寫標記 7，跑時間後確認被清成 0；對照組（L=450）標記保持 7，結束時寫回原值。
 - **刷新會改的計數不要斷言**：`新刷新招募数据` 抽到目標品質時會把 `[等階,43,0]` 保底計數歸零，`主动寻访` 加的 1 不一定留得住；只在同一次 evaluate 內比對銅錢扣除。
+
+### 修改器自己的讀取者、基準缺物品與就地差值（v2.30 詞條係數超限教訓）
+
+- **修改器自己也是讀取者**：原生端找齊後，再 grep `src/` 有沒有用同一個值域公式檢查這個欄位（這次是 `60+10*q`）。`ordinaryEquipment` 檢查每一槽係數，被 `characterAptitudeSource` 用來檢查穿戴裝備，所以一件超限裝備會連帶擋掉穿戴者的丹藥、基礎資質與技藝上限。放寬時加可選參數（`overLimitAffix`），只在旗標開啟、且該功能與這個欄位無關時傳 `true`；這是產品取捨，要問使用者。
+- **旗標決定走哪條分支**：`pillAptitudeBonusAscended` 開啟時，丹藥改走 `aptitudeNeutralEquipment`，完全不看係數，所以「穿戴者丹藥被擋」的測試要先關掉它。寫測試前先確認目前 catalog 開著哪些旗標會改走另一條路。
+- **基準存檔沒有要測的物品**：先用 core 掃一遍候選存檔（repo 外 `affix-overlimit-20261025/list2.cjs`），全部都是 Q1 才用 `affixPrepare` 原生取得、穿戴、洗練。`获得物品` 的參數同 `innerPillPrepare`（品質、等級、等階、`装备主属性系数(Q,'')`）；穿戴用 `wp` 第 6 欄當部位，會把原本那件換回背包。
+- **效果核對用就地差值**：在同一次 evaluate 內呼叫原生函式，用 `a.Set` 把該槽改回原值再呼叫一次，然後寫回。差值和修改器預覽的 `effect.delta` 比對，就不必管同屬性的其他來源；寫回後讀一次確認。
+- **瀏覽器規格不要點停用中的按鈕**：Playwright 會等到逾時。要證明「不合法值不能套用」，只填值，再斷言按鈕停用與提示文字。
+- **模擬測試的答案佇列**：同一個 test 裡連跑幾次被拒絕的案例時，前一次失敗會在佇列留下沒用到的答案；每次執行前先清空（`answers.length = 0`）。

@@ -39,7 +39,7 @@
  function renderAffixes(){
   const old=$('affixItem')?.value,slot=$('affixSlot')?.value||'1';
   const choices=equipmentChoices();
-  $('affixEditor').innerHTML=`<h3>詞條係數與精準洗練</h3><div class="toolbar"><select id="affixItem" aria-label="詞條裝備">${choices.map(v=>`<option value="${v.z}:${v.id}">${esc(equipmentLabel(v))}</option>`).join('')}</select><select id="affixSlot" aria-label="詞條槽">${Array.from({length:5},(_,i)=>`<option value="${i+1}">詞條槽 ${i+1}</option>`).join('')}</select></div><p id="affixInfo" class="muted small-text" role="status"></p><div class="toolbar"><label>目標係數<input id="affixValue" type="number" step="0.01"></label><button id="affixApply" class="primary small">套用詞條係數</button></div><p class="muted small-text">上方係數操作只調既有係數；下方精準洗練可替換合法詞條，兩者皆不重置選槽。首次選槽請使用下方精準洗練並確認；品質請使用品質升降；特殊裝備與超限值保持唯讀。</p><h4>精準洗練</h4><div class="toolbar"><input id="affixSearch" type="search" aria-label="搜尋合法詞條" placeholder="搜尋此裝備的合法詞條"><select id="affixTarget" aria-label="目標詞條"></select></div><label class="check" id="affixFirstLabel" hidden><input id="affixFirst" type="checkbox">確認首次選定此槽</label><p id="affixFirstNote" class="muted small-text"></p><div id="affixPreview" class="small-text" role="status"></div><button id="affixReplace" class="primary small" disabled>套用詞條與係數</button><p class="muted small-text">預覽為這件裝備的屬性貢獻，包含同屬性的主屬性與其他詞條；不代表完整角色面板。保留洗練選槽，不扣魂魄。</p>`;
+  $('affixEditor').innerHTML=`<h3>詞條係數與精準洗練</h3><div class="toolbar"><select id="affixItem" aria-label="詞條裝備">${choices.map(v=>`<option value="${v.z}:${v.id}">${esc(equipmentLabel(v))}</option>`).join('')}</select><select id="affixSlot" aria-label="詞條槽">${Array.from({length:5},(_,i)=>`<option value="${i+1}">詞條槽 ${i+1}</option>`).join('')}</select></div><p id="affixInfo" class="muted small-text" role="status"></p><div class="toolbar"><label>目標係數<input id="affixValue" type="number" step="0.01"></label><button id="affixApply" class="primary small">套用詞條係數</button></div><p class="muted small-text">上方係數操作只調既有係數；下方精準洗練可替換合法詞條，兩者皆不重置選槽。首次選槽請使用下方精準洗練並確認；品質請使用品質升降；特殊裝備保持唯讀，超過原版上限請用下方超限係數。</p><h4>超限係數</h4><div class="toolbar"><label>超限係數<input id="affixOverValue" type="number" step="0.01"></label><button id="affixOverApply" class="primary small" disabled>套用超限係數</button></div><p id="affixOverInfo" class="muted small-text" role="status"></p><p class="muted small-text">只改已選洗練槽的係數，上限 1000、最多兩位小數；遊戲內重洗此槽會重抽回原版區間，tips 與洗練頁的進度條在 120 封頂。超限後，此件的品質升降、精準洗練與一般係數調整停用。</p><h4>精準洗練</h4><div class="toolbar"><input id="affixSearch" type="search" aria-label="搜尋合法詞條" placeholder="搜尋此裝備的合法詞條"><select id="affixTarget" aria-label="目標詞條"></select></div><label class="check" id="affixFirstLabel" hidden><input id="affixFirst" type="checkbox">確認首次選定此槽</label><p id="affixFirstNote" class="muted small-text"></p><div id="affixPreview" class="small-text" role="status"></div><button id="affixReplace" class="primary small" disabled>套用詞條與係數</button><p class="muted small-text">預覽為這件裝備的屬性貢獻，包含同屬性的主屬性與其他詞條；不代表完整角色面板。保留洗練選槽，不扣魂魄。</p>`;
   if(choices.some(v=>`${v.z}:${v.id}`===old))$('affixItem').value=old;$('affixSlot').value=slot;
   let info=null;
   const target=()=>{const [plane,itemId]=$('affixItem').value.split(':').map(Number);return {plane,itemId,slot:Number($('affixSlot').value)};};
@@ -64,9 +64,27 @@
     $('affixApply').disabled=i.requiresInitialSelection||!C.affixInfo(model,t.itemId,i.slot,t.plane).verified;
     $('affixFirstLabel').hidden=!i.requiresInitialSelection;$('affixFirst').disabled=!C.KNOWLEDGE.verification.equipmentAffixInitialSelection;$('affixFirstNote').textContent=i.requiresInitialSelection?(!C.KNOWLEDGE.verification.equipmentAffixInitialSelection?'首次選槽尚待原生遊戲 UI 驗證，目前停用。 ':'')+'首次套用後，遊戲只允許洗練此槽；編輯器內可整組還原。本次不扣魂魄。':'';
    }catch(e){$('affixInfo').textContent=e.message;$('affixApply').disabled=true;if(!info)$('affixValue').value='';}
-   $('affixTarget').innerHTML='';$('affixSearch').value='';candidates();
+   $('affixTarget').innerHTML='';$('affixSearch').value='';candidates();overUpdate(true);
   };
-  $('affixItem').onchange=update;$('affixSlot').onchange=update;$('affixSearch').oninput=candidates;$('affixTarget').onchange=replacementPreview;$('affixValue').oninput=replacementPreview;$('affixFirst').onchange=replacementPreview;
+  // The over-limit entry also reads items the ordinary info refuses, so it finds the selected slot itself.
+  let overSlot=null;
+  const overUpdate=(fill=false)=>{
+   $('affixOverApply').disabled=true;
+   try{const t=target();let a,error;overSlot=null;
+    for(const s of [...new Set([t.slot,1,2,3,4,5])]){try{a=C.affixAdvancedInfo(model,t.itemId,s,t.plane);overSlot=s;break;}catch(e){error=error||e;}}
+    if(!a)throw error;
+    if(!info){$('affixSlot').innerHTML=`<option value="${overSlot}">詞條槽 ${overSlot}</option>`;$('affixSlot').value=String(overSlot);}
+    if(fill||!$('affixOverValue').value.trim())$('affixOverValue').value=a.current;
+    $('affixOverValue').min=a.min;$('affixOverValue').max=a.max;
+    const head=`槽 ${overSlot} ${C.catalogName('attributes',a.attributeId)} · 目前 ${a.current} · 超限範圍 ${a.min}–${a.max}（原版上限 ${a.normalMax}）`;
+    if(!a.verified){$('affixOverInfo').textContent=head+' · 詞條係數超限尚未完成隔離遊戲冒煙，目前停用。';return;}
+    let p;try{p=C.previewEquipmentAffixCoefficientAdvanced(model,{...t,slot:overSlot,coefficient:Number($('affixOverValue').value)});}catch(e){$('affixOverInfo').textContent=head+' · '+e.message;return;}
+    $('affixOverInfo').textContent=head+(p.effect?` · 此件${p.effect.name} ${fmt(p.effect.before)}${p.effect.unit} → ${fmt(p.effect.after)}${p.effect.unit}`:p.effectError?' · '+p.effectError:'')+(p.unchanged?' · 係數未改變':'');
+    $('affixOverApply').disabled=p.unchanged;
+   }catch(e){$('affixOverInfo').textContent=e.message;}
+  };
+  $('affixItem').onchange=update;$('affixSlot').onchange=update;$('affixSearch').oninput=candidates;$('affixTarget').onchange=replacementPreview;$('affixValue').oninput=replacementPreview;$('affixFirst').onchange=replacementPreview;$('affixOverValue').oninput=()=>overUpdate();
+  $('affixOverApply').onclick=()=>{if(!$('affixOverValue').value.trim())return toast('係數不能空白。',true);perform(()=>C.setEquipmentAffixCoefficientAdvanced(model,{...target(),slot:overSlot,coefficient:Number($('affixOverValue').value)}));};
   $('affixApply').onclick=()=>{if(!$('affixValue').value.trim())return toast('係數不能空白。',true);perform(()=>C.setEquipmentAffixCoefficient(model,{...target(),coefficient:Number($('affixValue').value)}));};
   $('affixReplace').onclick=()=>{if(!$('affixValue').value.trim())return toast('係數不能空白。',true);perform(()=>C.setEquipmentAffix(model,{...target(),attributeId:Number($('affixTarget').value),coefficient:Number($('affixValue').value),selectUnwashedSlot:!!info?.requiresInitialSelection&&$('affixFirst').checked}));};update();
  }

@@ -87133,6 +87133,7 @@
     "buildingLevel": true,
     "placedRelicAttributes": true,
     "pillAptitudeBonusAdvanced": true,
-    "recruitTechnologyAdvanced": true
+    "recruitTechnologyAdvanced": true,
+    "equipmentAffixCoefficientAdvanced": true
   }
 }
