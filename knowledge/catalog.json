@@ -66148,6 +66148,8 @@
     "wallEnhancementLevel": true,
     "cityLayerLevel": true,
     "ascensionQuality": true,
+    "backpackInnerPillLevel": true,
+    "innerPillLevel": true,
     "names": true,
     "characterExperience": true,
     "professionExperience": true,

@@ -250,11 +250,81 @@ async function ascensionQuality(state, s) {
   return native;
 }
 
+// Prepares unabsorbed inner pills on a base save: 获得物品 with the requested quality and level (main coefficient from the
+// native 装备主属性系数), optionally worn with 穿戴装备. Returns the z7／z9 rows so the editor scenario can name them.
+async function innerPillPrepare(state, s) {
+  const rows = [];
+  for (const {template, quality, level, wear} of s.innerPillPrepare.pills) {
+    const id = await evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);const wp=r.GetObjectClassByName('wp').GetInstances()[0].GetSdkInstance(),seen=new Set();for(let x=1;x<a.GetWidth();x++)if(a.At(x,1,7)>0)seen.add(x);
+      call('获得物品',true,${template},${quality},${level},wp.At(${template},3,0),call('装备主属性系数',${quality},''),1,false,0,'特定装备',false,false);for(let x=1;x<a.GetWidth();x++)if(!seen.has(x)&&a.At(x,1,7)===${template})return x;throw Error('Obtained inner pill missing in z7');})()`);
+    await pause(500);
+    let row = {template, plane: 7, id, record: await evaluate(state, `(()=>{${prefix}return record(${id},7);})()`)};
+    if (wear) {
+      await evaluate(state, `(()=>{${prefix}call('穿戴装备',5,${id},${wear},false,false);return true;})()`);
+      await pause(500);
+      const worn = await evaluate(state, `(()=>{${prefix}const id=a.At(${wear},20,2);return {id,record:record(id,9)};})()`);
+      assert.equal(worn.record[1], template, 'Inner pill was not worn'); assert.equal(worn.record[7], wear, 'Worn inner pill owner');
+      row = {template, plane: 9, id: worn.id, character: wear, record: worn.record};
+    }
+    assert.deepEqual([row.record[2], row.record[5], row.record[6]], [1, quality, level], 'Obtained inner pill');
+    for (let y = 0; y < 50; y++) state.cells.push([row.id, y, row.plane]);
+    if (wear) state.cells.push([wear, 20, 2]);
+    rows.push(row);
+  }
+  return rows;
+}
+
+// Edited inner pill levels after a restart. Every row must load at the edited level; a worn pill's 内丹破镜值 follows
+// round(200·q²·(0.15·T²+0.3)·(1+0.025·L))/100; a backpack pill keeps its level when worn (装备库存入 copies y0–49); the
+// native 升级装备 continues from a lowered level and stops at the cap; 渡劫结束 copies the edited level into z17.
+async function innerPillLevel(state, s) {
+  const {rows, wear, upgrade, capped, ascend} = s.innerPillLevel, out = {};
+  out.rows = await evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);return ${JSON.stringify(rows)}.map(v=>({...v,record:record(v.id,v.plane)}));})()`);
+  for (const v of out.rows) assert.equal(v.record[6], v.level, `Edited level not loaded for ${v.plane}:${v.id}`);
+  out.worn = await evaluate(state, `(()=>{${prefix}return ${JSON.stringify(rows.filter(v => v.character))}.map(v=>{const p=record(v.id,9),wp=r.GetObjectClassByName('wp').GetInstances()[0].GetSdkInstance(),attr=wp.At(p[1],8,0);
+    return {...v,pointer:a.At(v.character,20,2),breakthrough:call('内丹破镜值',p[5],p[6],p[3]),attr,main:call('装备主属性',p[6],p[3],attr,p[8],wp.At(p[1],11,0),'主属性',0,p[5]),total:call('装备属性计算',v.character,attr,0,0,0,0,0,0,0)};});})()`);
+  for (const v of out.worn) {
+    const p = out.rows.find(r => r.id === v.id && r.plane === 9).record;
+    assert.equal(v.pointer, v.id, 'Worn pointer');
+    assert.equal(v.breakthrough, Math.round(200 * p[5] ** 2 * (0.15 * p[3] ** 2 + 0.3) * (1 + 0.025 * p[6])) / 100, '内丹破镜值');
+    assert.ok(v.total >= v.main, 'Worn pill main attribute missing from 装备属性计算');
+  }
+  if (wear) {
+    await evaluate(state, `(()=>{${prefix}call('穿戴装备',5,${wear.id},${wear.character},false,false);return true;})()`);
+    await pause(500);
+    out.wear = await evaluate(state, `(()=>{${prefix}const id=a.At(${wear.character},20,2);return {id,record:record(id,9),bag:record(${wear.id},7)};})()`);
+    assert.equal(out.wear.record[6], wear.level, 'Worn backpack pill level'); assert.equal(out.wear.record[7], wear.character);
+    assert.ok(out.wear.bag.every(v => v === 0), 'Backpack row not moved');
+    for (let y = 0; y < 50; y++) state.cells.push([out.wear.id, y, 9], [wear.id, y, 7]);
+    state.cells.push([wear.character, 20, 2]);
+  }
+  out.upgrade = await evaluate(state, `(()=>{${prefix}const id=${upgrade.id},p=record(id,9),souls=a.At(3,2,0),cost=call('升级装备魂魄',p[6],p[3],0,'内丹');call('升级装备',id,${upgrade.character});return {before:p[6],after:a.At(id,6,9),souls,cost,soulsAfter:a.At(3,2,0)};})()`);
+  assert.deepEqual([out.upgrade.after, out.upgrade.soulsAfter], [out.upgrade.before + 1, out.upgrade.souls - out.upgrade.cost], 'Native upgrade from the edited level');
+  out.capped = await evaluate(state, `(()=>{${prefix}const id=${capped.id},souls=a.At(3,2,0),before=a.At(id,6,9);call('升级装备',id,${capped.character});return {before,after:a.At(id,6,9),cap:call('装备等级上限',a.At(id,5,9)),souls,soulsAfter:a.At(3,2,0)};})()`);
+  assert.deepEqual([out.capped.after, out.capped.soulsAfter], [out.capped.before, out.capped.souls], 'Native upgrade passed the cap');
+  assert.equal(out.capped.before, out.capped.cap, 'Capped pill not at its cap');
+  state.cells.push([3, 2, 0], [upgrade.id, 6, 9], [capped.id, 6, 9]);
+  if (ascend) {
+    const c = ascend.character, source = await evaluate(state, `(()=>{${prefix}return record(a.At(${c},20,2),9);})()`);
+    await evaluate(state, `(()=>{${prefix}const m=r.GetEventSheetManager(),v=name=>{const f=[...m.GetAllGlobalVariables(),...m.GetAllLocalVariables()].filter(v=>v.GetName()===name);if(f.length!==1)throw Error('Ambiguous variable '+name);return f[0];};v('渡劫角色序号').SetValue(${c});v('渡劫结丹品质').SetValue(${ascend.quality});call('渡劫结束',false);return true;})()`);
+    await pause(500);
+    out.ascend = await evaluate(state, `(()=>{${prefix}const c=${c},k=a.At(c,50,2),row=a.At(c,2*k,16);return {count:k,quality:a.At(c,2*k-1,16),row,stored:record(row,17),slot:a.At(c,20,2),source:record(${capped.id},9)};})()`);
+    assert.equal(out.ascend.slot, 0, 'Ascension did not take the worn pill');
+    assert.deepEqual([out.ascend.stored[1], out.ascend.stored[6], out.ascend.stored[7]], [source[1], source[6], c], 'Stored pill template, level or owner');
+    for (let y = 0; y < 9; y++) if (y !== 7) assert.equal(out.ascend.stored[y], source[y], 'Stored pill field ' + y);
+    assert.ok(out.ascend.source.every(v => v === 0), 'Worn pill row was not cleared');
+    for (let y = 0; y < 50; y++) state.cells.push([out.ascend.row, y, 17], [capped.id, y, 9]);
+    for (let y = 1; y <= 16; y++) state.cells.push([c, y, 16]);
+    state.cells.push([c, 20, 2], [c, 50, 2], [c, 3, 2]);
+  }
+  return out;
+}
+
 async function main() {
   const statePath = opt('--state'), state = JSON.parse(fs.readFileSync(statePath)), scenario = JSON.parse(fs.readFileSync(opt('--scenario')));
   const rel = path.relative(path.resolve(__dirname, '..'), state.dir), child = path.relative(state.dir, state.game);
   if (!rel || (!path.isAbsolute(rel) && rel !== '..' && !rel.startsWith('..' + path.sep)) || !child || path.isAbsolute(child) || child.startsWith('..')) throw Error('External disposable state required');
-  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.backpackOverLimit && !scenario.relics && !scenario.relicTakeOff && !scenario.wall && !scenario.city && !scenario.ascensionQuality) throw Error('Scenario has no native follow-up actions');
+  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.backpackOverLimit && !scenario.relics && !scenario.relicTakeOff && !scenario.wall && !scenario.city && !scenario.ascensionQuality && !scenario.innerPillPrepare && !scenario.innerPillLevel) throw Error('Scenario has no native follow-up actions');
   await waitMain(state);
   const result = {};
   if (scenario.ascend && !scenario.pills) result.ascend = await ascend(state, scenario);
@@ -266,10 +336,12 @@ async function main() {
   if (scenario.wall) result.wall = await wallUpgrade(state, scenario);
   if (scenario.city) result.city = await cityLayer(state, scenario);
   if (scenario.ascensionQuality) result.ascensionQuality = await ascensionQuality(state, scenario);
+  if (scenario.innerPillPrepare) result.innerPillPrepare = await innerPillPrepare(state, scenario);
+  if (scenario.innerPillLevel) result.innerPillLevel = await innerPillLevel(state, scenario);
   state.expected = await evaluate(state, `(()=>{${prefix}return ${JSON.stringify(state.cells)}.map(([x,y,z])=>a.At(x,y,z));})()`);
   fs.writeFileSync(statePath, JSON.stringify(state, null, 2));
   fs.writeFileSync(path.join(state.dir, 'native-lifecycle.json'), JSON.stringify(result, null, 2));
   console.log('PASS: native ' + Object.keys(result).join(' and ') + ' follow-up actions');
 }
 if (require.main === module) main().catch(e => { console.error(e.stack); process.exitCode = 1; });
-module.exports = {ascend, followup, pillsAndRebirth, backpackOverLimit, relicPlacement, relicTakeOff, wallUpgrade, cityLayer, ascensionQuality};
+module.exports = {ascend, followup, pillsAndRebirth, backpackOverLimit, relicPlacement, relicTakeOff, wallUpgrade, cityLayer, ascensionQuality, innerPillPrepare, innerPillLevel};

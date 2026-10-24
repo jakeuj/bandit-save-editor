@@ -46,7 +46,7 @@
 
 不再核對 core 摘要、證明內容、manifest 或工具雜湊，所以改 `src/core.js` 不會讓建置失敗。新功能冒煙通過後，在 `groups` 加上該群組、在 `verification.json` 的 `lightweight` 加一筆冒煙紀錄（日期、遊戲版本、代表案例、基準存檔與 repo 外結果檔的 SHA-256），並打開旗標。
 
-`lightweight` 裡的群組不進舊的複合遷移證明（`scripts/migration-proof.cjs` 的 `composite`）：選跑、`problem` 與 `compose` 都略過它們，所以版本遷移寫回後這些旗標會關閉，要在新版重跑冒煙再開。沒有這筆紀錄的已開群組仍照舊要求複合證據。冒煙可沿用 `verify-game.cjs --scenario`（`setPillAptitudeBonus`、`setEquipmentLevel` 等具名操作）加 `verify-native-lifecycle.cjs`（`ascend`、`followup`、`pills`、`backpackOverLimit`、`relics`、`relicTakeOff` 六種動作；`pills` 可用 `pillCharacter` 指定角色；擺放類動作要在存檔重啟後另跑一次取下，才算驗過兩輪 IO；`穿戴装备` 後要等一拍再讀角色指標，同一次 evaluate 內讀到的是空列）；固定基準存檔先複製到 repo 外的新資料夾，步驟依 `.local/game-sources.json` 的 `nativeSmoke` 紀錄（雲存檔載入 → 存檔 → assert → stop → restart → 存檔載入 → assert）。遊戲改版時，對受影響的功能跑冒煙，再更新 `gameVersion` 與 `fingerprints`。測試見 `tests/build-gate.test.cjs`。
+`lightweight` 裡的群組不進舊的複合遷移證明（`scripts/migration-proof.cjs` 的 `composite`）：選跑、`problem` 與 `compose` 都略過它們，所以版本遷移寫回後這些旗標會關閉，要在新版重跑冒煙再開。沒有這筆紀錄的已開群組仍照舊要求複合證據。冒煙可沿用 `verify-game.cjs --scenario`（`setPillAptitudeBonus`、`setEquipmentLevel` 等具名操作）加 `verify-native-lifecycle.cjs`（`ascend`、`followup`、`pills`、`backpackOverLimit`、`relics`、`relicTakeOff`、`wall`、`city`、`ascensionQuality`、`innerPillPrepare`、`innerPillLevel` 等動作，以 `main()` 的清單為準；`pills` 可用 `pillCharacter` 指定角色；擺放類動作要在存檔重啟後另跑一次取下，才算驗過兩輪 IO；`穿戴装备` 後要等一拍再讀角色指標，同一次 evaluate 內讀到的是空列）；固定基準存檔先複製到 repo 外的新資料夾，步驟依 `.local/game-sources.json` 的 `nativeSmoke` 紀錄（雲存檔載入 → 存檔 → assert → stop → restart → 存檔載入 → assert）。遊戲改版時，對受影響的功能跑冒煙，再更新 `gameVersion` 與 `fingerprints`。測試見 `tests/build-gate.test.cjs`。
 
 `scripts/*-proof.cjs` 與 `verification.json` 裡較早的首次證明紀錄仍保留作為歷史證據與遷移工具，但不再是建置條件。
 
@@ -95,3 +95,11 @@
 - **凍結的複本**：原生流程把一筆資料搬進另一層之後就不再修改（例如入體內丹 z9→z17），那層的值只能對照「當初的原生狀態」來改。先找出真正的讀取者（`角色资质上限倍率` 只讀 y15），但同一個公式寫出的重複欄位（y16、y17）也要一起寫，否則修改器自己的紀錄檢查會拒絕。
 - **共用還原群組**：會移動其他功能上限的修改（例如倍率 M），放進受影響欄位所屬的還原群組（`aptitude:角色ID`）。這樣單格還原會整組撤回，不會留下丹藥 B 超過上限的狀態。
 - **重用原生備料**：需要特殊狀態的冒煙，先找既有的原生備料存檔（例如 `pill-ascended-20261024/ascended`），複製到新資料夾當 `--save-file`，不用重新備料。
+
+### 類別欄、隱藏讀取者與同面板分派（v2.22 教訓）
+
+- **類別和種類是兩欄**：wp 第 4 欄是種類（`宝物`、`内丹`），第 5 欄是類別（`装备`、`内丹`）。內丹的類別不是「裝備」，`词条洗练` 只收類別「装备」，所以內丹詞條一直是 0；修改器的一般裝備入口也因為 `category!=='裝備'` 擋掉內丹。判斷資格時兩欄都要看。
+- **找讀取者不能只看屬性計算**：等級除了進 `装备属性计算`，還進 `内丹破镜值`，再經 `总渡劫值` 推渡劫進度。要列出所有讀取者並逐一確認效果和原生升級相同，才算沒有副作用。
+- **原生備料與編輯分兩支腳本**：先用 `innerPillPrepare` 以 `获得物品` 的品質／等級參數做出要測的物品（這是原生取得路徑，不是手寫欄位），存檔讀回後把 `game/save/ea1save.dat` 複製出來當基準，再跑編輯冒煙。被搬過的列 y0 可能重複（兩顆內丹都是 7），不要要求 y0 唯一。
+- **「從修改值繼續」的原生對照**：降級後直接呼叫原生 `升级装备`，比對等級 +1 與魂魄扣除量＝`升级装备魂魄`；升到上限的再呼叫一次，確認等級與魂魄都不動。
+- **同一面板、不同入口**：新功能要放進既有面板（例如裝備等級）時，在 UI 依範本種類分派到新的具名入口，不改共用的 `editingInfo`／`setEditingValue`。

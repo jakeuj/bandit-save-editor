@@ -871,6 +871,50 @@
   try{transaction(m,()=>{for(const c of preview.changes)put(m,c.coordinate,c.after,c.label);},'結丹品質調整');}finally{m.currentGroup=previous;}
   return preview;
  }
+ // Unabsorbed inner pill level (backpackInnerPillLevel z7／innerPillLevel z9). 升级装备／升级最大装备 share the treasure OR
+ // branch: z9 y6+1 up to 装备等级上限(y5)=10+(q−1)×5, paid in souls; z7 has no native upgrade. A worn pill's y6 feeds
+ // 装备属性计算, 内丹破镜值 (渡劫 speed) and is copied to z17 by 内丹入体存入, as after a native upgrade; 装备价格 ignores it.
+ // 获得物品 zeroes y9–23 and 词条洗练 only takes category 装备, so the affix columns stay 0. z9 rows must be worn (slot 5).
+ const innerPillQualityMax=6;
+ function innerPillLevelInfo(m,{itemId,plane=9}){
+  const fail=reason=>{throw Error('內丹等級：'+reason);};
+  if(![7,9].includes(plane)||!Number.isSafeInteger(itemId)||itemId<1||itemId>=m.original.size[0])fail('庫別或編號不符。');
+  const record=Array.from({length:60},(_,y)=>get(m,C(itemId,y,plane))),item=catalogMaps.items.get(record[1]),t=KNOWLEDGE.batch2Data?.items[record[1]],quality=record[5],level=record[6],owner=record[7];
+  if(!item||item.kind!=='内丹'||item.slot!==5||!t)fail('不是已辨識的內丹範本。');
+  if(record.some(v=>typeof v!=='number'||!Number.isFinite(v))||!Number.isSafeInteger(record[0])||record[0]<1||record[0]>=m.original.size[0])fail('識別或欄位型別不符。');
+  if(record[2]!==1||record[3]!==t.tier||record[4]!==0)fail('數量、等階或狀態不符。');
+  if(![0,1].includes(record[22])||![0,1].includes(record[24])||[...record.slice(9,22),record[23],...record.slice(25,50)].some(v=>v!==0))fail('包含尚未涵蓋的詞條或特殊狀態。');
+  if(!Number.isSafeInteger(quality)||quality<1||quality>innerPillQualityMax)fail('只支援原版品質 1–6。');
+  const normalMax=10+5*(quality-1);
+  if(!Number.isSafeInteger(level)||level<1||level>normalMax)fail('只支援原版等級，超限停用。');
+  // Native slot replacement returns the displaced item to z7 without clearing its owner; that stale owner must be active.
+  if(!Number.isSafeInteger(owner)||owner<0||owner>0&&!activeCharacter(m,owner))fail('歸屬不符。');
+  let references=0;
+  for(let x=1;plane===9&&x<m.original.size[0];x++)for(let slot=1;slot<=6;slot++)if(get(m,C(x,15+slot,2))===itemId){
+   references++;if(owner!==x||!activeCharacter(m,x)||slot!==5)fail('穿戴雙向指標不一致。');
+  }
+  if(plane===9&&references!==1)fail('裝備庫只支援穿戴中的內丹。');
+  const group=plane===7?'backpackInnerPillLevel':'innerPillLevel';
+  return {kind:'equipment',isInnerPill:true,id:itemId,itemId,plane,name:item.name,coordinate:C(itemId,6,plane),current:level,min:1,normalMax,advancedMax:normalMax,advancedVerified:false,verified:KNOWLEDGE.verification[group]===true,group,record,tier:t.tier,quality,owner,worn:references===1};
+ }
+ function previewInnerPillLevel(m,options){
+  const {itemId,plane=9,level}=options,reasons=[];let info=null;
+  if(Object.keys(options).some(k=>!['itemId','plane','level'].includes(k)))reasons.push('內丹等級只接受物品編號、庫別與等級。');
+  try{info=innerPillLevelInfo(m,{itemId,plane});}catch(e){reasons.push(e.message);}
+  if(info&&(!Number.isSafeInteger(level)||level<1||level>info.normalMax))reasons.push(`內丹等級須為 1–${info.normalMax} 的整數。`);
+  if(!info||reasons.length)return {...info,itemId,plane,level,reasons,changes:[],canApply:false};
+  const changes=level===info.current?[]:[{coordinate:info.coordinate,before:info.current,after:level,label:`${info.name}・內丹等級`}];
+  return {...info,level,reasons,changes,unchanged:!changes.length,canApply:info.verified&&!!changes.length};
+ }
+ function setInnerPillLevel(m,options){
+  const preview=previewInnerPillLevel(m,options);
+  if(preview.reasons.length)throw Error(preview.reasons.join('；'));
+  if(!preview.verified)throw Error('內丹等級尚未完成隔離遊戲驗證。');
+  if(!preview.changes.length)return preview;
+  const previous=m.currentGroup;m.currentGroup=`inner-pill:${preview.plane}:${preview.itemId}`;
+  try{transaction(m,()=>put(m,preview.coordinate,preview.level,preview.changes[0].label),`${preview.name}等級調整`);}finally{m.currentGroup=previous;}
+  return preview;
+ }
  // Backpack relic attributes (relicAttributes). 获得灵物 draws c_i=b_i×random(0.6,1) from lw y6–10, splits one total G by
  // c_i/Σc and rounds each share to 0.1 (z18 y5–9); y10 is the rounded mean. Five values are accepted only together, and only
  // when a witness (G, c) reproduces every share with the game's own expressions; template, quality and level stay fixed.
@@ -1265,5 +1309,5 @@
   if(patches.length!==m.changes.size)throw Error('部分修改座標未能定位，已停止匯出。');
   const parts=[];let previous=0;for(const p of patches){parts.push(m.text.slice(previous,p.start),p.value);previous=p.end;}parts.push(m.text.slice(previous));return parts.join('');
  }
- globalThis.SaveCore={ascensionQualityInfo,previewAscensionQuality,setAscensionQuality,cityLayersInfo,previewCityLayer,setCityLayer,wallEnhancementInfo,previewWallEnhancementLevel,setWallEnhancementLevel,relicAttributesInfo,previewRelicAttributes,setRelicAttributes,listRelics,setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,previewSetEquipmentQualityCandidate,applySetEquipmentQualityCandidate,setEquipmentQualityCandidateEffects,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
+ globalThis.SaveCore={innerPillLevelInfo,previewInnerPillLevel,setInnerPillLevel,ascensionQualityInfo,previewAscensionQuality,setAscensionQuality,cityLayersInfo,previewCityLayer,setCityLayer,wallEnhancementInfo,previewWallEnhancementLevel,setWallEnhancementLevel,relicAttributesInfo,previewRelicAttributes,setRelicAttributes,listRelics,setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,previewSetEquipmentQualityCandidate,applySetEquipmentQualityCandidate,setEquipmentQualityCandidateEffects,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
 })();

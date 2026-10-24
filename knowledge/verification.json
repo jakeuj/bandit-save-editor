@@ -69,7 +69,9 @@
     "relicAttributes": true,
     "wallEnhancementLevel": true,
     "cityLayerLevel": true,
-    "ascensionQuality": true
+    "ascensionQuality": true,
+    "backpackInnerPillLevel": true,
+    "innerPillLevel": true
   },
   "lightweight": {
     "randomCharacterBaseAptitudesAscended": {
@@ -211,6 +213,38 @@
       ],
       "baselineSaveSha256": "39a7c42075ccf4fc5d0c2842476a3235c26aa0422a7f100afd4ca716ef0a0ce1",
       "resultSha256": "e7187225de912028670111ae82476fc078805fed1283a19d39be3c1ea613c311",
+      "passed": true
+    },
+    "backpackInnerPillLevel": {
+      "date": "2026-10-24",
+      "gameVersion": "V1.0.11.2",
+      "flow": "docs/maintenance/lightweight.md",
+      "smoke": "verify-native-lifecycle.cjs innerPillPrepare 原生備料，verify-game.cjs 以 setInnerPillLevel 編輯兩庫（隔離副本、雲存檔載入、原版存檔、新 PID 讀回），再以 verify-native-lifecycle.cjs innerPillLevel 做原生核對與渡劫，第二輪原版存檔、新 PID 讀回，最後以修改器重讀遊戲寫出的存檔",
+      "cases": [
+        "原生備料：v2.16 結丹存檔（角色 8 結丹 2 次）以 获得物品 取得四顆內丹（品質／等級為參數、主係數取原生 装备主属性系数），兩顆留背包、兩顆以 穿戴装备 穿在角色 8／7，原版存檔、新 PID 讀回後當基準",
+        "背包 z7：靈巧內丹 T3 Q3 1→20（上限）、慧根內丹 T4 Q4 12→3；穿戴 z9：角色 8 蠻力內丹 T2 Q2 8→15（上限）、角色 7 聚氣內丹 T5 Q2 8→2；雲存檔載入、原版存檔、新 PID 讀回一致",
+        "原生核對：穿戴內丹 内丹破镜值 與公式相符（9.9／34.02）、装备属性计算 含其主屬性；背包 Lv20 內丹穿上後 z9 仍是 20；角色 7 從 Lv2 原生 升级装备 到 3、扣魂魄 449＝升级装备魂魄；角色 8 在上限 15 時原生升級不動、不扣魂魄",
+        "渡劫帶入：角色 8 以 渡劫结束（品質 4）結第 3 次丹，z17 新列 y6＝15、範本與 owner 相符，z9 原列清空；第二輪原版存檔、新 PID 讀回一致（3 個 PID、4 次 assert）",
+        "修改器重讀遊戲寫出檔：三顆內丹仍可編輯、角色 8 結丹紀錄 3 次通過檢查（倍率 6）"
+      ],
+      "baselineSaveSha256": "431a4edd09e5d1d7fe4f9df0a4116e50990ff6a951a2173ba30a3e48cc707338",
+      "resultSha256": "a606c552fc62d0c4e54e308554626c420b3c17712c3b0f87ed2803e593ae1e2f",
+      "passed": true
+    },
+    "innerPillLevel": {
+      "date": "2026-10-24",
+      "gameVersion": "V1.0.11.2",
+      "flow": "docs/maintenance/lightweight.md",
+      "smoke": "verify-native-lifecycle.cjs innerPillPrepare 原生備料，verify-game.cjs 以 setInnerPillLevel 編輯兩庫（隔離副本、雲存檔載入、原版存檔、新 PID 讀回），再以 verify-native-lifecycle.cjs innerPillLevel 做原生核對與渡劫，第二輪原版存檔、新 PID 讀回，最後以修改器重讀遊戲寫出的存檔",
+      "cases": [
+        "原生備料：v2.16 結丹存檔（角色 8 結丹 2 次）以 获得物品 取得四顆內丹（品質／等級為參數、主係數取原生 装备主属性系数），兩顆留背包、兩顆以 穿戴装备 穿在角色 8／7，原版存檔、新 PID 讀回後當基準",
+        "背包 z7：靈巧內丹 T3 Q3 1→20（上限）、慧根內丹 T4 Q4 12→3；穿戴 z9：角色 8 蠻力內丹 T2 Q2 8→15（上限）、角色 7 聚氣內丹 T5 Q2 8→2；雲存檔載入、原版存檔、新 PID 讀回一致",
+        "原生核對：穿戴內丹 内丹破镜值 與公式相符（9.9／34.02）、装备属性计算 含其主屬性；背包 Lv20 內丹穿上後 z9 仍是 20；角色 7 從 Lv2 原生 升级装备 到 3、扣魂魄 449＝升级装备魂魄；角色 8 在上限 15 時原生升級不動、不扣魂魄",
+        "渡劫帶入：角色 8 以 渡劫结束（品質 4）結第 3 次丹，z17 新列 y6＝15、範本與 owner 相符，z9 原列清空；第二輪原版存檔、新 PID 讀回一致（3 個 PID、4 次 assert）",
+        "修改器重讀遊戲寫出檔：三顆內丹仍可編輯、角色 8 結丹紀錄 3 次通過檢查（倍率 6）"
+      ],
+      "baselineSaveSha256": "431a4edd09e5d1d7fe4f9df0a4116e50990ff6a951a2173ba30a3e48cc707338",
+      "resultSha256": "a606c552fc62d0c4e54e308554626c420b3c17712c3b0f87ed2803e593ae1e2f",
       "passed": true
     }
   },
