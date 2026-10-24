@@ -234,11 +234,27 @@ async function cityLayer(state, s) {
   return {before, after};
 }
 
+// An edited ascension quality after a restart: the native 角色资质上限倍率 and 角色资质上限 must equal the editor's M and
+// caps, and every referenced stored pill must carry the coefficient of its round's quality.
+async function ascensionQuality(state, s) {
+  const {character, multiplier, caps, qualities} = s.ascensionQuality;
+  const native = await evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);const c=${character},k=a.At(c,50,2),rounds=[];for(let i=1;i<=k;i++){const row=a.At(c,2*i,16);rounds.push({quality:a.At(c,2*i-1,16),row,coefficients:[15,16,17].map(y=>a.At(row,y,17))});}return {count:k,rounds,multiplier:call('角色资质上限倍率',c,0,0),caps:['力量','敏捷','智力'].map(t=>call('角色资质上限',c,t)),totals:[1,2,3].map(t=>call('角色资质计算',c,t))};})()`);
+  assert.deepEqual(native.rounds.map(r => r.quality), qualities, 'Edited qualities not loaded');
+  native.rounds.forEach((r, i) => assert.deepEqual(r.coefficients, Array(3).fill(ascensionCoefficient(r.quality, i + 1)), 'Stored pill coefficient'));
+  assert.equal(native.multiplier, multiplier, 'Native cap multiplier');
+  assert.deepEqual(native.caps, caps, 'Native aptitude caps');
+  native.totals.forEach((t, i) => assert.ok(t <= native.caps[i], 'Total above the native cap'));
+  for (let y = 1; y <= 16; y++) state.cells.push([character, y, 16]);
+  for (const r of native.rounds) for (const y of [15, 16, 17]) state.cells.push([r.row, y, 17]);
+  state.cells.push([character, 50, 2]);
+  return native;
+}
+
 async function main() {
   const statePath = opt('--state'), state = JSON.parse(fs.readFileSync(statePath)), scenario = JSON.parse(fs.readFileSync(opt('--scenario')));
   const rel = path.relative(path.resolve(__dirname, '..'), state.dir), child = path.relative(state.dir, state.game);
   if (!rel || (!path.isAbsolute(rel) && rel !== '..' && !rel.startsWith('..' + path.sep)) || !child || path.isAbsolute(child) || child.startsWith('..')) throw Error('External disposable state required');
-  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.backpackOverLimit && !scenario.relics && !scenario.relicTakeOff && !scenario.wall && !scenario.city) throw Error('Scenario has no native follow-up actions');
+  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.backpackOverLimit && !scenario.relics && !scenario.relicTakeOff && !scenario.wall && !scenario.city && !scenario.ascensionQuality) throw Error('Scenario has no native follow-up actions');
   await waitMain(state);
   const result = {};
   if (scenario.ascend && !scenario.pills) result.ascend = await ascend(state, scenario);
@@ -249,10 +265,11 @@ async function main() {
   if (scenario.relicTakeOff) result.relicTakeOff = await relicTakeOff(state);
   if (scenario.wall) result.wall = await wallUpgrade(state, scenario);
   if (scenario.city) result.city = await cityLayer(state, scenario);
+  if (scenario.ascensionQuality) result.ascensionQuality = await ascensionQuality(state, scenario);
   state.expected = await evaluate(state, `(()=>{${prefix}return ${JSON.stringify(state.cells)}.map(([x,y,z])=>a.At(x,y,z));})()`);
   fs.writeFileSync(statePath, JSON.stringify(state, null, 2));
   fs.writeFileSync(path.join(state.dir, 'native-lifecycle.json'), JSON.stringify(result, null, 2));
   console.log('PASS: native ' + Object.keys(result).join(' and ') + ' follow-up actions');
 }
 if (require.main === module) main().catch(e => { console.error(e.stack); process.exitCode = 1; });
-module.exports = {ascend, followup, pillsAndRebirth, backpackOverLimit, relicPlacement, relicTakeOff, wallUpgrade, cityLayer};
+module.exports = {ascend, followup, pillsAndRebirth, backpackOverLimit, relicPlacement, relicTakeOff, wallUpgrade, cityLayer, ascensionQuality};

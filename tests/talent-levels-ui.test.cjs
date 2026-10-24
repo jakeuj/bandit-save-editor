@@ -43,6 +43,7 @@ async function setup({gate=false,mutate}={}){
   .replace('/*__RELIC_UI__*/',()=>fs.readFileSync(path.join(root,'src/relic-ui.js'),'utf8'))
   .replace('/*__WALL_UI__*/',()=>fs.readFileSync(path.join(root,'src/wall-ui.js'),'utf8'))
   .replace('/*__CITY_UI__*/',()=>fs.readFileSync(path.join(root,'src/city-ui.js'),'utf8'))
+  .replace('/*__ASCENSION_UI__*/',()=>fs.readFileSync(path.join(root,'src/ascension-ui.js'),'utf8'))
   .replace("showTab('resources');renderFooter();","globalThis.uiTest={get model(){return model;}};showTab('resources');renderFooter();");
  vm.runInNewContext(source,context);
  const fixture=saveFixture({characters:2}),data=fixture.data;

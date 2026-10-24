@@ -66147,6 +66147,7 @@
     "relicAttributes": true,
     "wallEnhancementLevel": true,
     "cityLayerLevel": true,
+    "ascensionQuality": true,
     "names": true,
     "characterExperience": true,
     "professionExperience": true,

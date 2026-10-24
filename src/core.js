@@ -824,6 +824,53 @@
   }else if(!Number.isSafeInteger(bonus)||bonus<0||bonus>info.max)throw Error(`累積增量須為 0–${info.max} 的整數（每 1 等於資質 0.1 點）。`);
   return batch2Put(m,info,bonus,`aptitude:${characterId}`,`${get(m,C(characterId,1,2))}・${info.name}丹藥累積增量`);
  }
+ // Ascension quality (ascensionQuality). 渡劫结束 writes z16[c,2k−1]=q and the k-th stored pill's z17 y15–17 =
+ // 结丹资质提升系数(q,k); nothing else writes them after the ascension, and only 角色资质上限倍率 reads y15. A new q rewrites
+ // all four cells together, matching an ascension at that quality, and moves only M. Template-0 characters only; a lower
+ // quality is blocked while any current A+B/10 exceeds the new cap (native pills never leave B above it).
+ function ascensionQualityInfo(m,{characterId}){
+  const reasons=[],verified=!!KNOWLEDGE.verification.ascensionQuality;
+  try{
+   if(!activeCharacter(m,characterId)||get(m,C(characterId,0,2))!==characterId)throw Error('找不到有效的已招募角色。');
+   if(get(m,C(characterId,2,2))!==0)throw Error('有名角色載入時會依範本回填資質；本功能只支援範本 0。');
+   if(get(m,C(characterId,55,2))!==0)throw Error('目前只支援非在監的已招募角色。');
+   if(ascensionRecord(m,characterId).count===0)throw Error('角色尚未結丹。');
+   let ascension=null;
+   const aptitudes=[1,2,3].map(aptitude=>{
+    const source=characterAptitudeSource(m,characterId,aptitude,undefined,true),bonus=get(m,C(characterId,12+aptitude,2));
+    assertPillBonusReadable(bonus);ascension=source.ascension;
+    const cap=aptitudeCap(source.base,ascension),total=Math.round(100*(source.base+bonus/10))/100;
+    if(!Number.isFinite(total)||total>cap)throw Error('目前丹藥增量超過角色資質上限，請先降低增量。');
+    return {aptitude,name:aptitudeNames[aptitude-1],base:source.base,bonus,total,cap};
+   });
+   return {characterId,records:ascension.records.map(r=>({...r,name:catalogName('items',r.templateId)})),ascensions:ascension.count,multiplier:ascension.multiplier,aptitudes,eligible:true,reasons,verified};
+  }catch(e){reasons.push(e.message);return {characterId,eligible:false,reasons,verified};}
+ }
+ function previewAscensionQuality(m,options){
+  const {characterId,round,quality}=options,info=ascensionQualityInfo(m,{characterId}),reasons=[...info.reasons];
+  if(Object.keys(options).some(k=>!['characterId','round','quality'].includes(k)))reasons.push('結丹品質只接受角色編號、結丹次序與品質。');
+  if(info.eligible&&(!Number.isSafeInteger(round)||round<1||round>info.ascensions))reasons.push(`結丹次序須為 1–${info.ascensions} 的整數。`);
+  if(!Number.isSafeInteger(quality)||quality<1||quality>9)reasons.push('結丹品質須為原版 1–9 的整數。');
+  if(!info.eligible||reasons.length)return {...info,reasons,canApply:false,changes:[]};
+  const record=info.records[round-1],coefficient=ascensionCoefficient(quality,round);
+  // Same summation order as ascensionRecord: from 0 in round order, 1.5 added last.
+  let sum=0;for(const r of info.records)sum+=r.round===round?coefficient:r.coefficient;
+  const nextMultiplier=1.5+sum,aptitudes=info.aptitudes.map(before=>{
+   const cap=aptitudeCap(before.base,{multiplier:nextMultiplier});
+   if(before.total>cap)reasons.push(`${before.name}目前總資質 ${before.total} 超過新上限 ${cap}；請先降低丹藥增量或選較高品質。`);
+   return {aptitude:before.aptitude,name:before.name,before,after:{...before,cap}};
+  });
+  const name=get(m,C(characterId,1,2)),changes=quality===record.quality?[]:[{coordinate:C(characterId,2*round-1,16),before:record.quality,after:quality,label:`${name}・第 ${round} 次結丹品質`},...[15,16,17].map((y,i)=>({coordinate:C(record.row,y,17),before:record.coefficient,after:coefficient,label:`${name}・第 ${round} 次入體內丹・${aptitudeNames[i]}上限係數`}))];
+  return {...info,round,quality,record,coefficient,nextMultiplier,aptitudes,changes,reasons,unchanged:!changes.length,canApply:info.verified&&!reasons.length&&!!changes.length};
+ }
+ function setAscensionQuality(m,options){
+  const preview=previewAscensionQuality(m,options);
+  if(preview.reasons.length)throw Error(preview.reasons.join('；'));
+  if(!preview.verified)throw Error('結丹品質尚未完成隔離遊戲驗證。');
+  const previous=m.currentGroup;m.currentGroup=`aptitude:${options.characterId}`;
+  try{transaction(m,()=>{for(const c of preview.changes)put(m,c.coordinate,c.after,c.label);},'結丹品質調整');}finally{m.currentGroup=previous;}
+  return preview;
+ }
  // Backpack relic attributes (relicAttributes). 获得灵物 draws c_i=b_i×random(0.6,1) from lw y6–10, splits one total G by
  // c_i/Σc and rounds each share to 0.1 (z18 y5–9); y10 is the rounded mean. Five values are accepted only together, and only
  // when a witness (G, c) reproduces every share with the game's own expressions; template, quality and level stay fixed.
@@ -999,6 +1046,8 @@
    else if(y>=28&&y<=33)named(`洗練槽標記 #${y-27}`);
    else if(y>=15&&y<=20)named(`裝備詞條係數 #${y-14}`,{type:'decimal',entity:catalogName('items',get(m,C(x,1,z)))});
   }else if(z===15)named(`任務記錄欄位 ${y}`,{entity:catalogName('quests',x)});
+  else if(z===16&&y>=1&&y<=16)named(y%2?`第 ${(y+1)/2} 次結丹品質`:`第 ${y/2} 次入體內丹列號`,{entity:activeCharacter(m,x)?get(m,C(x,1,2)):`角色 #${x}`,reason:'請使用角色養成的結丹品質具名操作；入體內丹係數一起結算'});
+  else if(z===17)named(({1:'入體內丹範本',3:'入體內丹等階',5:'入體內丹品質',6:'入體內丹等級',7:'入體內丹歸屬角色',8:'入體內丹主屬性品質係數'})[y]||(y>=15&&y<=17?`${aptitudeNames[y-15]}上限係數`:`入體內丹欄位 ${y}`),{entity:catalogName('items',get(m,C(x,1,17))),reason:'入體後原生流程不再修改；結丹係數請使用結丹品質具名操作'});
   else if([1,6,10,11,13,16,17,18,19,20,21].includes(z))named(`${plane.name}・欄位 ${y}`,{entity:`資料 #${x}`});
   f.source=(evidenceIndex.get(`${z},${y}`)||evidenceIndex.get(`${z},*`)||[]).filter(e=>e.x==='*'||e.x===x).slice(0,4).map(e=>({function:e.function,sheet:e.sheet,sid:e.sid,actionSid:e.actionSid}));
   if(f.known&&f.editable&&f.verification)f={...f,status:'遊戲驗證',reason:''};
@@ -1216,5 +1265,5 @@
   if(patches.length!==m.changes.size)throw Error('部分修改座標未能定位，已停止匯出。');
   const parts=[];let previous=0;for(const p of patches){parts.push(m.text.slice(previous,p.start),p.value);previous=p.end;}parts.push(m.text.slice(previous));return parts.join('');
  }
- globalThis.SaveCore={cityLayersInfo,previewCityLayer,setCityLayer,wallEnhancementInfo,previewWallEnhancementLevel,setWallEnhancementLevel,relicAttributesInfo,previewRelicAttributes,setRelicAttributes,listRelics,setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,previewSetEquipmentQualityCandidate,applySetEquipmentQualityCandidate,setEquipmentQualityCandidateEffects,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
+ globalThis.SaveCore={ascensionQualityInfo,previewAscensionQuality,setAscensionQuality,cityLayersInfo,previewCityLayer,setCityLayer,wallEnhancementInfo,previewWallEnhancementLevel,setWallEnhancementLevel,relicAttributesInfo,previewRelicAttributes,setRelicAttributes,listRelics,setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,previewSetEquipmentQualityCandidate,applySetEquipmentQualityCandidate,setEquipmentQualityCandidateEffects,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
 })();

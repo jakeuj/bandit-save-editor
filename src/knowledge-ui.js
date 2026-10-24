@@ -223,7 +223,7 @@
   $('characterSummary').innerHTML=stat('角色等級',read(x,3,2))+stat('自然經驗餘額',read(x,4,2))+stat('等級上限',(Math.floor(read(x,50,2))+1)*30)+stat('目前職業',C.catalogName('professions',read(x,6,2)))+stat('共用池已投入經驗',read(x,56,2))+stat('自動轉職預設',read(x,59,2));
   $('skillRows').innerHTML=C.SKILLS.map((name,i)=>`<tr><td>${esc(name)}</td><td>${htmlValue(read(x,31+i,2))} / ${htmlValue(read(x,22+i,2))}</td><td>${htmlValue(read(x,40+i,2))}</td><td>${htmlValue(C.experienceNeed.skill(read(x,31+i,2)))}</td></tr>`).join('');
   $('growthStatus').textContent=['names','characterExperience','professionExperience','skillExperience'].every(k=>K.verification[k])?'名稱與經驗已通過隔離驗證':'部分養成功能待遊戲驗證';
-  renderGrowth();renderBaseAptitudes();renderSkillCaps();renderTalentLevels();renderPills();
+  renderGrowth();renderBaseAptitudes();renderSkillCaps();renderTalentLevels();renderPills();if(typeof renderAscensionQuality==='function')renderAscensionQuality();
  }
  function renderGrowth(){
   const x=Number($('characterSelect').value),kind=$('growthKind').value,old=$('growthTarget').value;
