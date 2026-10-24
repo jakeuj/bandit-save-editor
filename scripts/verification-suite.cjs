@@ -42,7 +42,7 @@ const families = {
     }
   },
   batch2: {
-    groups: ['equipmentAffixCoefficient', 'pillAptitudeBonus', 'pillAptitudeBonusDecimal', 'pillAptitudeBonusAscended', 'relicAttributes'],
+    groups: ['equipmentAffixCoefficient', 'pillAptitudeBonus', 'pillAptitudeBonusDecimal', 'pillAptitudeBonusAscended', 'relicAttributes', 'wallEnhancementLevel'],
     oracle: 'verify-batch2.cjs',
     // Rewash and the equip cycle reuse the replacement script; pills and rebirth follow in the native script.
     lifecycle: ['verify-affix-lifecycle.cjs', 'verify-native-lifecycle.cjs'],

@@ -42,6 +42,7 @@ async function setup({gate=false,mutate}={}){
   .replace('/*__KNOWLEDGE_UI__*/',()=>fs.readFileSync(path.join(root,'src/knowledge-ui.js'),'utf8'))
   .replace('/*__BATCH_UI__*/',()=>fs.readFileSync(path.join(root,'src/batch-ui.js'),'utf8'))
   .replace('/*__RELIC_UI__*/',()=>fs.readFileSync(path.join(root,'src/relic-ui.js'),'utf8'))
+  .replace('/*__WALL_UI__*/',()=>fs.readFileSync(path.join(root,'src/wall-ui.js'),'utf8'))
   .replace("showTab('resources');renderFooter();","globalThis.uiTest={get model(){return model;}};showTab('resources');renderFooter();");
  vm.runInNewContext(source,context);
  const fixture=saveFixture({characters:2}),data=fixture.data;

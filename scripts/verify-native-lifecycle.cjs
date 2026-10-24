@@ -192,11 +192,30 @@ async function relicTakeOff(state) {
   return off;
 }
 
+// An edited wall level after a restart: 城墙最大生命 (with 加成属性效果) must stay at or above the edited HP, one native 城墙升级
+// charges 城墙强化货币 and adds one level without touching HP, and a few seconds of game time regenerate HP toward the maximum.
+async function wallUpgrade(state, s) {
+  const read = `const level=a.At(19,1,0),life=a.At(0,11,1),money=a.At(1,2,0),max=call('城墙最大生命'),cap=call('城墙强化上限'),cost=call('城墙强化货币');`;
+  const before = await evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);${read}return {level,life,money,max,cap,cost};})()`);
+  assert.equal(before.level, s.wall.level, 'Edited wall level not loaded');
+  assert.ok(before.life <= before.max, 'Edited HP above the native maximum');
+  assert.ok(before.level < before.cap && before.money >= before.cost, 'Native upgrade not affordable');
+  const upgraded = await evaluate(state, `(()=>{${prefix}call('城墙升级');${read}return {level,life,money,max,cap,cost};})()`);
+  assert.deepEqual([upgraded.level, upgraded.life, upgraded.money], [before.level + 1, before.life, before.money - before.cost], 'Native wall upgrade');
+  assert.ok(upgraded.max > before.max, 'Native maximum did not grow');
+  const paused = await evaluate(state, `(()=>{${prefix}r.SetTimeScale(1);return ['游戏暂停','挑战城市开关','占领城市开关'].map(n=>global(n).GetValue());})()`);
+  await pause(3500);
+  const regen = await evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);return {life:a.At(0,11,1),max:call('城墙最大生命')};})()`);
+  if (!paused.some(Boolean)) assert.ok(regen.life > upgraded.life && regen.life <= regen.max, 'HP did not regenerate toward the maximum');
+  for (const c of [[19, 1, 0], [0, 11, 1], [0, 5, 1], [1, 2, 0]]) state.cells.push(c);
+  return {before, upgraded, paused, regen};
+}
+
 async function main() {
   const statePath = opt('--state'), state = JSON.parse(fs.readFileSync(statePath)), scenario = JSON.parse(fs.readFileSync(opt('--scenario')));
   const rel = path.relative(path.resolve(__dirname, '..'), state.dir), child = path.relative(state.dir, state.game);
   if (!rel || (!path.isAbsolute(rel) && rel !== '..' && !rel.startsWith('..' + path.sep)) || !child || path.isAbsolute(child) || child.startsWith('..')) throw Error('External disposable state required');
-  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.backpackOverLimit && !scenario.relics && !scenario.relicTakeOff) throw Error('Scenario has no native follow-up actions');
+  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.backpackOverLimit && !scenario.relics && !scenario.relicTakeOff && !scenario.wall) throw Error('Scenario has no native follow-up actions');
   await waitMain(state);
   const result = {};
   if (scenario.ascend && !scenario.pills) result.ascend = await ascend(state, scenario);
@@ -205,10 +224,11 @@ async function main() {
   if (scenario.backpackOverLimit) result.backpackOverLimit = await backpackOverLimit(state, scenario);
   if (scenario.relics) result.relics = await relicPlacement(state, scenario);
   if (scenario.relicTakeOff) result.relicTakeOff = await relicTakeOff(state);
+  if (scenario.wall) result.wall = await wallUpgrade(state, scenario);
   state.expected = await evaluate(state, `(()=>{${prefix}return ${JSON.stringify(state.cells)}.map(([x,y,z])=>a.At(x,y,z));})()`);
   fs.writeFileSync(statePath, JSON.stringify(state, null, 2));
   fs.writeFileSync(path.join(state.dir, 'native-lifecycle.json'), JSON.stringify(result, null, 2));
   console.log('PASS: native ' + Object.keys(result).join(' and ') + ' follow-up actions');
 }
 if (require.main === module) main().catch(e => { console.error(e.stack); process.exitCode = 1; });
-module.exports = {ascend, followup, pillsAndRebirth, backpackOverLimit, relicPlacement, relicTakeOff};
+module.exports = {ascend, followup, pillsAndRebirth, backpackOverLimit, relicPlacement, relicTakeOff, wallUpgrade};

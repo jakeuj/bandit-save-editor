@@ -174,6 +174,20 @@ test('backpack over-limit follow-up sends compilable page code and rejects any n
   }finally{require.cache[gamePath].exports = real; delete require.cache[lifecyclePath];}
 });
 
+test('wall follow-up sends compilable page code and rejects HP changes from the native upgrade',async()=>{
+  const gamePath = require.resolve('../scripts/verify-game.cjs'), lifecyclePath = require.resolve('../scripts/verify-native-lifecycle.cjs');
+  const real = require(gamePath), answers = [];
+  const fake = {...real, waitMain: async () => {}, evaluate: async (state, expression) => { new Function('return ' + expression); return answers.shift()(expression); }};
+  delete require.cache[lifecyclePath]; require.cache[gamePath] = {...require.cache[gamePath], exports: fake};
+  try{
+    const {wallUpgrade} = require(lifecyclePath), before = {level: 30, life: 36541, money: 1e9, max: 40000, cap: 60, cost: 2000};
+    const run = life => answers.push(() => before, () => ({...before, level: 31, life, money: before.money - 2000, max: 42000}), () => [false, false, false], () => ({life: 36541 + 1260, max: 42000}));
+    const state = {cells: []};run(36541);await wallUpgrade(state, {wall: {level: 30}});
+    assert.deepEqual(state.cells, [[19, 1, 0], [0, 11, 1], [0, 5, 1], [1, 2, 0]]);
+    run(42000);await assert.rejects(wallUpgrade({cells: []}, {wall: {level: 30}}), /Native wall upgrade/);
+  }finally{require.cache[gamePath].exports = real; delete require.cache[lifecyclePath];}
+});
+
 test('every suite oracle and lifecycle script exists and marked copies run each family lifecycle',()=>{
   const S = require('../scripts/verification-suite.cjs');
   for (const [name, family] of Object.entries(S.families)) for (const script of [family.oracle, ...(family.lifecycle || [])].filter(Boolean)) assert.ok(fs.existsSync(path.join(root, 'scripts', script)), name + ': ' + script);
@@ -265,7 +279,7 @@ test('write-back opens proven groups on a new build, compares on the proven buil
     const compared = M.writeBack({dir, catalog, proof, results: {...results(catalog.gameVersion), ui: {}}});
     assert.equal(compared.action, 'compared');
     assert.equal(compared.consistent, false, 'quality UI pending must differ from the native proof');
-    assert.deepEqual(compared.comparison.filter(c => c.existing !== c.migrated).map(c => c.group).sort(), [...R.sections.equipmentQuality.groups,...['randomCharacterBaseAptitudes','pillAptitudeBonusDecimal','pillAptitudeBonusAscended','backpackEquipmentLevelAdvanced','relicAttributes','randomCharacterBaseAptitudesAscended'].filter(g=>!catalog.verification[g])].sort());
+    assert.deepEqual(compared.comparison.filter(c => c.existing !== c.migrated).map(c => c.group).sort(), [...R.sections.equipmentQuality.groups,...['randomCharacterBaseAptitudes','pillAptitudeBonusDecimal','pillAptitudeBonusAscended','backpackEquipmentLevelAdvanced','relicAttributes','randomCharacterBaseAptitudesAscended','wallEnhancementLevel'].filter(g=>!catalog.verification[g])].sort());
     assert.deepEqual(snapshot(), same);
     const reordered = {...catalog, fingerprints: Object.fromEntries(Object.entries(catalog.fingerprints).reverse()), batch2Fingerprints: Object.fromEntries(Object.entries(catalog.batch2Fingerprints).reverse())};
     assert.equal(M.writeBack({dir, catalog: reordered, proof, results: {...results(catalog.gameVersion), ui: {}}, exec: () => { throw Error('same fingerprint must not build after key reordering'); }}).action, 'compared');

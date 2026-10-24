@@ -898,6 +898,34 @@
   try{transaction(m,()=>{for(const c of preview.changes)put(m,c.coordinate,c.after,c.label);},`背包靈物 #${itemId}・五行調整`);}finally{m.currentGroup=previous;}
   return preview;
  }
+ // City wall enhancement level (wallEnhancementLevel). 城墙升级 adds one to [19,1,0] while it is below 城墙强化上限
+ // (int(z1 #0 y5)+1)×60 and never touches the current wall HP z1 #0 y11; regeneration (+1%/s) and 采集核心 healing only run
+ // below 城墙最大生命 and stop there, and nothing lowers HP above it. Max HP also multiplies by (100+加成属性效果(25))/100,
+ // which depends on technologies and stationed characters, so lowering the level caps HP at the bonus-free maximum: never
+ // above the real one, and the game regenerates the rest. Raising leaves HP as 城墙升级 does.
+ const wallLife=(L,B)=>Math.round(((80+Math.ceil(((3.34*Math.pow(L+2,2.5))*Math.pow(1.02,L+2))))*Math.pow(1.2,B)));
+ function wallEnhancementInfo(m){
+  const g=c=>exists(m.original,c)?get(m,c):undefined,level=g(C(19,1,0)),building=g(C(0,5,1)),life=g(C(0,11,1));
+  if(g(C(0,1,1))!==21)throw Error('找不到城牆資料（z1 第 0 列不是城牆）。');
+  if(!Number.isSafeInteger(building)||building<0)throw Error('城牆建築等級不是有效整數。');
+  if(!Number.isSafeInteger(level)||level<0)throw Error('城牆強化等級不是有效整數。');
+  if(typeof life!=='number'||!Number.isFinite(life)||life<0)throw Error('城牆目前生命不是有效數值。');
+  return {level,building,cap:(building+1)*60,life,baseLife:wallLife(level,building),verified:!!KNOWLEDGE.verification.wallEnhancementLevel};
+ }
+ function previewWallEnhancementLevel(m,{level}){
+  const info=wallEnhancementInfo(m);
+  if(!Number.isSafeInteger(level)||level<0||level>info.cap)throw Error(`城牆強化等級須為 0–${info.cap} 的整數（上限依城牆建築等級 ${info.building}）。`);
+  const baseLife=wallLife(level,info.building),life=level<info.level&&info.life>baseLife?baseLife:info.life;
+  const changes=[...(level===info.level?[]:[{coordinate:C(19,1,0),before:info.level,after:level,label:'城牆強化等級'}]),...(life===info.life?[]:[{coordinate:C(0,11,1),before:info.life,after:life,label:'城牆目前生命'}])];
+  return {level:{before:info.level,after:level},life:{before:info.life,after:life},baseLife,cap:info.cap,changes,unchanged:!changes.length,verified:info.verified};
+ }
+ function setWallEnhancementLevel(m,{level}){
+  const preview=previewWallEnhancementLevel(m,{level});
+  if(!preview.verified)throw Error('城牆強化等級尚未完成隔離遊戲驗證。');
+  const previous=m.currentGroup;m.currentGroup='wall:enhancement';
+  try{transaction(m,()=>{for(const c of preview.changes)put(m,c.coordinate,c.after,c.label);},'城牆強化等級調整');}finally{m.currentGroup=previous;}
+  return preview;
+ }
  /** @returns {FieldDescriptor} */
  function resolveField(m,c){
   if(!exists(m.original,c))throw Error('座標超出這份存檔的範圍。');
@@ -1146,5 +1174,5 @@
   if(patches.length!==m.changes.size)throw Error('部分修改座標未能定位，已停止匯出。');
   const parts=[];let previous=0;for(const p of patches){parts.push(m.text.slice(previous,p.start),p.value);previous=p.end;}parts.push(m.text.slice(previous));return parts.join('');
  }
- globalThis.SaveCore={relicAttributesInfo,previewRelicAttributes,setRelicAttributes,listRelics,setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,previewSetEquipmentQualityCandidate,applySetEquipmentQualityCandidate,setEquipmentQualityCandidateEffects,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
+ globalThis.SaveCore={wallEnhancementInfo,previewWallEnhancementLevel,setWallEnhancementLevel,relicAttributesInfo,previewRelicAttributes,setRelicAttributes,listRelics,setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,previewSetEquipmentQualityCandidate,applySetEquipmentQualityCandidate,setEquipmentQualityCandidateEffects,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
 })();

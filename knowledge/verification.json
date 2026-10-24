@@ -66,7 +66,8 @@
     "professionTrainingCapAdvanced": true,
     "advancedTechnologyLevel": true,
     "advancedTechnologyLevelAdvanced": true,
-    "relicAttributes": true
+    "relicAttributes": true,
+    "wallEnhancementLevel": true
   },
   "lightweight": {
     "randomCharacterBaseAptitudesAscended": {
@@ -166,6 +167,20 @@
       ],
       "baselineSaveSha256": "ebb0a4a28791218986c594d3b3819a066482bc11ff75aac99f8498c4ce4b84c5",
       "resultSha256": "37302c3e309666ad37227a3655c39aa7289b8ede14e03cda3ffbf821292e4e6a",
+      "passed": true
+    },
+    "wallEnhancementLevel": {
+      "date": "2026-10-24",
+      "gameVersion": "V1.0.11.2",
+      "flow": "docs/maintenance/lightweight.md",
+      "smoke": "verify-game.cjs 以 setWallEnhancementLevel 編輯（隔離副本、雲存檔載入、原版存檔、新 PID 讀回），再以 verify-native-lifecycle.cjs wall 原生升級與回血，第二輪原版存檔、新 PID 讀回，最後以修改器重讀遊戲寫出的存檔",
+      "cases": [
+        "城牆強化 60→30（建築等級 0、cap 60）：目前生命 318218 下修為不含加成上限 36541；原生 城墙最大生命 在此存檔也是 36541（加成 0）",
+        "讀回後原生 城墙升级 30→31 扣強化貨幣 678000、生命不變；放行 3.5 秒回血 36541→37798，未超過原生上限 40245",
+        "第二輪原版存檔 L31／HP 37798；新 PID 讀回時引擎多一次回血 +402（載入到凍結前的原生回血），遊戲寫出檔一致；修改器重讀 L31、cap 60，可升到 60、超過 cap 拒絕"
+      ],
+      "baselineSaveSha256": "ebb0a4a28791218986c594d3b3819a066482bc11ff75aac99f8498c4ce4b84c5",
+      "resultSha256": "9b5ea21f6f161692f25e2508fe6deb00b97be3b526859c153030d58e75d7a895",
       "passed": true
     }
   },

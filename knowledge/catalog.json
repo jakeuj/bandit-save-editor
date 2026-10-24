@@ -66027,6 +66027,7 @@
     "pillAptitudeBonusDecimal": true,
     "pillAptitudeBonusAscended": true,
     "relicAttributes": true,
+    "wallEnhancementLevel": true,
     "names": true,
     "characterExperience": true,
     "professionExperience": true,
