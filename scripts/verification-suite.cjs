@@ -22,7 +22,7 @@ const families = {
     checks:{load:'load',save:'save',restart:'reload',originalHashes:'assert',nativeEffects:'oracleCompare',talentFormulas:'oracleCompare',aptitudeCap:'oracleCompare',numericUpdate:'lifecycle',nativeTransfer:'lifecycle',nativePrison:'lifecycle',nativeRebirth:'lifecycle',nativeDismiss:'lifecycle',stageRoundtrips:'lifecycle'}
   },
   randomCharacterSkillCaps: {
-    groups:['randomCharacterSkillCaps'],
+    groups:['randomCharacterSkillCaps','randomCharacterSkillCapsAscended'],
     initialProofRequired:true,
     oracle:'verify-random-character-skill-caps.cjs', lifecycle:['verify-skill-caps-lifecycle.cjs'],
     checks:{load:'load',save:'save',restart:'reload',originalHashes:'assert',nativeEffects:'oracleCompare',nativeRecruitment:'lifecycle',numericUpdate:'lifecycle',nativeSkillExperience:'lifecycle',capRemainderTiming:'lifecycle',batchCompatibility:'oracleCompare',nativeTransfer:'lifecycle',nativePrison:'lifecycle',nativeRebirth:'lifecycle',nativeDismiss:'lifecycle',stageRoundtrips:'lifecycle'}

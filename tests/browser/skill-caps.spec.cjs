@@ -44,7 +44,7 @@ for (const width of [1280, 390]) {
     await page.goto(site.url); await loadRaw(page, site, f.raw);
     await page.locator('[data-tab="characters"]').click();
     expect(await page.locator('#characterSelect option').count()).toBe(50);
-    for (const [id, reason] of [[1, '範本'], [2, '監'], [3, '紀錄'], [4, '共同生成']]) {
+    for (const [id, reason] of [[1, '範本'], [2, '監'], [3, '結丹'], [4, '共同生成']]) {
       await selectCharacter(page, id);
       await expect(page.locator('#skillCapsStatus')).toContainText(reason);
       await expect(page.locator('#skillCapsPreviewBtn')).toBeDisabled();

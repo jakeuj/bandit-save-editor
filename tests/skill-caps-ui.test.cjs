@@ -74,7 +74,7 @@ test('skill cap UI exposes safe preview while the independent gate prevents all 
 });
 
 test('skill cap UI explains named, imprisoned, staged and incompatible talent exclusions',async()=>{
- for(const [y,z,value,reason]of [[2,2,1,/範本回填/],[55,2,2,/在監/],[50,2,1,/結丹/],[1,16,1,/重生/],[1,12,0,/共同生成/]]){
+ for(const [y,z,value,reason]of [[2,2,1,/範本回填/],[55,2,2,/在監/],[50,2,1,/結丹/],[1,16,1,/重生|結丹紀錄/],[1,12,0,/共同生成/]]){
   const h=await setup({mutate:data=>data[1][y][z]=value});
   assert.equal(h.$('skillCapsPreviewBtn').disabled,true);assert.equal(h.$('skillCap1').disabled,true);assert.match(h.$('skillCapsStatus').textContent,reason);
   assert.equal(h.model.changes.size,0);

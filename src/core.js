@@ -498,7 +498,10 @@
    if(!activeCharacter(m,characterId)||get(m,C(characterId,0,2))!==characterId)throw Error('找不到有效的已招募角色。');
    if(get(m,C(characterId,2,2))!==0)throw Error('有名角色載入／數值更新會依範本回填技藝上限；只支援範本 0。');
    if(get(m,C(characterId,55,2))!==0)throw Error('目前只支援非在監的已招募角色。');
-   if(get(m,C(characterId,50,2))!==0||Array.from({length:16},(_,i)=>get(m,C(characterId,i+1,16))).some(v=>v!==0))throw Error('目前只支援無結丹及重生階段紀錄的角色。');
+   // randomCharacterSkillCapsAscended: 渡劫结束 and its callees never write z2 y10–12, y22–49 or z12, and 获得技艺经验 reads
+   // only y22–48, so the witness is unchanged; the record is still checked like the other ascended entries.
+   if(ascendedSkillCaps())info.ascensions=ascensionRecord(m,characterId).count;
+   else if(get(m,C(characterId,50,2))!==0||Array.from({length:16},(_,i)=>get(m,C(characterId,i+1,16))).some(v=>v!==0))throw Error('目前只支援無結丹及重生階段紀錄的角色。');
    info.quality=get(m,C(characterId,49,2));
    if(!Number.isSafeInteger(info.quality)||info.quality<1||info.quality>6)throw Error('角色品質須為原版 1–6。');
    info.raw=[10,11,12].map(y=>get(m,C(characterId,y,2)));
@@ -678,6 +681,7 @@
  // and per-piece wearing check; 渡劫结束 never writes z2 y10–12, y49 or z12, so only the cap multiplier moves.
  const ascendedBaseAptitudes=()=>!!KNOWLEDGE.verification.randomCharacterBaseAptitudesAscended;
  const ascendedTalents=()=>!!KNOWLEDGE.verification.randomCharacterTalentsAscended;
+ const ascendedSkillCaps=()=>!!KNOWLEDGE.verification.randomCharacterSkillCapsAscended;
  // 角色资质上限 rounds 100×(A×M); without a record the v2.7 product order for M=1.5 stays.
  const aptitudeCap=(base,ascension)=>ascension?Math.round(100*(base*ascension.multiplier))/100:Math.round(100*base*1.5)/100;
  const aptitudeAttribute=id=>id>=104&&id<=106;

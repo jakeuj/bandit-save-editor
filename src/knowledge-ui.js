@@ -161,7 +161,7 @@
  function renderSkillCaps(){
   const characterId=Number($('characterSelect').value),info=C.randomCharacterSkillCapsInfo(model,{characterId});
   $('skillCapsEditor').innerHTML=`<h3>一般隨機角色九項技藝上限</h3><p class="muted small-text" id="skillCapsStatus" role="status"></p><div class="aptitude-inputs">${C.SKILLS.map((name,i)=>`<label for="skillCap${i+1}">${esc(name)}上限<input id="skillCap${i+1}" type="number" min="1" step="1" value="${esc(read(characterId,22+i,2))}" ${info.eligible?'':'disabled'}></label>`).join('')}</div><p class="muted small-text">九項須與目前品質、原始資質及三項天賦符合相同的原版招募傾向與主副技藝條件；只調上限，不改天賦。提高上限保留等級與經驗餘額，不會立即升級；低於目前等級，或降低至目前等級且仍有餘額時，整筆阻擋。</p><p class="muted small-text" id="skillCapsRestoreNote">首次有效上限調整後，此角色九項上限、等級與經驗餘額共 27 欄會累計一起還原，包含先前及後續的單項／全部技藝經驗修改。還原回載入時；復原一步只撤回上一筆操作。其他角色不受影響。</p><div class="toolbar"><button id="skillCapsPreviewBtn" class="small">預覽九項上限</button><button id="skillCapsApplyBtn" class="primary small" disabled>套用九項上限</button></div><div id="skillCapsPreview" aria-live="polite"></div>`;
-  $('skillCapsStatus').textContent=info.eligible?`品質 ${info.quality} · 目前九項有共同生成條件${info.verified?' · 已通過獨立隔離驗證':' · 尚待獨立隔離驗證，可預覽，套用停用'}`:info.reasons.join('；');
+  $('skillCapsStatus').textContent=info.eligible?`品質 ${info.quality} · 目前九項有共同生成條件${info.ascensions?` · 結丹 ${info.ascensions} 次`:''}${info.verified?' · 已通過獨立隔離驗證':' · 尚待獨立隔離驗證，可預覽，套用停用'}`:info.reasons.join('；');
   $('skillCapsPreviewBtn').disabled=!info.eligible;
   let snapshot=null;
   const request=()=>({characterId,caps:C.SKILLS.map((_,i)=>{const value=$('skillCap'+(i+1)).value;if(!value.trim())throw Error('九項上限不能空白。');return Number(value);})});

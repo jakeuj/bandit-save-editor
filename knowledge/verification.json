@@ -40,6 +40,7 @@
     "randomCharacterBaseAptitudes": true,
     "randomCharacterBaseAptitudesAscended": true,
     "randomCharacterTalentsAscended": true,
+    "randomCharacterSkillCapsAscended": true,
     "backpackEquipmentQualityUpgrade": true,
     "backpackEquipmentQualityDowngrade": true,
     "equipmentQualityUpgrade": true,
@@ -92,6 +93,19 @@
       "cases": [
         "角色 8 三槽天賦 攻速強化／擅長普攻／力量系職業 Lv2/2/2→1/2/1（Q1 等級池 1–2，無資質天賦）",
         "兩輪存讀一致；天賦 ID、結丹紀錄與 z17 係數 0.8／1.68 不變"
+      ]
+    },
+    "randomCharacterSkillCapsAscended": {
+      "date": "2026-10-24",
+      "gameVersion": "V1.0.11.2",
+      "flow": "docs/maintenance/lightweight.md",
+      "smoke": "沿用 v2.16 原生結丹備料存檔（角色 8 结丹 2 次）當基準；verify-game.cjs 以 setCharacterSkillCaps 編輯、雲存檔載入、原版存檔、新 PID 讀回，再以修改器重讀遊戲寫出的存檔",
+      "baselineSaveSha256": "39a7c42075ccf4fc5d0c2842476a3235c26aa0422a7f100afd4ca716ef0a0ce1",
+      "resultSha256": "b8c6c520b8ae9d243da6be998dcc49b91bf3f0e42ce25dc625db741871ee2ac8",
+      "passed": true,
+      "cases": [
+        "角色 8（Q1、範本 0、結丹 2 次）九上限 9/25/12/10/5/19/6/5/9→14/38/12/4/5/27/6/5/9：升 技藝1／2／6、降 技藝4 到等級 2 以上，等級與餘額不變",
+        "兩輪存讀 44 格一致：九上限／等級／餘額、基礎資質、品質、y50、天賦、z16 與 z17 係數 0.8／1.68；修改器重讀仍有共同生成見證"
       ]
     },
     "pillAptitudeBonusAscended": {
