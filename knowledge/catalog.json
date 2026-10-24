@@ -47208,196 +47208,224 @@
         "name": "營房",
         "category": "基礎",
         "advanced": false,
-        "tableLimit": 1
+        "tableLimit": 1,
+        "prerequisite": 0
       },
       {
         "id": 2,
         "name": "書院",
         "category": "基礎",
         "advanced": false,
-        "tableLimit": 1
+        "tableLimit": 1,
+        "prerequisite": 1
       },
       {
         "id": 3,
         "name": "招募處",
         "category": "基礎",
         "advanced": false,
-        "tableLimit": 1
+        "tableLimit": 1,
+        "prerequisite": 2
       },
       {
         "id": 4,
         "name": "鍛造屋",
         "category": "基礎",
         "advanced": false,
-        "tableLimit": 1
+        "tableLimit": 1,
+        "prerequisite": 3
       },
       {
         "id": 5,
         "name": "聚義堂",
         "category": "基礎",
         "advanced": false,
-        "tableLimit": 1
+        "tableLimit": 1,
+        "prerequisite": 4
       },
       {
         "id": 6,
         "name": "城市投資",
         "category": "基礎",
         "advanced": false,
-        "tableLimit": 1
+        "tableLimit": 1,
+        "prerequisite": 3
       },
       {
         "id": 7,
         "name": "調整難度",
         "category": "基礎",
         "advanced": false,
-        "tableLimit": 1
+        "tableLimit": 1,
+        "prerequisite": 3
       },
       {
         "id": 8,
         "name": "擴張山寨",
         "category": "基礎",
         "advanced": false,
-        "tableLimit": 1
+        "tableLimit": 1,
+        "prerequisite": 5
       },
       {
         "id": 9,
         "name": "煉丹坊",
         "category": "基礎",
         "advanced": false,
-        "tableLimit": 1
+        "tableLimit": 1,
+        "prerequisite": 8
       },
       {
         "id": 10,
         "name": "工藝所",
         "category": "基礎",
         "advanced": false,
-        "tableLimit": 1
+        "tableLimit": 1,
+        "prerequisite": 9
       },
       {
         "id": 11,
         "name": "團隊技術",
         "category": "基礎",
         "advanced": false,
-        "tableLimit": 1
+        "tableLimit": 1,
+        "prerequisite": 5
       },
       {
         "id": 12,
         "name": "校場",
         "category": "基礎",
         "advanced": false,
-        "tableLimit": 1
+        "tableLimit": 1,
+        "prerequisite": 9
       },
       {
         "id": 13,
         "name": "建造局",
         "category": "基礎",
         "advanced": false,
-        "tableLimit": 1
+        "tableLimit": 1,
+        "prerequisite": 12
       },
       {
         "id": 14,
         "name": "林場",
         "category": "基礎",
         "advanced": false,
-        "tableLimit": 1
+        "tableLimit": 1,
+        "prerequisite": 16
       },
       {
         "id": 15,
         "name": "礦坑",
         "category": "基礎",
         "advanced": false,
-        "tableLimit": 1
+        "tableLimit": 1,
+        "prerequisite": 16
       },
       {
         "id": 16,
         "name": "農莊",
         "category": "基礎",
         "advanced": false,
-        "tableLimit": 1
+        "tableLimit": 1,
+        "prerequisite": 12
       },
       {
         "id": 17,
         "name": "渡劫台",
         "category": "基礎",
         "advanced": false,
-        "tableLimit": 1
+        "tableLimit": 1,
+        "prerequisite": 12
       },
       {
         "id": 18,
         "name": "置物台",
         "category": "基礎",
         "advanced": false,
-        "tableLimit": 1
+        "tableLimit": 1,
+        "prerequisite": 17
       },
       {
         "id": 19,
         "name": "主動尋訪",
         "category": "基礎",
         "advanced": false,
-        "tableLimit": 1
+        "tableLimit": 1,
+        "prerequisite": 5
       },
       {
         "id": 20,
         "name": "自動召喚靈獸",
         "category": "基礎",
         "advanced": false,
-        "tableLimit": 1
+        "tableLimit": 1,
+        "prerequisite": 21
       },
       {
         "id": 21,
         "name": "自動城市挑戰",
         "category": "基礎",
         "advanced": false,
-        "tableLimit": 1
+        "tableLimit": 1,
+        "prerequisite": 8
       },
       {
         "id": 22,
         "name": "製造技術",
         "category": "基礎",
         "advanced": false,
-        "tableLimit": 1
+        "tableLimit": 1,
+        "prerequisite": 10
       },
       {
         "id": 23,
         "name": "發展技術",
         "category": "基礎",
         "advanced": false,
-        "tableLimit": 1
+        "tableLimit": 1,
+        "prerequisite": 12
       },
       {
         "id": 24,
         "name": "採集技術",
         "category": "基礎",
         "advanced": false,
-        "tableLimit": 1
+        "tableLimit": 1,
+        "prerequisite": 14
       },
       {
         "id": 25,
         "name": "修煉技術",
         "category": "基礎",
         "advanced": false,
-        "tableLimit": 1
+        "tableLimit": 1,
+        "prerequisite": 18
       },
       {
         "id": 26,
         "name": "司職任免",
         "category": "基礎",
         "advanced": false,
-        "tableLimit": 1
+        "tableLimit": 1,
+        "prerequisite": 15
       },
       {
         "id": 27,
         "name": "監牢",
         "category": "基礎",
         "advanced": false,
-        "tableLimit": 1
+        "tableLimit": 1,
+        "prerequisite": 22
       },
       {
         "id": 28,
         "name": "裝飾物",
         "category": "基礎",
         "advanced": false,
-        "tableLimit": 1
+        "tableLimit": 1,
+        "prerequisite": 11
       },
       {
         "id": 29,
@@ -66160,7 +66188,8 @@
     "professionTrainingCap": true,
     "professionTrainingCapAdvanced": true,
     "advancedTechnologyLevel": true,
-    "advancedTechnologyLevelAdvanced": true
+    "advancedTechnologyLevelAdvanced": true,
+    "basicTechnologyLevel": true
   },
   "setEquipmentLevel": {
     "version": 1,

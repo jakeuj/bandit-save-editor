@@ -72,7 +72,8 @@
     "ascensionQuality": true,
     "backpackInnerPillLevel": true,
     "innerPillLevel": true,
-    "ascendedInnerPillLevel": true
+    "ascendedInnerPillLevel": true,
+    "basicTechnologyLevel": true
   },
   "lightweight": {
     "randomCharacterBaseAptitudesAscended": {
@@ -260,6 +261,21 @@
       ],
       "baselineSaveSha256": "cdd686d64783feb082dcce6de12cb8b1a4b99b5a8653811a1568098b1850d6f4",
       "resultSha256": "73315a62f83c5409ac890ab8b6233ba657e5a319e9770a9aec0b2d1ab5e3ff42",
+      "passed": true
+    },
+    "basicTechnologyLevel": {
+      "date": "2026-10-24",
+      "gameVersion": "V1.0.11.2",
+      "flow": "docs/maintenance/lightweight.md",
+      "smoke": "沿用 v2.23 冒煙第二輪遊戲寫出的存檔（基礎科技 13、14、15、17、18、24–27 未掌握）當基準，verify-game.cjs 以 setBasicTechnology 編輯（隔離副本、雲存檔載入、原版存檔、新 PID 讀回），再以 verify-native-lifecycle.cjs basicTechnology 做原生核對，第二輪原版存檔、新 PID 讀回，最後以修改器重讀遊戲寫出的存檔",
+      "cases": [
+        "#14 林場（前置 16 已掌握）0→1；#26 司職任免連同前置 #15 礦坑一起 0→1；雲存檔載入、原版存檔、新 PID 讀回一致，13、24 與 26 的研究旗標不動",
+        "原生核對：科技解锁判断 對 14／15／26 回 1、對 13／17／18／24／25／27 回 0，科技等级上限 皆為 1；建筑等级解锁判断(林場 7／礦坑 9, 0) 回 1、(建造局 4, 0) 回 0",
+        "科技研究：已掌握的 #14 不開始研究（等級、旗標、設施、銅錢不變）；前置被修改器解鎖的 #24 能開始研究並以 取消设施进程 停止、退還銅錢",
+        "第二輪原版存檔、新 PID 讀回一致（3 個 PID、4 次 assert）；修改器重讀遊戲寫出檔：已掌握 22 項，#24 只需自己一項"
+      ],
+      "baselineSaveSha256": "c259c6d181ca8a274b211ef5f2f13728bb1b9eb0092132038a82ffb9763dd029",
+      "resultSha256": "431156dce5dc5ee15a0364f5cf689b50c5b8127c7b8f21c8623fe33f2ffcae75",
       "passed": true
     }
   },

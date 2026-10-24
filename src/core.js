@@ -1102,6 +1102,44 @@
   try{transaction(m,()=>{for(const c of preview.changes)put(m,c.coordinate,c.after,c.label);},`${preview.city.name}・城市層數調整`);}finally{m.currentGroup=previous;}
   return preview;
  }
+ // Basic technologies (basicTechnologyLevel). kj 1–28 are 0/1 unlocks: 科技等级上限 returns kj[id,5]=1 for 基础 rows. Every
+ // reader of [id,4,0] is a UI gate (build menu, feature buttons, research page) or the research flow; building caps read the
+ // advanced techs only (jz column 34), and #8 only enables the expansion button. Research completion (采集核心碰撞) adds 1
+ // without a cap check, so a tech under research is refused. Raising writes 1 and clears the research points y12 as that
+ // completion does, unlocking the missing prerequisite chain (kj column 7) in the same step. Nothing lowers a tech natively,
+ // so lowering is not offered; 初始化设置 starts every game with #1 and #2 at 1.
+ const basicTechnologyIds=KNOWLEDGE.catalogs.technologies.filter(t=>t.id>=1&&t.id<=28&&!t.advanced&&Number.isSafeInteger(t.prerequisite)).map(t=>t.id);
+ function basicTechnologiesInfo(m){
+  if(basicTechnologyIds.length!==28)throw Error('知識目錄缺少基礎科技前置資料。');
+  const technologies=basicTechnologyIds.map(id=>{
+   const t=catalogMaps.technologies.get(id),level=get(m,C(id,4,0)),points=get(m,C(id,12,0)),flag=get(m,C(id,13,0));
+   if(level!==0&&level!==1)throw Error(`${t.name}的科技等級不是 0 或 1。`);
+   if(typeof points!=='number'||!Number.isFinite(points)||points<0)throw Error(`${t.name}的研究點數不是有效數值。`);
+   if(flag!==0&&flag!==1)throw Error(`${t.name}的研究狀態不是 0 或 1。`);
+   return {id,name:t.name,prerequisite:t.prerequisite,level,points,researching:flag===1||busyFacility(m,id,5)};
+  });
+  return {technologies,unlocked:technologies.filter(t=>t.level===1).length,verified:!!KNOWLEDGE.verification.basicTechnologyLevel};
+ }
+ function previewBasicTechnology(m,{technologyId}){
+  const info=basicTechnologiesInfo(m),byId=new Map(info.technologies.map(t=>[t.id,t])),target=byId.get(technologyId);
+  if(!target)throw Error('只支援基礎科技 1–28。');
+  if(target.level===1)return {technology:{id:target.id,name:target.name},chain:[],changes:[],unchanged:true,verified:info.verified};
+  const chain=[];
+  for(let t=target;t&&t.level===0;t=byId.get(t.prerequisite)){if(chain.includes(t))throw Error('前置科技形成循環。');chain.unshift(t);}
+  const busy=chain.filter(t=>t.researching);
+  if(busy.length)throw Error(`${busy.map(t=>t.name).join('、')}正在研究，請先在遊戲內停止。`);
+  const changes=chain.flatMap(t=>[{coordinate:C(t.id,4,0),before:0,after:1,label:`${t.name}・基礎科技`},...(t.points===0?[]:[{coordinate:C(t.id,12,0),before:t.points,after:0,label:`${t.name}・研究點數`}])]);
+  return {technology:{id:target.id,name:target.name},chain:chain.map(t=>({id:t.id,name:t.name})),changes,unchanged:false,verified:info.verified};
+ }
+ function setBasicTechnology(m,options){
+  const preview=previewBasicTechnology(m,options);
+  if(!preview.verified)throw Error('基礎科技尚未完成隔離遊戲驗證。');
+  if(preview.unchanged)return preview;
+  // One group for every basic tech: restoring a prerequisite also restores the techs unlocked on top of it.
+  const previous=m.currentGroup;m.currentGroup='technology:basic';
+  try{transaction(m,()=>{for(const c of preview.changes)put(m,c.coordinate,c.after,c.label);},`${preview.technology.name}・基礎科技解鎖`);}finally{m.currentGroup=previous;}
+  return preview;
+ }
  /** @returns {FieldDescriptor} */
  function resolveField(m,c){
   if(!exists(m.original,c))throw Error('座標超出這份存檔的範圍。');
@@ -1115,7 +1153,7 @@
   else if(z===0&&y===1){const labels={0:'存檔識別',2:'山寨等級',4:'目前地圖',6:'商店刷新時間',7:'引導任務編號',8:'山寨總聲望',12:'存檔年份',13:'存檔天數',14:'存檔小時',15:'累計遊玩秒數',19:'城牆等級',22:'支援者禮包紀錄'};if(labels[x])named(labels[x]);}
   else if(z===0&&y===17&&x===1)named('招募刷新倒數（秒）',{type:'decimal'});
   else if(z===0&&[11,21,38,44].includes(y)&&cityRows.has(x))named({11:'城市層數',21:'掛機層數',38:'佔領旗標',44:'首次進入旗標'}[y],{entity:cityRows.get(x),reason:'請使用城市層數具名操作；總聲望與掛機層數一起結算',related:[C(x,11,0),C(x,21,0),C(8,1,0)]});
-  else if(z===0&&[4,13].includes(y)&&catalogMaps.technologies.has(x))named(y===4?'科技等級':'科技研究狀態',{entity:catalogName('technologies',x)});
+  else if(z===0&&[4,12,13].includes(y)&&catalogMaps.technologies.has(x))named({4:'科技等級',12:'科技研究點數',13:'科技研究狀態'}[y],{entity:catalogName('technologies',x),...(basicTechnologyIds.includes(x)?{reason:'請使用基礎科技解鎖具名操作；前置科技與研究點數一起結算',related:[C(x,4,0),C(x,12,0),C(x,13,0)]}:{})});
   else if(z===0&&y===5&&catalogMaps.professions.has(x))named('職業操練上限',{entity:catalogName('professions',x)});
   else if(z===2&&y>=10&&y<=12)named(`${aptitudeNames[y-10]}基礎資質`,{reason:'請由角色養成的三項基礎資質具名操作修改；有名角色載入時會依範本回填',related:[10,11,12,13,14,15].map(y=>C(x,y,2)),verification:'randomCharacterBaseAptitudes'});
   else if(z===2&&y>=13&&y<=15)named(`${aptitudeNames[y-13]}丹藥累積增量`,{reason:'請由角色養成的丹藥增量具名操作修改；每 1 等於資質 0.1 點',related:[10,11,12,13,14,15].map(y=>C(x,y,2))});
@@ -1353,5 +1391,5 @@
   if(patches.length!==m.changes.size)throw Error('部分修改座標未能定位，已停止匯出。');
   const parts=[];let previous=0;for(const p of patches){parts.push(m.text.slice(previous,p.start),p.value);previous=p.end;}parts.push(m.text.slice(previous));return parts.join('');
  }
- globalThis.SaveCore={ascendedInnerPillLevelInfo,previewAscendedInnerPillLevel,setAscendedInnerPillLevel,innerPillLevelInfo,previewInnerPillLevel,setInnerPillLevel,ascensionQualityInfo,previewAscensionQuality,setAscensionQuality,cityLayersInfo,previewCityLayer,setCityLayer,wallEnhancementInfo,previewWallEnhancementLevel,setWallEnhancementLevel,relicAttributesInfo,previewRelicAttributes,setRelicAttributes,listRelics,setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,previewSetEquipmentQualityCandidate,applySetEquipmentQualityCandidate,setEquipmentQualityCandidateEffects,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
+ globalThis.SaveCore={basicTechnologiesInfo,previewBasicTechnology,setBasicTechnology,ascendedInnerPillLevelInfo,previewAscendedInnerPillLevel,setAscendedInnerPillLevel,innerPillLevelInfo,previewInnerPillLevel,setInnerPillLevel,ascensionQualityInfo,previewAscensionQuality,setAscensionQuality,cityLayersInfo,previewCityLayer,setCityLayer,wallEnhancementInfo,previewWallEnhancementLevel,setWallEnhancementLevel,relicAttributesInfo,previewRelicAttributes,setRelicAttributes,listRelics,setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,previewSetEquipmentQualityCandidate,applySetEquipmentQualityCandidate,setEquipmentQualityCandidateEffects,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,setPillAptitudeBonus,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
 })();

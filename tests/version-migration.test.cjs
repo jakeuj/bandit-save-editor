@@ -205,6 +205,22 @@ test('city follow-up sends compilable page code and rejects a cache that misses 
   }finally{require.cache[gamePath].exports = real; delete require.cache[lifecyclePath];}
 });
 
+test('basic technology follow-up sends compilable page code and rejects research the edit should have blocked',async()=>{
+  const gamePath = require.resolve('../scripts/verify-game.cjs'), lifecyclePath = require.resolve('../scripts/verify-native-lifecycle.cjs');
+  const real = require(gamePath), answers = [];
+  const fake = {...real, waitMain: async () => {}, evaluate: async (state, expression) => { new Function('return ' + expression); assert.match(expression, /建筑等级解锁判断/); return answers.shift(); }};
+  delete require.cache[lifecyclePath]; require.cache[gamePath] = {...require.cache[gamePath], exports: fake};
+  try{
+    const {basicTechnology} = require(lifecyclePath), scenario = {basicTechnology: {unlocked: [14], locked: [13], buildings: [[7, 1], [4, 0]], research: 24}};
+    const t = (id, level) => ({id, level, points: 0, flag: 0, unlock: level, cap: 1});
+    const good = {academy: 3, unlocked: [t(14, 1)], locked: [t(13, 0)], buildings: [{b: 7, expected: 1, unlock: 1}, {b: 4, expected: 0, unlock: 0}], refused: [1, 0, 0, 0], started: [1, 24, 0], stopped: [0, 0, 0], f: 9};
+    answers.push(good);const state = {cells: []};await basicTechnology(state, scenario);
+    assert.deepEqual(state.cells.slice(-2), [[9, 3, 21], [1, 2, 0]]);assert.equal(state.cells.length, 11);
+    answers.push({...good, refused: [2, 0, 0, 0]});await assert.rejects(basicTechnology({cells: []}, scenario), /An unlocked basic tech started research/);
+    answers.push({...good, buildings: [{b: 7, expected: 1, unlock: 0}]});await assert.rejects(basicTechnology({cells: []}, scenario), /建筑等级解锁判断/);
+  }finally{require.cache[gamePath].exports = real; delete require.cache[lifecyclePath];}
+});
+
 test('every suite oracle and lifecycle script exists and marked copies run each family lifecycle',()=>{
   const S = require('../scripts/verification-suite.cjs');
   for (const [name, family] of Object.entries(S.families)) for (const script of [family.oracle, ...(family.lifecycle || [])].filter(Boolean)) assert.ok(fs.existsSync(path.join(root, 'scripts', script)), name + ': ' + script);
@@ -296,7 +312,7 @@ test('write-back opens proven groups on a new build, compares on the proven buil
     const compared = M.writeBack({dir, catalog, proof, results: {...results(catalog.gameVersion), ui: {}}});
     assert.equal(compared.action, 'compared');
     assert.equal(compared.consistent, false, 'quality UI pending must differ from the native proof');
-    assert.deepEqual(compared.comparison.filter(c => c.existing !== c.migrated).map(c => c.group).sort(), [...R.sections.equipmentQuality.groups,...['randomCharacterBaseAptitudes','pillAptitudeBonusDecimal','pillAptitudeBonusAscended','backpackEquipmentLevelAdvanced','relicAttributes','randomCharacterBaseAptitudesAscended','wallEnhancementLevel','cityLayerLevel','ascensionQuality','backpackInnerPillLevel','innerPillLevel','ascendedInnerPillLevel'].filter(g=>!catalog.verification[g])].sort());
+    assert.deepEqual(compared.comparison.filter(c => c.existing !== c.migrated).map(c => c.group).sort(), [...R.sections.equipmentQuality.groups,...['randomCharacterBaseAptitudes','pillAptitudeBonusDecimal','pillAptitudeBonusAscended','backpackEquipmentLevelAdvanced','relicAttributes','randomCharacterBaseAptitudesAscended','wallEnhancementLevel','cityLayerLevel','ascensionQuality','backpackInnerPillLevel','innerPillLevel','ascendedInnerPillLevel','basicTechnologyLevel'].filter(g=>!catalog.verification[g])].sort());
     assert.deepEqual(snapshot(), same);
     const reordered = {...catalog, fingerprints: Object.fromEntries(Object.entries(catalog.fingerprints).reverse()), batch2Fingerprints: Object.fromEntries(Object.entries(catalog.batch2Fingerprints).reverse())};
     assert.equal(M.writeBack({dir, catalog: reordered, proof, results: {...results(catalog.gameVersion), ui: {}}, exec: () => { throw Error('same fingerprint must not build after key reordering'); }}).action, 'compared');

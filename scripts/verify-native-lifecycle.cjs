@@ -342,11 +342,32 @@ async function ascendedInnerPillLevel(state, s) {
   return native;
 }
 
+// Edited basic techs after a restart: 科技解锁判断 and 建筑等级解锁判断 (level 0, the build menu) see the new unlocks, the cap
+// stays at 1, an unlocked tech refuses further research, and a tech whose prerequisite was edited starts and stops natively.
+async function basicTechnology(state, s) {
+  const {unlocked, locked, buildings, research} = s.basicTechnology;
+  const out = await evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);let academy=0;for(let x=1;x<a.GetWidth();x++)if(a.At(x,0,1)===x&&a.At(x,1,1)===5){academy=x;break;}if(!academy)throw Error('No 书院');
+    const gate=id=>({id,level:a.At(id,4,0),points:a.At(id,12,0),flag:a.At(id,13,0),unlock:call('科技解锁判断',id),cap:call('科技等级上限',id,0)});
+    const out={academy,unlocked:${JSON.stringify(unlocked)}.map(gate),locked:${JSON.stringify(locked)}.map(gate),buildings:${JSON.stringify(buildings)}.map(([b,expected])=>({b,expected,unlock:call('建筑等级解锁判断',b,0,false)}))};
+    ${selectFacility(1, 'academy')}
+    const copper=a.At(1,2,0);call('科技研究',${unlocked[0]},a.At(academy,5,1));out.refused=[a.At(${unlocked[0]},4,0),a.At(${unlocked[0]},13,0),a.At(f,3,21),a.At(1,2,0)-copper];
+    call('科技研究',${research},a.At(academy,5,1));out.started=[a.At(${research},13,0),a.At(f,3,21),a.At(${research},4,0)];call('取消设施进程',X,Y,false,0);out.stopped=[a.At(${research},13,0),a.At(f,3,21),a.At(1,2,0)-copper];out.f=f;return out;})()`);
+  for (const t of out.unlocked) assert.deepEqual([t.level, t.points, t.flag, t.unlock, t.cap], [1, 0, 0, 1, 1], `Unlocked tech ${t.id}`);
+  for (const t of out.locked) assert.deepEqual([t.level, t.unlock], [0, 0], `Locked tech ${t.id}`);
+  for (const b of out.buildings) assert.equal(b.unlock, b.expected, `建筑等级解锁判断 for building ${b.b}`);
+  assert.deepEqual(out.refused, [1, 0, 0, 0], 'An unlocked basic tech started research');
+  assert.deepEqual(out.started, [1, research, 0], 'Research behind an edited prerequisite did not start');
+  assert.deepEqual(out.stopped, [0, 0, 0], 'Cancel did not clear the research or refund the copper');
+  for (const id of [...unlocked, ...locked, research]) state.cells.push([id, 4, 0], [id, 12, 0], [id, 13, 0]);
+  state.cells.push([out.f, 3, 21], [1, 2, 0]);
+  return out;
+}
+
 async function main() {
   const statePath = opt('--state'), state = JSON.parse(fs.readFileSync(statePath)), scenario = JSON.parse(fs.readFileSync(opt('--scenario')));
   const rel = path.relative(path.resolve(__dirname, '..'), state.dir), child = path.relative(state.dir, state.game);
   if (!rel || (!path.isAbsolute(rel) && rel !== '..' && !rel.startsWith('..' + path.sep)) || !child || path.isAbsolute(child) || child.startsWith('..')) throw Error('External disposable state required');
-  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.backpackOverLimit && !scenario.relics && !scenario.relicTakeOff && !scenario.wall && !scenario.city && !scenario.ascensionQuality && !scenario.innerPillPrepare && !scenario.innerPillLevel && !scenario.ascendedInnerPillLevel) throw Error('Scenario has no native follow-up actions');
+  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.backpackOverLimit && !scenario.relics && !scenario.relicTakeOff && !scenario.wall && !scenario.city && !scenario.ascensionQuality && !scenario.innerPillPrepare && !scenario.innerPillLevel && !scenario.ascendedInnerPillLevel && !scenario.basicTechnology) throw Error('Scenario has no native follow-up actions');
   await waitMain(state);
   const result = {};
   if (scenario.ascend && !scenario.pills) result.ascend = await ascend(state, scenario);
@@ -361,10 +382,11 @@ async function main() {
   if (scenario.innerPillPrepare) result.innerPillPrepare = await innerPillPrepare(state, scenario);
   if (scenario.innerPillLevel) result.innerPillLevel = await innerPillLevel(state, scenario);
   if (scenario.ascendedInnerPillLevel) result.ascendedInnerPillLevel = await ascendedInnerPillLevel(state, scenario);
+  if (scenario.basicTechnology) result.basicTechnology = await basicTechnology(state, scenario);
   state.expected = await evaluate(state, `(()=>{${prefix}return ${JSON.stringify(state.cells)}.map(([x,y,z])=>a.At(x,y,z));})()`);
   fs.writeFileSync(statePath, JSON.stringify(state, null, 2));
   fs.writeFileSync(path.join(state.dir, 'native-lifecycle.json'), JSON.stringify(result, null, 2));
   console.log('PASS: native ' + Object.keys(result).join(' and ') + ' follow-up actions');
 }
 if (require.main === module) main().catch(e => { console.error(e.stack); process.exitCode = 1; });
-module.exports = {ascend, followup, pillsAndRebirth, backpackOverLimit, relicPlacement, relicTakeOff, wallUpgrade, cityLayer, ascensionQuality, innerPillPrepare, innerPillLevel, ascendedInnerPillLevel};
+module.exports = {ascend, followup, pillsAndRebirth, backpackOverLimit, relicPlacement, relicTakeOff, wallUpgrade, cityLayer, ascensionQuality, innerPillPrepare, innerPillLevel, ascendedInnerPillLevel, basicTechnology};

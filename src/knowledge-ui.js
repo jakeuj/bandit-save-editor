@@ -244,7 +244,7 @@
  }
  function renderSettlement(){
   $('settlementName').value=read(1,1,0);$('renameSettlementBtn').disabled=!K.verification.names;
-  $('settlementSummary').innerHTML=stat('山寨等級',read(2,1,0))+stat('目前地圖',read(4,1,0))+stat('累計遊玩秒數',read(15,1,0));if(typeof renderWall==='function')renderWall();if(typeof renderCity==='function')renderCity();
+  $('settlementSummary').innerHTML=stat('山寨等級',read(2,1,0))+stat('目前地圖',read(4,1,0))+stat('累計遊玩秒數',read(15,1,0));if(typeof renderWall==='function')renderWall();if(typeof renderCity==='function')renderCity();if(typeof renderBasicTech==='function')renderBasicTech();
   const kind=$('settlementCategory').value,q=$('settlementSearch').value.trim().toLowerCase();
   $('settlementNote').textContent=['buildings','facilities','quests'].includes(kind)?'以下為遊戲資料表，不代表已建造、已擁有或已完成。配置與進程請從欄位圖鑑對照原始記錄。':'可從下方調整操練上限或進階科技；研究與操練進行中不修改。';
   const rows=K.catalogs[kind].filter(r=>`${r.id} ${r.name} ${r.category}`.toLowerCase().includes(q));
