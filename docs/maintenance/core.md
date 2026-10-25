@@ -67,14 +67,12 @@ node scripts/build-editor.cjs
 
 ## 新功能的 core 開發規範
 
-> 2026-10-24 起依[輕量開發流程](lightweight.md)：下列獨立入口原則保留（好維護），但改 core 不再重證全部代表副本，第 6 點的切片報告只當參考。
+新功能依下列規範設計，目的是好維護：改一個功能不牽動其他功能的程式與測試。（2026-10-24 前這些規範也用來減少 core 切片重證；[輕量開發流程](lightweight.md#改-core-與遊戲改版)起改 core 不再重證。）
 
-既有群組的原生證據依 family 的 core 切片綁定（見[切片綁定](../research/core-ast-proof.md#第二階段功能切片)）。只有修改落在少數 family 專屬函式時才省得到選跑；碰到共用樞紐就等同整份 core 變動，全部重證。新功能依下列規範設計：
-
-1. 以**獨立具名入口**提供資格、預覽與交易（例如 `xxxInfo`／`previewXxx`／`setXxx`），UI 直接呼叫該入口；不在 `editingInfo`、`setEditingValue`、`resolveField` 等樞紐新增分支。寶物等級（v2.11）接入 `editingInfo`／`setEditingValue`，因此付了全部 19 份重證，是反例。v2.14 背包等級超限只是把 z7 納入既有進階判斷，仍改在樞紐內（另寫入口會複製整套背包檢查）；代價是要調整綁歷史證明的測試，見[輕量流程](lightweight.md#測試也不綁目前-core)。
+1. 以**獨立具名入口**提供資格、預覽與交易（例如 `xxxInfo`／`previewXxx`／`setXxx`），UI 直接呼叫該入口；不在 `editingInfo`、`setEditingValue`、`resolveField` 等樞紐新增分支。寶物等級（v2.11）接入 `editingInfo`／`setEditingValue`，當時因此付了全部 19 份重證，是反例。v2.14 背包等級超限只是把 z7 納入既有進階判斷，仍改在樞紐內（另寫入口會複製整套背包檢查）；代價是要調整綁歷史證明的測試，見[輕量流程](lightweight.md#測試也不綁目前-core)。
 2. 新入口只新增 `globalThis.SaveCore` 匯出名稱；新增名稱不影響既有 family，改變既有名稱的指向則會影響。
-3. 新功能的唯讀保護若必須進入 `resolveField`（例如自訂座標不可繞過），先排在一次本來就要全跑的時點（遊戲改版或發布前），把分類改成資料驅動；不在開發中修改樞紐。
-4. 共用工具（座標、格存取、`put`、`transaction`、`parse`／`serialize`）只在發布前批次修改；新功能需要的輔助函式放在自己的區塊。
+3. 新功能的唯讀保護若必須進入 `resolveField`（例如自訂座標不可繞過），優先把分類改成資料驅動，不為單一功能在樞紐加特例。
+4. 共用工具（座標、格存取、`put`、`transaction`、`parse`／`serialize`）少改、集中改；新功能需要的輔助函式放在自己的區塊。
 5. 新 family 必須在 `scripts/migration-analysis.cjs` 的 `coreRoots` 宣告其原生情境與驗證腳本使用的 `SaveCore` 方法；`tests/core-slice-roots.test.cjs` 會核對漏列。
 6. 每次修改 core 後先跑 `node scripts/core-slice-report.cjs`（純靜態、秒級），看本次修改會讓哪些 family 的切片改變；結果只當參考，不決定重證（見[輕量開發流程](lightweight.md#改-core-與遊戲改版)）。
 
@@ -104,6 +102,8 @@ v2.1 可使用 repo 外 `--scenario` JSON：`baseline` 為 `[x,y,z,value]` 陣�
 
 
 ## 套裝等級首次證明與遷移
+
+> 歷史紀錄：本節是 v2.10 首次證明工具與代表遷移的說明；現行改 core 與遊戲改版依[輕量開發流程](lightweight.md)，下文「改 core 後須重驗」不再適用。
 
 詳見[研究與原生結果](../research/set-equipment-level.md)、[SDD](../../sdd/archive/2026-10-23-set-equipment-level/tasks.md)。`setEquipmentLevelInfo(model,{itemId,plane})` 核對套裝 metadata、Q1–Q6／T1–T9、等級、owner 與雙向唯一指標；`editingInfo(model,'equipment',id,plane)` 依種類分派，`setEquipmentLevel` 僅改 y6。z7 使用 `backpackSetEquipmentLevel`，z9 使用 `setEquipmentLevel`；品質、詞條、套裝合成及進階模式不在範圍。已洗唯一選槽的 P套 ID（跨池範圍）另由 `backpackSetEquipmentLevelCrossPool`／`setEquipmentLevelCrossPool` 各自把關，預設關閉，關閉時只接受原池；首次證明見[套裝品質 B 任務](../../sdd/set-equipment-quality-b/tasks.md)。y0 是保留身分，可不同於目前列號；y23／26／27 保留。各群組的獨立首次證明通過後才開放。
 
