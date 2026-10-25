@@ -19,6 +19,7 @@ SCRIPT_SHA256 = {
     "b5bf45f38e8165bbd5093702695486fe77797a27914bba8b1fdd5f46658396bc": "V1.0.9.1",
     "1e1643722efc032824881f03ce4d81df1135e6a8cd8e08d9fd87e56e480ac9f6": "V1.0.10.2",
     "3e0febeb8342138ed47d9e8499e3646f4e8ddc2ce89a9faa0bebbad9ba83280e": "V1.0.11.2",
+    "e6a6d629bf7320344445ac7e6e47085211496e5b6a9498aec13ab1a121abd04b": "V1.0.12.2",
 }
 STEAM_COMMON = Path.home() / (
     "Library/Application Support/CrossOver/Bottles/NGO-Steam-0/drive_c/"

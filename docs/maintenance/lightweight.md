@@ -41,7 +41,7 @@
 5. **冒煙**：依真改動挑代表案例。`verify-game.cjs` 會把載入的 catalog 旗標全部打開，候選 catalog 只要指紋對得上新來源。這次用 `backpackOverLimit`（裝備入庫、取出、穿戴、卸下）和 `relicCrafting`（靈物合成、精煉）兩份，腳本在 repo 外 `v1.0.12.2-migration-20261025/run-smoke.sh`。
 6. **寫回**：重產 catalog（舊旗標照抄）；`verification.json` 換 `gameVersion`、build、指紋，加 `gameUpdate` 紀錄（變動來源、靜態核對結論、冒煙雜湊）。輕量群組的紀錄改成新版本，另記原冒煙版本 `smokeGameVersion` 與 `gameUpdate` 說明。
 7. **歷史證明測試**：舊的複合證明綁 V1.0.11.2，測試會用目前 catalog 去核對它而失敗。V1.0.11.2 的 catalog／verification 已凍結在 `tests/fixtures/v1.0.11.2-release`（gzip），`tests/helpers/legacy-release.cjs` 與 `release-v1.0.11.2.cjs` 從那裡讀；下次改版不用再凍結，除非又寫了新的複合證明。直接比對「目前 catalog 的遊戲版本」的斷言改讀 `knowledge/catalog.json`。知識統計（函式數）照新版更新。
-8. 更新紀錄加新版本、README 知識基準與進度入口；Mac 啟動器的 `SCRIPT_SHA256` 不跟著加，等明確處理 Mac 時再核對路徑補丁。
+8. 更新紀錄加新版本、README 知識基準與進度入口；Mac 啟動器的 `SCRIPT_SHA256` 不跟著加。換到 Mac 準備副本時，`prepare-macos.py` 會因指紋不符而停下，那時再依 [launcher 說明](../../launcher/README.md)做靜態核對並登錄；Mac 實機啟動與存讀補驗也到那時再做。
 
 踩過的坑：新版從 `开始界面` 載入較慢，`--probe` 剛載入時讀到的是開始畫面的值；以 `--assert` 的通過為準。背景指令裡用 `tail -3 a b` 會失敗（要寫 `tail -n 3`），整個背景任務因此被標成失敗，但冒煙本身已通過，要看 steps.log 判斷。
 

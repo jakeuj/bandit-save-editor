@@ -10,7 +10,7 @@
 <CrossOver bottle>/drive_c/Program Files (x86)/Steam/steamapps/common/塔防山贼模拟器/package.nw
 ```
 
-以當次使用者指定的實際路徑為準。`launcher/prepare-macos.py` 目前先找 `common/塔防山贼模拟器`，找不到才使用歷史 `common/bandit`；準備工具已接受 V1.0.11.2 路徑修正來源，但只完成靜態核對，尚未重驗新版 Mac 啟動、Steam 清單、實際存讀及重啟續玩。`--source` 接受包含 `package.nw` 的遊戲目錄，不是封裝檔本身：
+以當次使用者指定的實際路徑為準。`launcher/prepare-macos.py` 目前先找 `common/塔防山贼模拟器`，找不到才使用歷史 `common/bandit`；準備工具已接受 V1.0.11.2 與 V1.0.12.2 路徑修正來源，但只完成靜態核對（Windows 可做，步驟見 launcher 說明），尚未重驗新版 Mac 啟動、Steam 清單、實際存讀及重啟續玩。`--source` 接受包含 `package.nw` 的遊戲目錄，不是封裝檔本身：
 
 ```sh
 python3 launcher/prepare-macos.py --source "<SteamLibrary>/steamapps/common/塔防山贼模拟器"

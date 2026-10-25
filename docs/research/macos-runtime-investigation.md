@@ -114,9 +114,28 @@ Nevergrind 的預設本機 runtime 快取路徑（由 script／README 得知，�
 
 若發行端日後更新 Construct exporter，新的遊戲版本可能改用不同 runtime，須重新確認。Construct 現行文件已將 NW.js exporter 列為退役功能，但此事不會讓眼前已存在的 NW.js payload 自動失效。[Construct deprecated features](https://www.construct.net/en/make-games/manuals/construct-3/tips-and-guides/deprecated-features)
 
+## V1.0.12.2 靜態核對（2026-10-25）
+
+在 Windows 用指定安裝的 V1.0.12.2（Steam build 26174490）完成靜態核對，再把指紋登錄進準備工具；沒有在 Mac 上執行。
+
+| 檢查 | 結果 |
+| --- | --- |
+| 來源 | 安裝的 `package.nw` 共 273 個項目；`scripts/c3runtime.js` 指紋與 `knowledge/catalog.json` 的 V1.0.12.2 相符 |
+| 修正位置 | 跟 V1.0.11.2 比對 `execPath`、`\\"`、`"savedir\\`、`"backup\\`、`"save\\` 前後各 60 字元的片段，8 個片段完全相同；命中次數：`_appFolder` 1 次、`_nwjsAppFolder` 1 次、`savedir` 4 次、`backup` 4 次（與前版相同） |
+| 其他改動 | `c3runtime.js` 只差遊戲 expression（角色排序、刷新倒數、第六槽計算等）及部分 shader／expression 區塊改成 CRLF 換行，沒碰檔案讀寫 |
+| 未變檔案 | `package.json`（icon 仍用反斜線，準備工具照舊修正）、`scripts/main.js`、`greenworks-osx.node` 指紋與下方 V1.0.9.1 相同 |
+| 工具核對 | 用準備工具的 `patch_runtime` 產生修正副本，`--verify-runtime` 回報 `game_version` V1.0.12.2 |
+
+尚未做：Mac 原生啟動、Steam 清單、本機存檔／讀檔、新程序重啟讀回。這些要在 Apple Silicon Mac 上依[建議驗證順序](#建議驗證順序)與 `scripts/verify-game.cjs` 補驗，前幾版的實測不能沿用。
+
+```text
+V1.0.12.2 scripts/c3runtime.js  原始 e6a6d629bf7320344445ac7e6e47085211496e5b6a9498aec13ab1a121abd04b
+                                修正 54f926b275e1fed2243b7c901bd1aab7d28682bebffd46eec8ad68182b4019c2
+```
+
 ## 本次檔案指紋
 
-下列為 `package.nw` 內檔案的 SHA-256，便於日後分辨遊戲更新；不包含遊戲程式或玩家資料本身。
+下列為 V1.0.9.1 `package.nw` 內檔案的 SHA-256，便於日後分辨遊戲更新；不包含遊戲程式或玩家資料本身。
 
 ```text
 package.json             79173c1a8a3a36445e1fb0734a1d2df63848464058a475be961df70fe4c5ae99
