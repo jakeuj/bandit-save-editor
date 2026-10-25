@@ -23,7 +23,7 @@ v2.7 已發布一般隨機角色基礎資質；路線圖第 2 項的下一步為
 
 先讀 AGENTS、專案／SDD 技能、README、維護／測試指引、路線圖、存檔／第二批／v2.7 研究及兩案 SDD。跨檔入口先查既有 graphify，再核對來源。廣查結果曾截斷，另以具體符號查詢；圖譜沒有新符號時直接查目前檔案，未以缺少節點推定功能不存在，也未重建圖譜。原始遊戲檔與分析事件樹僅在 repo 外暫存。
 
-來源入口：[路線圖第2項](../../docs/research/feature-roadmap.md#2-一般隨機角色的基礎資質技藝上限與天賦)、[存檔規則](../../docs/research/save-knowledge.md)、[v2.7研究](../../docs/research/random-character-growth.md)、[維護指引](../../docs/maintenance.md)、[測試指引](../../docs/testing.md)。本輪另重新執行 `npm run verify:release`：建置同步、106項Node及7項headless通過；此為未改產品的現況回歸，不是v2.8驗收。
+來源入口：[路線圖第2項](../../docs/research/archive/2026-10-22-feature-roadmap.md#2-一般隨機角色的基礎資質技藝上限與天賦)、[存檔規則](../../docs/research/save-knowledge.md)、[v2.7研究](../../docs/research/random-character-growth.md)、[維護指引](../../docs/maintenance.md)、[測試指引](../../docs/testing.md)。本輪另重新執行 `npm run verify:release`：建置同步、106項Node及7項headless通過；此為未改產品的現況回歸，不是v2.8驗收。
 
 以下分為三種證據：**欄位合法**是型別與目前狀態通過；**原版可生成**是指定範圍存在共同生成見證；**後續行為正確**必須由相符來源原生函式、原版存檔及新 PID 讀回支持。前兩者不會自動取得第三種結論。
 
