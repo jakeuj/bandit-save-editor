@@ -1,8 +1,8 @@
 # 天賦等級維護
 
-[維護索引](../maintenance.md)；只讀本次任務相關章節。版本與日期標示的實測紀錄只證明當時範圍，現行開放狀態以 catalog／verification 與相應 SDD 為準。
+[維護索引](../maintenance.md)；只讀本次任務相關章節。版本與日期標示的實測紀錄只證明當時範圍，現行開放狀態以 catalog／verification 為準（輕量群組見 `knowledge/verification.json` 的 `lightweight`）。
 
-> 整份 core 摘要現採[語法樹格式](../research/core-ast-proof.md)：一般註解／排版不影響綁定，可執行語法改依 family 切片保護（[第二階段](../research/core-ast-proof.md#第二階段功能切片)），無法切片時退回整份 core。下列舊版整檔文字摘要與實測數字保留歷史脈絡；其他功能的區段摘要沒有在本階段改造。
+> 下列 core 摘要、選跑重證與實測數字是 2026-10-24 輕量流程前的歷史紀錄；現行驗證與建置閘門見[輕量開發流程](lightweight.md)。
 
 ## v2.9 一般隨機角色天賦等級
 
@@ -12,7 +12,7 @@
 
 生成器 `random-character-talents-data.cjs` 以 10 個來源 SID 的事件摘要（只接受 V1.0.11.2 審閱值）產生 `catalog.randomCharacterTalents`：品質等級池、屬性單位與 `天赋属性` 6 個公式分支；天賦屬性／係數沿用 `batch2Data.talents`。來源、規則或天賦資料變動會關閉 `randomCharacterTalents`。
 
-`random-character-talents-proof.cjs` 綁 15 來源、規則＋天賦資料，以及 core 的天賦區塊（`// Talent level rules.` 至 `// Talent level rules end.`）加 v2.7 證明切片，**不綁整份 core**，其他 core 修改不會讓本群組失效；反之，`randomCharacterSkillCaps` 仍綁整份 core。
+`random-character-talents-proof.cjs` 綁 15 來源、規則＋天賦資料，以及 core 的天賦區塊（`// Talent level rules.` 至 `// Talent level rules end.`）加 v2.7 證明切片，**不綁整份 core**，其他 core 修改不會讓本群組失效；反之，`randomCharacterSkillCaps` 仍綁整份 core。（以上是證明工具的綁定方式；2026-10-24 起建置閘門不再核對 core，見[輕量開發流程](lightweight.md#建置閘門)。）
 
 首次開放入口（Windows 用完整開發快取與獨立 runtime，見[本機開發快取](migration.md#本機開發快取)）：
 

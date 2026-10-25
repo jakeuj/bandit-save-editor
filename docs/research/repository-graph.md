@@ -1,6 +1,6 @@
 # Repo 知識圖譜
 
-graphify 將程式結構、研究文件與視覺素材整理為本機可查詢的圖譜。適合尋找跨檔入口，例如從維護指引追到核心交易、隔離遊戲驗證與單檔建置。找到入口後，依節點與關係的 `source_file`、`source_location` 回到目前來源確認；功能狀態以各研究筆記及 SDD 任務為準。
+graphify 將程式結構、研究文件與視覺素材整理為本機可查詢的圖譜。適合尋找跨檔入口，例如從維護指引追到核心交易、隔離遊戲驗證與單檔建置。找到入口後，依節點與關係的 `source_file`、`source_location` 回到目前來源確認；功能狀態以 catalog／verification 及各研究筆記的實作摘要為準（舊功能另見 `sdd/` 歷史紀錄）。
 
 遊戲資料規則與可寫驗證的維護入口仍是 [存檔知識調查](save-knowledge.md)及[維護指引](../maintenance.md)。圖譜中的 `EXTRACTED` 表示來源明示關係，`INFERRED` 是推論，`AMBIGUOUS` 是待確認；三者都不等同隔離遊戲實測通過。
 

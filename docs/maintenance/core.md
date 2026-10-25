@@ -1,6 +1,6 @@
 # 來源、核心 API 與首次開放
 
-[維護索引](../maintenance.md)；只讀本次任務相關章節。版本與日期標示的實測紀錄只證明當時範圍，現行開放狀態以 catalog／verification 與相應 SDD 為準。
+[維護索引](../maintenance.md)；只讀本次任務相關章節。版本與日期標示的實測紀錄只證明當時範圍，現行開放狀態以 catalog／verification 為準（輕量群組見 `knowledge/verification.json` 的 `lightweight`）。
 
 ## 編輯入口
 
@@ -96,14 +96,7 @@ node scripts/extract-game.cjs --source /path/to/unpacked/game --audit-only --aud
 
 此模式輸出 13 個來源指紋、統計及事件／讀寫索引，略過 catalog 產生器，不修改 catalog、繁中對照或驗證旗標。一般重建的指紋限制維持不變；原始 audit 的 repo 外路徑會在寫入知識前檢查。比對時以 SID 定位，expression 編號可能因其他事件增刪而移動。2026-10-21 的新版分析與 Windows 讀寫／重啟結果見 [V1.0.10.2 調查](../research/v1.0.10.2-audit.md)。
 
-新增可寫功能需完成以下流程：
-
-1. 追查初始化、讀寫、計算與刪除，記錄欄位型別、值域、關聯及來源 SID；複雜或未釐清項目維持唯讀。
-2. 用合成資料測試非法型別、跨級、上限、交易回滾、完整復原及精確 token 替換。
-3. 以 `scripts/verify-game.cjs --help` 查看隔離驗證入口。此工具需要 Windows 或 macOS、Node.js 22+、解包的遊戲、同平台 NW.js runtime 及已登入的 Steam；來源須與 catalog 的完整15個指紋（13個基礎加yx／tz）相符。Windows 優先傳入本機索引記錄的快取 `game.exe`，也可用安裝目錄的版本；工具會複製 runtime 至隔離遊戲目錄。用 `--catalog` 指定候選目錄、`--save-file` 指定唯讀來源存檔、`--artifacts` 指定已存在的 repo 外目錄；不能沿用不同 runtime 的驗證紀錄。
-4. 確認遊戲載入、遊戲寫檔、停止測試程序後重啟讀回及來源存檔雜湊；測試只在獨立 app／遊戲／profile 中執行，保留授權初始化，Steam 寫入導向本機鏡像與紀錄。
-5. 將去識別結果與相符指紋寫入 `verification.json`，再開啟對應群組。建置會核對全部來源指紋、檢查結果及群組覆蓋，未通過就停止。
-6. 在 `scripts/verification-requirements.cjs` 加群組與 checks，`scripts/verification-suite.cjs` 指定家族／步驟，`scripts/migration-scenarios.cjs` 補代表情境，並在 `scripts/migration-analysis.cjs` 宣告相依。漏加不能在遷移時判為可沿用；首次獨立證明合併後才成為下次遷移的既有群組。
+新增可寫功能依[輕量開發流程](lightweight.md#新功能怎麼做)：追查欄位、型別、值域與來源 SID（未釐清項目維持唯讀），合成測試，加一次隔離遊戲冒煙後開旗標；建置閘門與新旗標的 family 登記見該頁「建置閘門」與「測試也不綁目前 core」。隔離驗證入口用 `scripts/verify-game.cjs --help` 查看：需要 Windows 或 macOS、Node.js 22+、解包的遊戲、同平台 NW.js runtime 及已登入的 Steam；Windows 優先傳入本機索引記錄的快取 `game.exe`，`--catalog` 指定候選目錄、`--save-file` 指定唯讀來源存檔、`--artifacts` 指定已存在的 repo 外目錄。測試只在獨立 app／遊戲／profile 中執行，Steam 寫入導向本機鏡像與紀錄。
 
 v2.1 可使用 repo 外 `--scenario` JSON：`baseline` 為 `[x,y,z,value]` 陣列、`operations` 指定三項具名 API 的 `method`／`options`、`observe` 列出預期核對座標。`verify-game.cjs` 的候選旗標只存在隔離 VM，不修改公開 catalog；只有版本遷移流水線在下節條件下寫回。`--load` 等待主畫面，`--save`／`--assert` 確認布局就緒後執行；`scripts/verify-advanced.cjs --state /outside/state.json` 記錄原版屬性／加成，重啟後加 `--compare` 核對。原始 scenario、結果、SID 呼叫及玩家資料仍留在 repo 外。
 

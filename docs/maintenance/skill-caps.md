@@ -1,8 +1,8 @@
 # 九項技藝上限維護
 
-[維護索引](../maintenance.md)；只讀本次任務相關章節。版本與日期標示的實測紀錄只證明當時範圍，現行開放狀態以 catalog／verification 與相應 SDD 為準。
+[維護索引](../maintenance.md)；只讀本次任務相關章節。版本與日期標示的實測紀錄只證明當時範圍，現行開放狀態以 catalog／verification 為準（輕量群組見 `knowledge/verification.json` 的 `lightweight`）。
 
-> 整份 core 摘要現採[語法樹格式](../research/core-ast-proof.md)：一般註解／排版不影響綁定，可執行語法改依 family 切片保護（[第二階段](../research/core-ast-proof.md#第二階段功能切片)），無法切片時退回整份 core。下列舊版整檔文字摘要與實測數字保留歷史脈絡；其他功能的區段摘要沒有在本階段改造。
+> 下列 core 摘要、選跑重證與實測數字是 2026-10-24 輕量流程前的歷史紀錄；現行驗證與建置閘門見[輕量開發流程](lightweight.md)。
 
 ## v2.8 A 交付紀錄：技藝上限核心，當時尚未開放
 

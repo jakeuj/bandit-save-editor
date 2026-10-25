@@ -1,6 +1,6 @@
 # 套裝品質 A 任務
 
-狀態：A 階段完成（A1–A10，2026-10-23）；B 待使用者逐段明確授權。[子提案](proposal.md)／[母規格與全案驗收](../set-equipment-quality/tasks.md)／[進度入口](../../docs/research/next-version-plan.md)。
+狀態：A 階段完成（A1–A10，2026-10-23）；B 亦已完成，v2.12 發布（2026-10-25 補註：A1–A10、B1–B10 已全部完成，作為 v2.12 發布；下列狀態為當時紀錄，見[更新紀錄](../../docs/releases.md#v212-套裝品質)。）[子提案](proposal.md)／[母規格與全案驗收](../set-equipment-quality/tasks.md)／[進度入口](../../docs/research/next-version-plan.md)。
 
 每項工程操作目標 30–60 分鐘；超時先再拆子 SDD。自動矩陣執行另記分片／checkpoint，完成全部分母才可勾選。
 

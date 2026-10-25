@@ -10,11 +10,11 @@
 
 ## 工具限制
 
-2026-10-22 v2.8 B另完成獨立headless Chromium的直接file完整尺寸九上限預覽／套用／實際下載／重載，HTTP桌面／390px及PWA離線／waiting交接也通過。這是直接開檔網頁流程實測，並非僅離線相依性檢查，也不宣稱原生選檔或其他未測的名稱／設定流程；歷史任務6保持未完成。詳細範圍見[B驗收](../random-character-skill-caps-b/tasks.md)。
+2026-10-22 v2.8 B另完成獨立headless Chromium的直接file完整尺寸九上限預覽／套用／實際下載／重載，HTTP桌面／390px及PWA離線／waiting交接也通過。這是直接開檔網頁流程實測，並非僅離線相依性檢查，也不宣稱原生選檔或其他未測的名稱／設定流程；當時歷史任務6保持未完成；2026-10-25 補註：舊功能直接開檔已由 headless `file:` 驗收，見[紀錄](../../docs/maintenance/pwa.md#2026-10-25-舊功能直接開檔驗收紀錄)。）。詳細範圍見[B驗收](../random-character-skill-caps-b/tasks.md)。
 
-2026-10-22 v2.5品質流程完成桌面／390px及PWA離線升降品、兩入口精確匯出、重讀與v2.4→v2.5等待／關閉重開。直接file://新流程仍待人工；本輪不擴大歷史任務6的直接開檔通過範圍，詳細證據見[品質研究](../../docs/research/equipment-quality.md)。
+2026-10-22 v2.5品質流程完成桌面／390px及PWA離線升降品、兩入口精確匯出、重讀與v2.4→v2.5等待／關閉重開。直接file://新流程當時仍待人工（2026-10-25 補註：舊功能直接開檔已由 headless `file:` 驗收，見[紀錄](../../docs/maintenance/pwa.md#2026-10-25-舊功能直接開檔驗收紀錄)。）本輪不擴大歷史任務6的直接開檔通過範圍，詳細證據見[品質研究](../../docs/research/equipment-quality.md)。
 
-任務 6 的桌面／手機編輯、匯出、重新載入、完整尺寸及離線相依性檢查已通過。2026-10-21 使用隔離 Chrome 155 另完成 PWA 安裝、獨立視窗、離線啟動、快取重建及多視窗更新；實際下載 HTML 後以 `file://` 直接開啟，也通過完整尺寸資源修改／還原／精確匯出／重新載入。直接開檔的名稱、三類經驗及設定完整流程仍待驗，任務 6 保持未完成。PWA 詳細證據見 `docs/maintenance/pwa.md`，其餘實測見 `docs/research/save-knowledge.md`；正式發布以對應 Pages 工作流程及線上資產核對為準。
+任務 6 的桌面／手機編輯、匯出、重新載入、完整尺寸及離線相依性檢查已通過。2026-10-21 使用隔離 Chrome 155 另完成 PWA 安裝、獨立視窗、離線啟動、快取重建及多視窗更新；實際下載 HTML 後以 `file://` 直接開啟，也通過完整尺寸資源修改／還原／精確匯出／重新載入。直接開檔的名稱、三類經驗及設定完整流程當時仍待驗，任務 6 保持未完成（2026-10-25 補註：已由 headless `file:` 驗收並勾選，見[紀錄](../../docs/maintenance/pwa.md#2026-10-25-舊功能直接開檔驗收紀錄)）。PWA 詳細證據見 `docs/maintenance/pwa.md`，其餘實測見 `docs/research/save-knowledge.md`；正式發布以對應 Pages 工作流程及線上資產核對為準。
 
 程式提交 `e5487de` 已推送 main，[Pages 部署](https://github.com/jakeuj/bandit-save-editor/actions/runs/39394230752)成功；正式首頁、離線 HTML、Mac 指南、sitemap、分享圖、favicon 與準備工具均回傳 200 且與本機逐 byte 一致。正式圖鑑索引及 390px 版面已確認。BANDIT 技能正本已更新並於本機 `.agents` repo 提交，其他工作的未推送提交保持原狀。
 

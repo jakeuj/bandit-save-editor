@@ -1,10 +1,13 @@
 # 山寨帳房維護索引
 
-依任務選讀下列文件，不必全文載入所有維護資料。公式、SID 與實測證據以[研究筆記](research/save-knowledge.md)及各功能 SDD 為準；[測試指引](testing.md)區分開發測試、日常推送及完整驗收。
+依任務選讀下列文件，不必全文載入所有維護資料。公式、SID 與實測證據以[研究筆記](research/save-knowledge.md)及各功能研究文件的實作摘要為準（v2.12 以前的功能另有 `sdd/` 歷史紀錄）；[測試指引](testing.md)區分開發測試、日常推送及完整驗收。
 
 | 任務 | 必讀文件 |
 | --- | --- |
-| 來源、核心 API 與首次開放 | [core](maintenance/core.md) |
+| 新功能、改 core、遊戲改版的驗證方式 | [lightweight](maintenance/lightweight.md)（與舊規則衝突時以它為準） |
+| 進度承接與下一步 | [planning](maintenance/planning.md) |
+| 是否分派子 agent／子 session | [dispatch](maintenance/dispatch.md) |
+| 來源與核心 API | [core](maintenance/core.md) |
 | 版本標示、提交與發布 | [release](maintenance/release.md) |
 | Wiki 內容、側邊欄與 Git 推送 | [Wiki 維護](maintenance/release.md#wiki-維護) |
 | Project 卡片、狀態與清單異常 | [Project 維護](maintenance/projects.md) |
@@ -18,7 +21,7 @@
 | 九項技藝上限維護 | [skill-caps](maintenance/skill-caps.md) |
 | 天賦等級維護 | [talents](maintenance/talents.md) |
 
-Mac 啟動與存檔位置讀 [launcher 說明](../launcher/README.md)；規劃下一版讀[目前進度與候選](research/next-version-plan.md)。新增可寫群組必須完成首次獨立證明，代表遷移不能代替首次開放。
+Mac 啟動與存檔位置讀 [launcher 說明](../launcher/README.md)；規劃下一版讀[目前進度與候選](research/next-version-plan.md)。新增寫入功能依輕量流程：合成測試加一次隔離遊戲冒煙通過才開旗標。
 
 ## 舊章節入口
 
@@ -136,4 +139,4 @@ Mac 啟動與存檔位置讀 [launcher 說明](../launcher/README.md)；規劃�
 
 - [輕量開發流程](maintenance/lightweight.md)：2026-10-24 起的新功能、改 core 與遊戲改版驗證方式，與舊規則衝突時以它為準。
 
-問目前進度、下一步或繼續實作時，先看[下一步與目前進度](research/next-version-plan.md)，再依[承接流程](maintenance/planning.md)讀當前 SDD，依[輕量開發流程](maintenance/lightweight.md)在同一個 session 實作；不要從歷史排序重開已完成工作。
+問目前進度、下一步或繼續實作時，先看[下一步與目前進度](research/next-version-plan.md)，再依[承接流程](maintenance/planning.md)讀相關研究與維護文件，依[輕量開發流程](maintenance/lightweight.md)在同一個 session 實作；不要從歷史排序重開已完成工作。

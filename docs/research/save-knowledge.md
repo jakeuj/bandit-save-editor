@@ -6,11 +6,11 @@
 
 普通裝備Q1–Q6品質交易、54項完整效果與15來源的獨立證明見[v2.5品質研究](equipment-quality.md)。y23為取得呼叫參數／套裝關聯值，不能等同當前品質；新品質交易保留它。舊版本的品質研究結論以該文件的來源修正與實測狀態為準。
 
-目前 repo 知識基準為 **V1.0.11.2**。2026-10-22 的[新版調查與 Windows 隔離讀寫／重啟驗證](v1.0.11.2-audit.md)已完成，對應 `knowledge/catalog.json` 與 `knowledge/verification.json`；正式網站發布另記。既有編輯座標與升級需求公式未發現變動，V1.0.10.2 已更新的產出與速度限制保留。本文件的 expression 編號、下列 2026-10-20 Mac 實測與歷史發布紀錄仍以 V1.0.9.1 為準；新版 expression 對照及實測範圍見新版調查。
+目前 repo 知識基準為 **V1.0.12.2**（2026-10-25 以輕量流程改版，公式編號 +4、編輯座標未變，見[更新紀錄](../releases.md#v228-遊戲-v10122)）。前一版 V1.0.11.2 的 2026-10-22 [新版調查與 Windows 隔離讀寫／重啟驗證](v1.0.11.2-audit.md)為歷史證據，對應 `knowledge/catalog.json` 與 `knowledge/verification.json`；正式網站發布另記。既有編輯座標與升級需求公式未發現變動，V1.0.10.2 已更新的產出與速度限制保留。本文件的 expression 編號、下列 2026-10-20 Mac 實測與歷史發布紀錄仍以 V1.0.9.1 為準；新版 expression 對照及實測範圍見新版調查。
 
 v2.7 的範本0基礎資質、同品質招募組合、丹藥相依與六欄還原見[一般隨機角色研究](random-character-growth.md)。v2.8 B已完成九項技藝上限介面與完整正式隔離驗證，合併相符獨立證明後開放套用；天賦維持唯讀，歷史實測不自動擴大。規則與最新驗收見[技藝上限研究](random-character-skill-caps.md)及[B任務](../../sdd/random-character-skill-caps-b/tasks.md)。
 
-2026-10-22更新後的指定安裝為V1.0.11.2／Steam build26126719，24個既有群組已經相符來源的Windows代表遷移與必要UI補測。更新前同日的V1.0.10.2／build26094666驗證仍為歷史證據，新版Mac啟動與存讀未實測。
+2026-10-22更新後的V1.0.11.2／Steam build26126719，當時24個既有群組已經相符來源的Windows代表遷移與必要UI補測；更早的V1.0.10.2／build26094666驗證為歷史證據。V1.0.11.2 與 V1.0.12.2 的 Mac 啟動與存讀尚未實測。
 
 ## 可重跑解析
 
@@ -22,7 +22,7 @@ node --test tests/*.test.cjs
 
 解析器確認 `project[3][12]` 為 save，使用 `C3_GetObjectRefTable` 辨識 Array 操作，對照 `project[6]` 事件 SID 與 `C3_ExpressionFuncs`。只在空白且限時的 VM 建立 expression factory 陣列，並不啟動遊戲或執行這些 factory。讀取參照與完整解析輸出僅在 repo 外的 audit；提交的是欄位寫入位置索引、必要名稱及規則摘要。
 
-目前 V1.0.11.2 辨識 725 個事件函式、863 個存檔陣列動作，其中 850 個 SetXYZ，及 2,825 個 save.At 讀取參照。名稱索引共 1,762 筆，涵蓋材料、角色範本、職業、屬性、物品、科技、建築、任務、天賦、設施及靈物。名稱採遊戲文字；未提供繁體的名稱用 macOS Foundation Hans-Hant 轉換或人工補充，轉換表保存在 `knowledge/traditional-names.json`，其他平台可重用。
+目前 V1.0.12.2 辨識 726 個事件函式、863 個存檔陣列動作，其中 850 個 SetXYZ，及 2,827 個 save.At 讀取參照（數字以 `knowledge/catalog.json` 的 `counts` 為準）。名稱索引共 1,762 筆，涵蓋材料、角色範本、職業、屬性、物品、科技、建築、任務、天賦、設施及靈物。名稱採遊戲文字；未提供繁體的名稱用 macOS Foundation Hans-Hant 轉換或人工補充，轉換表保存在 `knowledge/traditional-names.json`，其他平台可重用。
 
 事件／runtime 指紋未知時，解析器停止產生可編輯知識；其他資料表指紋改變時，重建不保留原本的新增可寫旗標。需重新查核座標、公式與來源；完整指紋相同才保留既有旗標。驗證紀錄另由建置工具核對全部 15 個來源檔案。單檔 HTML 內嵌知識與程式，使用者下載後不必持有或上傳遊戲資料表。
 

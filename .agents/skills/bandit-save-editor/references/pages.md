@@ -46,7 +46,7 @@ node scripts/build-editor.cjs
 node scripts/build-editor.cjs --check
 ```
 
-建置將 `src/` 與 catalog 內嵌進 `index.html`，也會核對開放寫入的完整來源指紋與驗證證明。提交程式來源／知識時一併提交同步後的 HTML；單純改 SEO 時保留內嵌程式。網站使用者仍只需要單一 HTML，沒有外部程式或知識相依。
+建置將 `src/` 與 catalog 內嵌進 `index.html`，也會核對每個開啟旗標的驗證紀錄、遊戲版本與資料指紋（見 repo `docs/maintenance/lightweight.md`「建置閘門」）。提交程式來源／知識時一併提交同步後的 HTML；單純改 SEO 時保留內嵌程式。網站使用者仍只需要單一 HTML，沒有外部程式或知識相依。
 
 遊戲知識版本標記、修改器版號與建置同步依 repo `docs/maintenance/release.md`「知識版本標示同步」。修改標記時一併核對來源與測試，不在技能維護另一份標記數量或版本常數。
 

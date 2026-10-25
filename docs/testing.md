@@ -1,6 +1,6 @@
 # 程式化測試與按需人工驗收
 
-遊戲與編輯器都優先使用可重複的程式驗證。程式修改先跑相關 Node，再跑需要的獨立 headless；純文件／技能修改檢查連結、規則與實作一致性，不跑產品測試。新增功能依[輕量開發流程](maintenance/lightweight.md)驗收：合成測試、一次瀏覽器測試與一次隔離遊戲冒煙。日常推送、Pages CI 與部署追蹤依[提交與發布](maintenance/release.md#提交與發布)，不重複執行已完成的開發驗收。完整 `npm run verify:release` 僅在使用者要求或具體故障需要時執行；已核准的新功能首次驗收依 SDD。失敗才讀詳細日誌及擴大檢查。例行遊戲遷移依[維護指引](maintenance/migration.md#版本遷移重驗)選跑，computer use 為零；原生視窗或實際 UI 故障先查程式證據，使用者明確要求才操作遊戲桌面。自動測試失敗先讀摘要／trace，不自動改用使用者瀏覽器重走流程。
+遊戲與編輯器都優先使用可重複的程式驗證。程式修改先跑相關 Node，再跑需要的獨立 headless；純文件／技能修改檢查連結、規則與實作一致性，不跑產品測試。新增功能依[輕量開發流程](maintenance/lightweight.md)驗收：合成測試、一次瀏覽器測試與一次隔離遊戲冒煙。日常推送、Pages CI 與部署追蹤依[提交與發布](maintenance/release.md#提交與發布)，不重複執行已完成的開發驗收。完整 `npm run verify:release` 僅在使用者要求或具體故障需要時執行。失敗才讀詳細日誌及擴大檢查。遊戲改版依[輕量流程的遊戲改版步驟](maintenance/lightweight.md#遊戲改版v228-實例)只對真改動跑冒煙，computer use 為零；原生視窗或實際 UI 故障先查程式證據，使用者明確要求才操作遊戲桌面。自動測試失敗先讀摘要／trace，不自動改用使用者瀏覽器重走流程。
 
 ## 安裝與入口
 
@@ -25,13 +25,13 @@ Linux CI另加`--with-deps`安裝系統函式庫。Playwright版本由package與
 
 ## 證據分工
 
-開發中修改 core 時，原生成本依 family 切片決定；先跑 `node scripts/core-slice-report.cjs` 看影響，再依[開發中的原生驗證](maintenance/migration.md#開發中的原生驗證)決定是否需要選跑。
+開發中修改 core 時跑該功能的 Node 測試；改動牽涉存檔讀寫行為時，再補該功能的隔離遊戲冒煙（[輕量開發流程](maintenance/lightweight.md#改-core-與遊戲改版)）。`node scripts/core-slice-report.cjs` 只當參考，不決定要不要重證。
 
 - 核心及Node UI事件：共用合成資料與獨立token renderer，不由待測serialize或changes反推預期。UI harness實際執行src處理函式，捕捉Blob的arrayBuffer，逐byte核對BOM、空白、指數、大型整數literal、MIME與檔名。這層不宣稱真實DOM排版或瀏覽器下載已驗收。
 - HTTP headless：在127.0.0.1隨機port只提供發布用HTML／PWA資產，測試真正建置HTML與DOM控制項。桌面／390px各有完整尺寸基礎資質及批次代表案例，核對搜尋、分頁、套用、還原／復原、下載及重載。基礎資質覆蓋有名／在監停用、非法組合與預覽過期；批次跨頁選51名，以50筆分頁並檢查一次復原整批。
 - file headless：直接導覽暫存HTML的file URL，完成完整尺寸預覽、下載及重載，確認PWA入口隱藏。這是直接開檔的Chromium網頁流程，沒有操作macOS／Windows原生選檔對話框。v2.6 以前的舊功能（資源、名稱、三類經驗、自訂欄位設定、比對／CSV、v2.1–v2.6）集中在 `tests/browser/legacy-file.spec.cjs`，2026-10-25 驗收範圍見[PWA 文件](maintenance/pwa.md#2026-10-25-舊功能直接開檔驗收紀錄)；改到這些流程時跑 `npm run test:browser -- --grep "file legacy"`。
 - PWA headless：分別檢查斷網後首頁與index.html仍能編輯／下載，與新建置waiting→保留未匯出修改→匯出→關閉同源頁→重開接手。新版在暫存副本加入測試標記並跑正式builder及check，保留全部資產雜湊驗證；不強制skipWaiting或清快取。
-- 遊戲：既有功能的版本遷移分開記錄本版原生實測、相依未變而沿用、UI 未重驗；只選受影響的原生家族／階段，維持隱藏、靜音及隔離。網頁測試不能新增遊戲寫入證明；新增功能仍須首次證明，例行遷移的 UI 未重驗不阻擋既有功能。
+- 遊戲：新功能與遊戲改版只跑受影響功能的隔離遊戲冒煙（代表案例原版存檔、新程序讀回），維持隱藏、靜音及隔離。網頁測試不能代替遊戲冒煙；UI 未重驗不阻擋既有功能。
 
 新增功能時擴充對應層的代表案例，完整數值矩陣留Node。Headless桌面／手機viewport只證明該Chromium引擎的結果；Safari、真實手機、PWA原生安裝視窗及個人瀏覽器擴充影響各自按需驗證。CSS視覺品質可先檢視自動截圖，不必開啟使用者瀏覽器。
 
@@ -53,10 +53,10 @@ Linux CI另加`--with-deps`安裝系統函式庫。Playwright版本由package與
 
 發布檢查依[提交與發布](maintenance/release.md#提交與發布)按變更範圍執行：純文件推送後即結束，影響網站產物或發布設定才追蹤相符 SHA 的部署；明確要求確認線上版本才 GET 首頁，多頁 HTTP bytes／metadata 僅在使用者要求或故障需要時核對。需要正式DOM證據時使用獨立headless context，使用者既有快取或安裝問題才升級computer use；PWA更新交接的例行回歸由上述暫存建置測試負責。記錄實際環境與通過層級，保留歷史未測範圍，不將單次自動測試擴張成所有瀏覽器已驗收。
 
-測試基線見[程式化測試SDD](../sdd/programmatic-testing/tasks.md)；v2.8新增介面在正式開閘後通過138 Node／12 headless，完整分層結果見[B驗收](../sdd/random-character-skill-caps-b/tasks.md)。
+測試分層的建立紀錄見[程式化測試SDD](../sdd/programmatic-testing/tasks.md)（歷史）；當時 v2.8 的 138 Node／12 headless 數字只代表該版，目前數量以各版[更新紀錄](releases.md)為準。
 
 
-套裝等級的首次原生完整矩陣、12副本生命週期與合併入口見[核心維護](maintenance/core.md#套裝等級首次證明與遷移)；`set-equipment-level-*.test.cjs` 驗證核心、oracle、manifest與proof拒絕條件，`tests/browser/set-equipment-level.spec.cjs` 驗兩庫介面、下載、file與PWA。Node／瀏覽器合成存檔不替代原生首次證明；日後代表遷移僅沿用既有首次證明。
+套裝等級的首次原生完整矩陣、12副本生命週期與合併入口見[核心維護](maintenance/core.md#套裝等級首次證明與遷移)；`set-equipment-level-*.test.cjs` 驗證核心、oracle、manifest與proof拒絕條件，`tests/browser/set-equipment-level.spec.cjs` 驗兩庫介面、下載、file與PWA。Node／瀏覽器合成存檔不替代遊戲冒煙；該段的首次證明與代表遷移是輕量流程前的歷史紀錄。
 
 
 ## 介面導覽與收合維護
