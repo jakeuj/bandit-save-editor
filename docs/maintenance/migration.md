@@ -2,7 +2,7 @@
 
 [維護索引](../maintenance.md)；只讀本次任務相關章節。版本與日期標示的實測紀錄只證明當時範圍，現行開放狀態以 catalog／verification 為準（輕量群組見 `knowledge/verification.json` 的 `lightweight`）。
 
-遊戲改版的現行做法見[輕量流程的遊戲改版步驟](lightweight.md#遊戲改版v228-實例)；本頁保留本機快取、`--plan` 來源分析與 Windows 隔離操作等仍會用到的工具說明。2026-10-23–24 的按影響選跑與複合證明移到文末[舊複合遷移工具](#舊複合遷移工具歷史)，只供讀舊證據或診斷。
+遊戲改版的現行做法見[遊戲改版步驟](game-update.md)；本頁保留本機快取、`--plan` 來源分析與 Windows 隔離操作等仍會用到的工具說明。2026-10-23–24 的按影響選跑與複合證明移到文末[舊複合遷移工具](#舊複合遷移工具歷史)，只供讀舊證據或診斷。
 
 ## 本機開發快取
 
@@ -19,7 +19,7 @@
 1. 核對正式分支公告、公告日期與 `appmanifest_4267800.acf` buildid。公告協助縮小範圍，實際判斷仍以來源差異為準。
 2. 先跑下列 `--plan`。`--package` 可傳安裝目錄或 `package.nw`；只擷取 15 個分析來源，依整包 SHA 與逐檔雜湊重用 repo 外快取。相同來源不啟動遊戲，不必每次完整解包圖片、音樂及 runtime。
 3. 未知事件／runtime 的知識生成仍須靜態查核：依 SID 確認後更新生成器來源清單、重建候選 catalog。`--plan` 可以先分析未知來源；真正寫回要求 `--catalog` 與實際 15 來源完全相符。格式無法解析就留下待查報告及既有發布版，不升級成 UI 操作或自行宣稱相容。
-4. 依[遊戲改版步驟](lightweight.md#遊戲改版v228-實例)逐條比對事件、只對真改動跑冒煙；不再去掉 `--plan` 以代表副本寫回。
+4. 依[遊戲改版步驟](game-update.md)逐條比對事件、只對真改動跑冒煙；不再去掉 `--plan` 以代表副本寫回。
 
 ```sh
 node scripts/verify-migration.cjs --package STEAM_GAME_DIR --artifacts EXTERNAL_DIR --plan

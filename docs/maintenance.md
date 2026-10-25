@@ -5,6 +5,8 @@
 | 任務 | 必讀文件 |
 | --- | --- |
 | 新功能、改 core、遊戲改版的驗證方式 | [lightweight](maintenance/lightweight.md)（與舊規則衝突時以它為準） |
+| 遊戲改版步驟 | [game-update](maintenance/game-update.md) |
+| 冒煙工具與各版原生／測試教訓 | [native-lessons](maintenance/native-lessons.md) |
 | 進度承接與下一步 | [planning](maintenance/planning.md) |
 | 是否分派子 agent／子 session | [dispatch](maintenance/dispatch.md) |
 | 來源與核心 API | [core](maintenance/core.md) |

@@ -94,7 +94,7 @@ PWA 需以 localhost HTTP 或 HTTPS 提供完整目錄；`file://` 只使用單�
 | 核心 API、功能維護、知識更新 | [維護索引](docs/maintenance.md) |
 | 開發測試與驗收範圍 | [測試指引](docs/testing.md) |
 | 欄位座標、成長公式與來源證據 | [存檔知識調查](docs/research/save-knowledge.md) |
-| 遊戲改版、來源核對與按影響驗證 | [版本遷移](docs/maintenance/migration.md) |
+| 遊戲改版、來源核對與按影響驗證 | [遊戲改版](docs/maintenance/game-update.md)、[版本遷移與本機快取](docs/maintenance/migration.md) |
 | 歷史版本核對與實測 | [V1.0.11.2 調查](docs/research/v1.0.11.2-audit.md)／[V1.0.10.2 調查](docs/research/v1.0.10.2-audit.md) |
 | 架構與跨檔關係 | [Repo 知識圖譜](docs/research/repository-graph.md) |
 | 已發布功能、限制與驗收紀錄 | [各版紀錄](docs/releases.md) |

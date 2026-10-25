@@ -24,7 +24,7 @@ v2.2 的既有詞條係數走 `affixInfo`／`setEquipmentAffixCoefficient`，丹
 
 來源為使用者合法持有、解包的遊戲副本。`package.nw` 可作 ZIP 分析；原始解析輸出與完整遊戲資料留在 repo 外。
 
-遊戲改版依 repo `docs/maintenance/lightweight.md`「遊戲改版」：`verify-migration.cjs --plan` 只用來列出變動來源，真改動逐條比對事件後只對受影響功能跑冒煙。未知規則再使用 `node scripts/extract-game.cjs --source /outside/repo/unpacked-game --audit-only --audit /outside/repo/audit.json` 取得原始事件／讀寫索引；此模式不修改 catalog、繁中對照或驗證旗標。以 SID 追查規則，expression 編號可能移動。
+遊戲改版依 repo `docs/maintenance/game-update.md`：`verify-migration.cjs --plan` 只用來列出變動來源，真改動逐條比對事件後只對受影響功能跑冒煙。未知規則再使用 `node scripts/extract-game.cjs --source /outside/repo/unpacked-game --audit-only --audit /outside/repo/audit.json` 取得原始事件／讀寫索引；此模式不修改 catalog、繁中對照或驗證旗標。以 SID 追查規則，expression 編號可能移動。
 
 ```sh
 node scripts/extract-game.cjs --source /path/to/unpacked/game --audit /outside/repo/bandit-audit.json
