@@ -29,7 +29,7 @@ Linux CI另加`--with-deps`安裝系統函式庫。Playwright版本由package與
 
 - 核心及Node UI事件：共用合成資料與獨立token renderer，不由待測serialize或changes反推預期。UI harness實際執行src處理函式，捕捉Blob的arrayBuffer，逐byte核對BOM、空白、指數、大型整數literal、MIME與檔名。這層不宣稱真實DOM排版或瀏覽器下載已驗收。
 - HTTP headless：在127.0.0.1隨機port只提供發布用HTML／PWA資產，測試真正建置HTML與DOM控制項。桌面／390px各有完整尺寸基礎資質及批次代表案例，核對搜尋、分頁、套用、還原／復原、下載及重載。基礎資質覆蓋有名／在監停用、非法組合與預覽過期；批次跨頁選51名，以50筆分頁並檢查一次復原整批。
-- file headless：直接導覽暫存HTML的file URL，完成完整尺寸預覽、下載及重載，確認PWA入口隱藏。這是直接開檔的Chromium網頁流程，沒有操作macOS／Windows原生選檔對話框。
+- file headless：直接導覽暫存HTML的file URL，完成完整尺寸預覽、下載及重載，確認PWA入口隱藏。這是直接開檔的Chromium網頁流程，沒有操作macOS／Windows原生選檔對話框。v2.6 以前的舊功能（資源、名稱、三類經驗、自訂欄位設定、比對／CSV、v2.1–v2.6）集中在 `tests/browser/legacy-file.spec.cjs`，2026-10-25 驗收範圍見[PWA 文件](maintenance/pwa.md#2026-10-25-舊功能直接開檔驗收紀錄)；改到這些流程時跑 `npm run test:browser -- --grep "file legacy"`。
 - PWA headless：分別檢查斷網後首頁與index.html仍能編輯／下載，與新建置waiting→保留未匯出修改→匯出→關閉同源頁→重開接手。新版在暫存副本加入測試標記並跑正式builder及check，保留全部資產雜湊驗證；不強制skipWaiting或清快取。
 - 遊戲：既有功能的版本遷移分開記錄本版原生實測、相依未變而沿用、UI 未重驗；只選受影響的原生家族／階段，維持隱藏、靜音及隔離。網頁測試不能新增遊戲寫入證明；新增功能仍須首次證明，例行遷移的 UI 未重驗不阻擋既有功能。
 

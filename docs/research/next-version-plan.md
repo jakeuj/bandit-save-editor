@@ -14,7 +14,7 @@
 | 再更早 | v2.28 遊戲 V1.0.12.2（2026-10-25）：公式編號 +4，裝備與靈物兩份代表冒煙通過，原有旗標維持開放。做法見[輕量流程](../maintenance/lightweight.md#遊戲改版v228-實例)、摘要見[各版紀錄](../releases.md#v228-遊戲-v10122) |
 | 歷史 | v2.27 丹藥超限與更早的功能見[各版紀錄](../releases.md)；靈物套裝合成與精煉的原生驗證（只驗證、無新旗標）見[集中研究](candidate-sweep-2026-10-23.md#原生驗證摘要2026-10-25修改後靈物用於套裝合成與內丹精煉) |
 | 目前主線 | 無功能主線 |
-| 下一步 | roadmap 的功能候選（含超限群組）已全部處理完；剩下另線與補驗：Mac 啟動器核對 V1.0.12.2（`c3runtime.js` 尚未登錄）與本機存讀／重啟補驗、有名角色 runtime 補丁提案、舊功能的直接 file 流程驗收。要做哪一項待使用者指定 |
+| 下一步 | roadmap 的功能候選（含超限群組）已全部處理完；剩下另線與補驗：Mac 啟動器核對 V1.0.12.2（`c3runtime.js` 尚未登錄）與本機存讀／重啟補驗、有名角色 runtime 補丁提案。舊功能的直接 file 流程已於 2026-10-25 以 headless 驗收（見下方「尚待驗收」）。要做哪一項待使用者指定 |
 | 授權 | v2.31 已完成；提交／推送依當次對話授權，下一項待使用者指定 |
 | 分派 | 預設在同一個 session 做完；查詢用子 agent，符合[分派判斷](../maintenance/dispatch.md#先判斷要不要分派)才開子 session |
 | 開放狀態 | 以目前 catalog／verification 為準；輕量開啟的群組（`pillAptitudeBonusDecimal`、`backpackEquipmentLevelAdvanced`、`relicAttributes`、`pillAptitudeBonusAscended`、`randomCharacterBaseAptitudesAscended`、`randomCharacterTalentsAscended`、`randomCharacterSkillCapsAscended`、`wallEnhancementLevel`、`cityLayerLevel`、`ascensionQuality`、`backpackInnerPillLevel`、`innerPillLevel`、`ascendedInnerPillLevel`、`basicTechnologyLevel`、`buildingLevel`、`placedRelicAttributes`、`pillAptitudeBonusAdvanced`、`recruitTechnologyAdvanced`、`equipmentAffixCoefficientAdvanced`、`equipmentSixthAffix`）記在 `verification.json` 的 `lightweight` |
@@ -43,7 +43,7 @@
 
 ## 尚待驗收
 
-- 名稱、三類經驗與設定，以及 v2.1–v2.5 各功能的直接下載 HTML／file 流程仍依各 SDD 保留缺口；新版功能的 file 或 PWA 通過不代替舊功能驗收。
+- 舊功能直接開檔（2026-10-25）：資源、名稱、三類經驗、自訂欄位設定、比對／CSV 與 v2.1–v2.6 已由 `tests/browser/legacy-file.spec.cjs` 以 headless Chromium 的 `file:` URL 完成讀取、編輯、還原／復原、精確匯出與重讀（6 案全過），範圍與未涵蓋處見[紀錄](../maintenance/pwa.md#2026-10-25-舊功能直接開檔驗收紀錄)。一般 Chrome／Edge、原生選檔與正式站下載的 HTML 未做；使用者決定以此作為驗收，四個歷史 SDD 任務（v2.1 7b、v2.2 9b、v2.3 10、save-knowledge 6）已勾選；原生選檔與一般瀏覽器改為按需。
 - V1.0.11.2 與 V1.0.12.2 的 Mac 啟動、本機存讀與新程序重啟仍待補驗，不能沿用舊版結果；啟動器尚未登錄 V1.0.12.2 的 `c3runtime.js`。
 - 有名角色與自然職業上限的 [runtime 補丁](../../sdd/runtime-patch/proposal.md)另列研究候選，與網站修改器分開。
 
