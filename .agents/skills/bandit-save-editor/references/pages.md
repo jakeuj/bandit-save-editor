@@ -82,4 +82,4 @@ node scripts/build-editor.cjs --check
 
 ## 歷史證據
 
-各次 SHA、run 與驗收限制完整保留在 [Pages 歷史驗證紀錄](pages-history.md)。
+各次 SHA、run 與驗收限制見 repo `docs/releases.md` 的「附錄：Pages 歷史驗證紀錄」與各研究文件。

@@ -7,11 +7,11 @@
 | 情境 | 讀取位置 |
 | --- | --- |
 | 開發或原生測試：定位完整來源、獨立 runtime、manifest 與快取冒煙證據 | `docs/maintenance/migration.md`「本機開發快取」 |
-| 遊戲改版：本機索引、公告、build／套件指紋、精簡分析與選跑 | 先讀 `docs/maintenance/lightweight.md`「遊戲改版（v2.28 實例）」，再依 `docs/maintenance/migration.md`「日常更新入口」解來源；公告來源與 API 備援見 `docs/maintenance/core.md`「重建知識與開放寫入」 |
+| 遊戲改版：本機索引、公告、build／套件指紋、事件比對與冒煙 | 先讀 `docs/maintenance/lightweight.md`「遊戲改版（v2.28 實例）」，再依 `docs/maintenance/migration.md`「日常更新入口」解來源；公告來源與 API 備援見 `docs/maintenance/core.md`「重建知識與開放寫入」 |
 | 未知來源的純分析、SID 與 expression 追查 | [存檔參考](save-format.md#重建知識) |
-| 版本沿用、原生實測、續跑及寫回條件 | `docs/maintenance/migration.md`「相依與證據」「擴大與續跑」 |
+| 舊複合證明的沿用、續跑及寫回（歷史，讀舊證據或診斷時） | `docs/maintenance/migration.md`「舊複合遷移工具（歷史）」 |
 
-精簡來源只供分析；完整快取缺失／損壞或來源改變時，依主流程補建，不因例行查版本重新解包。V1.0.11.2 完整實測見 `docs/research/v1.0.11.2-audit.md`，後續選跑政策與重播見 `docs/research/selective-migration.md`；Windows 證據不代表 Mac 已實測。
+精簡來源只供分析；完整快取缺失／損壞或來源改變時，依主流程補建，不因例行查版本重新解包。V1.0.12.2 改版做法見 `docs/maintenance/lightweight.md`，更早的 V1.0.11.2 完整實測與選跑重播見 `docs/research/v1.0.11.2-audit.md`、`docs/research/selective-migration.md`（歷史）；Windows 證據不代表 Mac 已實測。
 
 ## 驗證與交付
 

@@ -17,7 +17,7 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 
 ## 進度查詢與承接
 
-使用者問「現在做到哪」、「下一步做什麼」或「繼續實作下一版功能」時，先讀 repo 的 [下一步與目前進度](../../../docs/research/next-version-plan.md)，核對工作樹，依[輕量開發流程](../../../docs/maintenance/lightweight.md)在同一個 session 實作；查詢或核對用子 agent；只有同時符合「長、機械化、規格已定」或功能真的能並行時，才依[任務分派](../../../docs/maintenance/dispatch.md#先判斷要不要分派)開子 session。不重問已明確的目標。每次停點更新同一進度入口；roadmap 只用於候選排序，歷史完成工作不重開。每完成一個功能，主動把可重用的教訓寫回技能或對應的維護文件。
+使用者問「現在做到哪」、「下一步做什麼」或「繼續實作下一版功能」時，先讀 repo 的 [下一步與目前進度](../../../docs/research/next-version-plan.md)，核對工作樹，依[輕量開發流程](../../../docs/maintenance/lightweight.md)在同一個 session 實作；要不要分派依[任務分派](../../../docs/maintenance/dispatch.md#先判斷要不要分派)。不重問已明確的目標。每次停點更新同一進度入口；roadmap 只用於候選排序，歷史完成工作不重開。每完成一個功能，主動把可重用的教訓寫回技能或對應的維護文件。
 
 ## 規則同步檢查
 
@@ -48,7 +48,9 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 | 使用者明確要求遊戲 UI | `docs/game-ui-testing.md` 快速開始與目標路徑，再讀當次 computer-use 技能 |
 | Mac／CrossOver／Steam／存檔位置 | [Mac 參考](references/macos.md)、`launcher/README.md`、`docs/research/macos-runtime-investigation.md` |
 
-日常推送先依[待提交快照檢查](../../../docs/maintenance/release.md#待提交快照檢查)驗證暫存區 Git bytes；工作目錄的 `--check` 不代替此檢查；推送成功即結束（含功能發布），不追蹤 Pages；Wiki／Project／公告預設不同步，使用者要求才處理。功能收尾依發布指引的[最短流程](../../../docs/maintenance/release.md#功能收尾預設最短流程)；功能發布推送後，回覆最後主動附下一步提示：剩餘候選與推薦、是否開新 session，以及可直接貼上的開工 prompt（第 5 步）。完整驗收與部署追蹤條件依發布指引。新功能的驗證、改 core 與遊戲改版時要跑什麼，依[輕量開發流程](../../../docs/maintenance/lightweight.md)；新寫入功能在冒煙通過前維持關閉。建置閘門只核對每個開啟旗標在 `knowledge/verification.json` 的紀錄、遊戲版本與資料指紋，改 core 不會讓它失敗；輕量開啟的群組另記 `lightweight` 冒煙紀錄，不進複合遷移證明，改版後關閉待重冒煙，見該頁「建置閘門」；測試也不再把歷史證明綁到目前 core，新旗標記得登記 family，見該頁「測試也不綁目前 core」。
+- 提交前依[待提交快照檢查](../../../docs/maintenance/release.md#待提交快照檢查)驗證暫存區 Git bytes（工作目錄的 `--check` 不代替）；推送成功即結束，不追蹤 Pages；Wiki／Project／公告預設不同步。功能收尾與推送後的下一步提示依[最短流程](../../../docs/maintenance/release.md#功能收尾預設最短流程)。
+- 新功能、改 core 與遊戲改版要跑什麼，依[輕量開發流程](../../../docs/maintenance/lightweight.md)；新寫入功能在冒煙通過前維持關閉。
+- 建置閘門只核對開啟旗標的驗證紀錄、遊戲版本與資料指紋，改 core 不會讓它失敗；新旗標要登記 family，見該頁「建置閘門」與「測試也不綁目前 core」。
 
 ## 編輯來源
 
@@ -66,4 +68,4 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 - 新增寫入功能：合成測試加一次隔離遊戲冒煙（代表案例原版存檔、新程序讀回）通過才開旗標，不做全量矩陣與遊戲 UI 證據，見[輕量開發流程](../../../docs/maintenance/lightweight.md)。
 - 真實存檔、遊戲 payload、runtime、驗證 state 與原始 log 留在 repo 外。使用固定副本驗證，修改玩家原檔依任務指示執行並保留備份。
 
-整份 core 摘要格式、舊證明對照與註解／排版的適用界線見 `docs/research/core-ast-proof.md`；續跑 checkpoint 仍核對精確檔案指紋。
+舊證明工具的 core 摘要格式與對照見 `docs/research/core-ast-proof.md`（建置閘門已不核對 core）。
