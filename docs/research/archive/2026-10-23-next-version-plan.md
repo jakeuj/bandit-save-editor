@@ -12,7 +12,7 @@
 
 | 項目 | 狀態 | 證據 |
 | --- | --- | --- |
-| 知識基準 | V1.0.11.2／build 26126719，24 群組全部開放（代表子集遷移＋最小 UI 補測，Windows 隔離） | `knowledge/verification.json`（`migration.completed=true`）、[V1.0.11.2 對齊紀錄](../v1.0.11.2-audit.md) |
+| 知識基準 | V1.0.11.2／build 26126719，24 群組全部開放（代表子集遷移＋最小 UI 補測，Windows 隔離） | `knowledge/verification.json`（`migration.completed=true`）、[V1.0.11.2 對齊紀錄](v1.0.11.2-audit.md) |
 | 正式站 | `c05c4ae` 已推送，Pages run 39809846573 build／deploy 成功；線上 `index.html` 與 `sw.js` 的 SHA-256 與該提交 Git blob 相符；側欄「修改器 v2.8 · 2026.10.22」、遊戲版本 V1.0.11.2 | 2026-10-23 以 no-cache 抓取比對 |
 | 本機核對 | `node scripts/build-editor.cjs --check` 通過；`node --test tests/*.test.cjs` 138 項全過（56.8 秒） | 2026-10-23 執行 |
 | 未重跑 | 12 項 headless（`npm run test:browser`）、本機安裝 15 指紋重算、新版 Mac 啟動／存讀 | — |
@@ -62,7 +62,7 @@ v2.8.1 若取不到 Windows 隔離環境或 108＋2／15 副本在週期內跑�
 2. **測試**：`tests/advanced-editing.test.cjs` 新增 z9 套裝（範本 28 土匪之槍，setLink≠0）與 z7 套裝皆被 `setEquipmentLevel`／`editingInfo` 拒絕且訊息含「套裝」；普通裝備 z7／z9 行為不變；寶物／內丹仍拒絕。`tests/equipment-ui.test.cjs` 補 UI 事件案例：選到 z9 套裝時顯示唯讀原因。改完立刻跑 `node --test tests/*.test.cjs` 與 `node scripts/build-editor.cjs --check`。注意 `--check` 遇第一個錯誤就 throw，技藝上限檢查排在 growth 與品質之前，所以「只看到 randomCharacterSkillCaps 錯誤」不能證明其他群組未受影響；要直接比對 `randomCharacterGrowth.formulaHash` 與 `equipmentQuality.formulaHash` 不變。
 3. **重開技藝上限群組**：依第 3 節決定 4 的路徑，在 Windows 隔離副本以相符 15 指紋來源執行；通過後合併證明，核對其他 23 群組紀錄逐 byte 不變、`--check` 通過。旗標關閉狀態不得推送 main。
 4. **文件對齊 V1.0.11.2**：第 2 節第 6 條列出的檔案；`docs/research/advanced-editing.md` 的 equipmentLevel 證明段旁註「不涵蓋套裝；v2.8 及以前 z9 套裝等級可寫為缺口」；`docs/research/feature-roadmap.md` 第 3 項更正為「v2.1 只在 z7 排除，z9 於 v2.8.1 補排除」。
-5. **發布核對紀錄**：比照 `72398f4` 的做法，在 [V1.0.11.2 對齊紀錄](../v1.0.11.2-audit.md) 補 `c05c4ae` 的 Pages run 39809846573、線上 `index.html`／`sw.js` blob 相符、版本標籤 V1.0.11.2／v2.8（本文件第 1 節已有結果，搬過去即可）。
+5. **發布核對紀錄**：比照 `72398f4` 的做法，在 [V1.0.11.2 對齊紀錄](v1.0.11.2-audit.md) 補 `c05c4ae` 的 Pages run 39809846573、線上 `index.html`／`sw.js` blob 相符、版本標籤 V1.0.11.2／v2.8（本文件第 1 節已有結果，搬過去即可）。
 6. **維護指引補 Windows 遷移操作段**：`docs/maintenance.md`「版本遷移重驗」目前只有 macOS 指令；補 `--keep-copies` 避開 EPERM、CDP `Connection: close` 背景、`BANDIT_BROWSER_PORT=8942` 的本機過濾器例外（細節在 V1.0.11.2 對齊紀錄）。不改 `verify-migration.cjs`（與 selective-migration 同檔）。
 7. **版本與更新紀錄**：側欄「修改器 v2.8.1 · 日期」，更新紀錄首筆標「遊戲 V1.0.11.2」，內容含「z9 套裝等級改為唯讀，待獨立證明」「不追溯」「不新增修改功能」；README、SKILL.md 同步；`tests/changelog.test.cjs` 接受 v2.8.1。
 8. **發布**：`npm run verify:release` 全過後授權提交推送；Pages 成功後比對線上 blob，寫回紀錄。
@@ -114,7 +114,7 @@ v2.8.1 若取不到 Windows 隔離環境或 108＋2／15 副本在週期內跑�
 ### Prompt A：v2.8.1 鞏固版（實作）
 
 ```text
-請依 docs/research/next-version-plan.md 第 3–4 節實作 v2.8.1 鞏固版。先讀 AGENTS.md、docs/research/next-version-plan.md、sdd/v2.8.1-consolidation/proposal.md 與 tasks.md；只有需要細節時才讀 docs/maintenance.md 與 docs/research/v1.0.11.2-audit.md。
+請依 docs/research/next-version-plan.md 第 3–4 節實作 v2.8.1 鞏固版。先讀 AGENTS.md、docs/research/next-version-plan.md、sdd/v2.8.1-consolidation/proposal.md 與 tasks.md；只有需要細節時才讀 docs/maintenance.md 與 docs/research/archive/v1.0.11.2-audit.md。
 開工前：git status 確認工作樹乾淨；若有 sdd/selective-migration 的未提交變更，停下來回報，不要動那些檔案。
 依 tasks.md 逐條完成並勾選；每條做完跑該條指定的測試。src/core.js 只改 editingInfo 的 plane 9 分支，改完就凍結。技藝上限群組重開需要 Windows 隔離環境與相符來源，若環境不可用，改走計畫第 3 節的退回方案並在 tasks.md 如實記錄。
 不開新群組、不提交、不推送；全部完成並 npm run verify:release 通過後回報結果與缺口，等使用者授權提交。
@@ -133,6 +133,6 @@ v2.8.1 若取不到 Windows 隔離環境或 108＋2／15 副本在週期內跑�
 ### Prompt C：套裝等級前置研究（只讀、純文件）
 
 ```text
-請依 docs/research/next-version-plan.md 第 6 節完成套裝等級的 go／no-go 研究，產出 docs/research/set-equipment-level.md。先讀 AGENTS.md、該計畫第 2 節第 1、5 條與第 6 節、docs/research/feature-roadmap.md 第 3 與第 5 項、docs/research/v1.0.11.2-audit.md 的套裝合成變更。
+請依 docs/research/next-version-plan.md 第 6 節完成套裝等級的 go／no-go 研究，產出 docs/research/set-equipment-level.md。先讀 AGENTS.md、該計畫第 2 節第 1、5 條與第 6 節、docs/research/feature-roadmap.md 第 3 與第 5 項、docs/research/archive/v1.0.11.2-audit.md 的套裝合成變更。
 只讀 repo 與 repo 外 audit，不啟動遊戲、不改 src/、catalog、verification。每個結論附 SID 與 expression，區分靜態核對與未知。結尾給 go／no-go 與理由；若 go，列出新群組、oracle 與基準存檔條件。
 ```

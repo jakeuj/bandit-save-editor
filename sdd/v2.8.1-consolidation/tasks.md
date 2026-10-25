@@ -6,7 +6,7 @@
 - [x] 2. `tests/advanced-editing.test.cjs` 新增 z9／z7 套裝拒絕、普通不變、寶物／內丹仍拒絕案例；`tests/equipment-ui.test.cjs` 新增選到 z9 套裝顯示唯讀原因；跑 `node --test tests/*.test.cjs`，並直接比對 `randomCharacterGrowth.formulaHash` 與 `equipmentQuality.formulaHash` 不變（`--check` 預期只因技藝上限失敗）。凍結 `src/core.js`。
 - [x] 3. 依使用者決定的路徑重開 `randomCharacterSkillCaps`：Windows 隔離副本、相符 15 指紋來源、基準存檔；通過後合併證明，核對其他 23 群組紀錄逐 byte 不變、`node scripts/build-editor.cjs --check` 通過。做不到則改走退回方案並在此記錄。
 - [x] 4. 文件對齊 V1.0.11.2：`docs/research/feature-roadmap.md`（基準段、第 3 項敘述、文末影響段）、`docs/research/random-character-skill-caps.md` 首段、`docs/game-ui-testing.md`、`launcher/README.md`、`mac.html`、`.agents/skills/bandit-save-editor/references/macos.md`；`docs/research/advanced-editing.md` equipmentLevel 證明段旁註不涵蓋套裝。
-- [x] 5. `docs/research/v1.0.11.2-audit.md` 補 `c05c4ae` 發布核對（Pages run 39809846573、線上 `index.html`／`sw.js` blob 相符、版本標籤）；`docs/maintenance.md` 補 Windows 遷移操作段（`--keep-copies`、CDP `Connection: close`、`BANDIT_BROWSER_PORT`）。
+- [x] 5. `docs/research/archive/v1.0.11.2-audit.md` 補 `c05c4ae` 發布核對（Pages run 39809846573、線上 `index.html`／`sw.js` blob 相符、版本標籤）；`docs/maintenance.md` 補 Windows 遷移操作段（`--keep-copies`、CDP `Connection: close`、`BANDIT_BROWSER_PORT`）。
 - [x] 6. 側欄與更新紀錄改 v2.8.1／遊戲 V1.0.11.2，內容含「z9 套裝等級改為唯讀，待獨立證明」「不追溯」「不新增修改功能」；README、SKILL.md 同步；`tests/changelog.test.cjs` 通過。
 - [x] 7. `npm run verify:release` 全過，回報結果與缺口，等待使用者授權提交；本次不提交、不推送。
 

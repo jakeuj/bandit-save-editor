@@ -32,4 +32,4 @@ Mac沿用已核對的準備副本，`--package`指向原始安裝目錄。未帶
 
 ### 首次驗證與版本遷移歷史
 
-2026-10-22 B首次完成108＋2完整隔離矩陣及13階段，正式合併為第24群組；該次來源為V1.0.10.2／build26094666。既有23群組紀錄完整保留，核心未更動；詳細實測與發布分層結果見[研究紀錄](../research/random-character-skill-caps.md)及[B任務](../../sdd/random-character-skill-caps-b/tasks.md)。其後更新至V1.0.11.2／build26126719，已完成15個Windows隔離副本、24群組代表遷移與必要UI補測，並保留首次完整矩陣證明；新版差異、測試工具收尾修正與發布範圍見[新版調查](../research/v1.0.11.2-audit.md)。Windows遇到通過副本清理的檔案鎖時，可沿用`--keep-copies`保留診斷，等自己的程序完全退出後再清理repo外副本。
+2026-10-22 B首次完成108＋2完整隔離矩陣及13階段，正式合併為第24群組；該次來源為V1.0.10.2／build26094666。既有23群組紀錄完整保留，核心未更動；詳細實測與發布分層結果見[研究紀錄](../research/random-character-skill-caps.md)及[B任務](../../sdd/random-character-skill-caps-b/tasks.md)。其後更新至V1.0.11.2／build26126719，已完成15個Windows隔離副本、24群組代表遷移與必要UI補測，並保留首次完整矩陣證明；新版差異、測試工具收尾修正與發布範圍見[新版調查](../research/archive/v1.0.11.2-audit.md)。Windows遇到通過副本清理的檔案鎖時，可沿用`--keep-copies`保留診斷，等自己的程序完全退出後再清理repo外副本。

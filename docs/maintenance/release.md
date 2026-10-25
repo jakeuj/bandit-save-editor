@@ -81,4 +81,4 @@ Wiki 與主 repo 分開提交；若同時修改主 repo 的技能、指引或文
 
 ## 歷史發布與驗收限制
 
-V1.0.10.2（提交 `7adcb01`）、v2.1（`d98db49`）與 v2.2–v2.4 的部署、資產比對與驗收範圍見[各版紀錄的 Pages 歷史附錄](../releases.md#附錄pages-歷史驗證紀錄2026-10-2122)、[V1.0.10.2 正式發布紀錄](../research/v1.0.10.2-audit.md#正式發布驗證)與 [v2.1 正式發布紀錄](../research/advanced-editing.md#v21-正式發布驗證)。後續版本以自己的提交重做核對，不引用舊版資源測試當作新功能已實測。JavaScript 與 Manifest 以 `.gitattributes` 固定 LF；提交前用待提交快照檢查，避免 Windows 行尾改變已釘選的 PWA 雜湊。
+V1.0.10.2（提交 `7adcb01`）、v2.1（`d98db49`）與 v2.2–v2.4 的部署、資產比對與驗收範圍見[各版紀錄的 Pages 歷史附錄](../releases.md#附錄pages-歷史驗證紀錄2026-10-2122)、[V1.0.10.2 正式發布紀錄](../research/archive/v1.0.10.2-audit.md#正式發布驗證)與 [v2.1 正式發布紀錄](../research/advanced-editing.md#v21-正式發布驗證)。後續版本以自己的提交重做核對，不引用舊版資源測試當作新功能已實測。JavaScript 與 Manifest 以 `.gitattributes` 固定 LF；提交前用待提交快照檢查，避免 Windows 行尾改變已釘選的 PWA 雜湊。

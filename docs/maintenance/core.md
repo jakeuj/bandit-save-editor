@@ -92,7 +92,7 @@ node scripts/extract-game.cjs --source /path/to/unpacked/game --audit /tmp/bandi
 node scripts/extract-game.cjs --source /path/to/unpacked/game --audit-only --audit /outside/repo/audit.json
 ```
 
-此模式輸出 13 個來源指紋、統計及事件／讀寫索引，略過 catalog 產生器，不修改 catalog、繁中對照或驗證旗標。一般重建的指紋限制維持不變；原始 audit 的 repo 外路徑會在寫入知識前檢查。比對時以 SID 定位，expression 編號可能因其他事件增刪而移動。2026-10-21 的新版分析與 Windows 讀寫／重啟結果見 [V1.0.10.2 調查](../research/v1.0.10.2-audit.md)。
+此模式輸出 13 個來源指紋、統計及事件／讀寫索引，略過 catalog 產生器，不修改 catalog、繁中對照或驗證旗標。一般重建的指紋限制維持不變；原始 audit 的 repo 外路徑會在寫入知識前檢查。比對時以 SID 定位，expression 編號可能因其他事件增刪而移動。2026-10-21 的新版分析與 Windows 讀寫／重啟結果見 [V1.0.10.2 調查](../research/archive/v1.0.10.2-audit.md)。
 
 新增可寫功能依[輕量開發流程](lightweight.md#新功能怎麼做)：追查欄位、型別、值域與來源 SID（未釐清項目維持唯讀），合成測試，加一次隔離遊戲冒煙後開旗標；建置閘門與新旗標的 family 登記見該頁「建置閘門」與「測試也不綁目前 core」。隔離驗證入口用 `scripts/verify-game.cjs --help` 查看：需要 Windows 或 macOS、Node.js 22+、解包的遊戲、同平台 NW.js runtime 及已登入的 Steam；Windows 優先傳入本機索引記錄的快取 `game.exe`，`--catalog` 指定候選目錄、`--save-file` 指定唯讀來源存檔、`--artifacts` 指定已存在的 repo 外目錄。測試只在獨立 app／遊戲／profile 中執行，Steam 寫入導向本機鏡像與紀錄。
 

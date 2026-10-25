@@ -365,7 +365,7 @@ v2.1（裝備等級、操練上限、進階科技）見[進階修改研究](rese
 
 2026-10-21 v2.1 功能提交 `d98db495110beff15e1b5a5599f6b8804d11d674`，[Pages run 39607900455](https://github.com/jakeuj/bandit-save-editor/actions/runs/39607900455) 成功。正式 v2.1／V1.0.10.2、資產 Git blob 比對、PWA waiting→關閉重開與斷網編輯／精確匯出通過；詳細以 repo `docs/research/advanced-editing.md` 的「v2.1 正式發布驗證」為準。`file://` 的新功能流程仍待人工驗收，不能與 PWA 離線混為一談。
 
-2026-10-21 的 V1.0.10.2 最終發布提交為 `7adcb01f9f0ddef749c1474850877df79ad78dd9`，[Pages run 39598503967](https://github.com/jakeuj/bandit-save-editor/actions/runs/39598503967) 成功；正式圖鑑標籤及摘要均確認新版，PWA 關閉後重開套用成功。詳細資產比對、截圖位置及範圍以 repo `docs/research/v1.0.10.2-audit.md` 的「正式發布驗證」為準，後續發布用自己的 SHA 驗證。
+2026-10-21 的 V1.0.10.2 最終發布提交為 `7adcb01f9f0ddef749c1474850877df79ad78dd9`，[Pages run 39598503967](https://github.com/jakeuj/bandit-save-editor/actions/runs/39598503967) 成功；正式圖鑑標籤及摘要均確認新版，PWA 關閉後重開套用成功。詳細資產比對、截圖位置及範圍以 repo `docs/research/archive/v1.0.10.2-audit.md` 的「正式發布驗證」為準，後續發布用自己的 SHA 驗證。
 
 2026-10-21 的 SEO 修正提交為 `3c7f51be141d5b20f7f3fb42bbe317d6fe8d2fbe`，[Pages run 39454904155](https://github.com/jakeuj/bandit-save-editor/actions/runs/39454904155) 已成功。正式兩頁、sitemap、robots、v3 PNG、SVG 與 Mac 準備工具的回應內容均與該提交 Git blob 一致，repo 網站連結已改為新網域。此紀錄供回查，後續版本仍以自己的 SHA 重新驗證。
 

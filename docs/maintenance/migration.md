@@ -35,7 +35,7 @@ Mac 啟動器不是每個 Windows 版本的固定驗收項。明確處理 Mac �
 
 `verify-game.cjs` 的 CDP 探索請求使用 `Connection: close`：NW.js 停止並以新 PID 重啟後，避免同一 Node 程序重用舊 HTTP socket，造成 checkpoint 重啟後連線中斷。這是驗證器的連線收尾，不需修改遊戲或系統網路設定。
 
-本機瀏覽器過濾器（例如 AdGuard）若改寫 loopback 埠的 HTML，PWA 驗證會失敗；設定方式見[測試指引](../testing.md)，不調整全機過濾器，也不放寬 PWA 測試。故障背景見[V1.0.11.2 紀錄](../research/v1.0.11.2-audit.md#windows-隔離驗證)。
+本機瀏覽器過濾器（例如 AdGuard）若改寫 loopback 埠的 HTML，PWA 驗證會失敗；設定方式見[測試指引](../testing.md)，不調整全機過濾器，也不放寬 PWA 測試。故障背景見[V1.0.11.2 紀錄](../research/archive/v1.0.11.2-audit.md#windows-隔離驗證)。
 
 ## 舊複合遷移工具（歷史）
 
