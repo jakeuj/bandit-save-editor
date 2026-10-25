@@ -1,4 +1,5 @@
 'use strict';
+const {navigate} = require('./actions.cjs');
 // Sixth affix slot: the affix panel's sixth-slot row sends an attribute and 50–120 to the named entry, and clears it again.
 // Runs on disposable candidate builds (gate opened or closed, proof gate removed); browser behaviour only.
 const path=require('node:path'),{test:base,expect}=require('./fixtures.cjs'),{createSite}=require('./site.cjs'),{saveFixture,renderSave}=require('../helpers/save-fixture.cjs'),{loadRaw,download,noOverflow}=require('./actions.cjs');
@@ -6,7 +7,7 @@ const opened=base.extend({site:async({},use)=>{const site=await createSite({cand
 const closed=base.extend({site:async({},use)=>{const site=await createSite({candidate:{close:['equipmentSixthAffix']}});try{await use(site);}finally{await site.close();}}});
 // One unworn ordinary quality-6 勇武頭巾 at row 20 in z9 and z7 with slots 1–5 filled (12,13,17,18,19) and slot 1 washed; 20 is free.
 function fixture(){const {data}=saveFixture({characters:2}),row=Array(60).fill(0);Object.assign(row,{0:20,1:16,2:1,3:1,5:6,6:3,8:245,9:12,10:13,11:17,12:18,13:19,15:60,16:61,17:62,18:63,19:64,24:1,28:1});for(const z of [7,9])row.forEach((v,y)=>data[20][y][z]=v);return {raw:renderSave(data),expected:patches=>renderSave(data,patches)};}
-async function select(page,plane){await page.locator('[data-tab="inventory"]').click();await page.locator('#inventoryPlane').selectOption(String(plane));await page.locator('#affixItem').selectOption(`${plane}:20`);}
+async function select(page,plane){await navigate(page, 'inventory');await page.locator('#inventoryPlane').selectOption(String(plane));await page.locator('#affixItem').selectOption(`${plane}:20`);}
 async function apply(page,id,value){await page.locator('#sixthTarget').selectOption(String(id));await page.locator('#sixthValue').fill(String(value));await page.locator('#sixthApply').click();}
 for(const width of [1280,390])opened(`sixth affix ${width}px: duplicate and 120.01 refused, 100 applied, exact bytes, reload and clear`,async({page,site})=>{
  await page.setViewportSize({width,height:844});const f=fixture();await page.goto(site.url);await loadRaw(page,site,f.raw);

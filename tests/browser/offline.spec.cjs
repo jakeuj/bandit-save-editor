@@ -71,7 +71,7 @@ test('PWA: verified next build waits for edited pages, then activates after all 
   await expect(page.locator('#baseAptitude0')).toHaveValue('40');
   expect(await page.evaluate(() => ({time: performance.timeOrigin, marker: document.documentElement.dataset.testRelease || null}))).toEqual(before);
   await download(page, site, f.expected([[3, 10, 2, 40], [3, 11, 2, 35]]));
-  await expect(page.locator('#pendingLabel')).toHaveText('個已匯出變更');
+  await expect(page.locator('#pendingLabel')).toHaveText('已匯出');
   await page.close();
   const next = await context.newPage();
   await next.goto(site.url);

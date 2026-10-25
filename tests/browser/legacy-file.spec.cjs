@@ -1,4 +1,5 @@
 'use strict';
+const {navigate} = require('./actions.cjs');
 // Direct file:// acceptance for features shipped before per-feature file cases existed: resources, names, the three
 // experience kinds, custom-field settings, compare/CSV, v2.2–v2.5 equipment and pills, and v2.6 batch. Uses the
 // shipped build and its current verification flags; expected bytes come from the independent renderer.
@@ -57,7 +58,7 @@ async function restoreInReview(page, key) {
   await page.locator('[data-close="reviewDialog"]').click();
 }
 async function plane(page, z) {
-  await page.locator('[data-tab="inventory"]').click();
+  await navigate(page, 'inventory');
   await page.locator('#inventoryPlane').selectOption(String(z));
 }
 
@@ -65,12 +66,12 @@ test('file legacy: resources, names and three experience kinds with linked resto
   const f = fixture();
   await open(page, site);
   await loadRaw(page, site, f.raw);
-  await page.locator('[data-tab="resources"]').click();
+  await navigate(page, 'resources');
   await page.locator('#resourceCards [data-field="1,2,0"]').fill('800');
   await page.locator('#resourceCards [data-field="1,2,0"]').press('Tab');
   await expect(page.locator('#pendingCount')).toHaveText('1');
 
-  await page.locator('[data-tab="settlement"]').click();
+  await navigate(page, 'settlement');
   await page.locator('#settlementName').fill('新寨');
   await page.locator('#renameSettlementBtn').click();
   await selectCharacter(page, 1);
@@ -95,7 +96,7 @@ test('file legacy: resources, names and three experience kinds with linked resto
     [1, 3, 2, 3], [1, 4, 2, 500], [1, 1, 4, 3], [1, 39, 2, 3], [1, 48, 2, 500]
   ]));
   await reload(page, output);
-  await page.locator('[data-tab="settlement"]').click();
+  await navigate(page, 'settlement');
   await expect(page.locator('#settlementName')).toHaveValue('新寨');
   await selectCharacter(page, 1);
   await expect(page.locator('#characterName')).toHaveValue('甲"乙');
@@ -109,7 +110,7 @@ test('file legacy: custom field pin, settings export/import, compare and CSV exp
   const f = fixture();
   await open(page, site);
   await loadRaw(page, site, f.raw);
-  await page.locator('[data-tab="advanced"]').click();
+  await navigate(page, 'advanced');
   await page.locator('#coordX').fill('150');
   await page.locator('#coordY').fill('30');
   await page.locator('#coordZ').fill('0');
@@ -128,14 +129,14 @@ test('file legacy: custom field pin, settings export/import, compare and CSV exp
   await loadRaw(page, site, f.raw);
   await expect(page.locator('#customSection')).toBeHidden();
   await page.locator('#configInput').setInputFiles(configFile);
-  await page.locator('[data-tab="resources"]').click();
+  await navigate(page, 'resources');
   await expect(page.locator('#customSection')).toBeVisible();
   await page.locator('#customCards [data-field="150,30,0"]').fill('9');
   await page.locator('#customCards [data-field="150,30,0"]').press('Tab');
   await expect(page.locator('#pendingCount')).toHaveText('1');
   const output = await download(page, site, f.expected([[150, 30, 0, 9]]));
 
-  await page.locator('[data-tab="compare"]').click();
+  await navigate(page, 'compare');
   await page.locator('#compareInput').setInputFiles(output);
   await expect(page.locator('#diffCount')).toHaveText('1');
   await expect(page.locator('#diffRows')).toContainText('[150, 30, 0]');
@@ -154,7 +155,7 @@ test('file legacy: v2.1 stored equipment level, training cap and advanced techno
   await page.locator('[data-edit-target="equipment"]').selectOption('9:20');
   await page.locator('[data-edit-value="equipment"]').fill('12');
   await page.locator('[data-edit-apply="equipment"]').click();
-  await page.locator('[data-tab="settlement"]').click();
+  await navigate(page, 'settlement');
   await page.locator('[data-edit-target="training"]').selectOption('1');
   await expect(page.locator('#trainingEditor')).toContainText('一般上限 20');
   await page.locator('[data-edit-value="training"]').fill('15');
@@ -176,7 +177,7 @@ test('file legacy: v2.1 stored equipment level, training cap and advanced techno
   await plane(page, 9);
   await page.locator('[data-edit-target="equipment"]').selectOption('9:20');
   await expect(page.locator('[data-edit-value="equipment"]')).toHaveValue('12');
-  await page.locator('[data-tab="settlement"]').click();
+  await navigate(page, 'settlement');
   await page.locator('[data-edit-target="training"]').selectOption('1');
   await expect(page.locator('#trainingEditor')).toContainText('目前 15');
   await page.locator('[data-edit-target="technology"]').selectOption('31');
@@ -283,7 +284,7 @@ test('file legacy: v2.6 batch character experience applies once, undoes atomical
   const f = fixture();
   await open(page, site);
   await loadRaw(page, site, f.raw);
-  await page.locator('[data-tab="batch"]').click();
+  await navigate(page, 'batch');
   await page.locator('#batchSelectPage').click();
   await expect(page.locator('#batchCharacterCount')).toContainText('已勾選 2');
   await page.locator('#batchAmount').fill('1');

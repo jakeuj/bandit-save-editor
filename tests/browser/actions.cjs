@@ -12,13 +12,28 @@ async function loadRaw(page, site, raw, name = 'synthetic.dat') {
   await expect(page.locator('#workspace')).not.toHaveAttribute('aria-busy', 'true');
   return file;
 }
+async function navigate(page, name) {
+  if (await page.locator('#navigationBtn').isVisible()) {
+    await page.locator('#navigationBtn').click();
+    await page.locator(`[data-mobile-tab="${name}"]`).click();
+    await expect(page.locator('#navigationDialog')).not.toBeVisible();
+  } else await page.locator(`[data-tab="${name}"]`).click();
+}
+// Legacy feature regressions exercise the editors after explicitly opening them.
+async function openCharacterEditors(page) {
+  for (const section of await page.locator('[data-character-section]').all()) {
+    if (await section.getAttribute('open') === null) await section.locator('summary').first().click();
+  }
+}
 async function selectCharacter(page, id) {
-  await page.locator('[data-tab="characters"]').click();
+  await navigate(page, 'characters');
   await page.locator('#characterSearch').fill('#' + id);
   await page.locator('#characterSelect').selectOption(String(id));
   await expect(page.locator('#characterSelect')).toHaveValue(String(id));
+  await openCharacterEditors(page);
 }
 async function previewBase(page, values) {
+  if (await page.locator('#baseAptitudeSection').getAttribute('open') === null) await page.locator('#baseAptitudeSection > summary').click();
   for (let i = 0; i < values.length; i++) await page.locator('#baseAptitude' + i).fill(String(values[i]));
   await page.locator('#baseAptitudePreviewBtn').click();
 }
@@ -40,4 +55,4 @@ async function download(page, site, expected, button = '#downloadBtn') {
 async function noOverflow(page) {
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), 'Page must fit the viewport').toBe(true);
 }
-module.exports = {loadRaw, selectCharacter, previewBase, download, noOverflow};
+module.exports = {navigate, openCharacterEditors, loadRaw, selectCharacter, previewBase, download, noOverflow};

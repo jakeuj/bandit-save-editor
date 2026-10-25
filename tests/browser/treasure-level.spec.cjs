@@ -1,4 +1,5 @@
 'use strict';
+const {navigate} = require('./actions.cjs');
 // Candidate UI for treasure levels. Runs on a disposable candidate build (flags opened, proof gate removed): this proves
 // the browser behaviour only. It is not first-proof evidence and never opens a group in the repository.
 const path=require('node:path'),{pathToFileURL}=require('node:url'),{test:base,expect}=require('./fixtures.cjs'),{createSite}=require('./site.cjs'),{saveFixture,renderSave}=require('../helpers/save-fixture.cjs'),{loadRaw,download,noOverflow}=require('./actions.cjs');
@@ -13,7 +14,7 @@ function fixture({invalid=false}={}){
  if(invalid){const bad=row.slice();bad[1]=templates[1];bad[6]=99;bad.forEach((v,y)=>data[21][y][7]=v);}
  return {raw:renderSave(data),expected:patches=>renderSave(data,patches)};
 }
-async function select(page,plane,id=20){await page.locator('[data-tab="inventory"]').click();await page.locator('#inventoryPlane').selectOption(String(plane));await page.locator('[data-edit-target="equipment"]').selectOption(plane+':'+id);}
+async function select(page,plane,id=20){await navigate(page, 'inventory');await page.locator('#inventoryPlane').selectOption(String(plane));await page.locator('[data-edit-target="equipment"]').selectOption(plane+':'+id);}
 async function edit(page,plane,value){await select(page,plane);await expect(page.locator('[data-edit-mode="equipment"]')).toBeDisabled();await page.locator('[data-edit-value="equipment"]').fill(String(value));await expect(page.locator('[data-treasure-level-preview]')).toContainText('→ '+value);await page.locator('[data-edit-apply="equipment"]').click();}
 
 closed('treasure levels without a first proof are inspectable but disabled and write nothing',async({page,site})=>{

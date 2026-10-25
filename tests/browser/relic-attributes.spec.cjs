@@ -1,4 +1,5 @@
 'use strict';
+const {navigate} = require('./actions.cjs');
 // Backpack relic elements. Runs on disposable candidate builds (gate opened or closed, proof gate removed) so the same spec
 // keeps covering both states; it is browser behaviour only, not the isolated game smoke that opens the repository gate.
 const path=require('node:path'),{test:base,expect}=require('./fixtures.cjs'),{createSite}=require('./site.cjs'),{saveFixture,renderSave}=require('../helpers/save-fixture.cjs'),{loadRaw,download,noOverflow}=require('./actions.cjs');
@@ -7,7 +8,7 @@ const closed=base.extend({site:async({},use)=>{const site=await createSite({cand
 // A natural roll: 妖狐靈火 (bases 55/95/30/75/45), level 2, quality 1, backpack row 1.
 function fixture(){const {data}=saveFixture({characters:2});[1,1,2,1,1,1.2,1.6,0.4,1.6,0.9,1.1,0,0,1].forEach((v,y)=>data[1][y][18]=v);return {raw:renderSave(data),expected:patches=>renderSave(data,patches)};}
 const inputs=page=>[0,1,2,3,4].map(i=>page.locator('#relicValue'+i));
-async function open(page){await page.locator('[data-tab="inventory"]').click();await expect(page.locator('#relicItem')).toHaveValue('1');}
+async function open(page){await navigate(page, 'inventory');await expect(page.locator('#relicItem')).toHaveValue('1');}
 for(const width of [1280,390])opened(`relic elements ${width}px: preset fills a natural roll, exact bytes, reload, reject unnatural`,async({page,site})=>{
  await page.setViewportSize({width,height:844});const f=fixture();await page.goto(site.url);await loadRaw(page,site,f.raw);await open(page);
  await expect(page.locator('#relicInfo')).toContainText('總靈氣原版範圍 5.6–7.7');await expect(page.locator('#relicInfo')).toContainText('目前數值可由原版生成');

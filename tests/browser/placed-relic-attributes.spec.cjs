@@ -1,4 +1,5 @@
 'use strict';
+const {navigate} = require('./actions.cjs');
 // Relics placed on a 置物台. Runs on disposable candidate builds (gate opened or closed, proof gate removed) so the same spec
 // keeps covering both states; it is browser behaviour only, not the isolated game smoke that opens the repository gate.
 const path=require('node:path'),{test:base,expect}=require('./fixtures.cjs'),{createSite}=require('./site.cjs'),{saveFixture,renderSave}=require('../helpers/save-fixture.cjs'),{loadRaw,download,noOverflow}=require('./actions.cjs');
@@ -10,7 +11,7 @@ function fixture(){const {data}=saveFixture({characters:2});
  [7,1,2,1,1,1.2,1.6,0.4,1.6,0.9,1.1,0,5,0].forEach((v,y)=>data[2][y][19]=v);
  return {raw:renderSave(data),expected:patches=>renderSave(data,patches)};}
 const inputs=page=>[0,1,2,3,4].map(i=>page.locator('#relicValue'+i));
-async function open(page){await page.locator('[data-tab="inventory"]').click();await expect(page.locator('#relicItem')).toHaveValue('p2');}
+async function open(page){await navigate(page, 'inventory');await expect(page.locator('#relicItem')).toHaveValue('p2');}
 for(const width of [1280,390])opened(`placed relic ${width}px: preset, tile aura preview, exact bytes, reload, reject unnatural`,async({page,site})=>{
  await page.setViewportSize({width,height:844});const f=fixture();await page.goto(site.url);await loadRaw(page,site,f.raw);await open(page);
  await expect(page.locator('#relicInfo')).toContainText('置物台 #5（Lv 2）');await expect(page.locator('#relicInfo')).toContainText('總靈氣原版範圍 5.6–7.7');

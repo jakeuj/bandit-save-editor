@@ -1,4 +1,5 @@
 'use strict';
+const {navigate} = require('./actions.cjs');
 const path = require('node:path');
 const {pathToFileURL} = require('node:url');
 const {test, expect} = require('./fixtures.cjs');
@@ -7,6 +8,7 @@ const {loadRaw, selectCharacter, download, noOverflow} = require('./actions.cjs'
 const released = require('../../knowledge/catalog.json').verification.randomCharacterSkillCaps === true;
 
 async function previewCaps(page, caps = [38, 20, 10, 10, 10, 10, 10, 10, 10]) {
+  if (await page.locator('#skillCapsSection').getAttribute('open') === null) await page.locator('#skillCapsSection > summary').click();
   for (let i = 0; i < 9; i++) await page.locator('#skillCap' + (i + 1)).fill(String(caps[i]));
   await page.locator('#skillCapsPreviewBtn').click();
 }
@@ -42,7 +44,7 @@ for (const width of [1280, 390]) {
     await page.setViewportSize({width, height: 844});
     const f = skillCapsFixture();
     await page.goto(site.url); await loadRaw(page, site, f.raw);
-    await page.locator('[data-tab="characters"]').click();
+    await navigate(page, 'characters');
     expect(await page.locator('#characterSelect option').count()).toBe(50);
     for (const [id, reason] of [[1, '範本'], [2, '監'], [3, '結丹'], [4, '共同生成']]) {
       await selectCharacter(page, id);
@@ -81,7 +83,7 @@ for (const width of [1280, 390]) {
     await expect(page.locator('#skillCapsApplyBtn')).toBeDisabled();
     await previewCaps(page); await page.locator('#skillCapsApplyBtn').click();
     await expect(page.locator('#pendingCount')).toHaveText('2');
-    await page.locator('[data-tab="batch"]').click();
+    await navigate(page, 'batch');
     await page.locator('#batchKind').selectOption('skillExperience');
     await page.locator('#batchCharacterSearch').fill('#2500');
     await page.locator('#batchCharacter').selectOption('2500');

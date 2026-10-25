@@ -57,3 +57,12 @@ Linux CI另加`--with-deps`安裝系統函式庫。Playwright版本由package與
 
 
 套裝等級的首次原生完整矩陣、12副本生命週期與合併入口見[核心維護](maintenance/core.md#套裝等級首次證明與遷移)；`set-equipment-level-*.test.cjs` 驗證核心、oracle、manifest與proof拒絕條件，`tests/browser/set-equipment-level.spec.cjs` 驗兩庫介面、下載、file與PWA。Node／瀏覽器合成存檔不替代原生首次證明；日後代表遷移僅沿用既有首次證明。
+
+
+## 介面導覽與收合維護
+
+- 手機（760px 以下）透過「全部功能」原生 dialog 切換，桌面保留側欄。兩個功能清單與目前項目須同步；選單關閉回到開啟按鈕，選取功能則移入內容標題。角色頁內跳轉展開目標後聚焦 summary，保留 summary 原有的鍵盤操作。
+- 角色的五個 `data-character-section` 外層由 HTML 固定持有；重繪只更新內部編輯器。不要以重新建立外層或 toggle 事件呼叫 render 的方式收合，否則會清掉草稿、預覽或展開狀態。只有成功載入另一份存檔才重設收合狀態。
+- 空物品清單應在呼叫核心資格檢查前顯示空狀態；已有但不支援、未知範本或異常記錄仍須可見並呈現拒絕原因，不得為了隱藏錯誤而過濾。超限後果、首次選槽確認及動態阻擋原因保留在操作旁；公式與完整還原規則可收進詳細規則。
+- 固定底列的高度由 ResizeObserver 寫入 `--footer-space`，內容留白與 toast 共用此值，包含裝置安全區。未載入時隱藏底列；改底列文字或按鈕時要檢查 320px 的換行與遮擋。
+- `tests/browser/actions.cjs` 的 `navigate` 走實際桌面側欄或手機選單；`selectCharacter` 額外展開編輯區，供既有功能回歸使用。預設收合、焦點、草稿保留與換檔重設由 `ux-navigation.spec.cjs` 獨立驗證，不能以回歸 helper 取代。使用 `npm run test:browser -- --grep "UX " --visual` 可保留四種寬度及角色頁截圖。

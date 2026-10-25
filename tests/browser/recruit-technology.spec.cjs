@@ -1,4 +1,5 @@
 'use strict';
+const {navigate} = require('./actions.cjs');
 // Recruitment technology #33 over 299: the advanced technology panel sends 300–599 to the named over-limit entry.
 // Runs on disposable candidate builds (gate opened or closed, proof gate removed); browser behaviour only.
 const path=require('node:path'),{test:base,expect}=require('./fixtures.cjs'),{createSite}=require('./site.cjs'),{saveFixture,renderSave}=require('../helpers/save-fixture.cjs'),{loadRaw,download,noOverflow}=require('./actions.cjs');
@@ -12,7 +13,7 @@ function fixture(){
 }
 const value=page=>page.locator('[data-edit-value="technology"]'),apply=page=>page.locator('[data-edit-apply="technology"]');
 async function open(page){
- await page.locator('[data-tab="settlement"]').click();
+ await navigate(page, 'settlement');
  await page.locator('[data-edit-target="technology"]').selectOption('33');
  await page.locator('[data-edit-mode="technology"]').check();
 }

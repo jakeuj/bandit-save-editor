@@ -1,4 +1,5 @@
 'use strict';
+const {navigate} = require('./actions.cjs');
 // Inner pill levels in the equipment-level panel. Runs on disposable candidate builds (gates opened or closed, proof gate
 // removed); browser behaviour only, not the isolated game smoke that opens the repository gates.
 const path=require('node:path'),{test:base,expect}=require('./fixtures.cjs'),{createSite}=require('./site.cjs'),{saveFixture,renderSave}=require('../helpers/save-fixture.cjs'),{loadRaw,download,noOverflow}=require('./actions.cjs');
@@ -13,7 +14,7 @@ function fixture(){
  row(inner[1].id,2,1,1).forEach((v,y)=>data[21][y][9]=v);data[21][0][9]=21;data[1][20][2]=21;
  return {raw:renderSave(data),expected:patches=>renderSave(data,patches)};
 }
-async function select(page,plane,id){await page.locator('[data-tab="inventory"]').click();await page.locator('#inventoryPlane').selectOption(String(plane));await page.locator('[data-edit-target="equipment"]').selectOption(plane+':'+id);}
+async function select(page,plane,id){await navigate(page, 'inventory');await page.locator('#inventoryPlane').selectOption(String(plane));await page.locator('[data-edit-target="equipment"]').selectOption(plane+':'+id);}
 async function edit(page,plane,id,value){await select(page,plane,id);await expect(page.locator('[data-edit-mode="equipment"]')).toBeDisabled();await page.locator('[data-edit-value="equipment"]').fill(String(value));await expect(page.locator('[data-inner-pill-level-preview]')).toContainText('→ '+value);await page.locator('[data-edit-apply="equipment"]').click();}
 
 closed('closed inner pill gates show the pill but keep Apply disabled',async({page,site})=>{

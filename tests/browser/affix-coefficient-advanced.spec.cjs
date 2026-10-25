@@ -1,4 +1,5 @@
 'use strict';
+const {navigate} = require('./actions.cjs');
 // Affix coefficient over the native range: the affix panel's over-limit row sends 10–1000 to the named entry.
 // Runs on disposable candidate builds (gate opened or closed, proof gate removed); browser behaviour only.
 const path=require('node:path'),{test:base,expect}=require('./fixtures.cjs'),{createSite}=require('./site.cjs'),{saveFixture,renderSave}=require('../helpers/save-fixture.cjs'),{loadRaw,download,noOverflow}=require('./actions.cjs');
@@ -6,7 +7,7 @@ const opened=base.extend({site:async({},use)=>{const site=await createSite({cand
 const closed=base.extend({site:async({},use)=>{const site=await createSite({candidate:{close:['equipmentAffixCoefficientAdvanced']}});try{await use(site);}finally{await site.close();}}});
 // One unworn ordinary quality-2 勇武頭巾 at row 20 in z9 and z7 (range 10–80), slot 1 already washed.
 function fixture(){const {data}=saveFixture({characters:2}),row=Array(60).fill(0);Object.assign(row,{0:20,1:16,2:1,3:1,5:2,6:3,8:125,9:12,15:20,24:1,28:1});for(const z of [7,9])row.forEach((v,y)=>data[20][y][z]=v);return {raw:renderSave(data),expected:patches=>renderSave(data,patches)};}
-async function select(page,plane){await page.locator('[data-tab="inventory"]').click();await page.locator('#inventoryPlane').selectOption(String(plane));await page.locator('#affixItem').selectOption(`${plane}:20`);}
+async function select(page,plane){await navigate(page, 'inventory');await page.locator('#inventoryPlane').selectOption(String(plane));await page.locator('#affixItem').selectOption(`${plane}:20`);}
 async function apply(page,value){await page.locator('#affixOverValue').fill(String(value));await page.locator('#affixOverApply').click();}
 for(const width of [1280,390])opened(`affix over-limit ${width}px: 1000.01 refused, 1000 applied, exact bytes, reload and lower again`,async({page,site})=>{
  await page.setViewportSize({width,height:844});const f=fixture();await page.goto(site.url);await loadRaw(page,site,f.raw);

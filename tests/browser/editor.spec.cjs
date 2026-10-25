@@ -1,4 +1,5 @@
 'use strict';
+const {navigate} = require('./actions.cjs');
 const path = require('node:path');
 const {test, expect} = require('./fixtures.cjs');
 const {saveFixture} = require('../helpers/save-fixture.cjs');
@@ -10,7 +11,7 @@ for (const width of [1280, 390]) {
     const f = saveFixture({size: 2501, characters: 2500, exclusions: true});
     await page.goto(site.url);
     await loadRaw(page, site, f.raw);
-    await page.locator('[data-tab="characters"]').click();
+    await navigate(page, 'characters');
     expect(await page.locator('#characterSelect option').count()).toBe(50);
     await expect(page.locator('#baseAptitudeStatus')).toContainText('範本');
     await expect(page.locator('#baseAptitudePreviewBtn')).toBeDisabled();
@@ -53,7 +54,7 @@ for (const width of [1280, 390]) {
     await page.setViewportSize({width, height: 844});
     const f = saveFixture({size: 2501, characters: 2500});
     await page.goto(site.url); await loadRaw(page, site, f.raw);
-    await page.locator('[data-tab="batch"]').click();
+    await navigate(page, 'batch');
     await expect(page.locator('[data-batch-character]')).toHaveCount(50);
     await page.locator('#batchSelectPage').click();
     await page.locator('#batchCharacterNext').click();
@@ -78,7 +79,7 @@ for (const width of [1280, 390]) {
     await expect(page.locator('#pendingCount')).toHaveText('0');
     await page.locator('#fileInput').setInputFiles(output);
     await expect(page.locator('#fileName')).toHaveText(path.basename(output));
-    await page.locator('[data-tab="batch"]').click();
+    await navigate(page, 'batch');
     await page.locator('#batchKind').selectOption('skillExperience');
     await expect(page.locator('#batchCharacter option')).toHaveCount(50);
     await page.locator('#batchCharacterSearch').fill('#2500');
