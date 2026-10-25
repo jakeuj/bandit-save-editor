@@ -261,6 +261,23 @@ test('affix over-limit follow-up sends compilable page code and rejects a clampe
   }finally{require.cache[gamePath].exports = real; delete require.cache[lifecyclePath];}
 });
 
+test('sixth affix follow-up sends compilable page code and rejects a wrong effect or a wash that touches slot 6',async()=>{
+  const gamePath = require.resolve('../scripts/verify-game.cjs'), lifecyclePath = require.resolve('../scripts/verify-native-lifecycle.cjs');
+  const real = require(gamePath), answers = [];
+  const fake = {...real, waitMain: async () => {}, evaluate: async (state, expression) => { new Function('return ' + expression); return /return true;\}\)\(\)$/.test(expression) ? true : answers.shift(); }};
+  delete require.cache[lifecyclePath]; require.cache[gamePath] = {...require.cache[gamePath], exports: fake};
+  try{
+    const {sixthAffix} = require(lifecyclePath), row = Object.assign(Array(50).fill(0), {0: 7, 1: 1, 3: 1, 5: 6, 7: 2, 10: 53, 14: 13, 16: 80, 20: 120, 29: 1});
+    const bagRow = Object.assign([...row], {7: 0}), back = Object.assign(Array(50).fill(0), {1: 2, 3: 1, 5: 6, 11: 36, 14: 12, 17: 70, 20: 50.5, 30: 1});
+    const s = {sixthAffix: {rows: [{id: 7, plane: 9, attributeId: 13, coefficient: 120, selected: 2, character: 2, part: 1, delta: 13.2}, {id: 2, plane: 7, attributeId: 12, coefficient: 50.5, selected: 3}]}};
+    const wash = (before, slot, value, extra = {}) => ({before, after: Object.assign([...before], {[14 + slot]: value}, extra), count: 1, countAfter: 1, cost: 40, spent: 40});
+    const run = (effect, sixth = {}) => { answers.length = 0; answers.push([{cells: [13, 120, 0], count: 1}, {cells: [12, 50.5, 0], count: 1}], [{id: 7, now: 50, was: 50 - effect, total: 80, expected: 13.2, restored: 13}], row, {id: 9, record: bagRow}, {id: 7, record: row}, wash(row, 2, 99.5, sixth), wash(back, 3, 66.6)); return sixthAffix({cells: []}, s); };
+    const ok = await run(13.2);assert.equal(ok.washed[0].after[16], 99.5);assert.equal(ok.washed[1].after[17], 66.6);
+    await assert.rejects(run(10), /editor predicted/);
+    await assert.rejects(run(13.2, {20: 60}), /sixth slot/);
+  }finally{require.cache[gamePath].exports = real; delete require.cache[lifecyclePath];}
+});
+
 test('building level follow-up sends compilable page code and rejects an upgrade that ignores the edited level',async()=>{
   const gamePath = require.resolve('../scripts/verify-game.cjs'), lifecyclePath = require.resolve('../scripts/verify-native-lifecycle.cjs');
   const real = require(gamePath), answers = [];

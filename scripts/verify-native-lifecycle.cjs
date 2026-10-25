@@ -614,6 +614,53 @@ async function affixOverLimit(state, s) {
   return {loaded, effects, cycles, washed};
 }
 
+// Edited sixth affix slots after a restart (equipmentSixthAffix). Every row loads y14／y20 with y33 still 0, so 装备已洗词条数
+// keeps counting only the selected slot. For a worn row, 装备属性计算 (Repeat 6) moves by the editor's predicted delta when y14 is
+// cleared in place and restored; 卸下装备→穿戴装备 keeps all 50 fields. A native 词条洗练 of the selected slot (the wash page
+// lists five slots, so slot 6 is never offered) rerolls only that slot, charges 词条洗练魂魄 and leaves the sixth slot alone.
+async function sixthAffix(state, s) {
+  const {rows} = s.sixthAffix;
+  const loaded = await evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);return ${JSON.stringify(rows)}.map(v=>({cells:[14,20,33].map(y=>a.At(v.id,y,v.plane)),count:call('装备已洗词条数',v.id,v.plane,0)}));})()`);
+  rows.forEach((v, i) => {
+    assert.deepEqual(loaded[i].cells, [v.attributeId, v.coefficient, 0], `Row ${v.plane}:${v.id} did not load the edited sixth slot`);
+    assert.equal(loaded[i].count, 1, `Row ${v.plane}:${v.id} washed count is not 1`);
+  });
+  const effects = await evaluate(state, `(()=>{${prefix}return ${JSON.stringify(rows.filter(v => v.character))}.map(v=>{const f=()=>call('装备属性计算',v.character,v.attributeId,0,0,0,0,0,0,0);const now=f(),total=call('属性计算',v.character,v.attributeId);a.Set(v.id,14,9,0);const was=f();a.Set(v.id,14,9,v.attributeId);return {id:v.id,now,was,total,expected:v.delta,restored:a.At(v.id,14,9)};})})()`);
+  for (const e of effects) {
+    assert.ok(Number.isFinite(e.now) && Number.isFinite(e.total), 'Native equipment effect is not finite');
+    assert.ok(Math.abs(e.now - e.was - e.expected) < 1e-6, `装备属性计算 moved by ${e.now - e.was}, editor predicted ${e.expected}`);
+    assert.equal(e.restored, rows.find(v => v.id === e.id && v.plane === 9).attributeId);
+  }
+  const targets = rows.map(v => ({...v}));
+  const cycles = [];
+  for (const v of targets.filter(v => v.character)) {
+    const before = await evaluate(state, `(()=>{${prefix}if(a.At(${v.character},${15 + v.part},2)!==${v.id})throw Error('Expected worn sixth-slot item');const b=record(${v.id},9);call('卸下装备',${v.part},${v.id},${v.character},false,false);return b;})()`);
+    await pause(500);
+    const bag = await evaluate(state, `(()=>{${prefix}if(a.At(${v.character},${15 + v.part},2)!==0)throw Error('Unequip failed');for(let id=1;id<a.GetWidth();id++)if(a.At(id,0,7)===${before[0]}&&a.At(id,1,7)===${before[1]}&&a.At(id,14,7)===${v.attributeId}&&a.At(id,20,7)===${v.coefficient})return {id,record:record(id,7)};throw Error('Unequipped record missing');})()`);
+    await evaluate(state, `(()=>{${prefix}call('穿戴装备',${v.part},${bag.id},${v.character},false,false);return true;})()`);
+    await pause(500);
+    const worn = await evaluate(state, `(()=>{${prefix}const id=a.At(${v.character},${15 + v.part},2);return {id,record:record(id,9)};})()`);
+    for (let y = 0; y < 50; y++) if (y !== 7) { assert.equal(bag.record[y], before[y], 'Unequip field ' + y); assert.equal(worn.record[y], before[y], 'Equip cycle field ' + y); }
+    assert.equal(worn.record[7], v.character);
+    state.cells.push([v.character, 15 + v.part, 2]);
+    v.id = worn.id;
+    cycles.push({before, bag, worn});
+  }
+  const washed = [];
+  for (const v of targets) {
+    const w = await evaluate(state, `(()=>{${prefix}const before=record(${v.id},${v.plane}),souls=a.At(3,2,0),count=call('装备已洗词条数',${v.id},${v.plane},0),cost=call('词条洗练魂魄',before[3],count);call('词条洗练',${v.id},${v.selected},${v.plane});const after=record(${v.id},${v.plane});return {before,after,count,countAfter:call('装备已洗词条数',${v.id},${v.plane},0),cost,spent:souls-a.At(3,2,0)};})()`);
+    const c = w.after[14 + v.selected];
+    assert.ok(c >= 50 && c <= 120 && Math.abs(c * 100 - Math.round(c * 100)) < 1e-6, 'Wash did not roll a Q6 coefficient: ' + c);
+    assert.ok(w.after[8 + v.selected] > 0, 'Wash cleared the affix');
+    assert.deepEqual([w.after[14], w.after[20], w.after[33]], [v.attributeId, v.coefficient, 0], 'Wash touched the sixth slot');
+    assert.deepEqual([w.after[27 + v.selected], w.count, w.countAfter, w.spent], [1, 1, 1, w.cost], 'Wash flag, washed count or cost');
+    for (let y = 0; y < 50; y++) if (y !== 8 + v.selected && y !== 14 + v.selected) assert.equal(w.after[y], w.before[y], 'Wash changed field ' + y);
+    for (let y = 0; y < 50; y++) state.cells.push([v.id, y, v.plane]);
+    washed.push({id: v.id, plane: v.plane, ...w});
+  }
+  return {loaded, effects, cycles, washed};
+}
+
 // Edited building levels after a restart: the facility and research caps follow the new level, 建筑升阶 starts the next tier
 // from it (work 建造工程量(t, L+1), materials deducted) and 取消升阶 returns both, and at the tech cap it refuses. The walls
 // rise at once, so their edited level is checked at the cap (refused, nothing spent) and through the wider enhancement cap.
@@ -645,7 +692,7 @@ async function main() {
   const statePath = opt('--state'), state = JSON.parse(fs.readFileSync(statePath)), scenario = JSON.parse(fs.readFileSync(opt('--scenario')));
   const rel = path.relative(path.resolve(__dirname, '..'), state.dir), child = path.relative(state.dir, state.game);
   if (!rel || (!path.isAbsolute(rel) && rel !== '..' && !rel.startsWith('..' + path.sep)) || !child || path.isAbsolute(child) || child.startsWith('..')) throw Error('External disposable state required');
-  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.pillOverLimit && !scenario.backpackOverLimit && !scenario.relics && !scenario.relicTakeOff && !scenario.relicStandPrepare && !scenario.placedRelicAura && !scenario.wall && !scenario.city && !scenario.ascensionQuality && !scenario.innerPillPrepare && !scenario.innerPillLevel && !scenario.ascendedInnerPillLevel && !scenario.basicTechnology && !scenario.buildingLevel && !scenario.relicCrafting && !scenario.recruitTechnology && !scenario.affixPrepare && !scenario.affixOverLimit) throw Error('Scenario has no native follow-up actions');
+  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.pillOverLimit && !scenario.backpackOverLimit && !scenario.relics && !scenario.relicTakeOff && !scenario.relicStandPrepare && !scenario.placedRelicAura && !scenario.wall && !scenario.city && !scenario.ascensionQuality && !scenario.innerPillPrepare && !scenario.innerPillLevel && !scenario.ascendedInnerPillLevel && !scenario.basicTechnology && !scenario.buildingLevel && !scenario.relicCrafting && !scenario.recruitTechnology && !scenario.affixPrepare && !scenario.affixOverLimit && !scenario.sixthAffix) throw Error('Scenario has no native follow-up actions');
   await waitMain(state);
   const result = {};
   if (scenario.ascend && !scenario.pills) result.ascend = await ascend(state, scenario);
@@ -667,6 +714,7 @@ async function main() {
   if (scenario.recruitTechnology) result.recruitTechnology = await recruitTechnology(state, scenario);
   if (scenario.affixPrepare) result.affixPrepare = await affixPrepare(state, scenario);
   if (scenario.affixOverLimit) result.affixOverLimit = await affixOverLimit(state, scenario);
+  if (scenario.sixthAffix) result.sixthAffix = await sixthAffix(state, scenario);
   if (scenario.buildingLevel) result.buildingLevel = await buildingLevel(state, scenario);
   if (scenario.relicCrafting) result.relicCrafting = await relicCrafting(state, scenario);
   state.expected = await evaluate(state, `(()=>{${prefix}return ${JSON.stringify(state.cells)}.map(([x,y,z])=>a.At(x,y,z));})()`);
@@ -675,4 +723,4 @@ async function main() {
   console.log('PASS: native ' + Object.keys(result).join(' and ') + ' follow-up actions');
 }
 if (require.main === module) main().catch(e => { console.error(e.stack); process.exitCode = 1; });
-module.exports = {ascend, followup, pillsAndRebirth, pillOverLimit, backpackOverLimit, relicPlacement, relicTakeOff, relicStandPrepare, placedRelicAura, wallUpgrade, cityLayer, ascensionQuality, innerPillPrepare, innerPillLevel, ascendedInnerPillLevel, basicTechnology, buildingLevel, recruitTechnology, affixPrepare, affixOverLimit, relicCrafting};
+module.exports = {ascend, followup, pillsAndRebirth, pillOverLimit, backpackOverLimit, relicPlacement, relicTakeOff, relicStandPrepare, placedRelicAura, wallUpgrade, cityLayer, ascensionQuality, innerPillPrepare, innerPillLevel, ascendedInnerPillLevel, basicTechnology, buildingLevel, recruitTechnology, affixPrepare, affixOverLimit, sixthAffix, relicCrafting};

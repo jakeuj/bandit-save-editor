@@ -87134,6 +87134,7 @@
     "placedRelicAttributes": true,
     "pillAptitudeBonusAdvanced": true,
     "recruitTechnologyAdvanced": true,
-    "equipmentAffixCoefficientAdvanced": true
+    "equipmentAffixCoefficientAdvanced": true,
+    "equipmentSixthAffix": true
   }
 }

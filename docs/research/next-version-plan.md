@@ -8,16 +8,16 @@
 
 | 要知道什麼 | 目前答案 |
 | --- | --- |
-| 剛完成 | v2.30 詞條係數超限（2026-10-25）：普通裝備已選洗練槽的係數 z7／z9 y15–20 可設原版下限到 1000（兩位小數），獨立入口 `affixAdvancedInfo`／`previewEquipmentAffixCoefficientAdvanced`／`setEquipmentAffixCoefficientAdvanced`。原生上限只在生成端 `装备词条系数`；效果只經 `装备属性计算`→`装备主属性`，線性不夾限，顯示進度條在 120 封頂，重洗會重抽回原版區間。使用者決定兩庫都開、超限後放寬等級與穿戴者資質檢查（`ordinaryEquipment` 第 5 參數），品質、精準洗練、套裝照舊拒絕。原生備料（`affixPrepare`）後冒煙（穿戴中 1000、背包 555.55、背包 500 再原生重洗，兩輪存讀、效果差值等於預測、卸下穿回、修改器重讀）通過後開啟 `equipmentAffixCoefficientAdvanced`。摘要見[第二批研究](advanced-editing-batch2.md#實作摘要2026-10-25v230-詞條係數超限) |
-| 再前一項 | v2.29 招募科技超限（2026-10-25）：進階科技 #33 進階模式放寬到 599，只寫 `[33,4,0]`；讀取者只有 `加成属性效果(24)`＝L，間隔 600−L 沒有下限。冒煙通過後開啟 `recruitTechnologyAdvanced`。摘要見[進階修改研究](advanced-editing.md#實作摘要2026-10-25v229-招募科技超限) |
-| 更早 | v2.28 遊戲 V1.0.12.2（2026-10-25）：已審核事件只差編號位移與 `刷新物品`／`刷新灵物` 的延遲參數，公式編號 +4；裝備與靈物兩份代表冒煙通過，原有旗標維持開放。做法見[輕量流程](../maintenance/lightweight.md#遊戲改版v228-實例)、摘要見[各版紀錄](../releases.md#v228-遊戲-v10122) |
-| 再更早 | v2.27 丹藥超限（2026-10-25）：B 設成 0–1000 的整數，只限無結丹角色；原生 `角色资质计算` 不夾上限，超限後 `服用普通丹药` 拒絕、重生清零。摘要見[第二批研究](advanced-editing-batch2.md#實作摘要2026-10-25v227-丹藥超限) |
-| 歷史 | 靈物套裝合成與精煉的原生驗證（2026-10-25，只驗證、無新旗標）：`套装合成` 把靈物 y4 寫進裝備 y23、y10 寫進 y26（y26 沒有讀取者），`内丹精炼` 只用靈物 y4（品質＝floor((y4＋材料品質)/2)），完全不讀五行；材料、部位、靈物範本與配方解鎖只在選取介面檢查。冒煙（修改過的 #5 加穿戴中的竹槍合成土匪之槍、修改過的 #4 加練氣力量丹 Q6 精煉成 Q5 掠奪內丹、兩輪存讀、修改器重讀）通過。摘要見[集中研究](candidate-sweep-2026-10-23.md#原生驗證摘要2026-10-25修改後靈物用於套裝合成與內丹精煉) |
+| 剛完成 | v2.31 第六槽（2026-10-25）：Q6 普通裝備的第六槽 `[i,14,z]`／`[i,20,z]` 可新增、替換、清除（合法池不重複、50–120、兩位小數、y33 保持 0），獨立入口 `sixthAffixInfo`／`previewEquipmentSixthAffix`／`setEquipmentSixthAffix`。原生生成碰不到第六槽（`装备词条数量` 夾到 5），但 `装备属性计算`、`物品tips` 都是 Repeat 6 照算照列，洗練頁只列 5 槽。使用者決定只開第六槽、品質 7 判定不開放（原生拿不到、不多一槽、品質字樣空白、背景顯示凡物），並放寬穿戴者檢查（`ordinaryEquipment` 第 6 參數）。冒煙（沿用 v2.30 備料存檔：穿戴中暴傷 120、背包暴擊 50.5，兩輪存讀、效果差值等於預測、卸下穿回、原生洗練已選槽不動第六槽、修改器重讀）通過後開啟 `equipmentSixthAffix`。摘要見[第二批研究](advanced-editing-batch2.md#實作摘要2026-10-25v231-第六槽品質-7-判定不開放) |
+| 再前一項 | v2.30 詞條係數超限（2026-10-25）：普通裝備已選洗練槽的係數 z7／z9 可設原版下限到 1000，原生線性不夾限、重洗回原版區間；冒煙後開啟 `equipmentAffixCoefficientAdvanced`。摘要見[第二批研究](advanced-editing-batch2.md#實作摘要2026-10-25v230-詞條係數超限) |
+| 更早 | v2.29 招募科技超限（2026-10-25）：進階科技 #33 進階模式放寬到 599；冒煙後開啟 `recruitTechnologyAdvanced`。摘要見[進階修改研究](advanced-editing.md#實作摘要2026-10-25v229-招募科技超限) |
+| 再更早 | v2.28 遊戲 V1.0.12.2（2026-10-25）：公式編號 +4，裝備與靈物兩份代表冒煙通過，原有旗標維持開放。做法見[輕量流程](../maintenance/lightweight.md#遊戲改版v228-實例)、摘要見[各版紀錄](../releases.md#v228-遊戲-v10122) |
+| 歷史 | v2.27 丹藥超限與更早的功能見[各版紀錄](../releases.md)；靈物套裝合成與精煉的原生驗證（只驗證、無新旗標）見[集中研究](candidate-sweep-2026-10-23.md#原生驗證摘要2026-10-25修改後靈物用於套裝合成與內丹精煉) |
 | 目前主線 | 無功能主線 |
-| 下一步 | 下一個功能從 roadmap 挑（超限只剩品質 7／第六槽，靜態補查已知 Q7 不會多一槽），依[輕量開發流程](../maintenance/lightweight.md)做 |
-| 授權 | v2.30 已完成；提交／推送依當次對話授權，下一個功能待使用者指定 |
+| 下一步 | roadmap 的功能候選（含超限群組）已全部處理完；剩下另線與補驗：Mac 啟動器核對 V1.0.12.2（`c3runtime.js` 尚未登錄）與本機存讀／重啟補驗、有名角色 runtime 補丁提案、舊功能的直接 file 流程驗收。要做哪一項待使用者指定 |
+| 授權 | v2.31 已完成；提交／推送依當次對話授權，下一項待使用者指定 |
 | 分派 | 預設在同一個 session 做完；查詢用子 agent，符合[分派判斷](../maintenance/dispatch.md#先判斷要不要分派)才開子 session |
-| 開放狀態 | 以目前 catalog／verification 為準；輕量開啟的群組（`pillAptitudeBonusDecimal`、`backpackEquipmentLevelAdvanced`、`relicAttributes`、`pillAptitudeBonusAscended`、`randomCharacterBaseAptitudesAscended`、`randomCharacterTalentsAscended`、`randomCharacterSkillCapsAscended`、`wallEnhancementLevel`、`cityLayerLevel`、`ascensionQuality`、`backpackInnerPillLevel`、`innerPillLevel`、`ascendedInnerPillLevel`、`basicTechnologyLevel`、`buildingLevel`、`placedRelicAttributes`、`pillAptitudeBonusAdvanced`、`recruitTechnologyAdvanced`、`equipmentAffixCoefficientAdvanced`）記在 `verification.json` 的 `lightweight` |
+| 開放狀態 | 以目前 catalog／verification 為準；輕量開啟的群組（`pillAptitudeBonusDecimal`、`backpackEquipmentLevelAdvanced`、`relicAttributes`、`pillAptitudeBonusAscended`、`randomCharacterBaseAptitudesAscended`、`randomCharacterTalentsAscended`、`randomCharacterSkillCapsAscended`、`wallEnhancementLevel`、`cityLayerLevel`、`ascensionQuality`、`backpackInnerPillLevel`、`innerPillLevel`、`ascendedInnerPillLevel`、`basicTechnologyLevel`、`buildingLevel`、`placedRelicAttributes`、`pillAptitudeBonusAdvanced`、`recruitTechnologyAdvanced`、`equipmentAffixCoefficientAdvanced`、`equipmentSixthAffix`）記在 `verification.json` 的 `lightweight` |
 
 ### 其他候選
 
@@ -25,7 +25,7 @@
 | --- | --- | --- | --- |
 | 降低原生重證成本 | 第 1、2、4 節已實作並推送：core 依 family 切片綁定、獨立入口開發規範、開發中不選跑；以 v2.11 已證明 core 建立切片基準，未重跑原生 | 剩第 3 節：並行副本（先做 PID／profile 核對與 2 份 Steam 探針）；何時值得做由[重證成本紀錄](reproof-ledger.json)判斷，切片報告達門檻會印「提示：」 | 只改 `scripts/` 與文件；並行需要實際跑原生副本驗證 |
 
-其他候選（超限只剩品質 7／第六槽）排序與理由見[路線圖](feature-roadmap.md)；候選不等於排程或實作授權。
+其他候選（roadmap 功能候選已全部處理完）排序與理由見[路線圖](feature-roadmap.md)；候選不等於排程或實作授權。
 
 套裝品質已於 2026-10-23 選為主線，A1–A10 已授權並完成。2026-10-23 的[後續候選集中研究](candidate-sweep-2026-10-23.md)補查了小數丹藥的跨 API 限制、靈物共同生成／平均值、結丹相依、內丹空經驗函式及城市／城牆，交付限研究文件，沒有功能發布或新增原生證明。
 

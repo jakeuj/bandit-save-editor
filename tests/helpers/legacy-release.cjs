@@ -7,7 +7,7 @@ const fs=require('node:fs'),path=require('node:path'),{spawnSync}=require('node:
 const fixtures=path.join(__dirname,'../fixtures/legacy-release'),root=path.join(__dirname,'../..');
 const text=name=>fs.readFileSync(path.join(fixtures,name),'utf8');
 const Q=require('../../scripts/set-equipment-quality-data.cjs'),release=require('./release-v1.0.11.2.cjs');
-const treasureGroups=['backpackTreasureLevel','treasureLevel',...Q.groups,...Q.crossPoolGroups,'pillAptitudeBonusDecimal','pillAptitudeBonusAscended','backpackEquipmentLevelAdvanced','relicAttributes','randomCharacterBaseAptitudesAscended','randomCharacterTalentsAscended','randomCharacterSkillCapsAscended','wallEnhancementLevel','cityLayerLevel','ascensionQuality','backpackInnerPillLevel','innerPillLevel','ascendedInnerPillLevel','basicTechnologyLevel','buildingLevel','placedRelicAttributes','pillAptitudeBonusAdvanced','recruitTechnologyAdvanced','equipmentAffixCoefficientAdvanced'];
+const treasureGroups=['backpackTreasureLevel','treasureLevel',...Q.groups,...Q.crossPoolGroups,'pillAptitudeBonusDecimal','pillAptitudeBonusAscended','backpackEquipmentLevelAdvanced','relicAttributes','randomCharacterBaseAptitudesAscended','randomCharacterTalentsAscended','randomCharacterSkillCapsAscended','wallEnhancementLevel','cityLayerLevel','ascensionQuality','backpackInnerPillLevel','innerPillLevel','ascendedInnerPillLevel','basicTechnologyLevel','buildingLevel','placedRelicAttributes','pillAptitudeBonusAdvanced','recruitTechnologyAdvanced','equipmentAffixCoefficientAdvanced','equipmentSixthAffix'];
 const legacy={
  core:text('core.js'),
  proof:()=>JSON.parse(text('verification.json')),

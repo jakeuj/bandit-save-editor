@@ -78,7 +78,8 @@
     "placedRelicAttributes": true,
     "pillAptitudeBonusAdvanced": true,
     "recruitTechnologyAdvanced": true,
-    "equipmentAffixCoefficientAdvanced": true
+    "equipmentAffixCoefficientAdvanced": true,
+    "equipmentSixthAffix": true
   },
   "lightweight": {
     "randomCharacterBaseAptitudesAscended": {
@@ -400,6 +401,21 @@
       "preparedSaveSha256": "0d1798de365ac07886d01ceb7630b023e07291725d36082f48dab87cf06d8124",
       "resultSha256": "3d7b2efff6362f2f0bd5e24020a610a18763d207d5489156b2787acaa47c0249",
       "nativeResultSha256": "347d72fbd63ca5bc33b927040b76f53a6d0f6843663b1651605b23cdffcc9707",
+      "passed": true
+    },
+    "equipmentSixthAffix": {
+      "date": "2026-10-25",
+      "gameVersion": "V1.0.12.2",
+      "flow": "docs/maintenance/lightweight.md",
+      "smoke": "v1.0.12.2 完整來源、一份編輯冒煙；基準沿用 v2.30 原生備料存檔（affix-overlimit-20261025/prepared，兩件原生 Q6 普通裝備）；編輯以 verify-game.cjs 的 setEquipmentSixthAffix（雲存檔載入、原版存檔、新 PID 讀回），verify-native-lifecycle.cjs sixthAffix 原生核對，再存檔、新 PID 讀回，修改器重讀遊戲寫出檔",
+      "cases": [
+        "z9 #7 柴斧 Q6（角色 2 穿戴）第六槽 空白→暴擊傷害 120：讀回 y14／y20／y33＝13／120／0，装备已洗词条数 維持 1；就地清除 y14 再呼叫 装备属性计算(2,13) 差 13.2，等於修改器預測；卸下（z7 #8）再穿回整列 50 欄不變；原生 词条洗练 已選槽 2 重抽為 89.7（50–120 內），第六槽不變、扣魂魄 100",
+        "z7 #2 竹槍 Q6 第六槽 空白→暴擊幾率 50.5：兩輪原版存檔、新 PID 讀回後保持；原生 词条洗练 已選槽 3 重抽為 116.23，第六槽與已洗數不變、扣魂魄 100",
+        "修改器重讀遊戲寫出檔：兩件第六槽保持；一般係數入口拒絕、第六槽入口可再編輯，背包等級與穿戴者的丹藥入口照常"
+      ],
+      "baselineSaveSha256": "0d1798de365ac07886d01ceb7630b023e07291725d36082f48dab87cf06d8124",
+      "resultSha256": "9999ea94988b7673b1ff1fa9194e6b63eb3db551356abbf3d23c4fc0dbdc2a80",
+      "nativeResultSha256": "803909c49e3a2e8487faba766313f9914cf2695119fca72f374872b254e4ea95",
       "passed": true
     }
   },
