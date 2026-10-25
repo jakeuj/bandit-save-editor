@@ -2,7 +2,7 @@
 
 一功能一列，只讀目標功能那列指向的文件。欄位、公式、具名入口、拒絕條件、還原群組與冒煙結果都在研究文件的「實作摘要」（v2.12 以前看研究正文與 `sdd/` 歷史紀錄），本頁不複製；現行開放狀態以 `knowledge/catalog.json` 的 `verification` 為準。本導覽不新增實作或發布授權。
 
-研究路徑以 repo 的 `docs/research/` 為準，下表簡寫：`sweep` 是 `candidate-sweep-2026-10-23.md`、`batch2` 是 `advanced-editing-batch2.md`。
+研究路徑以 repo 的 `docs/research/` 為準，下表簡寫：`batch2` 是 `advanced-editing-batch2.md`。v2.13–v2.26 的實作摘要原在 `candidate-sweep-2026-10-23.md`，2026-10-25 依主題拆到 batch2、`ascension-inner-pill.md`（結丹內丹）、`relic-attributes.md`（靈物）、`city-wall.md`（城市城牆）、`technology-building.md`（科技建築），原頁留段落對照。
 
 ## 依功能讀取
 
@@ -22,26 +22,26 @@
 | 套裝等級、積分、合成後搬移 | v2.10 | `backpackSetEquipmentLevel`、`setEquipmentLevel`、`*CrossPool` | [套裝等級](../../../../docs/research/set-equipment-level.md) | `sdd/archive/2026-10-23-set-equipment-level/` |
 | 寶物等級（魂魄升級，無經驗欄） | v2.11 | `backpackTreasureLevel`、`treasureLevel` | [寶物等級](../../../../docs/research/treasure-level.md) | `sdd/archive/2026-10-23-treasure-level/` |
 | 套裝品質 | v2.12 | `*SetEquipmentQuality{Upgrade,Downgrade}` | [套裝品質](../../../../docs/research/set-equipment-quality.md) | `sdd/set-equipment-quality{,-a,-b}/` |
-| 小數丹藥增量 | v2.13 | `pillAptitudeBonusDecimal` | [sweep 實作摘要](../../../../docs/research/candidate-sweep-2026-10-23.md#實作摘要2026-10-24v213) | — |
+| 小數丹藥增量 | v2.13 | `pillAptitudeBonusDecimal` | [batch2 實作摘要](../../../../docs/research/advanced-editing-batch2.md#實作摘要2026-10-24v213) | — |
 | 背包普通裝備等級超限 | v2.14 | `backpackEquipmentLevelAdvanced` | [裝備操作實作摘要](../../../../docs/research/equipment-workflow.md#實作摘要2026-10-24v214-背包普通裝備等級超限) | — |
-| 背包靈物五行 | v2.15 | `relicAttributes` | [sweep 實作摘要](../../../../docs/research/candidate-sweep-2026-10-23.md#實作摘要2026-10-24v215-背包靈物五行) | — |
-| 結丹角色丹藥 | v2.16 | `pillAptitudeBonusAscended` | [sweep 實作摘要](../../../../docs/research/candidate-sweep-2026-10-23.md#實作摘要2026-10-24v216-結丹角色丹藥) | — |
-| 結丹角色基礎資質與天賦 | v2.17 | `randomCharacterBaseAptitudesAscended`、`randomCharacterTalentsAscended` | [sweep 實作摘要](../../../../docs/research/candidate-sweep-2026-10-23.md#實作摘要2026-10-24v217-結丹角色基礎資質與天賦) | — |
-| 結丹角色技藝上限 | v2.18 | `randomCharacterSkillCapsAscended` | [sweep 實作摘要](../../../../docs/research/candidate-sweep-2026-10-23.md#實作摘要2026-10-24v218-結丹角色技藝上限) | — |
-| 城牆強化等級 | v2.19 | `wallEnhancementLevel` | [sweep 實作摘要](../../../../docs/research/candidate-sweep-2026-10-23.md#實作摘要2026-10-24v219-城牆強化等級) | — |
-| 城市層數與聲望 | v2.20 | `cityLayerLevel` | [sweep 實作摘要](../../../../docs/research/candidate-sweep-2026-10-23.md#實作摘要2026-10-24v220-城市層數與聲望) | — |
-| 結丹品質 | v2.21 | `ascensionQuality` | [sweep 實作摘要](../../../../docs/research/candidate-sweep-2026-10-23.md#實作摘要2026-10-24v221-結丹品質) | — |
-| 未入體內丹等級 | v2.22 | `backpackInnerPillLevel`、`innerPillLevel` | [sweep 實作摘要](../../../../docs/research/candidate-sweep-2026-10-23.md#實作摘要2026-10-24v222-未入體內丹等級) | — |
-| 入體內丹等級 | v2.23 | `ascendedInnerPillLevel` | [sweep 實作摘要](../../../../docs/research/candidate-sweep-2026-10-23.md#實作摘要2026-10-24v223-入體內丹等級) | — |
-| 基礎科技解鎖 | v2.24 | `basicTechnologyLevel` | [sweep 實作摘要](../../../../docs/research/candidate-sweep-2026-10-23.md#實作摘要2026-10-24v224-基礎科技解鎖) | — |
-| 建築等級 | v2.25 | `buildingLevel` | [sweep 實作摘要](../../../../docs/research/candidate-sweep-2026-10-23.md#實作摘要2026-10-24v225-建築等級) | — |
-| 已擺放靈物五行 | v2.26 | `placedRelicAttributes` | [sweep 實作摘要](../../../../docs/research/candidate-sweep-2026-10-23.md#實作摘要2026-10-24v226-已擺放靈物五行) | — |
+| 背包靈物五行 | v2.15 | `relicAttributes` | [靈物 實作摘要](../../../../docs/research/relic-attributes.md#實作摘要2026-10-24v215-背包靈物五行) | — |
+| 結丹角色丹藥 | v2.16 | `pillAptitudeBonusAscended` | [結丹內丹 實作摘要](../../../../docs/research/ascension-inner-pill.md#實作摘要2026-10-24v216-結丹角色丹藥) | — |
+| 結丹角色基礎資質與天賦 | v2.17 | `randomCharacterBaseAptitudesAscended`、`randomCharacterTalentsAscended` | [結丹內丹 實作摘要](../../../../docs/research/ascension-inner-pill.md#實作摘要2026-10-24v217-結丹角色基礎資質與天賦) | — |
+| 結丹角色技藝上限 | v2.18 | `randomCharacterSkillCapsAscended` | [結丹內丹 實作摘要](../../../../docs/research/ascension-inner-pill.md#實作摘要2026-10-24v218-結丹角色技藝上限) | — |
+| 城牆強化等級 | v2.19 | `wallEnhancementLevel` | [城市城牆 實作摘要](../../../../docs/research/city-wall.md#實作摘要2026-10-24v219-城牆強化等級) | — |
+| 城市層數與聲望 | v2.20 | `cityLayerLevel` | [城市城牆 實作摘要](../../../../docs/research/city-wall.md#實作摘要2026-10-24v220-城市層數與聲望) | — |
+| 結丹品質 | v2.21 | `ascensionQuality` | [結丹內丹 實作摘要](../../../../docs/research/ascension-inner-pill.md#實作摘要2026-10-24v221-結丹品質) | — |
+| 未入體內丹等級 | v2.22 | `backpackInnerPillLevel`、`innerPillLevel` | [結丹內丹 實作摘要](../../../../docs/research/ascension-inner-pill.md#實作摘要2026-10-24v222-未入體內丹等級) | — |
+| 入體內丹等級 | v2.23 | `ascendedInnerPillLevel` | [結丹內丹 實作摘要](../../../../docs/research/ascension-inner-pill.md#實作摘要2026-10-24v223-入體內丹等級) | — |
+| 基礎科技解鎖 | v2.24 | `basicTechnologyLevel` | [科技建築 實作摘要](../../../../docs/research/technology-building.md#實作摘要2026-10-24v224-基礎科技解鎖) | — |
+| 建築等級 | v2.25 | `buildingLevel` | [科技建築 實作摘要](../../../../docs/research/technology-building.md#實作摘要2026-10-24v225-建築等級) | — |
+| 已擺放靈物五行 | v2.26 | `placedRelicAttributes` | [靈物 實作摘要](../../../../docs/research/relic-attributes.md#實作摘要2026-10-24v226-已擺放靈物五行) | — |
 | 丹藥超限 | v2.27 | `pillAptitudeBonusAdvanced` | [batch2 實作摘要](../../../../docs/research/advanced-editing-batch2.md#實作摘要2026-10-25v227-丹藥超限) | — |
 | 招募科技超限 | v2.29 | `recruitTechnologyAdvanced` | [進階修改實作摘要](../../../../docs/research/advanced-editing.md#實作摘要2026-10-25v229-招募科技超限) | — |
 | 詞條係數超限 | v2.30 | `equipmentAffixCoefficientAdvanced` | [batch2 實作摘要](../../../../docs/research/advanced-editing-batch2.md#實作摘要2026-10-25v230-詞條係數超限) | — |
 | 第六槽（品質 7 不開放） | v2.31 | `equipmentSixthAffix` | [batch2 實作摘要](../../../../docs/research/advanced-editing-batch2.md#實作摘要2026-10-25v231-第六槽品質-7-判定不開放) | — |
 
-靈物用於套裝合成與內丹精煉的原生驗證（只驗證、無新旗標）見 [sweep 原生驗證摘要](../../../../docs/research/candidate-sweep-2026-10-23.md#原生驗證摘要2026-10-25修改後靈物用於套裝合成與內丹精煉)。有名角色資質、技藝上限、天賦回填與自然職業 30 級限制屬 [runtime 補丁提案](../../../../sdd/runtime-patch/proposal.md)，與網站修改器分開。
+靈物用於套裝合成與內丹精煉的原生驗證（只驗證、無新旗標）見 [靈物 原生驗證摘要](../../../../docs/research/relic-attributes.md#原生驗證摘要2026-10-25修改後靈物用於套裝合成與內丹精煉)。有名角色資質、技藝上限、天賦回填與自然職業 30 級限制屬 [runtime 補丁提案](../../../../sdd/runtime-patch/proposal.md)，與網站修改器分開。
 
 ## 跨功能易錯點
 

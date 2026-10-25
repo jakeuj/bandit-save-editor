@@ -155,7 +155,7 @@ V1.0.11.2／build 26126719，Windows win32-x64；完整開發快取與獨立 run
 
 ## 仍未驗證
 
-結丹角色的天賦等級於 v2.17 開放（旗標 `randomCharacterTalentsAscended`），資質天賦的 cap 改用結丹倍率，見[集中研究實作摘要](candidate-sweep-2026-10-23.md#實作摘要2026-10-24v217-結丹角色基礎資質與天賦)。
+結丹角色的天賦等級於 v2.17 開放（旗標 `randomCharacterTalentsAscended`），資質天賦的 cap 改用結丹倍率，見[結丹與內丹研究實作摘要](ascension-inner-pill.md#實作摘要2026-10-24v217-結丹角色基礎資質與天賦)。
 
 | 問題 | 原因 |
 | --- | --- |
