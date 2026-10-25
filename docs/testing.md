@@ -45,6 +45,8 @@ Linux CI另加`--with-deps`安裝系統函式庫。Playwright版本由package與
 
 執行器使用OS暫存目錄下的`bandit-browser-*`儲存摘要及Playwright結果，站點副本使用`bandit-site-*`。正常結束關閉自己建立的瀏覽器、伺服器及副本；全部成功會刪除結果目錄。失敗保留summary.json、trace、錯誤DOM摘要及可取得的截圖，並印出路徑；`--visual`也保留成功截圖。強制終止程序可能留下暫存資料，只清理確認屬於本次執行的目錄。使用者瀏覽器設定、分頁、Downloads與真實存檔不參與。
 
+工作目錄的 `npm test` 只有 PWA 建置／快取雜湊案例失敗、`git status` 卻乾淨時，先查工作檔是否被寫成 CRLF，排查與還原見[換行差異的處理](maintenance/release.md#待提交快照檢查)。
+
 預設由OS選擇隨機loopback埠；需要沿用使用者既有的本機內容過濾器例外時，可在該次測試程序設定`BANDIT_BROWSER_PORT`，埠被占用就直接失敗，不連接既有服務。隨機埠若落在 Chromium 封鎖的 unsafe port（例如 5060、6566，清單在 `tests/browser/loopback.cjs`），站點與開跑前檢查都會關掉重新 listen，最多 20 次，避免單一案例以 `net::ERR_UNSAFE_PORT` 失敗；指定 `BANDIT_BROWSER_PORT` 時照原值使用，不重試也不換埠。2026-10-22新版對齊時，隨機埠被AdGuard注入腳本，四個PWA案例因資產完整性檢查失敗；沿用文件記錄的8942例外後四案通過。PowerShell可用`$env:BANDIT_BROWSER_PORT='8942'; npm run verify:release`；只設定測試程序環境，不修改使用者過濾器、瀏覽器設定或PWA雜湊規則。2026-10-24 起 `scripts/test-browser.cjs` 開跑前先用同一個埠設定提供一次 `index.html`，以頁面導覽與子資源兩種請求比對原檔位元組；被改寫就印出原因與改埠／加例外的提示，以 exit 1 停下，不再跑出一整批「離線準備失敗」。同日使用者在 AdGuard 使用者規則調整 127.0.0.1 例外後，隨機埠已不再被改寫（41 項瀏覽器測試未設埠即通過）；若之後又被改寫，以開跑前檢查的訊息為準。過濾器改寫首頁並注入 CSP／腳本時，Worker 因內容不符而拒絕快取是預期行為；先比較實際 HTTP 回應與提交的 Git blob，不要放寬 CSP 或略過指紋比對。
 
 平時只讀通過數／耗時與失敗摘要；失敗時才開對應trace或截圖。需要查看trace可用`npx playwright show-trace /temporary/path/trace.zip`，這是明確的除錯操作，不是預設驗收。CI失敗會保留瀏覽器診斷artifact七天，Pages仍只發布原有靜態白名單。

@@ -63,6 +63,7 @@ print('Verified tree: ' + snapshot)
 - 編輯文字時保留 `.gitattributes` 指定的 LF；Python 寫入可用 `newline='\n'`。屬性只約束 Git 轉換，不能防止編輯工具先將工作檔寫成 CRLF。
 - builder 依實際 bytes 計算 PWA 指紋。工作目錄若含 CRLF，建置與本機 `--check` 可能都通過，但 `git add` 轉為 LF 後雜湊就失效。`git diff --check` 也不驗證產物雜湊。
 - 快照檢查失敗時先停止提交／推送。在隔離快照執行 builder，檢視產物差異，只取回本次所需的 `index.html`／`sw.js`；保留工作目錄中其他未暫存修改，勿整份覆蓋。重新 stage 後再次檢查；不手填雜湊、不略過 CI 或 Service Worker 完整性檢查。
+- 工作目錄 `npm test` 的 PWA 測試失敗、暫存快照卻全過時，多半是工作檔被寫成 CRLF（2026-10-25 曾有 65 個 `eol=lf` 檔案如此）。用 `git ls-files --eol | grep w/crlf | grep eol=lf` 列出；逐檔確認去掉 CR 後與 `git show HEAD:<path>` 相同，才以 HEAD bytes 覆蓋；內容不同的檔案是未提交修改，不得覆蓋。覆蓋後 `git status` 可能因 stat 快取仍顯示 `M`，hash 相同時 `git add` 即清除。
 - 這是 agent 發布流程；目前 workflow 只在推送後執行 `--check`，尚無本機自動 hook。更新技能不能視為已新增自動攔截。
 
 2026-10-23 品質下拉修正曾在 `36f2cb3` 因換行轉換導致 Pages 的 `sw.js` 同步檢查失敗；`d1d1c11` 依 Git blob 重建後部署成功。此案例說明檢查應在提交前固定快照，而非等 CI 失敗才查行尾。

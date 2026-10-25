@@ -12,6 +12,7 @@
 | 更早 | v2.31 第六槽、v2.30 詞條係數超限、v2.29 招募科技超限、v2.28 遊戲 V1.0.12.2 與更早的功能見[各版紀錄](../releases.md)；靈物套裝合成與精煉的原生驗證（只驗證、無新旗標）見[集中研究](candidate-sweep-2026-10-23.md#原生驗證摘要2026-10-25修改後靈物用於套裝合成與內丹精煉) |
 | 目前主線 | 無功能主線 |
 | 下一步 | roadmap 的功能候選（含超限群組）已全部處理完；剩下另線與補驗：Mac 啟動器的 V1.0.12.2 本機存讀／重啟補驗（2026-10-25 已在 Windows 完成靜態登錄，補驗要用 Apple Silicon Mac）、有名角色 runtime 補丁提案。舊功能的直接 file 流程已於 2026-10-25 以 headless 驗收（見下方「尚待驗收」）。要做哪一項待使用者指定 |
+| 文件維護 | 2026-10-25 已把舊流程入口對齊輕量流程、精簡技能並去除重複。尚未做：拆分 `docs/maintenance/lightweight.md`（改版步驟、原生教訓各自成頁）、candidate-sweep 依主題拆檔、roadmap 縮成總表、舊 audit 移 `archive/`、新增 `sdd/README.md` 索引；需使用者指定才做 |
 | 授權 | v2.32 已完成；提交／推送依當次對話授權，下一項待使用者指定 |
 | 分派 | 預設在同一個 session 做完；查詢用子 agent，符合[分派判斷](../maintenance/dispatch.md#先判斷要不要分派)才開子 session |
 | 開放狀態 | 以目前 catalog／verification 為準；輕量開啟的群組與冒煙紀錄記在 `knowledge/verification.json` 的 `lightweight` |
