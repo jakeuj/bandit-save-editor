@@ -47,6 +47,20 @@ test('invalid edits roll back as a single transaction', () => {
   assert.throws(() => C.set(model, { x: 1, y: 1, z: 0 }, 1));
 });
 
+test('V1.0.13.0 saves grow a z22 armory layer; it round-trips and stays read-only like the backpack', () => {
+  const data = Array.from({ length: 221 }, () => Array.from({ length: 60 }, () => Array(23).fill(0)));
+  data[0][0][1] = 'szmnqea';
+  data[5][0][22] = 5; data[5][1][22] = 3; data[5][6][22] = 1000; data[37][1][0] = 1;
+  const raw = JSON.stringify({ c2array: true, size: [221, 60, 23], data }), model = C.parse(raw);
+  assert.equal(C.serialize(model), raw);
+  const level = C.resolveField(model, { x: 5, y: 6, z: 22 }), mode = C.resolveField(model, { x: 37, y: 1, z: 0 });
+  assert.deepEqual([level.category, level.label, level.known, level.editable], ['武庫', '物品等級', true, false]);
+  assert.deepEqual([mode.label, mode.editable], ['武庫換裝模式', false]);
+  assert.throws(() => C.set(model, { x: 5, y: 6, z: 22 }, 5));
+  assert.throws(() => C.set(model, { x: 37, y: 1, z: 0 }, 0));
+  assert.equal(C.serialize(model), raw);
+});
+
 test('malformed and unrelated save files are rejected; catalog has 220 unique coordinates', () => {
   for (const text of ['', '{broken', '{}', '{"c2array":true,"size":[1,1,1],"data":[[[0]]]}']) assert.throws(() => C.parse(text));
   assert.equal(C.MATERIALS.length, 220);

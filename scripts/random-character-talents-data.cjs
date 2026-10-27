@@ -4,9 +4,9 @@ const path = require('node:path');
 // Reviewed static rules only. A matching digest is not a native verification result.
 // Selection, recruitment copy, initial characters, template refill gate, effect functions and dismissal.
 const sourceSids = [390673545485827,822838674776648,768713561163211,298590518650410,884525457994003,501010543923483,699833323210652,778369382997146,211049884056972,176292127127652];
-// Reviewed on V1.0.11.2; V1.0.12.2 differs only by bound-reference numbering. Older builds were not re-reviewed whole.
-const reviewedDigest = '7e99eb981e6ff90026f0741131f65639de718684ee7702ab8a74f39d6c14ce62';
-const reviewedDigests = new Set(['f6710c95560744a06e8c7ada0511ef1a3b4c72336d034a4c5ef2f45c771e6e80', reviewedDigest]);
+// Reviewed on V1.0.11.2; V1.0.12.2 and V1.0.13.0 differ only by bound-reference numbering. Older builds were not re-reviewed whole.
+const reviewedDigest = 'd2120ed077224f379e3469f687fda26007f2eb366a7bd38e8777de011f2c6105';
+const reviewedDigests = new Set(['f6710c95560744a06e8c7ada0511ef1a3b4c72336d034a4c5ef2f45c771e6e80', '7e99eb981e6ff90026f0741131f65639de718684ee7702ab8a74f39d6c14ce62', reviewedDigest]);
 const talentLevels = [[1,2],[1,2,3],[2,3,4],[3,4,5],[4,5],[5]];
 // 天赋属性 branches in source order; the first matching branch wins.
 function formulaOf(attributeId, unit) {

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "game": "szmnqea",
-  "gameVersion": "V1.0.12.2",
+  "gameVersion": "V1.0.13.0",
   "setEquipmentLevel": {
     "version": 1,
     "policy": "level-only",
@@ -26,7 +26,7 @@
       601593514747018,
       699971245656002
     ],
-    "sourceDigest": "aef31814fe92f015076d8d25c1edb910f2b31cc34bdabc51f0e9285c8f5ab377",
+    "sourceDigest": "d40f4f3f4222f4df71fc1a13fe3d958b14b024379b804461fd0aa3a1858d12fc",
     "sets": {
       "1": {
         "name": "土匪",
@@ -12167,9 +12167,9 @@
       924571110308816,
       501272375624196,
       791657421740250,
-      959041203712077,
+      204416519787196,
       654692930556623,
-      418018161514165,
+      574511591831477,
       754298301929487,
       311899301569964,
       714979671293604,
@@ -12180,7 +12180,7 @@
       131416746119248,
       773239288013696
     ],
-    "sourceDigest": "4db0a11781c417bef5206ab4156a7e7f56be6d88d6a615e60d4644aa1c9cabfe",
+    "sourceDigest": "be73fe031f97c1dd637f4faa0b49d8730c2f648e2f805ec6e532b565d68b8b66",
     "items": {
       "556": {
         "name": "铜护符",
@@ -14820,14 +14820,14 @@
       934893556333374,
       661914404104909,
       791657421740250,
-      959041203712077,
+      204416519787196,
       654692930556623,
-      418018161514165,
+      574511591831477,
       924571110308816,
-      894058542259455,
-      412476211843946,
+      685377673296405,
+      257975754908346,
       501272375624196,
-      158038025432481,
+      314497106398393,
       731456201592556,
       491911663973794,
       118557701104625,
@@ -14838,7 +14838,7 @@
       819450314280438,
       338766607025535
     ],
-    "sourceDigest": "af3cdec973318023e9d0e1c4f21efc70094c950165dc95660d574c224e1f52d7",
+    "sourceDigest": "09e0ad7f521be3712e7ef9091520671be399ec16b8b92439773829535c870271",
     "dependencies": {
       "Q1": {
         "sids": [
@@ -14871,7 +14871,7 @@
           3012
         ],
         "topic": "level cap by quality",
-        "digest": "8e5e3e17aa815b0967bf9045f7a3f88d7e24ed4c270aa1cb6c282e0220607c57"
+        "digest": "03140745c58a0f1cd9837eff8861967cc90e12bbe01a90dafb2042acad5703d5"
       },
       "Q3": {
         "sids": [
@@ -14892,7 +14892,7 @@
           3570
         ],
         "topic": "acquisition and synthesis keep y5 and affixes",
-        "digest": "746f9a73dfd09c9891c433506951e153be8469bd59a2da75e6efa76277eceb12"
+        "digest": "be467a282c1228cfce75fbe7efb44068d3564ab9e3e8df6032ba4c61dd681fa8"
       },
       "Q4": {
         "sids": [
@@ -14909,7 +14909,7 @@
           2902
         ],
         "topic": "affix pool follows current y1 template",
-        "digest": "2d4529ff52d269bfaf8ab1f2795b7e0993399059fce5832e670fc4b2d381fa0e"
+        "digest": "3919b33bea681bf41e59edf8a92e0da5e1524004a4f9f8430955fd3b34aabde9"
       },
       "Q5": {
         "sids": [
@@ -14981,9 +14981,9 @@
       "Q8": {
         "sids": [
           791657421740250,
-          959041203712077,
+          204416519787196,
           654692930556623,
-          418018161514165
+          574511591831477
         ],
         "expressions": [
           2874,
@@ -14994,15 +14994,15 @@
           3
         ],
         "topic": "storage move copies y0-49",
-        "digest": "bf7e5df0b0e9e8d1462067909d181b96699577784811ac6126a6c9dd2148a80e"
+        "digest": "02a08ac78766217c08f69f6712299c2de9ea1b1a5c79eaa08c486fd94bfa7c6b"
       },
       "Q9": {
         "sids": [
           924571110308816,
-          894058542259455,
-          412476211843946,
+          685377673296405,
+          257975754908346,
           501272375624196,
-          158038025432481,
+          314497106398393,
           731456201592556
         ],
         "expressions": [
@@ -15012,7 +15012,7 @@
           3610
         ],
         "topic": "equip/unequip owner pointers, synthesis refresh",
-        "digest": "a93978f3e9ff9f8dac290eb2b85e0a02365794af54f1ef7d35f0be39dbd35e53"
+        "digest": "cff27728febe1c540fe9d16c1e619279dc70ec7e632ddec1e4963892b23fc9e2"
       },
       "Q10": {
         "sids": [
@@ -15039,7 +15039,7 @@
           4865
         ],
         "topic": "slot generation, refine page limits and refresh",
-        "digest": "0dff003d8f73542180ec3777c4d1cf09ee09b83a5182a7f8d44032cd745ae1f6"
+        "digest": "0b4ec7c994ff1624b9a700bb5e3e3282c25a392c9224e43bd6890a4d16e8d4bb"
       }
     },
     "quality": {
@@ -21832,7 +21832,7 @@
       748584357810010,
       176292127127652
     ],
-    "sourceDigest": "54cc0530f54a82b96aea1823e270a7e34262b8357239b7c0514f4499bd027f0d"
+    "sourceDigest": "e931bd43946f2d02175d8c5c759d404f6764ee91560d0f3d980350d045b26b83"
   },
   "randomCharacterTalents": {
     "version": 1,
@@ -22183,7 +22183,7 @@
       211049884056972,
       176292127127652
     ],
-    "sourceDigest": "7e99eb981e6ff90026f0741131f65639de718684ee7702ab8a74f39d6c14ce62"
+    "sourceDigest": "d2120ed077224f379e3469f687fda26007f2eb366a7bd38e8777de011f2c6105"
   },
   "equipmentQuality": {
     "version": 1,
@@ -25596,43 +25596,43 @@
         "kind": "aptitude",
         "unit": "",
         "format": "小数",
-        "expression": 5311
+        "expression": 5371
       },
       "2": {
         "kind": "aptitude",
         "unit": "",
         "format": "小数",
-        "expression": 5311
+        "expression": 5371
       },
       "3": {
         "kind": "aptitude",
         "unit": "",
         "format": "小数",
-        "expression": 5311
+        "expression": 5371
       },
       "4": {
         "kind": "attack",
         "unit": "",
         "format": "整数",
-        "expression": 5310
+        "expression": 5370
       },
       "5": {
         "kind": "attack",
         "unit": "",
         "format": "整数",
-        "expression": 5310
+        "expression": 5370
       },
       "6": {
         "kind": "attack",
         "unit": "",
         "format": "整数",
-        "expression": 5310
+        "expression": 5370
       },
       "12": {
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5314,
+        "expression": 5374,
         "base": 2,
         "tier": 0.75,
         "level": 0.01
@@ -25641,7 +25641,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5315,
+        "expression": 5375,
         "base": 8,
         "tier": 3,
         "level": 0.4
@@ -25650,7 +25650,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25659,7 +25659,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25668,7 +25668,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25677,7 +25677,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25686,7 +25686,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25695,7 +25695,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25704,7 +25704,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25713,7 +25713,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25722,7 +25722,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25731,7 +25731,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25740,7 +25740,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25749,7 +25749,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25758,7 +25758,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25767,7 +25767,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25776,7 +25776,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25785,7 +25785,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25794,7 +25794,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25803,7 +25803,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25812,61 +25812,61 @@
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5316
+        "expression": 5376
       },
       "41": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5316
+        "expression": 5376
       },
       "42": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5316
+        "expression": 5376
       },
       "43": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5316
+        "expression": 5376
       },
       "44": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5316
+        "expression": 5376
       },
       "45": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5316
+        "expression": 5376
       },
       "46": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5316
+        "expression": 5376
       },
       "47": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5316
+        "expression": 5376
       },
       "48": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5316
+        "expression": 5376
       },
       "51": {
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5314,
+        "expression": 5374,
         "base": 2,
         "tier": 0.75,
         "level": 0.01
@@ -25875,7 +25875,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5315,
+        "expression": 5375,
         "base": 8,
         "tier": 3,
         "level": 0.4
@@ -25884,7 +25884,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25893,7 +25893,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25902,7 +25902,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25911,7 +25911,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25920,7 +25920,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25929,7 +25929,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25938,7 +25938,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25947,7 +25947,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25956,7 +25956,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25965,7 +25965,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25974,7 +25974,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25983,7 +25983,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25992,7 +25992,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5317,
+        "expression": 5377,
         "base": 2,
         "tier": 0.75,
         "level": 0.1
@@ -26001,7 +26001,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5317,
+        "expression": 5377,
         "base": 2,
         "tier": 0.75,
         "level": 0.1
@@ -26010,7 +26010,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -26019,7 +26019,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -26028,7 +26028,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5319,
+        "expression": 5379,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -26099,8 +26099,8 @@
       196601779910507,
       775039415186059,
       564254928232839,
-      959041203712077,
-      418018161514165
+      204416519787196,
+      574511591831477
     ]
   },
   "affixReplacement": {
@@ -26118,266 +26118,266 @@
         "base": 2,
         "tier": 0.75,
         "level": 0.01,
-        "expression": 5314
+        "expression": 5374
       },
       "13": {
         "unit": "%",
         "base": 8,
         "tier": 3,
         "level": 0.4,
-        "expression": 5315
+        "expression": 5375
       },
       "17": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "18": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "19": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "20": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "21": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "23": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "24": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "25": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "26": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "27": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "31": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "32": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "33": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "35": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "36": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "37": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "38": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "51": {
         "unit": "%",
         "base": 2,
         "tier": 0.75,
         "level": 0.01,
-        "expression": 5314
+        "expression": 5374
       },
       "52": {
         "unit": "%",
         "base": 8,
         "tier": 3,
         "level": 0.4,
-        "expression": 5315
+        "expression": 5375
       },
       "53": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "54": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "55": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "56": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "57": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "58": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "59": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "60": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "61": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "62": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "63": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "64": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "71": {
         "unit": "%",
         "base": 2,
         "tier": 0.75,
         "level": 0.1,
-        "expression": 5317
+        "expression": 5377
       },
       "72": {
         "unit": "%",
         "base": 2,
         "tier": 0.75,
         "level": 0.1,
-        "expression": 5317
+        "expression": 5377
       },
       "110": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "111": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       },
       "112": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5319
+        "expression": 5379
       }
     }
   },
@@ -26549,15 +26549,15 @@
     ]
   },
   "fingerprints": {
-    "data.json": "950a1c1d586617292e9c1497b09facd064988c1f720db4c2c262b0f9cd42adbf",
-    "scripts/c3runtime.js": "e6a6d629bf7320344445ac7e6e47085211496e5b6a9498aec13ab1a121abd04b",
+    "data.json": "9e5697adeb11a0c1daf40be6086b56f58755562f3560ad1772d771445e167ed2",
+    "scripts/c3runtime.js": "2546ca0823f858f3ce2a2e1dd013ed70f7e4d330e8d6c33d7ce75fb2a75d6936",
     "cl.json": "c121cf702eb6a4edb184d7180ad83d41aa90efca4a1e5e21e652dd1ff24f47b7",
     "js.json": "5c360c93cd1248fe96d0373428ddae4649698574d032b333432e4b777fcc0ee4",
     "zy.json": "97d59a029aefbfbba315c9cec7b83a168571def79282eec2be9edbfeb3759188",
     "sx.json": "6a24e20ad0a70d5ad17a0310f0a9e7619dda5c4718d536a3df51d385abd748e7",
     "wp.json": "c7b65aad4dc3ee9458221ca8fc16d91a8e6ad7e872686a820e97303de7bb6558",
-    "kj.json": "b051136f1366eb1c990004a4fa8a2d8f90339c7defbc10eb90c68c2ff36e5309",
-    "jz.json": "cf4d691dc7f6814db5ba1e0e28ac206d7a15c58ddccba55a473975461841b0bf",
+    "kj.json": "fc7f6f219f9ebea75fc10b4af89fb2ecc1fccb8196919476478f3802f96ae37f",
+    "jz.json": "3d5da9a57d55f8ec616bf514571bbd06e688ee456d3b3c348a390322de3e3b25",
     "rw.json": "705f541917d9a62cff9ef5805032fd29496fdc98b03a7f065ff3fc6fab937b4b",
     "tf.json": "c8a3005201d8f17a0899584baf7e0286b073aa84d4697807edcd44e00902fa1f",
     "ss.json": "4350cb979c4026ce0d8dc25e7807fde3d29a1d42fbd2e499673614a4f67e1bc7",
@@ -57978,18 +57978,18 @@
     }
   },
   "counts": {
-    "functions": 726,
-    "setXYZ": 850,
-    "arrayActions": 863,
-    "readSites": 2827
+    "functions": 737,
+    "setXYZ": 856,
+    "arrayActions": 869,
+    "readSites": 2938
   },
   "planes": [
     {
       "z": 0,
       "name": "山寨與全局",
       "status": "程式證據",
-      "writes": 265,
-      "reads": 577,
+      "writes": 267,
+      "reads": 579,
       "sources": [
         {
           "function": "初始化／事件",
@@ -58451,7 +58451,7 @@
       "name": "存檔識別與建築",
       "status": "程式證據",
       "writes": 54,
-      "reads": 400,
+      "reads": 401,
       "sources": [
         {
           "function": "存档",
@@ -58564,7 +58564,7 @@
       "name": "角色基本資料",
       "status": "程式證據",
       "writes": 138,
-      "reads": 599,
+      "reads": 603,
       "sources": [
         {
           "function": "初始化／事件",
@@ -58634,12 +58634,12 @@
         {
           "function": "穿戴装备",
           "sheet": "主事件",
-          "sid": 412476211843946
+          "sid": 257975754908346
         },
         {
           "function": "卸下装备",
           "sheet": "主事件",
-          "sid": 158038025432481
+          "sid": 314497106398393
         },
         {
           "function": "司职任命",
@@ -59004,28 +59004,13 @@
       "z": 7,
       "name": "背包物品",
       "status": "程式證據",
-      "writes": 57,
-      "reads": 88,
+      "writes": 56,
+      "reads": 89,
       "sources": [
         {
           "function": "获得物品",
           "sheet": "主事件",
           "sid": 184080370296337
-        },
-        {
-          "function": "卸下装备",
-          "sheet": "主事件",
-          "sid": 158038025432481
-        },
-        {
-          "function": "装备库存入",
-          "sheet": "主事件",
-          "sid": 959041203712077
-        },
-        {
-          "function": "装备库取出",
-          "sheet": "主事件",
-          "sid": 418018161514165
         },
         {
           "function": "失去物品",
@@ -59036,6 +59021,16 @@
           "function": "初始化／事件",
           "sheet": "主事件",
           "sid": 951985176122627
+        },
+        {
+          "function": "仓库存入",
+          "sheet": "主事件",
+          "sid": 851164993810329
+        },
+        {
+          "function": "仓库取出",
+          "sheet": "主事件",
+          "sid": 507459344390517
         }
       ],
       "columns": [
@@ -59085,17 +59080,17 @@
         {
           "function": "穿戴装备",
           "sheet": "主事件",
-          "sid": 412476211843946
+          "sid": 257975754908346
         },
         {
           "function": "装备库存入",
           "sheet": "主事件",
-          "sid": 959041203712077
+          "sid": 204416519787196
         },
         {
           "function": "装备库取出",
           "sheet": "主事件",
-          "sid": 418018161514165
+          "sid": 574511591831477
         },
         {
           "function": "升级装备",
@@ -59230,7 +59225,7 @@
       "name": "鍛造佇列",
       "status": "程式證據",
       "writes": 31,
-      "reads": 90,
+      "reads": 93,
       "sources": [
         {
           "function": "取消锻造",
@@ -59377,7 +59372,7 @@
       "name": "靈物背包",
       "status": "程式證據",
       "writes": 18,
-      "reads": 42,
+      "reads": 49,
       "sources": [
         {
           "function": "获得灵物",
@@ -59558,6 +59553,26 @@
         17,
         18
       ]
+    },
+    {
+      "z": 22,
+      "name": "武庫",
+      "status": "程式證據",
+      "writes": 2,
+      "reads": 17,
+      "sources": [
+        {
+          "function": "仓库存入",
+          "sheet": "主事件",
+          "sid": 851164993810329
+        },
+        {
+          "function": "仓库取出",
+          "sheet": "主事件",
+          "sid": 507459344390517
+        }
+      ],
+      "columns": []
     }
   ],
   "catalogs": {
@@ -68350,10 +68365,11 @@
       },
       {
         "id": 29,
-        "name": "空白",
-        "category": "",
+        "name": "武庫",
+        "category": "基礎",
         "advanced": false,
-        "tableLimit": null
+        "tableLimit": 1,
+        "prerequisite": 19
       },
       {
         "id": 30,
@@ -71774,6 +71790,11 @@
       "sid": 601593514747018
     },
     {
+      "name": "获得物品自动卖出",
+      "sheet": "主事件",
+      "sid": 589172953418656
+    },
+    {
       "name": "获得灵物",
       "sheet": "主事件",
       "sid": 699971245656002
@@ -72342,6 +72363,56 @@
       "name": "召回监牢人员",
       "sheet": "主事件",
       "sid": 748584357810010
+    },
+    {
+      "name": "刷新武库页面",
+      "sheet": "主事件",
+      "sid": 873518951035428
+    },
+    {
+      "name": "刷新武库",
+      "sheet": "主事件",
+      "sid": 773350279749285
+    },
+    {
+      "name": "仓库最大页码计算",
+      "sheet": "主事件",
+      "sid": 688554693492750
+    },
+    {
+      "name": "仓库排序",
+      "sheet": "主事件",
+      "sid": 806234499599066
+    },
+    {
+      "name": "仓库数量",
+      "sheet": "主事件",
+      "sid": 929781490457726
+    },
+    {
+      "name": "仓库容量上限",
+      "sheet": "主事件",
+      "sid": 308746213908103
+    },
+    {
+      "name": "仓库存入",
+      "sheet": "主事件",
+      "sid": 138107268876020
+    },
+    {
+      "name": "仓库取出",
+      "sheet": "主事件",
+      "sid": 127627007124274
+    },
+    {
+      "name": "刷新武库页面2",
+      "sheet": "主事件",
+      "sid": 425358506966626
+    },
+    {
+      "name": "刷新武库2",
+      "sheet": "主事件",
+      "sid": 763075301790003
     },
     {
       "name": "刷新城主府页面",
@@ -74632,7 +74703,7 @@
     },
     {
       "sid": 343364988410687,
-      "actionSid": 783391181660435,
+      "actionSid": 888568312159860,
       "function": "初始化／事件",
       "sheet": "主事件",
       "x": "*",
@@ -74972,7 +75043,7 @@
         12,
         15,
         null,
-        66
+        71
       ]
     },
     {
@@ -74987,7 +75058,7 @@
         null,
         null,
         null,
-        70
+        75
       ]
     },
     {
@@ -75152,7 +75223,7 @@
         null,
         null,
         null,
-        179
+        183
       ]
     },
     {
@@ -75167,7 +75238,7 @@
         null,
         null,
         null,
-        179
+        183
       ]
     },
     {
@@ -75422,7 +75493,7 @@
         null,
         null,
         null,
-        254
+        257
       ]
     },
     {
@@ -75452,7 +75523,7 @@
         null,
         null,
         null,
-        481
+        484
       ]
     },
     {
@@ -75527,7 +75598,7 @@
         12,
         null,
         null,
-        544
+        548
       ]
     },
     {
@@ -75542,7 +75613,7 @@
         12,
         null,
         null,
-        545
+        549
       ]
     },
     {
@@ -75557,7 +75628,7 @@
         12,
         null,
         null,
-        546
+        550
       ]
     },
     {
@@ -75572,7 +75643,7 @@
         12,
         null,
         null,
-        547
+        551
       ]
     },
     {
@@ -75587,7 +75658,7 @@
         12,
         null,
         null,
-        548
+        552
       ]
     },
     {
@@ -75602,7 +75673,7 @@
         12,
         null,
         null,
-        549
+        553
       ]
     },
     {
@@ -75617,7 +75688,7 @@
         12,
         null,
         null,
-        550
+        554
       ]
     },
     {
@@ -75632,7 +75703,7 @@
         12,
         null,
         null,
-        551
+        555
       ]
     },
     {
@@ -75647,7 +75718,7 @@
         12,
         null,
         null,
-        552
+        556
       ]
     },
     {
@@ -75662,7 +75733,7 @@
         12,
         null,
         null,
-        553
+        557
       ]
     },
     {
@@ -75677,7 +75748,7 @@
         12,
         null,
         null,
-        554
+        558
       ]
     },
     {
@@ -75692,7 +75763,7 @@
         12,
         null,
         null,
-        555
+        559
       ]
     },
     {
@@ -75707,7 +75778,7 @@
         12,
         null,
         null,
-        556
+        560
       ]
     },
     {
@@ -75722,7 +75793,7 @@
         12,
         null,
         null,
-        557
+        561
       ]
     },
     {
@@ -75737,7 +75808,7 @@
         12,
         null,
         null,
-        558
+        562
       ]
     },
     {
@@ -75752,7 +75823,7 @@
         12,
         null,
         null,
-        559
+        563
       ]
     },
     {
@@ -75767,7 +75838,7 @@
         12,
         null,
         null,
-        560
+        564
       ]
     },
     {
@@ -75782,7 +75853,7 @@
         12,
         null,
         null,
-        561
+        565
       ]
     },
     {
@@ -75795,9 +75866,9 @@
       "z": 2,
       "refs": [
         12,
-        562,
+        566,
         null,
-        563
+        567
       ]
     },
     {
@@ -75812,7 +75883,7 @@
         null,
         null,
         null,
-        1194
+        1198
       ]
     },
     {
@@ -75827,7 +75898,7 @@
         null,
         null,
         null,
-        1195
+        1199
       ]
     },
     {
@@ -76034,8 +76105,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1455,
-        1003,
+        1459,
+        1007,
         null,
         null
       ]
@@ -76049,8 +76120,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1456,
-        1003,
+        1460,
+        1007,
         null,
         null
       ]
@@ -76064,8 +76135,8 @@
       "y": "*",
       "z": 10,
       "refs": [
-        1015,
-        1003,
+        1019,
+        1007,
         null,
         null
       ]
@@ -76079,8 +76150,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1455,
-        1003,
+        1459,
+        1007,
         null,
         null
       ]
@@ -76094,8 +76165,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1456,
-        1003,
+        1460,
+        1007,
         null,
         null
       ]
@@ -76109,8 +76180,8 @@
       "y": "*",
       "z": 10,
       "refs": [
-        1015,
-        1003,
+        1019,
+        1007,
         null,
         null
       ]
@@ -76124,10 +76195,10 @@
       "y": 16,
       "z": 0,
       "refs": [
-        61,
+        66,
         null,
         null,
-        61
+        66
       ]
     },
     {
@@ -76262,7 +76333,7 @@
         12,
         null,
         null,
-        1503
+        1507
       ]
     },
     {
@@ -76274,8 +76345,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1455,
-        1003,
+        1459,
+        1007,
         null,
         15
       ]
@@ -76289,10 +76360,10 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1456,
-        1003,
+        1460,
+        1007,
         null,
-        1510
+        1514
       ]
     },
     {
@@ -76304,10 +76375,10 @@
       "y": "*",
       "z": 10,
       "refs": [
-        1015,
-        1003,
+        1019,
+        1007,
         null,
-        1510
+        1514
       ]
     },
     {
@@ -76319,8 +76390,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1003,
-        1003,
+        1007,
+        1007,
         null,
         15
       ]
@@ -76352,7 +76423,7 @@
         15,
         null,
         null,
-        977
+        979
       ]
     },
     {
@@ -76457,7 +76528,7 @@
         15,
         null,
         null,
-        1648
+        1652
       ]
     },
     {
@@ -76472,7 +76543,7 @@
         15,
         null,
         null,
-        977
+        979
       ]
     },
     {
@@ -76814,8 +76885,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1708,
-        1003,
+        1712,
+        1007,
         null,
         12
       ]
@@ -76829,8 +76900,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1708,
-        1003,
+        1712,
+        1007,
         null,
         null
       ]
@@ -77129,7 +77200,7 @@
       "y": 13,
       "z": 0,
       "refs": [
-        1061,
+        1065,
         null,
         null,
         null
@@ -77189,7 +77260,7 @@
       "y": 15,
       "z": 0,
       "refs": [
-        1061,
+        1065,
         null,
         null,
         null
@@ -77234,10 +77305,10 @@
       "y": 3,
       "z": 21,
       "refs": [
-        61,
+        66,
         null,
         null,
-        61
+        66
       ]
     },
     {
@@ -77249,7 +77320,7 @@
       "y": 4,
       "z": 21,
       "refs": [
-        61,
+        66,
         null,
         null,
         null
@@ -77264,7 +77335,7 @@
       "y": 7,
       "z": 21,
       "refs": [
-        61,
+        66,
         null,
         null,
         null
@@ -77279,7 +77350,7 @@
       "y": 8,
       "z": 21,
       "refs": [
-        61,
+        66,
         null,
         null,
         null
@@ -77294,7 +77365,7 @@
       "y": 9,
       "z": 21,
       "refs": [
-        61,
+        66,
         null,
         null,
         null
@@ -77309,10 +77380,10 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1777,
-        1778,
+        1781,
+        1782,
         null,
-        1779
+        1783
       ]
     },
     {
@@ -77324,8 +77395,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1777,
-        1778,
+        1781,
+        1782,
         null,
         null
       ]
@@ -77492,7 +77563,7 @@
         null,
         null,
         null,
-        1811
+        1815
       ]
     },
     {
@@ -77657,7 +77728,7 @@
         null,
         null,
         null,
-        1839
+        1843
       ]
     },
     {
@@ -77672,7 +77743,7 @@
         null,
         null,
         null,
-        1839
+        1843
       ]
     },
     {
@@ -77687,7 +77758,7 @@
         15,
         null,
         null,
-        61
+        66
       ]
     },
     {
@@ -77702,7 +77773,7 @@
         15,
         null,
         null,
-        61
+        66
       ]
     },
     {
@@ -77714,7 +77785,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        1948,
+        1955,
         null,
         null,
         null
@@ -77729,7 +77800,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        1948,
+        1955,
         null,
         null,
         null
@@ -77969,7 +78040,7 @@
       "y": 1,
       "z": 2,
       "refs": [
-        61,
+        66,
         null,
         null,
         12
@@ -77984,7 +78055,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        1948,
+        1955,
         null,
         null,
         null
@@ -78137,7 +78208,7 @@
         15,
         null,
         null,
-        2263
+        2270
       ]
     },
     {
@@ -78152,7 +78223,7 @@
         15,
         null,
         null,
-        2264
+        2271
       ]
     },
     {
@@ -78167,7 +78238,7 @@
         15,
         null,
         null,
-        2265
+        2272
       ]
     },
     {
@@ -78287,7 +78358,7 @@
         15,
         null,
         null,
-        2282
+        2289
       ]
     },
     {
@@ -78302,7 +78373,7 @@
         15,
         null,
         null,
-        2282
+        2289
       ]
     },
     {
@@ -78317,7 +78388,7 @@
         15,
         null,
         null,
-        2282
+        2289
       ]
     },
     {
@@ -78332,7 +78403,7 @@
         15,
         null,
         null,
-        2285
+        2292
       ]
     },
     {
@@ -78347,7 +78418,7 @@
         15,
         null,
         null,
-        2285
+        2292
       ]
     },
     {
@@ -78362,7 +78433,7 @@
         15,
         null,
         null,
-        2285
+        2292
       ]
     },
     {
@@ -78377,7 +78448,7 @@
         15,
         null,
         null,
-        2285
+        2292
       ]
     },
     {
@@ -78392,7 +78463,7 @@
         15,
         null,
         null,
-        2285
+        2292
       ]
     },
     {
@@ -78407,7 +78478,7 @@
         15,
         null,
         null,
-        2285
+        2292
       ]
     },
     {
@@ -78422,7 +78493,7 @@
         15,
         null,
         null,
-        2285
+        2292
       ]
     },
     {
@@ -78437,7 +78508,7 @@
         15,
         null,
         null,
-        2285
+        2292
       ]
     },
     {
@@ -78452,7 +78523,7 @@
         15,
         null,
         null,
-        2285
+        2292
       ]
     },
     {
@@ -78465,9 +78536,9 @@
       "z": 3,
       "refs": [
         15,
-        2286,
+        2293,
         null,
-        2287
+        2294
       ]
     },
     {
@@ -78480,9 +78551,9 @@
       "z": 3,
       "refs": [
         15,
-        2286,
+        2293,
         null,
-        2288
+        2295
       ]
     },
     {
@@ -78497,7 +78568,7 @@
         15,
         null,
         null,
-        2289
+        2296
       ]
     },
     {
@@ -78512,7 +78583,7 @@
         15,
         null,
         null,
-        2290
+        2297
       ]
     },
     {
@@ -78527,7 +78598,7 @@
         15,
         null,
         null,
-        2291
+        2298
       ]
     },
     {
@@ -78542,7 +78613,7 @@
         15,
         null,
         null,
-        2293
+        2300
       ]
     },
     {
@@ -78557,7 +78628,7 @@
         15,
         null,
         null,
-        2294
+        2301
       ]
     },
     {
@@ -78572,7 +78643,7 @@
         15,
         null,
         null,
-        2295
+        2302
       ]
     },
     {
@@ -78587,7 +78658,7 @@
         15,
         null,
         null,
-        2296
+        2303
       ]
     },
     {
@@ -78602,7 +78673,7 @@
         15,
         null,
         null,
-        2297
+        2304
       ]
     },
     {
@@ -78617,7 +78688,7 @@
         15,
         null,
         null,
-        2299
+        2306
       ]
     },
     {
@@ -78765,9 +78836,9 @@
       "z": 3,
       "refs": [
         15,
-        2302,
+        2309,
         null,
-        138
+        143
       ]
     },
     {
@@ -78872,7 +78943,7 @@
         15,
         null,
         null,
-        2306
+        2313
       ]
     },
     {
@@ -78887,7 +78958,7 @@
         15,
         null,
         null,
-        2307
+        2314
       ]
     },
     {
@@ -78902,7 +78973,7 @@
         15,
         null,
         null,
-        2308
+        2315
       ]
     },
     {
@@ -78917,7 +78988,7 @@
         15,
         null,
         null,
-        2309
+        2316
       ]
     },
     {
@@ -78932,7 +79003,7 @@
         15,
         null,
         null,
-        2310
+        2317
       ]
     },
     {
@@ -78947,7 +79018,7 @@
         15,
         null,
         null,
-        2311
+        2318
       ]
     },
     {
@@ -78962,7 +79033,7 @@
         15,
         null,
         null,
-        2312
+        2319
       ]
     },
     {
@@ -78977,7 +79048,7 @@
         15,
         null,
         null,
-        2313
+        2320
       ]
     },
     {
@@ -78992,7 +79063,7 @@
         15,
         null,
         null,
-        2314
+        2321
       ]
     },
     {
@@ -79007,7 +79078,7 @@
         15,
         null,
         null,
-        2315
+        2322
       ]
     },
     {
@@ -79127,7 +79198,7 @@
         15,
         null,
         null,
-        2317
+        2324
       ]
     },
     {
@@ -79142,7 +79213,7 @@
         15,
         null,
         null,
-        2318
+        2325
       ]
     },
     {
@@ -79157,7 +79228,7 @@
         15,
         null,
         null,
-        2320
+        2327
       ]
     },
     {
@@ -79172,7 +79243,7 @@
         15,
         null,
         null,
-        2321
+        2328
       ]
     },
     {
@@ -79187,7 +79258,7 @@
         15,
         null,
         null,
-        2324
+        2331
       ]
     },
     {
@@ -79292,7 +79363,7 @@
         15,
         15,
         null,
-        2329
+        2336
       ]
     },
     {
@@ -79322,7 +79393,7 @@
         12,
         15,
         null,
-        2407
+        2414
       ]
     },
     {
@@ -79335,9 +79406,9 @@
       "z": 12,
       "refs": [
         12,
-        1187,
+        1191,
         null,
-        2408
+        2415
       ]
     },
     {
@@ -79350,9 +79421,9 @@
       "z": 12,
       "refs": [
         12,
-        2409,
+        2416,
         null,
-        2410
+        2417
       ]
     },
     {
@@ -79427,7 +79498,7 @@
         12,
         null,
         null,
-        2323
+        2330
       ]
     },
     {
@@ -79440,7 +79511,7 @@
       "z": 4,
       "refs": [
         12,
-        2411,
+        2418,
         null,
         null
       ]
@@ -79454,7 +79525,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        2413,
+        2420,
         null,
         null,
         null
@@ -79487,7 +79558,7 @@
         12,
         15,
         null,
-        2407
+        2414
       ]
     },
     {
@@ -79500,9 +79571,9 @@
       "z": 12,
       "refs": [
         12,
-        1187,
+        1191,
         null,
-        2408
+        2415
       ]
     },
     {
@@ -79515,9 +79586,9 @@
       "z": 12,
       "refs": [
         12,
-        2409,
+        2416,
         null,
-        2410
+        2417
       ]
     },
     {
@@ -79592,7 +79663,7 @@
         12,
         null,
         null,
-        2323
+        2330
       ]
     },
     {
@@ -79605,7 +79676,7 @@
       "z": 4,
       "refs": [
         12,
-        2411,
+        2418,
         null,
         null
       ]
@@ -79619,7 +79690,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        2413,
+        2420,
         null,
         null,
         null
@@ -79652,7 +79723,7 @@
         12,
         15,
         null,
-        2407
+        2414
       ]
     },
     {
@@ -79665,9 +79736,9 @@
       "z": 12,
       "refs": [
         12,
-        1187,
+        1191,
         null,
-        2408
+        2415
       ]
     },
     {
@@ -79680,9 +79751,9 @@
       "z": 12,
       "refs": [
         12,
-        2409,
+        2416,
         null,
-        2410
+        2417
       ]
     },
     {
@@ -79757,7 +79828,7 @@
         12,
         null,
         null,
-        2323
+        2330
       ]
     },
     {
@@ -79770,7 +79841,7 @@
       "z": 4,
       "refs": [
         12,
-        2411,
+        2418,
         null,
         null
       ]
@@ -79802,7 +79873,7 @@
         12,
         15,
         null,
-        2407
+        2414
       ]
     },
     {
@@ -79815,9 +79886,9 @@
       "z": 12,
       "refs": [
         12,
-        1187,
+        1191,
         null,
-        2408
+        2415
       ]
     },
     {
@@ -79830,9 +79901,9 @@
       "z": 12,
       "refs": [
         12,
-        2409,
+        2416,
         null,
-        2410
+        2417
       ]
     },
     {
@@ -79907,7 +79978,7 @@
         12,
         null,
         null,
-        2323
+        2330
       ]
     },
     {
@@ -79920,7 +79991,7 @@
       "z": 4,
       "refs": [
         12,
-        2411,
+        2418,
         null,
         null
       ]
@@ -79949,7 +80020,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        2413,
+        2420,
         null,
         null,
         null
@@ -79982,7 +80053,7 @@
         12,
         15,
         null,
-        2407
+        2414
       ]
     },
     {
@@ -79995,9 +80066,9 @@
       "z": 12,
       "refs": [
         12,
-        1187,
+        1191,
         null,
-        2408
+        2415
       ]
     },
     {
@@ -80010,9 +80081,9 @@
       "z": 12,
       "refs": [
         12,
-        2409,
+        2416,
         null,
-        2410
+        2417
       ]
     },
     {
@@ -80087,7 +80158,7 @@
         12,
         null,
         null,
-        2323
+        2330
       ]
     },
     {
@@ -80100,7 +80171,7 @@
       "z": 4,
       "refs": [
         12,
-        2411,
+        2418,
         null,
         null
       ]
@@ -80129,7 +80200,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        2413,
+        2420,
         null,
         null,
         null
@@ -80162,7 +80233,7 @@
         12,
         15,
         null,
-        2329
+        2336
       ]
     },
     {
@@ -80175,9 +80246,9 @@
       "z": 12,
       "refs": [
         12,
-        1187,
+        1191,
         null,
-        2417
+        2424
       ]
     },
     {
@@ -80190,9 +80261,9 @@
       "z": 12,
       "refs": [
         12,
-        2409,
+        2416,
         null,
-        2418
+        2425
       ]
     },
     {
@@ -80267,7 +80338,7 @@
         12,
         null,
         null,
-        2419
+        2426
       ]
     },
     {
@@ -80280,7 +80351,7 @@
       "z": 4,
       "refs": [
         12,
-        2411,
+        2418,
         null,
         null
       ]
@@ -80327,7 +80398,7 @@
         null,
         null,
         null,
-        2479
+        2486
       ]
     },
     {
@@ -80357,7 +80428,7 @@
         null,
         null,
         null,
-        70
+        75
       ]
     },
     {
@@ -80372,7 +80443,7 @@
         15,
         null,
         null,
-        2489
+        2496
       ]
     },
     {
@@ -80402,7 +80473,7 @@
         null,
         null,
         null,
-        70
+        75
       ]
     },
     {
@@ -80417,7 +80488,7 @@
         null,
         null,
         null,
-        70
+        75
       ]
     },
     {
@@ -80429,7 +80500,7 @@
       "y": 0,
       "z": 3,
       "refs": [
-        61,
+        66,
         null,
         null,
         null
@@ -80444,10 +80515,10 @@
       "y": 0,
       "z": 3,
       "refs": [
-        61,
+        66,
         null,
         null,
-        61
+        66
       ]
     },
     {
@@ -80504,7 +80575,7 @@
       "y": 3,
       "z": 21,
       "refs": [
-        1667,
+        1671,
         null,
         null,
         15
@@ -80534,7 +80605,7 @@
       "y": 3,
       "z": 21,
       "refs": [
-        1667,
+        1671,
         null,
         null,
         15
@@ -80564,7 +80635,7 @@
       "y": 3,
       "z": 21,
       "refs": [
-        1667,
+        1671,
         null,
         null,
         15
@@ -80760,9 +80831,9 @@
       "z": 7,
       "refs": [
         12,
-        2833,
+        2855,
         null,
-        351
+        354
       ]
     },
     {
@@ -80775,9 +80846,9 @@
       "z": 7,
       "refs": [
         12,
-        2834,
+        2856,
         null,
-        2835
+        2857
       ]
     },
     {
@@ -80867,7 +80938,7 @@
         12,
         null,
         null,
-        2844
+        2865
       ]
     },
     {
@@ -80882,7 +80953,7 @@
         12,
         null,
         null,
-        2845
+        2866
       ]
     },
     {
@@ -80912,7 +80983,7 @@
         12,
         null,
         null,
-        2846
+        2867
       ]
     },
     {
@@ -80955,9 +81026,9 @@
       "z": 7,
       "refs": [
         12,
-        2833,
+        2855,
         null,
-        351
+        354
       ]
     },
     {
@@ -80970,9 +81041,9 @@
       "z": 7,
       "refs": [
         12,
-        2834,
+        2856,
         null,
-        2835
+        2857
       ]
     },
     {
@@ -81407,7 +81478,7 @@
         12,
         null,
         null,
-        238
+        242
       ]
     },
     {
@@ -81437,7 +81508,7 @@
         12,
         null,
         null,
-        2855
+        2878
       ]
     },
     {
@@ -81452,7 +81523,7 @@
         12,
         null,
         null,
-        2855
+        2878
       ]
     },
     {
@@ -81467,7 +81538,7 @@
         12,
         null,
         null,
-        2855
+        2878
       ]
     },
     {
@@ -81482,7 +81553,7 @@
         12,
         null,
         null,
-        2855
+        2878
       ]
     },
     {
@@ -81497,7 +81568,7 @@
         12,
         null,
         null,
-        2855
+        2878
       ]
     },
     {
@@ -81512,7 +81583,7 @@
         12,
         null,
         null,
-        2856
+        2879
       ]
     },
     {
@@ -81531,8 +81602,8 @@
       ]
     },
     {
-      "sid": 894058542259455,
-      "actionSid": 739533464902962,
+      "sid": 685377673296405,
+      "actionSid": 421947970604069,
       "function": "穿戴装备",
       "sheet": "主事件",
       "x": "*",
@@ -81540,14 +81611,14 @@
       "z": 2,
       "refs": [
         15,
-        799,
+        803,
         null,
         15
       ]
     },
     {
-      "sid": 894058542259455,
-      "actionSid": 561203422890122,
+      "sid": 685377673296405,
+      "actionSid": 806524004673125,
       "function": "穿戴装备",
       "sheet": "主事件",
       "x": "*",
@@ -81561,8 +81632,8 @@
       ]
     },
     {
-      "sid": 412476211843946,
-      "actionSid": 776861075445214,
+      "sid": 257975754908346,
+      "actionSid": 153409095452313,
       "function": "穿戴装备",
       "sheet": "主事件",
       "x": "*",
@@ -81570,14 +81641,14 @@
       "z": 2,
       "refs": [
         15,
-        799,
+        803,
         null,
         15
       ]
     },
     {
-      "sid": 412476211843946,
-      "actionSid": 824806047432580,
+      "sid": 257975754908346,
+      "actionSid": 197693326252958,
       "function": "穿戴装备",
       "sheet": "主事件",
       "x": "*",
@@ -81591,8 +81662,8 @@
       ]
     },
     {
-      "sid": 158038025432481,
-      "actionSid": 753242455863665,
+      "sid": 314497106398393,
+      "actionSid": 410111917484772,
       "function": "卸下装备",
       "sheet": "主事件",
       "x": "*",
@@ -81600,29 +81671,29 @@
       "z": 2,
       "refs": [
         15,
-        799,
+        803,
         null,
         null
       ]
     },
     {
-      "sid": 158038025432481,
-      "actionSid": 745405926555062,
+      "sid": 314497106398393,
+      "actionSid": 646854225296867,
       "function": "卸下装备",
       "sheet": "主事件",
       "x": "*",
       "y": 7,
-      "z": 7,
+      "z": "*",
       "refs": [
         15,
         null,
-        null,
+        15,
         null
       ]
     },
     {
-      "sid": 959041203712077,
-      "actionSid": 946346596188538,
+      "sid": 204416519787196,
+      "actionSid": 820604997612691,
       "function": "装备库存入",
       "sheet": "主事件",
       "x": "*",
@@ -81632,42 +81703,42 @@
         12,
         15,
         null,
-        2875
+        2900
       ]
     },
     {
-      "sid": 959041203712077,
-      "actionSid": 200599711628051,
+      "sid": 204416519787196,
+      "actionSid": 130372166634359,
       "function": "装备库存入",
       "sheet": "主事件",
       "x": "*",
       "y": "*",
-      "z": 7,
+      "z": "*",
       "refs": [
         15,
         15,
-        null,
+        15,
         null
       ]
     },
     {
-      "sid": 418018161514165,
-      "actionSid": 352266576649710,
+      "sid": 574511591831477,
+      "actionSid": 840866749174393,
       "function": "装备库取出",
       "sheet": "主事件",
       "x": "*",
       "y": "*",
-      "z": 7,
+      "z": "*",
       "refs": [
         12,
         15,
-        null,
-        2876
+        15,
+        2901
       ]
     },
     {
-      "sid": 418018161514165,
-      "actionSid": 667912244212412,
+      "sid": 574511591831477,
+      "actionSid": 805478487399860,
       "function": "装备库取出",
       "sheet": "主事件",
       "x": "*",
@@ -81722,7 +81793,7 @@
         15,
         null,
         null,
-        3017
+        3044
       ]
     },
     {
@@ -81737,7 +81808,7 @@
         15,
         null,
         null,
-        3017
+        3044
       ]
     },
     {
@@ -81752,7 +81823,7 @@
         null,
         null,
         null,
-        3022
+        3049
       ]
     },
     {
@@ -81767,7 +81838,7 @@
         15,
         null,
         null,
-        3017
+        3044
       ]
     },
     {
@@ -81782,7 +81853,7 @@
         null,
         null,
         null,
-        3023
+        3050
       ]
     },
     {
@@ -81797,7 +81868,7 @@
         15,
         null,
         null,
-        3017
+        3044
       ]
     },
     {
@@ -81842,7 +81913,7 @@
         null,
         null,
         null,
-        61
+        66
       ]
     },
     {
@@ -81857,7 +81928,7 @@
         null,
         null,
         null,
-        61
+        66
       ]
     },
     {
@@ -81872,7 +81943,7 @@
         null,
         null,
         null,
-        61
+        66
       ]
     },
     {
@@ -81887,7 +81958,7 @@
         null,
         null,
         null,
-        61
+        66
       ]
     },
     {
@@ -81902,7 +81973,7 @@
         null,
         null,
         null,
-        61
+        66
       ]
     },
     {
@@ -81917,7 +81988,7 @@
         null,
         null,
         null,
-        61
+        66
       ]
     },
     {
@@ -81932,7 +82003,7 @@
         null,
         null,
         null,
-        61
+        66
       ]
     },
     {
@@ -81944,7 +82015,7 @@
       "y": 22,
       "z": 7,
       "refs": [
-        61,
+        66,
         null,
         null,
         null
@@ -81959,7 +82030,7 @@
       "y": 22,
       "z": 7,
       "refs": [
-        61,
+        66,
         null,
         null,
         null
@@ -81974,7 +82045,7 @@
       "y": 11,
       "z": 18,
       "refs": [
-        61,
+        66,
         null,
         null,
         null
@@ -81989,7 +82060,37 @@
       "y": 11,
       "z": 18,
       "refs": [
-        61,
+        66,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 997561657956192,
+      "actionSid": 833343410027545,
+      "function": "初始化／事件",
+      "sheet": "主事件",
+      "x": 37,
+      "y": 1,
+      "z": 0,
+      "refs": [
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 319445312315450,
+      "actionSid": 558151658342000,
+      "function": "初始化／事件",
+      "sheet": "主事件",
+      "x": 37,
+      "y": 1,
+      "z": 0,
+      "refs": [
+        null,
         null,
         null,
         null
@@ -82004,7 +82105,7 @@
       "y": 8,
       "z": 0,
       "refs": [
-        61,
+        66,
         null,
         null,
         null
@@ -82019,7 +82120,7 @@
       "y": 8,
       "z": 0,
       "refs": [
-        61,
+        66,
         null,
         null,
         null
@@ -82049,10 +82150,10 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3207,
+        3235,
         15,
         null,
-        138
+        143
       ]
     },
     {
@@ -82064,10 +82165,10 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3208,
+        3236,
         15,
         null,
-        138
+        143
       ]
     },
     {
@@ -82079,10 +82180,10 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3209,
+        3237,
         15,
         null,
-        3210
+        3238
       ]
     },
     {
@@ -82094,7 +82195,7 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3207,
+        3235,
         15,
         null,
         null
@@ -82109,7 +82210,7 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3208,
+        3236,
         15,
         null,
         null
@@ -82124,7 +82225,7 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3209,
+        3237,
         15,
         null,
         null
@@ -82154,7 +82255,7 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3226,
+        3254,
         15,
         null,
         null
@@ -82169,7 +82270,7 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3227,
+        3255,
         15,
         null,
         null
@@ -82187,7 +82288,7 @@
         null,
         null,
         null,
-        3283
+        3309
       ]
     },
     {
@@ -82232,7 +82333,7 @@
         null,
         null,
         null,
-        3294
+        3320
       ]
     },
     {
@@ -82244,7 +82345,7 @@
       "y": 36,
       "z": 0,
       "refs": [
-        2033,
+        2040,
         null,
         null,
         null
@@ -82289,7 +82390,7 @@
       "y": 52,
       "z": 2,
       "refs": [
-        3348,
+        3374,
         null,
         null,
         null
@@ -82322,7 +82423,7 @@
         12,
         15,
         null,
-        2329
+        2336
       ]
     },
     {
@@ -82335,9 +82436,9 @@
       "z": 12,
       "refs": [
         12,
-        1187,
+        1191,
         null,
-        2417
+        2424
       ]
     },
     {
@@ -82350,9 +82451,9 @@
       "z": 12,
       "refs": [
         12,
-        2409,
+        2416,
         null,
-        2418
+        2425
       ]
     },
     {
@@ -82427,7 +82528,7 @@
         12,
         null,
         null,
-        2419
+        2426
       ]
     },
     {
@@ -82440,7 +82541,7 @@
       "z": 4,
       "refs": [
         12,
-        2411,
+        2418,
         null,
         null
       ]
@@ -82472,7 +82573,7 @@
         12,
         15,
         null,
-        2329
+        2336
       ]
     },
     {
@@ -82485,9 +82586,9 @@
       "z": 12,
       "refs": [
         12,
-        1187,
+        1191,
         null,
-        2417
+        2424
       ]
     },
     {
@@ -82500,9 +82601,9 @@
       "z": 12,
       "refs": [
         12,
-        2409,
+        2416,
         null,
-        2418
+        2425
       ]
     },
     {
@@ -82577,7 +82678,7 @@
         12,
         null,
         null,
-        2419
+        2426
       ]
     },
     {
@@ -82590,7 +82691,7 @@
       "z": 4,
       "refs": [
         12,
-        2411,
+        2418,
         null,
         null
       ]
@@ -82622,7 +82723,7 @@
         12,
         15,
         null,
-        2329
+        2336
       ]
     },
     {
@@ -82635,9 +82736,9 @@
       "z": 12,
       "refs": [
         12,
-        1187,
+        1191,
         null,
-        2417
+        2424
       ]
     },
     {
@@ -82650,9 +82751,9 @@
       "z": 12,
       "refs": [
         12,
-        2409,
+        2416,
         null,
-        2418
+        2425
       ]
     },
     {
@@ -82682,7 +82783,7 @@
         12,
         null,
         null,
-        1807
+        1811
       ]
     },
     {
@@ -82757,7 +82858,7 @@
         12,
         null,
         null,
-        2419
+        2426
       ]
     },
     {
@@ -82770,7 +82871,7 @@
       "z": 4,
       "refs": [
         12,
-        2411,
+        2418,
         null,
         null
       ]
@@ -82799,7 +82900,7 @@
       "y": 31,
       "z": 0,
       "refs": [
-        244,
+        248,
         null,
         null,
         null
@@ -82814,7 +82915,7 @@
       "y": 31,
       "z": 0,
       "refs": [
-        244,
+        248,
         null,
         null,
         null
@@ -82829,7 +82930,7 @@
       "y": 31,
       "z": 0,
       "refs": [
-        244,
+        248,
         null,
         null,
         null
@@ -82844,7 +82945,7 @@
       "y": 31,
       "z": 0,
       "refs": [
-        244,
+        248,
         null,
         null,
         null
@@ -82859,7 +82960,7 @@
       "y": 32,
       "z": 0,
       "refs": [
-        244,
+        248,
         null,
         null,
         null
@@ -82874,7 +82975,7 @@
       "y": 32,
       "z": 0,
       "refs": [
-        244,
+        248,
         null,
         null,
         null
@@ -82889,7 +82990,7 @@
       "y": 32,
       "z": 0,
       "refs": [
-        244,
+        248,
         null,
         null,
         null
@@ -82904,7 +83005,7 @@
       "y": 32,
       "z": 0,
       "refs": [
-        244,
+        248,
         null,
         null,
         null
@@ -82919,7 +83020,7 @@
       "y": 33,
       "z": 0,
       "refs": [
-        244,
+        248,
         null,
         null,
         null
@@ -82934,7 +83035,7 @@
       "y": 33,
       "z": 0,
       "refs": [
-        244,
+        248,
         null,
         null,
         null
@@ -82949,7 +83050,7 @@
       "y": 33,
       "z": 0,
       "refs": [
-        244,
+        248,
         null,
         null,
         null
@@ -82964,7 +83065,7 @@
       "y": 33,
       "z": 0,
       "refs": [
-        244,
+        248,
         null,
         null,
         null
@@ -82979,7 +83080,7 @@
       "y": 31,
       "z": 0,
       "refs": [
-        61,
+        66,
         null,
         null,
         null
@@ -82994,7 +83095,7 @@
       "y": 31,
       "z": 0,
       "refs": [
-        61,
+        66,
         null,
         null,
         null
@@ -83009,7 +83110,7 @@
       "y": 32,
       "z": 0,
       "refs": [
-        61,
+        66,
         null,
         null,
         null
@@ -83024,7 +83125,7 @@
       "y": 32,
       "z": 0,
       "refs": [
-        61,
+        66,
         null,
         null,
         null
@@ -83039,7 +83140,7 @@
       "y": 33,
       "z": 0,
       "refs": [
-        61,
+        66,
         null,
         null,
         null
@@ -83054,7 +83155,7 @@
       "y": 33,
       "z": 0,
       "refs": [
-        61,
+        66,
         null,
         null,
         null
@@ -83069,7 +83170,7 @@
       "y": 3,
       "z": 21,
       "refs": [
-        1667,
+        1671,
         null,
         null,
         15
@@ -83357,7 +83458,7 @@
         12,
         null,
         null,
-        244
+        248
       ]
     },
     {
@@ -83432,7 +83533,7 @@
         12,
         null,
         null,
-        3536
+        3562
       ]
     },
     {
@@ -83444,7 +83545,7 @@
       "y": 30,
       "z": 0,
       "refs": [
-        244,
+        248,
         null,
         null,
         null
@@ -83459,7 +83560,7 @@
       "y": 30,
       "z": 0,
       "refs": [
-        61,
+        66,
         null,
         null,
         null
@@ -83474,7 +83575,7 @@
       "y": 30,
       "z": 0,
       "refs": [
-        61,
+        66,
         null,
         null,
         null
@@ -83492,7 +83593,7 @@
         15,
         null,
         15,
-        2751
+        2775
       ]
     },
     {
@@ -83537,7 +83638,7 @@
         15,
         null,
         15,
-        3572
+        3598
       ]
     },
     {
@@ -83552,7 +83653,7 @@
         15,
         null,
         15,
-        3573
+        3599
       ]
     },
     {
@@ -83564,7 +83665,7 @@
       "y": 34,
       "z": 0,
       "refs": [
-        244,
+        248,
         null,
         null,
         null
@@ -83594,7 +83695,7 @@
       "y": 20,
       "z": 0,
       "refs": [
-        798,
+        802,
         null,
         null,
         null
@@ -83624,7 +83725,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        1948,
+        1955,
         null,
         null,
         null
@@ -83654,7 +83755,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        1948,
+        1955,
         null,
         null,
         null
@@ -83669,8 +83770,68 @@
       "y": 18,
       "z": 0,
       "refs": [
-        61,
+        66,
         null,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 851164993810329,
+      "actionSid": 977734135584485,
+      "function": "仓库存入",
+      "sheet": "主事件",
+      "x": "*",
+      "y": "*",
+      "z": 22,
+      "refs": [
+        12,
+        15,
+        null,
+        3774
+      ]
+    },
+    {
+      "sid": 851164993810329,
+      "actionSid": 886478393240278,
+      "function": "仓库存入",
+      "sheet": "主事件",
+      "x": "*",
+      "y": "*",
+      "z": 7,
+      "refs": [
+        15,
+        15,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 507459344390517,
+      "actionSid": 617103198582672,
+      "function": "仓库取出",
+      "sheet": "主事件",
+      "x": "*",
+      "y": "*",
+      "z": 7,
+      "refs": [
+        12,
+        15,
+        null,
+        3775
+      ]
+    },
+    {
+      "sid": 507459344390517,
+      "actionSid": 446866968581875,
+      "function": "仓库取出",
+      "sheet": "主事件",
+      "x": "*",
+      "y": "*",
+      "z": 22,
+      "refs": [
+        15,
+        15,
         null,
         null
       ]
@@ -83699,7 +83860,7 @@
       "y": 20,
       "z": 0,
       "refs": [
-        798,
+        802,
         null,
         null,
         null
@@ -83732,7 +83893,7 @@
         15,
         null,
         null,
-        3807
+        3868
       ]
     },
     {
@@ -83760,7 +83921,7 @@
       "z": 0,
       "refs": [
         15,
-        2003,
+        2010,
         null,
         15
       ]
@@ -83819,8 +83980,8 @@
       "y": "*",
       "z": 0,
       "refs": [
-        3817,
-        3821,
+        3878,
+        3882,
         null,
         null
       ]
@@ -83972,7 +84133,7 @@
         12,
         15,
         null,
-        3885
+        3946
       ]
     },
     {
@@ -84002,7 +84163,7 @@
         12,
         15,
         null,
-        3886
+        3947
       ]
     },
     {
@@ -84047,7 +84208,7 @@
         15,
         null,
         null,
-        4045
+        4106
       ]
     },
     {
@@ -84062,7 +84223,7 @@
         15,
         null,
         null,
-        4046
+        4107
       ]
     },
     {
@@ -84075,7 +84236,7 @@
       "z": 16,
       "refs": [
         15,
-        4047,
+        4108,
         null,
         15
       ]
@@ -84090,7 +84251,7 @@
       "z": 16,
       "refs": [
         15,
-        4048,
+        4109,
         null,
         15
       ]
@@ -84167,7 +84328,7 @@
         15,
         null,
         null,
-        4051
+        4112
       ]
     },
     {
@@ -84182,7 +84343,7 @@
         15,
         null,
         null,
-        4051
+        4112
       ]
     },
     {
@@ -84197,7 +84358,7 @@
         15,
         null,
         null,
-        4051
+        4112
       ]
     },
     {
@@ -84212,7 +84373,7 @@
         12,
         15,
         null,
-        2876
+        2901
       ]
     },
     {
@@ -84287,7 +84448,7 @@
         15,
         null,
         null,
-        4268
+        4329
       ]
     },
     {
@@ -84344,10 +84505,10 @@
       "y": "*",
       "z": 10,
       "refs": [
-        4297,
+        4358,
         15,
         null,
-        4301
+        4361
       ]
     },
     {
@@ -84374,10 +84535,10 @@
       "y": 7,
       "z": 1,
       "refs": [
-        61,
+        66,
         null,
         null,
-        61
+        66
       ]
     },
     {
@@ -84389,7 +84550,7 @@
       "y": 7,
       "z": 1,
       "refs": [
-        61,
+        66,
         null,
         null,
         null
@@ -84437,7 +84598,7 @@
         15,
         15,
         null,
-        4321
+        4381
       ]
     },
     {
@@ -84479,10 +84640,10 @@
       "y": "*",
       "z": 6,
       "refs": [
-        349,
+        352,
         12,
         null,
-        4324
+        4384
       ]
     },
     {
@@ -84494,10 +84655,10 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1574,
+        1578,
         12,
         null,
-        4325
+        4385
       ]
     },
     {
@@ -84527,7 +84688,7 @@
         12,
         null,
         null,
-        4324
+        4384
       ]
     },
     {
@@ -84542,7 +84703,7 @@
         12,
         null,
         null,
-        1585
+        1589
       ]
     },
     {
@@ -84557,7 +84718,7 @@
         12,
         null,
         null,
-        1585
+        1589
       ]
     },
     {
@@ -84572,7 +84733,7 @@
         12,
         null,
         null,
-        4327
+        4387
       ]
     },
     {
@@ -84720,9 +84881,9 @@
       "z": 20,
       "refs": [
         12,
-        1963,
+        1970,
         null,
-        1429
+        1433
       ]
     },
     {
@@ -84735,9 +84896,9 @@
       "z": 20,
       "refs": [
         12,
-        1962,
+        1969,
         null,
-        1430
+        1434
       ]
     },
     {
@@ -84917,7 +85078,7 @@
         null,
         null,
         null,
-        138
+        143
       ]
     },
     {
@@ -84932,7 +85093,7 @@
         null,
         null,
         null,
-        4421
+        4481
       ]
     },
     {
@@ -84947,7 +85108,7 @@
         null,
         null,
         null,
-        4427
+        4487
       ]
     },
     {
@@ -84962,7 +85123,7 @@
         null,
         null,
         null,
-        4428
+        4488
       ]
     },
     {
@@ -84977,7 +85138,7 @@
         null,
         null,
         null,
-        4427
+        4487
       ]
     },
     {
@@ -84992,7 +85153,7 @@
         null,
         null,
         null,
-        4428
+        4488
       ]
     },
     {
@@ -85037,7 +85198,7 @@
         15,
         15,
         null,
-        4321
+        4381
       ]
     },
     {
@@ -85109,7 +85270,7 @@
       "y": 5,
       "z": 21,
       "refs": [
-        1667,
+        1671,
         null,
         null,
         null
@@ -85124,7 +85285,7 @@
       "y": 5,
       "z": 21,
       "refs": [
-        1667,
+        1671,
         null,
         null,
         null
@@ -85172,7 +85333,7 @@
         15,
         null,
         null,
-        4523
+        4583
       ]
     },
     {
@@ -85187,7 +85348,7 @@
         null,
         null,
         null,
-        4524
+        4584
       ]
     },
     {
@@ -85202,7 +85363,7 @@
         15,
         null,
         null,
-        4525
+        4585
       ]
     },
     {
@@ -85217,7 +85378,7 @@
         15,
         null,
         null,
-        4523
+        4583
       ]
     },
     {
@@ -85232,7 +85393,7 @@
         null,
         null,
         null,
-        4524
+        4584
       ]
     },
     {
@@ -85247,7 +85408,7 @@
         15,
         null,
         null,
-        4525
+        4585
       ]
     },
     {
@@ -85277,7 +85438,7 @@
         15,
         null,
         null,
-        4549
+        4609
       ]
     },
     {
@@ -85322,7 +85483,7 @@
         15,
         null,
         null,
-        4551
+        4611
       ]
     },
     {
@@ -85337,7 +85498,7 @@
         15,
         null,
         null,
-        4552
+        4612
       ]
     },
     {
@@ -85364,7 +85525,7 @@
       "y": 35,
       "z": 0,
       "refs": [
-        61,
+        66,
         null,
         null,
         null
@@ -85379,7 +85540,7 @@
       "y": 35,
       "z": 0,
       "refs": [
-        61,
+        66,
         null,
         null,
         null
@@ -85395,9 +85556,9 @@
       "z": 0,
       "refs": [
         15,
-        4589,
+        4649,
         null,
-        4590
+        4650
       ]
     },
     {
@@ -85412,7 +85573,7 @@
         null,
         null,
         null,
-        4592
+        4652
       ]
     },
     {
@@ -85425,9 +85586,9 @@
       "z": 0,
       "refs": [
         15,
-        4589,
+        4649,
         null,
-        4590
+        4650
       ]
     },
     {
@@ -85442,7 +85603,7 @@
         15,
         null,
         null,
-        4599
+        4659
       ]
     },
     {
@@ -85472,7 +85633,7 @@
         15,
         null,
         null,
-        4552
+        4612
       ]
     },
     {
@@ -85487,7 +85648,7 @@
         15,
         null,
         null,
-        4602
+        4662
       ]
     },
     {
@@ -85517,7 +85678,7 @@
         15,
         null,
         null,
-        4605
+        4665
       ]
     },
     {
@@ -85532,7 +85693,7 @@
         15,
         null,
         null,
-        1308
+        1312
       ]
     },
     {
@@ -85637,7 +85798,7 @@
         15,
         null,
         null,
-        4551
+        4611
       ]
     },
     {
@@ -85652,7 +85813,7 @@
         15,
         null,
         null,
-        4552
+        4612
       ]
     },
     {
@@ -85712,7 +85873,7 @@
         null,
         null,
         null,
-        4708
+        4768
       ]
     },
     {
@@ -85727,7 +85888,7 @@
         null,
         null,
         null,
-        4709
+        4769
       ]
     },
     {
@@ -85742,7 +85903,7 @@
         null,
         null,
         null,
-        4720
+        4780
       ]
     },
     {
@@ -85757,7 +85918,7 @@
         null,
         null,
         null,
-        61
+        66
       ]
     },
     {
@@ -85770,9 +85931,9 @@
       "z": "*",
       "refs": [
         15,
-        2833,
+        2855,
         15,
-        4870
+        4930
       ]
     },
     {
@@ -85785,9 +85946,9 @@
       "z": "*",
       "refs": [
         15,
-        4871,
+        4931,
         15,
-        4872
+        4932
       ]
     },
     {
@@ -85800,7 +85961,7 @@
       "z": "*",
       "refs": [
         15,
-        2903,
+        2928,
         15,
         null
       ]
@@ -85817,7 +85978,7 @@
         null,
         null,
         null,
-        4934
+        4994
       ]
     },
     {
@@ -85832,7 +85993,7 @@
         15,
         null,
         null,
-        5008
+        5068
       ]
     },
     {
@@ -85847,7 +86008,7 @@
         15,
         null,
         null,
-        5105
+        5165
       ]
     },
     {
@@ -85862,7 +86023,7 @@
         15,
         null,
         null,
-        5108
+        5168
       ]
     },
     {
@@ -85877,7 +86038,7 @@
         15,
         null,
         null,
-        4525
+        4585
       ]
     },
     {
@@ -85892,7 +86053,7 @@
         15,
         null,
         null,
-        232
+        236
       ]
     },
     {
@@ -85922,7 +86083,7 @@
         15,
         15,
         null,
-        5115
+        5175
       ]
     },
     {
@@ -85937,7 +86098,7 @@
         15,
         15,
         null,
-        5117
+        5177
       ]
     },
     {
@@ -85952,7 +86113,7 @@
         15,
         15,
         null,
-        5118
+        5178
       ]
     },
     {
@@ -85967,7 +86128,7 @@
         15,
         15,
         null,
-        4216
+        4277
       ]
     },
     {
@@ -86024,10 +86185,10 @@
       "y": "*",
       "z": 6,
       "refs": [
-        5130,
-        1778,
+        5190,
+        1782,
         null,
-        5131
+        5191
       ]
     },
     {
@@ -86042,7 +86203,7 @@
         15,
         null,
         null,
-        5132
+        5192
       ]
     },
     {
@@ -86102,7 +86263,7 @@
         15,
         null,
         null,
-        5135
+        5195
       ]
     },
     {
@@ -86117,7 +86278,7 @@
         15,
         null,
         null,
-        5138
+        5198
       ]
     },
     {
@@ -86192,7 +86353,7 @@
         15,
         null,
         null,
-        5141
+        5201
       ]
     },
     {
@@ -86207,7 +86368,7 @@
         15,
         null,
         null,
-        5143
+        5203
       ]
     },
     {
@@ -86282,7 +86443,7 @@
         15,
         null,
         null,
-        5147
+        5207
       ]
     },
     {
@@ -86297,7 +86458,7 @@
         15,
         null,
         null,
-        5150
+        5210
       ]
     },
     {
@@ -86357,7 +86518,7 @@
         15,
         null,
         null,
-        5149
+        5209
       ]
     },
     {
@@ -86372,7 +86533,7 @@
         15,
         null,
         null,
-        5147
+        5207
       ]
     },
     {
@@ -86387,7 +86548,7 @@
         15,
         null,
         null,
-        5150
+        5210
       ]
     },
     {
@@ -86444,10 +86605,10 @@
       "y": 4,
       "z": 1,
       "refs": [
-        61,
+        66,
         null,
         null,
-        5167
+        5227
       ]
     },
     {
@@ -86459,7 +86620,7 @@
       "y": 4,
       "z": 1,
       "refs": [
-        61,
+        66,
         null,
         null,
         null
@@ -86477,7 +86638,7 @@
         null,
         null,
         null,
-        5169
+        5229
       ]
     },
     {
@@ -86492,7 +86653,7 @@
         15,
         null,
         null,
-        5171
+        5231
       ]
     },
     {
@@ -86522,7 +86683,7 @@
         null,
         null,
         null,
-        5175
+        5235
       ]
     },
     {
@@ -86537,7 +86698,7 @@
         null,
         null,
         null,
-        5179
+        5239
       ]
     },
     {
@@ -86552,7 +86713,7 @@
         null,
         null,
         null,
-        5182
+        5242
       ]
     },
     {
@@ -86567,7 +86728,7 @@
         15,
         null,
         null,
-        5188
+        5248
       ]
     },
     {
@@ -86582,7 +86743,7 @@
         15,
         null,
         null,
-        5190
+        5250
       ]
     },
     {
@@ -86597,7 +86758,7 @@
         15,
         null,
         null,
-        5191
+        5251
       ]
     },
     {
@@ -86625,9 +86786,9 @@
       "z": 2,
       "refs": [
         15,
-        2003,
+        2010,
         null,
-        5212
+        5272
       ]
     },
     {
@@ -86640,9 +86801,9 @@
       "z": 2,
       "refs": [
         15,
-        2003,
+        2010,
         null,
-        5214
+        5274
       ]
     },
     {
@@ -86655,9 +86816,9 @@
       "z": 2,
       "refs": [
         15,
-        562,
+        566,
         null,
-        5215
+        5275
       ]
     },
     {
@@ -86670,7 +86831,7 @@
       "z": 2,
       "refs": [
         15,
-        2003,
+        2010,
         null,
         null
       ]
@@ -86684,10 +86845,10 @@
       "y": 7,
       "z": 21,
       "refs": [
-        61,
+        66,
         null,
         null,
-        61
+        66
       ]
     },
     {
@@ -86699,10 +86860,10 @@
       "y": 9,
       "z": 21,
       "refs": [
-        61,
+        66,
         null,
         null,
-        5218
+        5278
       ]
     },
     {
@@ -86714,7 +86875,7 @@
       "y": 8,
       "z": 21,
       "refs": [
-        61,
+        66,
         null,
         null,
         null
@@ -86729,10 +86890,10 @@
       "y": 4,
       "z": 21,
       "refs": [
-        61,
+        66,
         null,
         null,
-        5222
+        5282
       ]
     },
     {
@@ -86987,7 +87148,7 @@
         15,
         null,
         null,
-        5249
+        5309
       ]
     },
     {
@@ -87002,7 +87163,7 @@
         null,
         null,
         null,
-        5253
+        5313
       ]
     },
     {
@@ -87017,7 +87178,7 @@
         null,
         null,
         null,
-        5255
+        5315
       ]
     },
     {
@@ -87032,7 +87193,7 @@
         null,
         null,
         null,
-        5257
+        5317
       ]
     },
     {
@@ -87047,7 +87208,7 @@
         null,
         null,
         null,
-        5259
+        5319
       ]
     },
     {
@@ -87062,7 +87223,7 @@
         15,
         null,
         null,
-        5261
+        5321
       ]
     }
   ],
@@ -87119,6 +87280,13 @@
     "backpackInnerPillLevel": true,
     "innerPillLevel": true,
     "ascendedInnerPillLevel": true,
+    "basicTechnologyLevel": true,
+    "buildingLevel": true,
+    "placedRelicAttributes": true,
+    "pillAptitudeBonusAdvanced": true,
+    "recruitTechnologyAdvanced": true,
+    "equipmentAffixCoefficientAdvanced": true,
+    "equipmentSixthAffix": true,
     "names": true,
     "characterExperience": true,
     "professionExperience": true,
@@ -87128,13 +87296,6 @@
     "professionTrainingCap": true,
     "professionTrainingCapAdvanced": true,
     "advancedTechnologyLevel": true,
-    "advancedTechnologyLevelAdvanced": true,
-    "basicTechnologyLevel": true,
-    "buildingLevel": true,
-    "placedRelicAttributes": true,
-    "pillAptitudeBonusAdvanced": true,
-    "recruitTechnologyAdvanced": true,
-    "equipmentAffixCoefficientAdvanced": true,
-    "equipmentSixthAffix": true
+    "advancedTechnologyLevelAdvanced": true
   }
 }

@@ -12,10 +12,10 @@ async function nativeCycle(request){
  const pause=()=>new Promise(resolve=>setTimeout(resolve,500)),record=(id,z)=>Array.from({length:60},(_,y)=>a.At(id,y,z)),refs=()=>Array.from({length:6},(_,s)=>a.At(1,16+s,2));
  const initial=record(1,request.plane),steps=[];let bag=1,z9=1;
  const find=z=>{for(let id=1;id<a.GetWidth();id++)if(a.At(id,0,z)>0&&a.At(id,1,z)===initial[1])return id;throw Error('Cycle destination absent '+z+' refs '+JSON.stringify(refs()));};
- if(request.plane===9){if(request.worn)call('卸下装备',request.slot,1,1,false,false);else call('装备库取出',1,true,0);await pause();bag=find(7);steps.push({phase:'takeout',id:bag,plane:7,record:record(bag,7),refs:refs(),source:record(1,9)});}
- call('穿戴装备',request.slot,bag,1,false,false);await pause();z9=a.At(1,15+request.slot,2);steps.push({phase:'equip',id:z9,plane:9,record:record(z9,9),refs:refs(),source:record(bag,7)});
+ if(request.plane===9){if(request.worn)call('卸下装备',request.slot,1,1,false,false,7);else call('装备库取出',1,true,0,7);await pause();bag=find(7);steps.push({phase:'takeout',id:bag,plane:7,record:record(bag,7),refs:refs(),source:record(1,9)});}
+ call('穿戴装备',request.slot,bag,1,false,false,7);await pause();z9=a.At(1,15+request.slot,2);steps.push({phase:'equip',id:z9,plane:9,record:record(z9,9),refs:refs(),source:record(bag,7)});
  if(!z9)throw Error('Native equip did not set role pointer '+JSON.stringify(steps));
- call('刷新单角色全属性',1,true,0);call('卸下装备',request.slot,z9,1,false,false);await pause();bag=find(7);steps.push({phase:'unequip',id:bag,plane:7,record:record(bag,7),refs:refs(),source:record(z9,9)});
+ call('刷新单角色全属性',1,true,0);call('卸下装备',request.slot,z9,1,false,false,7);await pause();bag=find(7);steps.push({phase:'unequip',id:bag,plane:7,record:record(bag,7),refs:refs(),source:record(z9,9)});
  return {initial,steps,worn:!!request.worn,locations:[{id:bag,plane:7},{id:z9,plane:9}]};
 }
 // Wear the unequipped item, generate a different treasure natively, wear it over slot 6 and observe the swap.
@@ -24,11 +24,11 @@ async function nativeReplace(request){
  const call=(name,...args)=>{const f=m.GetFunctionBlockByName(name),b=f.GetEventBlock();return b.RunAsExpressionFunctionCall(b.GetSolModifiersIncludingParents(),f.IsCopyPicked(),f.GetReturnType(),f.GetDefaultReturnValue(),...args);};
  const pause=()=>new Promise(resolve=>setTimeout(resolve,500)),record=(id,z)=>Array.from({length:60},(_,y)=>a.At(id,y,z)),refs=()=>Array.from({length:6},(_,s)=>a.At(1,16+s,2));
  const find=(z,tpl)=>{for(let id=1;id<a.GetWidth();id++)if(a.At(id,0,z)>0&&a.At(id,1,z)===tpl)return id;throw Error('Replace row absent '+tpl+' / '+z+' refs '+JSON.stringify(refs()));};
- const first=record(request.bag,7);call('穿戴装备',request.slot,request.bag,1,false,false);await pause();
+ const first=record(request.bag,7);call('穿戴装备',request.slot,request.bag,1,false,false,7);await pause();
  const firstRow=a.At(1,15+request.slot,2),firstWorn=record(firstRow,9);
  call('获得物品',true,request.template,request.quality,request.level,request.tier,95+30*(request.quality-1),1,false,0,'特定装备',false,false);
  const second=find(7,request.template),secondBefore=record(second,7);
- call('穿戴装备',request.slot,second,1,false,false);await pause();
+ call('穿戴装备',request.slot,second,1,false,false,7);await pause();
  const pointer=a.At(1,15+request.slot,2),worn=record(pointer,9),returned=find(7,first[1]),returnedRecord=record(returned,7);
  return {first,firstWorn,secondBefore,pointer,worn,returned,returnedRecord,refs:refs(),stillWornFirst:a.At(firstRow,0,9)>0&&a.At(firstRow,1,9)===first[1]?record(firstRow,9):null};
 }

@@ -1,10 +1,11 @@
 'use strict';
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 // Reviewed static rules, not a native proof. Covers acquisition, upgrade, cap, equip/unequip, storage moves and decomposition.
-const sourceSids=[601593514747018,605413626718369,290240793057956,713681756866045,940995553206160,924571110308816,501272375624196,791657421740250,959041203712077,654692930556623,418018161514165,754298301929487,311899301569964,714979671293604,163385542232476,981828147671074,761577193118513,565108901731936,131416746119248,773239288013696];
+const sourceSids=[601593514747018,605413626718369,290240793057956,713681756866045,940995553206160,924571110308816,501272375624196,791657421740250,204416519787196,654692930556623,574511591831477,754298301929487,311899301569964,714979671293604,163385542232476,981828147671074,761577193118513,565108901731936,131416746119248,773239288013696];
 // V1.0.12.2 differs only by object/bound-reference renumbering and the new delayed-refresh argument (false) of 刷新物品／刷新灵物.
-const reviewedDigest='4db0a11781c417bef5206ab4156a7e7f56be6d88d6a615e60d4644aa1c9cabfe';
-const reviewedDigests=new Set(['d538a7f4e8ca258d1b5583797806d9f9f125b9898f5e5be78fff3b5fbf6fdcd2',reviewedDigest]);
+// V1.0.13.0 rebuilt the storage-move inner events (new SIDs) with a 库序号 argument (7 or the new armory 22); z7↔z9 copies y0–49 as before.
+const reviewedDigest='be73fe031f97c1dd637f4faa0b49d8730c2f648e2f805ec6e532b565d68b8b66';
+const reviewedDigests=new Set(['d538a7f4e8ca258d1b5583797806d9f9f125b9898f5e5be78fff3b5fbf6fdcd2','4db0a11781c417bef5206ab4156a7e7f56be6d88d6a615e60d4644aa1c9cabfe',reviewedDigest]);
 const groups=['backpackTreasureLevel','treasureLevel'];
 const hash=value=>crypto.createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const tierCounts={1:21,2:25,3:29,4:31,5:31,6:33};

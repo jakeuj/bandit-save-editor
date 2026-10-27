@@ -15,14 +15,14 @@ async function probeDriver(request){
  const log=[],snap=label=>log.push({label,z7:rows(7),z9:rows(9),refs:refs(),souls:a.At(3,2,0)});
  for(let id=1;id<=12;id++)for(const z of [7,9]){for(let y=0;y<60;y++)a.Set(id,y,z,0);}for(let s=1;s<=6;s++)a.Set(1,15+s,2,0);a.Set(3,2,0,1000);
  const X=gen(request.x),Y=gen(request.y);snap('generated');
- call('穿戴装备',6,X,1,false,false);await pause();snap('wear X');
- call('穿戴装备',6,Y,1,false,false);await pause();snap('wear Y over X (X displaced)');
+ call('穿戴装备',6,X,1,false,false,7);await pause();snap('wear X');
+ call('穿戴装备',6,Y,1,false,false,7);await pause();snap('wear Y over X (X displaced)');
  const staleX=find(7,request.x.template);const staleRecord=rec(staleX,7);
- call('装备库存入',staleX,true,0);await pause();snap('store stale X into z9');
+ call('装备库存入',staleX,true,0,7);await pause();snap('store stale X into z9');
  const storedX=find(9,request.x.template);const storedRecord=storedX?rec(storedX,9):null;
- if(storedX){call('装备库取出',storedX,true,0);await pause();snap('take stale X back out');}
+ if(storedX){call('装备库取出',storedX,true,0,7);await pause();snap('take stale X back out');}
  const bagX=find(7,request.x.template);
- call('穿戴装备',6,bagX,1,false,false);await pause();snap('re-wear stale X over Y');
+ call('穿戴装备',6,bagX,1,false,false,7);await pause();snap('re-wear stale X over Y');
  const sold=find(7,request.y.template);const before=a.At(3,2,0);
  if(sold){call('分解宝物',sold,false,false);await pause();}
  snap('decompose displaced Y (stale owner)');

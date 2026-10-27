@@ -25,7 +25,7 @@ function nativeDriver(request){
  // 升级装备(物品序号,角色序号) acts on z9 and pays souls; z7 rows are first moved by 装备库存入.
  if(request.op==='level')return request.items.map(item=>{
   reset(item.souls);const z=item.state==='backpack'?7:9;put(1,z,item.before);
-  let id=1;if(z===7){call('装备库存入',1,true,0);id=find(9,item.before[1]);}
+  let id=1;if(z===7){call('装备库存入',1,true,0,7);id=find(9,item.before[1]);}
   if(item.state==='equipped'){const row=read(id,9);row[7]=1;put(id,9,row);a.Set(1,21,2,id);}
   const moved=read(id,9),souls0=a.At(3,2,0);
   for(let l=item.from;l<item.to;l++)call('升级装备',id,0);

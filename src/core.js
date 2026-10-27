@@ -1274,15 +1274,15 @@
   try{transaction(m,()=>{for(const c of preview.changes)put(m,c.coordinate,c.after,c.label);},`${preview.city.name}・城市層數調整`);}finally{m.currentGroup=previous;}
   return preview;
  }
- // Basic technologies (basicTechnologyLevel). kj 1–28 are 0/1 unlocks: 科技等级上限 returns kj[id,5]=1 for 基础 rows. Every
+ // Basic technologies (basicTechnologyLevel). kj 1–29 are 0/1 unlocks (#29 武库 since V1.0.13.0, was an empty row): 科技等级上限 returns kj[id,5]=1 for 基础 rows. Every
  // reader of [id,4,0] is a UI gate (build menu, feature buttons, research page) or the research flow; building caps read the
  // advanced techs only (jz column 34), and #8 only enables the expansion button. Research completion (采集核心碰撞) adds 1
  // without a cap check, so a tech under research is refused. Raising writes 1 and clears the research points y12 as that
  // completion does, unlocking the missing prerequisite chain (kj column 7) in the same step. Nothing lowers a tech natively,
  // so lowering is not offered; 初始化设置 starts every game with #1 and #2 at 1.
- const basicTechnologyIds=KNOWLEDGE.catalogs.technologies.filter(t=>t.id>=1&&t.id<=28&&!t.advanced&&Number.isSafeInteger(t.prerequisite)).map(t=>t.id);
+ const basicTechnologyIds=KNOWLEDGE.catalogs.technologies.filter(t=>t.id>=1&&t.id<=29&&!t.advanced&&Number.isSafeInteger(t.prerequisite)).map(t=>t.id);
  function basicTechnologiesInfo(m){
-  if(basicTechnologyIds.length!==28)throw Error('知識目錄缺少基礎科技前置資料。');
+  if(basicTechnologyIds.length!==29)throw Error('知識目錄缺少基礎科技前置資料。');
   const technologies=basicTechnologyIds.map(id=>{
    const t=catalogMaps.technologies.get(id),level=get(m,C(id,4,0)),points=get(m,C(id,12,0)),flag=get(m,C(id,13,0));
    if(level!==0&&level!==1)throw Error(`${t.name}的科技等級不是 0 或 1。`);
@@ -1294,7 +1294,7 @@
  }
  function previewBasicTechnology(m,{technologyId}){
   const info=basicTechnologiesInfo(m),byId=new Map(info.technologies.map(t=>[t.id,t])),target=byId.get(technologyId);
-  if(!target)throw Error('只支援基礎科技 1–28。');
+  if(!target)throw Error('只支援基礎科技 1–29。');
   if(target.level===1)return {technology:{id:target.id,name:target.name},chain:[],changes:[],unchanged:true,verified:info.verified};
   const chain=[];
   for(let t=target;t&&t.level===0;t=byId.get(t.prerequisite)){if(chain.includes(t))throw Error('前置科技形成循環。');chain.unshift(t);}
@@ -1369,7 +1369,7 @@
   if(basic)named(basic.name,{type:'integer',min:0,editable:true,status:'既有功能',reason:''});
   else if(z===0&&y===6&&catalogMaps.materials.has(x))named(catalogName('materials',x),{entity:`材料 #${x}`,type:'integer',min:0,editable:true,status:'既有功能',reason:''});
   else if(key(c)==='1,1,0')named('山寨名稱',{type:'string',maxLength:6,verification:'names',editable:!!KNOWLEDGE.verification.names,reason:'名稱群組尚待遊戲驗證'});
-  else if(z===0&&y===1){const labels={0:'存檔識別',2:'山寨等級',4:'目前地圖',6:'商店刷新時間',7:'引導任務編號',8:'山寨總聲望',12:'存檔年份',13:'存檔天數',14:'存檔小時',15:'累計遊玩秒數',19:'城牆等級',22:'支援者禮包紀錄'};if(labels[x])named(labels[x]);}
+  else if(z===0&&y===1){const labels={0:'存檔識別',2:'山寨等級',4:'目前地圖',6:'商店刷新時間',7:'引導任務編號',8:'山寨總聲望',12:'存檔年份',13:'存檔天數',14:'存檔小時',15:'累計遊玩秒數',19:'城牆等級',22:'支援者禮包紀錄',37:'武庫換裝模式'};if(labels[x])named(labels[x]);}
   else if(z===0&&y===17&&x===1)named('招募刷新倒數（秒）',{type:'decimal'});
   else if(z===0&&[11,21,38,44].includes(y)&&cityRows.has(x))named({11:'城市層數',21:'掛機層數',38:'佔領旗標',44:'首次進入旗標'}[y],{entity:cityRows.get(x),reason:'請使用城市層數具名操作；總聲望與掛機層數一起結算',related:[C(x,11,0),C(x,21,0),C(8,1,0)]});
   else if(z===0&&[4,12,13].includes(y)&&catalogMaps.technologies.has(x))named({4:'科技等級',12:'科技研究點數',13:'科技研究狀態'}[y],{entity:catalogName('technologies',x),...(basicTechnologyIds.includes(x)?{reason:'請使用基礎科技解鎖具名操作；前置科技與研究點數一起結算',related:[C(x,4,0),C(x,12,0),C(x,13,0)]}:{})});
@@ -1385,7 +1385,7 @@
   }else if([4,5].includes(z)&&activeCharacter(m,x)&&catalogMaps.professions.has(y))named(z===4?'職業等級':'職業經驗餘額',{entity:`${get(m,C(x,1,2))}・${catalogName('professions',y)}`,type:z===5?'decimal':'integer'});
   else if(z===12&&[1,2,3,21,22,23].includes(y)){const k=y>20?y-20:y;named(`天賦 #${k}${y>20?'等級':'編號'}`,{entity:activeCharacter(m,x)?get(m,C(x,1,2)):`角色 #${x}`,type:'integer',reason:y>20?'請由角色養成的天賦等級具名預覽操作修改；有名角色依範本回填':'天賦 ID 依原版招募固定，不能更換',related:[1,2,3,21,22,23].map(y=>C(x,y,12))});}
   else if(z===12){named(`衍生屬性：${catalogName('attributes',y)}`,{entity:activeCharacter(m,x)?get(m,C(x,1,2)):`角色 #${x}`,type:'decimal'});}
-  else if([7,9].includes(z)){
+  else if([7,9,22].includes(z)){
    const labels={0:'初始背包列號',1:'物品範本',2:'物品數量／旗標',3:'物品等階',4:'物品狀態',5:'品質',6:'物品等級',7:'裝備歸屬／狀態',8:'主屬性品質係數',23:'取得參數／套裝關聯值',24:'新取得標記',25:'未辨識物品狀態 25',26:'套裝關聯值 26',27:'套裝原物品資訊'};
    if(labels[y])named(labels[y],{entity:catalogName('items',get(m,C(x,1,z)))});
    else if(y>=9&&y<=14)named(`裝備詞條 #${y-8}`,{entity:catalogName('items',get(m,C(x,1,z)))});
@@ -1409,7 +1409,7 @@
   if([4,5].includes(z)&&f.known){f.description='職業必須已習得；依職業等階計算需求，上限為 min(30, 操練上限)。自動轉職啟用時禁止增加。';f.related=[C(x,y,4),C(x,y,5),C(y,5,0),C(x,59,2)];}
   if(f.related.length&&![50,56,59].includes(y)&&((z===2&&[3,4].includes(y))||(z===2&&y>=31&&y<=48)||[4,5].includes(z)))f.reason='請由角色養成增加經驗，等級與餘額一起結算';
   if(z===12&&![1,2,3,21,22,23].includes(y))f.description='屬性與其他角色狀態相關；遊戲另在暫存物件重算數值，第一版不直接寫入。';
-  if([7,9].includes(z)&&f.known)f.description='物品實體的原始資料；詞條、係數、背包位置與穿戴歸屬需一起核實，第一版唯讀。';
+  if([7,9,22].includes(z)&&f.known)f.description='物品實體的原始資料；詞條、係數、背包位置與穿戴歸屬需一起核實，第一版唯讀。';
   if(z===9&&y===6||z===0&&y===5&&catalogMaps.professions.has(x)||z===0&&y===4&&catalogMaps.technologies.get(x)?.advanced){
    const kind=z===9?'equipment':y===5?'training':'technology';
    try{const info=editingInfo(m,kind,x);f.status=info.verified?'遊戲驗證':'程式證據';f.reason='請使用具名修改操作；自訂座標不可繞過模式及關聯檢查';f.description=`一般上限 ${info.normalMax}；進階已驗證上限 ${info.advancedMax}。${kind==='training'?'職業自然成長仍受原版 30 級限制。':''}`;}catch(e){f.reason=e.message;}

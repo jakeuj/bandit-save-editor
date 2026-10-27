@@ -3,8 +3,9 @@ const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypt
 // Reviewed static rules, not a native proof. Whole event subtrees include metadata producers and movement.
 const sourceSids=[713681756866045,605413626718369,290240793057956,648325761183486,179109980508468,797846367485481,240477057233049,661914404104909,131416746119248,773239288013696,360141429177377,503731874338191,791657421740250,654692930556623,924571110308816,501272375624196,601593514747018,699971245656002];
 // V1.0.12.2 differs only by object/bound-reference renumbering and the new delayed-refresh argument (false) of 刷新物品／刷新灵物.
-const reviewedDigest='aef31814fe92f015076d8d25c1edb910f2b31cc34bdabc51f0e9285c8f5ab377';
-const reviewedDigests=new Set(['74f9e5772b73edbdcac8bf4c9111b23bb5b9a42ec86198500ae24a27917be598',reviewedDigest]);
+// V1.0.13.0: equip/unequip/storage moves take a 库序号 argument (7 or the new armory 22); the reviewed rules are unchanged.
+const reviewedDigest='d40f4f3f4222f4df71fc1a13fe3d958b14b024379b804461fd0aa3a1858d12fc';
+const reviewedDigests=new Set(['74f9e5772b73edbdcac8bf4c9111b23bb5b9a42ec86198500ae24a27917be598','aef31814fe92f015076d8d25c1edb910f2b31cc34bdabc51f0e9285c8f5ab377',reviewedDigest]);
 const groups=['backpackSetEquipmentLevel','setEquipmentLevel'];
 const hash=value=>crypto.createHash('sha256').update(JSON.stringify(value)).digest('hex');
 function reviewedRules(digest,{wp,tz,sx},batch2,affix){

@@ -140,7 +140,7 @@ Nevergrind 的預設本機 runtime 快取路徑（由 script／README 得知，�
 | 存讀與重啟 | `verify-game.cjs`：雲存檔載入 → 原生存檔 → `--assert` 通過 → 停止 → 新 PID 重啟 → 存檔載入 → `--assert` 通過；兩次遊戲寫出的 `save\ea1save.dat` 雜湊相同，原始存檔與測試來源指紋不變 |
 | 隱藏執行 | 沿用 `LSBackgroundOnly` 測試 app、隱藏視窗與靜音設定；結束後沒有殘留程序 |
 
-- 候選 catalog 只把目前 catalog 的 15 個來源指紋換成 V1.0.13.0，放在 repo 外。`verify-game.cjs` 的基準編輯（角色 1 名稱與三類經驗）用的是 V1.0.12.2 知識，這次結果只證明啟動器能存讀，不代表修改器支援 V1.0.13.0。與 V1.0.12.2 相比，`data.json`、`c3runtime.js`、`kj.json`、`jz.json` 有變。
+- 候選 catalog 只把目前 catalog 的 15 個來源指紋換成 V1.0.13.0，放在 repo 外。`verify-game.cjs` 的基準編輯（角色 1 名稱與三類經驗）用的是 V1.0.12.2 知識，這次結果只證明啟動器能存讀，不代表修改器支援 V1.0.13.0。修改器的 V1.0.13.0 改版另於同日以 v2.33 完成（[各版紀錄](../releases.md#v233-遊戲-v10130)）。與 V1.0.12.2 相比，`data.json`、`c3runtime.js`、`kj.json`、`jz.json` 有變。
 - 原生「主动」存檔除了 `save\ea1save.dat`，也會在 `game/` 下寫出檔名含反斜線的 `savedir\ea1save.dat`、`savedir\saveinfo.dat`。來源是 `(AppFolder + 資料夾變數) + "\\ea"` 這組以變數組路徑的 expression，V1.0.9.1 就有，準備工具沒有正規化；不是 V1.0.13.0 的新問題。因此 Mac 上手動存檔不會更新 `savedir/` 資料夾裡的雲存檔快取。
 - 沒做：遊戲 UI 中的 Steam 雲存檔清單（測試不開視窗）、真實雲端上傳、成就、長時間遊玩。
 

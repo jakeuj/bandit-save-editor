@@ -199,12 +199,12 @@ async function lifecycleDriver(request){
   const seed=(source)=>{const m=Array.from({length:10},(_,i)=>request.markerBase+steps.length*10+i);m.forEach((v,i)=>a.Set(source.id,50+i,source.plane,v));return m;};
   const step=(phase,id,plane,source,markers)=>steps.push({phase,id,plane,record:read(id,plane),source:read(source.id,source.plane),sourceAt:source,markers,refs:refs()});
   if(request.plane===9){
-   const m=seed({id:1,plane:9});if(initial[7])call('卸下装备',request.slot,1,1,false,false);else call('装备库取出',1,true,0);
+   const m=seed({id:1,plane:9});if(initial[7])call('卸下装备',request.slot,1,1,false,false,7);else call('装备库取出',1,true,0,7);
    await pause();bag=find(7,template);step('takeout',bag,7,{id:1,plane:9},m);
   }
-  const from=bag,m1=seed({id:from,plane:7});call('穿戴装备',request.slot,bag,1,false,false);await pause();z9=a.At(1,15+request.slot,2);
+  const from=bag,m1=seed({id:from,plane:7});call('穿戴装备',request.slot,bag,1,false,false,7);await pause();z9=a.At(1,15+request.slot,2);
   if(!z9)throw Error('Native equip did not set role pointer '+JSON.stringify(refs()));step('equip',z9,9,{id:from,plane:7},m1);
-  call('刷新单角色全属性',1,true,0);const m2=seed({id:z9,plane:9});call('卸下装备',request.slot,z9,1,false,false);await pause();bag=find(7,template);step('unequip',bag,7,{id:z9,plane:9},m2);
+  call('刷新单角色全属性',1,true,0);const m2=seed({id:z9,plane:9});call('卸下装备',request.slot,z9,1,false,false,7);await pause();bag=find(7,template);step('unequip',bag,7,{id:z9,plane:9},m2);
   return {initial,steps,locations:[{id:bag,plane:7},{id:z9,plane:9}]};
  }
  if(request.op==='sort'){

@@ -163,7 +163,7 @@ async function crossPoolDriver(request){
  if(request.op==='upgrade')return request.items.map(item=>{
   // 升级装备(物品序号,角色序号) acts on z9; a z7 row is first stored natively, the destination row is found by identity.
   const start=item.record.map((v,y)=>y===6?item.low:v);load(start,item.plane,item.slot);let target=1,moved=null;
-  if(item.plane===7){call('装备库存入',1,true,0);target=find(9,start[1]);moved=read(target,9);}
+  if(item.plane===7){call('装备库存入',1,true,0,7);target=find(9,start[1]);moved=read(target,9);}
   const copper=a.At(1,2,0),souls=a.At(3,2,0);for(let l=item.low;l<item.high;l++)call('升级装备',target,0);
   return {label:item.label,moved,upgraded:read(target,9),cost:copper-a.At(1,2,0),soulCost:souls-a.At(3,2,0),target};
  });
@@ -173,10 +173,10 @@ async function crossPoolDriver(request){
  });
  if(request.op==='wear'){
   // z7 row equipped natively from the bag; character values while worn, then unequipped back to the bag.
-  load(request.record,7,request.slot);call('穿戴装备',request.slot,1,1,false,false);await pause();const z9=a.At(1,15+request.slot,2);
+  load(request.record,7,request.slot);call('穿戴装备',request.slot,1,1,false,false,7);await pause();const z9=a.At(1,15+request.slot,2);
   if(!z9)throw Error('Native equip did not set role pointer '+JSON.stringify(refs()));
   call('刷新单角色全属性',1,true,0);const worn=read(z9,9),source=read(1,7),values=character(request.record[1]),wornRefs=refs();
-  call('卸下装备',request.slot,z9,1,false,false);await pause();const bag=find(7,request.record[1]);
+  call('卸下装备',request.slot,z9,1,false,false,7);await pause();const bag=find(7,request.record[1]);
   return {z9,worn,source,values,wornRefs,back:read(bag,7),backRefs:refs()};
  }
  throw Error('Unknown cross-pool request '+request.op);

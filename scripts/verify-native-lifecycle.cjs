@@ -14,10 +14,10 @@ const selectFacility = (template, building) => `const start=global('主地图编
 
 async function followup(state, s) {
   const {equipment: {id, slot}, character, profession, technology, academy, drillGround} = s.followup;
-  const before = await evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);if(a.At(1,${15 + slot},2)!==${id})throw Error('Expected equipped follow-up item');const v=record(${id},9);call('卸下装备',${slot},${id},1,false,false);return v;})()`);
+  const before = await evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);if(a.At(1,${15 + slot},2)!==${id})throw Error('Expected equipped follow-up item');const v=record(${id},9);call('卸下装备',${slot},${id},1,false,false,7);return v;})()`);
   await pause(500);
   const bag = await evaluate(state, `(()=>{${prefix}if(a.At(1,${15 + slot},2)!==0)throw Error('Unequip failed');for(let id=1;id<a.GetWidth();id++)if(a.At(id,0,7)===${before[0]}&&a.At(id,1,7)===${before[1]}&&a.At(id,6,7)===${before[6]})return id;throw Error('Unequipped record missing');})()`);
-  await evaluate(state, `(()=>{${prefix}call('穿戴装备',${slot},${bag},1,false,false);return true;})()`);
+  await evaluate(state, `(()=>{${prefix}call('穿戴装备',${slot},${bag},1,false,false,7);return true;})()`);
   await pause(500);
   const worn = await evaluate(state, `(()=>{${prefix}const id=a.At(1,${15 + slot},2);return {id,record:record(id,9)};})()`);
   for (let y = 0; y < 50; y++) if (y !== 7) assert.equal(worn.record[y], before[y], 'Equip cycle field ' + y);
@@ -54,7 +54,7 @@ async function obtainAndWear(state, character, template) {
   const id = await evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);const wp=r.GetObjectClassByName('wp').GetInstances()[0].GetSdkInstance(),seen=new Set();for(let x=1;x<a.GetWidth();x++)if(a.At(x,1,7)>0)seen.add(x);
     call('获得物品',true,${template},1,1,wp.At(${template},3,0),100,1,false,0,'特定装备',false,false);for(let x=1;x<a.GetWidth();x++)if(!seen.has(x)&&a.At(x,1,7)===${template})return x;throw Error('Obtained item missing in z7');})()`);
   await pause(500);
-  await evaluate(state, `(()=>{${prefix}const wp=r.GetObjectClassByName('wp').GetInstances()[0].GetSdkInstance();call('穿戴装备',wp.At(${template},6,0),${id},${character},false,false);return true;})()`);
+  await evaluate(state, `(()=>{${prefix}const wp=r.GetObjectClassByName('wp').GetInstances()[0].GetSdkInstance();call('穿戴装备',wp.At(${template},6,0),${id},${character},false,false,7);return true;})()`);
   await pause(500);
   const worn = await evaluate(state, `(()=>{${prefix}const wp=r.GetObjectClassByName('wp').GetInstances()[0].GetSdkInstance(),slot=wp.At(${template},6,0),id=a.At(${character},15+slot,2);return {slot,id,record:record(id,9)};})()`);
   assert.equal(worn.record[1], template, 'Obtained item was not worn');
@@ -144,7 +144,7 @@ async function pillOverLimit(state, s) {
 // the backpack with finite equipment effects and unequipped. Moved rows must keep every field except the owner.
 async function backpackOverLimit(state, s) {
   const {stored, worn} = s.backpackOverLimit, find = `const find=(z,v)=>{for(let x=1;x<a.GetWidth();x++){let ok=true;for(let y=0;y<50;y++)if(y!==7&&a.At(x,y,z)!==v[y]){ok=false;break;}if(ok)return x;}throw Error('Moved record missing in z'+z);};`;
-  const store = await evaluate(state, `(()=>{${prefix}${find}r.SetTimeScale(0);const before=record(${stored.id},7);call('装备库存入',${stored.id},true,0);const id=find(9,before);return {before,id,moved:record(id,9),source:record(${stored.id},7)};})()`);
+  const store = await evaluate(state, `(()=>{${prefix}${find}r.SetTimeScale(0);const before=record(${stored.id},7);call('装备库存入',${stored.id},true,0,7);const id=find(9,before);return {before,id,moved:record(id,9),source:record(${stored.id},7)};})()`);
   await pause(500);
   const upgrade = await evaluate(state, `(()=>{${prefix}const id=${store.id},level=a.At(id,6,9),cap=call('装备等级上限',a.At(id,5,9));a.Set(1,2,0,1e12);a.Set(3,2,0,1e9);
     a.Set(id,6,9,cap-1);call('升级装备',id,0,0,true);const control={from:cap-1,to:a.At(id,6,9),copper:1e12-a.At(1,2,0)};a.Set(id,6,9,level);a.Set(1,2,0,1e12);a.Set(3,2,0,1e9);
@@ -155,13 +155,13 @@ async function backpackOverLimit(state, s) {
   assert.deepEqual(upgrade.single, upgrade.before, 'Native upgrade changed an over-limit row');
   assert.deepEqual(upgrade.maximum, upgrade.before, 'Native maximum upgrade changed an over-limit row');
   assert.deepEqual([upgrade.copper, upgrade.souls], [1e12, 1e9], 'Native upgrade charged an over-limit row');
-  const takeout = await evaluate(state, `(()=>{${prefix}${find}const before=record(${store.id},9);call('装备库取出',${store.id},true,0);const id=find(7,before);return {id,record:record(id,7)};})()`);
+  const takeout = await evaluate(state, `(()=>{${prefix}${find}const before=record(${store.id},9);call('装备库取出',${store.id},true,0,7);const id=find(7,before);return {id,record:record(id,7)};})()`);
   await pause(500);
   for (const [name, row] of [['store', store.moved], ['takeout', takeout.record]]) assert.deepEqual(row, store.before, name + ' changed the over-limit row');
   assert.ok(store.source.every(v => v === 0), 'Stored backpack row was not cleared');
 
   const put = await evaluate(state, `(()=>{${prefix}const wp=r.GetObjectClassByName('wp').GetInstances()[0].GetSdkInstance(),before=record(${worn.id},7),slot=wp.At(before[1],6,0);
-    call('穿戴装备',slot,${worn.id},${worn.character},false,false);return {slot,before};})()`);
+    call('穿戴装备',slot,${worn.id},${worn.character},false,false,7);return {slot,before};})()`);
   await pause(500);
   const wear = await evaluate(state, `(()=>{${prefix}const wp=r.GetObjectClassByName('wp').GetInstances()[0].GetSdkInstance(),slot=${put.slot},before=${JSON.stringify(put.before)},id=a.At(${worn.character},15+slot,2),v=record(id,9);
     const effects=[];for(let s=0;s<3;s++){const attr=wp.At(v[1],8+s,0);if(attr>0)effects.push({attr,actual:call('装备属性计算',${worn.character},attr,0,0,0,0,0,0,0),main:call('装备主属性',v[6],v[3],attr,v[8],wp.At(v[1],11+s,0),'主属性',0,v[5])});}
@@ -169,7 +169,7 @@ async function backpackOverLimit(state, s) {
   for (let y = 0; y < 50; y++) if (y !== 7) assert.equal(wear.record[y], wear.before[y], 'Wear changed field ' + y);
   assert.equal(wear.record[7], worn.character);
   for (const e of wear.effects) assert.ok(Number.isFinite(e.actual) && Number.isFinite(e.main) && e.actual >= e.main, 'Non-finite or missing equipment effect ' + e.attr);
-  await evaluate(state, `(()=>{${prefix}call('卸下装备',${wear.slot},${wear.id},${worn.character},false,false);return true;})()`);
+  await evaluate(state, `(()=>{${prefix}call('卸下装备',${wear.slot},${wear.id},${worn.character},false,false,7);return true;})()`);
   await pause(500);
   const back = await evaluate(state, `(()=>{${prefix}${find}const id=find(7,${JSON.stringify(wear.before)});return {id,record:record(id,7),pointer:a.At(${worn.character},${15 + wear.slot},2)};})()`);
   assert.deepEqual(back.record, wear.before, 'Unequip changed the over-limit row');
@@ -183,7 +183,40 @@ async function backpackOverLimit(state, s) {
 // Edited backpack relics placed natively on a building, taken off and placed again. Moves copy all 50 fields through z19
 // (y0 keeps the original row, so a relic can come back to another backpack row with a stale y0); only the placement pointer
 // z19 y12 ↔ building z1 y9 changes. Any building works for the move; only a 置物台 (67) feeds 刷新地块灵气, not covered here.
-const relicFind = `const same=(v,w)=>v.every((x,y)=>y===12||w[y]===x);const find=v=>{for(let x=1;x<a.GetWidth();x++)if(a.At(x,1,18)!==0&&same(v,record(x,18)))return x;throw Error('Relic missing in z18');};`;
+// V1.0.13.0 armory (z22): 仓库存入／仓库取出 copy y0–49 between the backpack and z22, and with 武库换装 mode on ([37,1,0]=1)
+// 穿戴装备／卸下装备 take 库序号 22 to wear straight from and unequip back into z22. Edited rows must keep every field except
+// the owner; both end in z22 so the restart reads the new layer back.
+async function armory(state, s) {
+  const {stored, worn} = s.armory, find = `const find=(z,v)=>{for(let x=1;x<a.GetWidth();x++){let ok=true;for(let y=0;y<50;y++)if(y!==7&&a.At(x,y,z)!==v[y]){ok=false;break;}if(ok)return x;}throw Error('Moved record missing in z'+z);};`;
+  const move = (fn, id, from, to) => evaluate(state, `(()=>{${prefix}${find}r.SetTimeScale(0);const before=record(${id},${from}),count=call('仓库数量',0);call('${fn}',${id},true,0);const x=find(${to},before);return {before,id:x,moved:record(x,${to}),source:record(${id},${from}),count:[count,call('仓库数量',0)]};})()`);
+  const store = await move('仓库存入', stored.id, 7, 22);
+  const takeout = await move('仓库取出', store.id, 22, 7);
+  const restore = await move('仓库存入', takeout.id, 7, 22);
+  for (const [name, m] of [['store', store], ['takeout', takeout], ['restore', restore]]) {
+    assert.deepEqual(m.moved, m.before, name + ' changed the edited row');
+    assert.ok(m.source.every(v => v === 0), name + ' did not clear the source row');
+  }
+  assert.deepEqual([store.count[1] - store.count[0], takeout.count[1] - takeout.count[0], restore.count[1] - restore.count[0]], [1, -1, 1], '仓库数量 did not follow the moves');
+  const shelf = await move('仓库存入', worn.id, 7, 22);
+  assert.deepEqual(shelf.moved, shelf.before, 'Storing the worn row changed it');
+  const put = await evaluate(state, `(()=>{${prefix}const wp=r.GetObjectClassByName('wp').GetInstances()[0].GetSdkInstance(),before=record(${shelf.id},22),slot=wp.At(before[1],6,0),mode=a.At(37,1,0);
+    a.Set(37,1,0,1);call('穿戴装备',slot,${shelf.id},${worn.character},false,false,22);return {slot,before,mode};})()`);
+  await pause(500);
+  const wear = await evaluate(state, `(()=>{${prefix}const id=a.At(${worn.character},15+${put.slot},2);return {id,record:record(id,9),source:record(${shelf.id},22)};})()`);
+  for (let y = 0; y < 50; y++) if (y !== 7) assert.equal(wear.record[y], put.before[y], 'Wearing from z22 changed field ' + y);
+  assert.equal(wear.record[7], worn.character);
+  assert.ok(wear.source.every(v => v === 0), 'Wearing did not clear the z22 row');
+  await evaluate(state, `(()=>{${prefix}call('卸下装备',${put.slot},${wear.id},${worn.character},false,false,22);return true;})()`);
+  await pause(500);
+  const back = await evaluate(state, `(()=>{${prefix}${find}const id=find(22,${JSON.stringify(put.before)});return {id,record:record(id,22),pointer:a.At(${worn.character},${15 + put.slot},2),mode:a.At(37,1,0)};})()`);
+  assert.deepEqual(back.record, put.before, 'Unequipping into z22 changed the edited row');
+  assert.notEqual(back.pointer, wear.id, 'Character still points at the unequipped row');
+  for (const v of [{id: restore.id, z: 22}, {id: back.id, z: 22}, {id: stored.id, z: 7}, {id: worn.id, z: 7}, {id: wear.id, z: 9}]) for (let y = 0; y < 50; y++) state.cells.push([v.id, y, v.z]);
+  state.cells.push([worn.character, 15 + put.slot, 2], [37, 1, 0]);
+  return {store, takeout, restore, shelf, wear, back, mode: put.mode};
+}
+
+const relicFind =`const same=(v,w)=>v.every((x,y)=>y===12||w[y]===x);const find=v=>{for(let x=1;x<a.GetWidth();x++)if(a.At(x,1,18)!==0&&same(v,record(x,18)))return x;throw Error('Relic missing in z18');};`;
 async function placeRelic(state, id, building) {
   await evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);if(a.At(${building},9,1)!==0)throw Error('Building already holds a relic');call('摆放灵物',${id},${building});return true;})()`);
   await pause(500);
@@ -406,7 +439,7 @@ async function innerPillPrepare(state, s) {
     await pause(500);
     let row = {template, plane: 7, id, record: await evaluate(state, `(()=>{${prefix}return record(${id},7);})()`)};
     if (wear) {
-      await evaluate(state, `(()=>{${prefix}call('穿戴装备',5,${id},${wear},false,false);return true;})()`);
+      await evaluate(state, `(()=>{${prefix}call('穿戴装备',5,${id},${wear},false,false,7);return true;})()`);
       await pause(500);
       const worn = await evaluate(state, `(()=>{${prefix}const id=a.At(${wear},20,2);return {id,record:record(id,9)};})()`);
       assert.equal(worn.record[1], template, 'Inner pill was not worn'); assert.equal(worn.record[7], wear, 'Worn inner pill owner');
@@ -436,7 +469,7 @@ async function innerPillLevel(state, s) {
     assert.ok(v.total >= v.main, 'Worn pill main attribute missing from 装备属性计算');
   }
   if (wear) {
-    await evaluate(state, `(()=>{${prefix}call('穿戴装备',5,${wear.id},${wear.character},false,false);return true;})()`);
+    await evaluate(state, `(()=>{${prefix}call('穿戴装备',5,${wear.id},${wear.character},false,false,7);return true;})()`);
     await pause(500);
     out.wear = await evaluate(state, `(()=>{${prefix}const id=a.At(${wear.character},20,2);return {id,record:record(id,9),bag:record(${wear.id},7)};})()`);
     assert.equal(out.wear.record[6], wear.level, 'Worn backpack pill level'); assert.equal(out.wear.record[7], wear.character);
@@ -551,7 +584,7 @@ async function affixPrepare(state, s) {
     await pause(500);
     let plane = 7, part = 0;
     if (wear) {
-      await evaluate(state, `(()=>{${prefix}const wp=r.GetObjectClassByName('wp').GetInstances()[0].GetSdkInstance();call('穿戴装备',wp.At(${template},6,0),${id},${wear},false,false);return true;})()`);
+      await evaluate(state, `(()=>{${prefix}const wp=r.GetObjectClassByName('wp').GetInstances()[0].GetSdkInstance();call('穿戴装备',wp.At(${template},6,0),${id},${wear},false,false,7);return true;})()`);
       await pause(500);
       ({id, part} = await evaluate(state, `(()=>{${prefix}const wp=r.GetObjectClassByName('wp').GetInstances()[0].GetSdkInstance(),part=wp.At(${template},6,0),id=a.At(${wear},15+part,2);if(a.At(id,1,9)!==${template}||a.At(id,7,9)!==${wear})throw Error('Obtained item was not worn');return {id,part};})()`));
       plane = 9;
@@ -586,10 +619,10 @@ async function affixOverLimit(state, s) {
   }
   const cycles = [];
   for (const v of rows.filter(v => v.character)) {
-    const before = await evaluate(state, `(()=>{${prefix}if(a.At(${v.character},${15 + v.part},2)!==${v.id})throw Error('Expected worn over-limit item');const b=record(${v.id},9);call('卸下装备',${v.part},${v.id},${v.character},false,false);return b;})()`);
+    const before = await evaluate(state, `(()=>{${prefix}if(a.At(${v.character},${15 + v.part},2)!==${v.id})throw Error('Expected worn over-limit item');const b=record(${v.id},9);call('卸下装备',${v.part},${v.id},${v.character},false,false,7);return b;})()`);
     await pause(500);
     const bag = await evaluate(state, `(()=>{${prefix}if(a.At(${v.character},${15 + v.part},2)!==0)throw Error('Unequip failed');for(let id=1;id<a.GetWidth();id++)if(a.At(id,0,7)===${before[0]}&&a.At(id,1,7)===${before[1]}&&a.At(id,${14 + v.slot},7)===${v.coefficient})return {id,record:record(id,7)};throw Error('Unequipped record missing');})()`);
-    await evaluate(state, `(()=>{${prefix}call('穿戴装备',${v.part},${bag.id},${v.character},false,false);return true;})()`);
+    await evaluate(state, `(()=>{${prefix}call('穿戴装备',${v.part},${bag.id},${v.character},false,false,7);return true;})()`);
     await pause(500);
     const worn = await evaluate(state, `(()=>{${prefix}const id=a.At(${v.character},${15 + v.part},2);return {id,record:record(id,9)};})()`);
     for (let y = 0; y < 50; y++) if (y !== 7) { assert.equal(bag.record[y], before[y], 'Unequip field ' + y); assert.equal(worn.record[y], before[y], 'Equip cycle field ' + y); }
@@ -634,10 +667,10 @@ async function sixthAffix(state, s) {
   const targets = rows.map(v => ({...v}));
   const cycles = [];
   for (const v of targets.filter(v => v.character)) {
-    const before = await evaluate(state, `(()=>{${prefix}if(a.At(${v.character},${15 + v.part},2)!==${v.id})throw Error('Expected worn sixth-slot item');const b=record(${v.id},9);call('卸下装备',${v.part},${v.id},${v.character},false,false);return b;})()`);
+    const before = await evaluate(state, `(()=>{${prefix}if(a.At(${v.character},${15 + v.part},2)!==${v.id})throw Error('Expected worn sixth-slot item');const b=record(${v.id},9);call('卸下装备',${v.part},${v.id},${v.character},false,false,7);return b;})()`);
     await pause(500);
     const bag = await evaluate(state, `(()=>{${prefix}if(a.At(${v.character},${15 + v.part},2)!==0)throw Error('Unequip failed');for(let id=1;id<a.GetWidth();id++)if(a.At(id,0,7)===${before[0]}&&a.At(id,1,7)===${before[1]}&&a.At(id,14,7)===${v.attributeId}&&a.At(id,20,7)===${v.coefficient})return {id,record:record(id,7)};throw Error('Unequipped record missing');})()`);
-    await evaluate(state, `(()=>{${prefix}call('穿戴装备',${v.part},${bag.id},${v.character},false,false);return true;})()`);
+    await evaluate(state, `(()=>{${prefix}call('穿戴装备',${v.part},${bag.id},${v.character},false,false,7);return true;})()`);
     await pause(500);
     const worn = await evaluate(state, `(()=>{${prefix}const id=a.At(${v.character},${15 + v.part},2);return {id,record:record(id,9)};})()`);
     for (let y = 0; y < 50; y++) if (y !== 7) { assert.equal(bag.record[y], before[y], 'Unequip field ' + y); assert.equal(worn.record[y], before[y], 'Equip cycle field ' + y); }
@@ -692,7 +725,7 @@ async function main() {
   const statePath = opt('--state'), state = JSON.parse(fs.readFileSync(statePath)), scenario = JSON.parse(fs.readFileSync(opt('--scenario')));
   const rel = path.relative(path.resolve(__dirname, '..'), state.dir), child = path.relative(state.dir, state.game);
   if (!rel || (!path.isAbsolute(rel) && rel !== '..' && !rel.startsWith('..' + path.sep)) || !child || path.isAbsolute(child) || child.startsWith('..')) throw Error('External disposable state required');
-  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.pillOverLimit && !scenario.backpackOverLimit && !scenario.relics && !scenario.relicTakeOff && !scenario.relicStandPrepare && !scenario.placedRelicAura && !scenario.wall && !scenario.city && !scenario.ascensionQuality && !scenario.innerPillPrepare && !scenario.innerPillLevel && !scenario.ascendedInnerPillLevel && !scenario.basicTechnology && !scenario.buildingLevel && !scenario.relicCrafting && !scenario.recruitTechnology && !scenario.affixPrepare && !scenario.affixOverLimit && !scenario.sixthAffix) throw Error('Scenario has no native follow-up actions');
+  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.pillOverLimit && !scenario.backpackOverLimit && !scenario.armory && !scenario.relics && !scenario.relicTakeOff && !scenario.relicStandPrepare && !scenario.placedRelicAura && !scenario.wall && !scenario.city && !scenario.ascensionQuality && !scenario.innerPillPrepare && !scenario.innerPillLevel && !scenario.ascendedInnerPillLevel && !scenario.basicTechnology && !scenario.buildingLevel && !scenario.relicCrafting && !scenario.recruitTechnology && !scenario.affixPrepare && !scenario.affixOverLimit && !scenario.sixthAffix) throw Error('Scenario has no native follow-up actions');
   await waitMain(state);
   const result = {};
   if (scenario.ascend && !scenario.pills) result.ascend = await ascend(state, scenario);
@@ -700,6 +733,7 @@ async function main() {
   if (scenario.pills) result.pills = await pillsAndRebirth(state, scenario);
   if (scenario.pillOverLimit) result.pillOverLimit = await pillOverLimit(state, scenario);
   if (scenario.backpackOverLimit) result.backpackOverLimit = await backpackOverLimit(state, scenario);
+  if (scenario.armory) result.armory = await armory(state, scenario);
   if (scenario.relics) result.relics = await relicPlacement(state, scenario);
   if (scenario.relicStandPrepare) result.relicStandPrepare = await relicStandPrepare(state, scenario);
   if (scenario.placedRelicAura) result.placedRelicAura = await placedRelicAura(state, scenario);
@@ -723,4 +757,4 @@ async function main() {
   console.log('PASS: native ' + Object.keys(result).join(' and ') + ' follow-up actions');
 }
 if (require.main === module) main().catch(e => { console.error(e.stack); process.exitCode = 1; });
-module.exports = {ascend, followup, pillsAndRebirth, pillOverLimit, backpackOverLimit, relicPlacement, relicTakeOff, relicStandPrepare, placedRelicAura, wallUpgrade, cityLayer, ascensionQuality, innerPillPrepare, innerPillLevel, ascendedInnerPillLevel, basicTechnology, buildingLevel, recruitTechnology, affixPrepare, affixOverLimit, sixthAffix, relicCrafting};
+module.exports = {ascend, followup, pillsAndRebirth, pillOverLimit, backpackOverLimit, armory, relicPlacement, relicTakeOff, relicStandPrepare, placedRelicAura, wallUpgrade, cityLayer, ascensionQuality, innerPillPrepare, innerPillLevel, ascendedInnerPillLevel, basicTechnology, buildingLevel, recruitTechnology, affixPrepare, affixOverLimit, sixthAffix, relicCrafting};

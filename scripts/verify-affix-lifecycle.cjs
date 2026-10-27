@@ -5,10 +5,10 @@ const args=process.argv.slice(2),opt=k=>args[args.indexOf(k)+1];
 const prefix=`const r=self.__banditValidationRuntime,a=r.GetObjectClassByName('save').GetInstances()[0].GetSdkInstance();const call=(name,...args)=>{const f=r.GetEventSheetManager().GetFunctionBlockByName(name),b=f.GetEventBlock();return b.RunAsExpressionFunctionCall(b.GetSolModifiersIncludingParents(),f.IsCopyPicked(),f.GetReturnType(),f.GetDefaultReturnValue(),...args);};`;
 async function main(){
  const statePath=opt('--state'),state=JSON.parse(fs.readFileSync(statePath)),scenario=JSON.parse(fs.readFileSync(opt('--scenario'))),first=scenario.items[0];await waitMain(state);
- const before=await evaluate(state,`(()=>{${prefix}r.SetTimeScale(0);const id=a.At(1,${15+first.equipSlot},2);if(id!==${first.id})throw Error('Expected isolated equipped target');const record=Array.from({length:50},(_,y)=>a.At(id,y,9));call('卸下装备',${first.equipSlot},id,1,false,false);return record;})()`);
+ const before=await evaluate(state,`(()=>{${prefix}r.SetTimeScale(0);const id=a.At(1,${15+first.equipSlot},2);if(id!==${first.id})throw Error('Expected isolated equipped target');const record=Array.from({length:50},(_,y)=>a.At(id,y,9));call('卸下装备',${first.equipSlot},id,1,false,false,7);return record;})()`);
  await new Promise(resolve=>setTimeout(resolve,500));
  const bag=await evaluate(state,`(()=>{${prefix}if(a.At(1,${15+first.equipSlot},2)!==0)throw Error('Unequip failed');for(let id=1;id<2501;id++)if(a.At(id,0,7)>0&&a.At(id,1,7)===${before[1]}&&a.At(id,${8+first.options.slot},7)===${before[8+first.options.slot]}&&a.At(id,${14+first.options.slot},7)===${before[14+first.options.slot]}&&a.At(id,${27+first.options.slot},7)===1)return id;throw Error('Unequipped record missing');})()`);
- await evaluate(state,`(()=>{${prefix}call('穿戴装备',${first.equipSlot},${bag},1,false,false);return true;})()`);
+ await evaluate(state,`(()=>{${prefix}call('穿戴装备',${first.equipSlot},${bag},1,false,false,7);return true;})()`);
  await new Promise(resolve=>setTimeout(resolve,500));
  const after=await evaluate(state,`(()=>{${prefix}const id=a.At(1,${15+first.equipSlot},2);return {id,record:Array.from({length:50},(_,y)=>a.At(id,y,9))};})()`);
  for(let y=1;y<50;y++)if(y!==7)assert.equal(after.record[y],before[y],'Equip cycle field '+y);assert.equal(after.record[7],1);

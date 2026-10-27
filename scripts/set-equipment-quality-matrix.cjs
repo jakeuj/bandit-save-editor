@@ -310,9 +310,9 @@ async function matrixDriver(request){
     }
     if(item.move){
      const row=item.after[0],tid=row[1];
-     if(item.state==='backpack'){call('装备库存入',1,true,0);const x=await settle(9,tid);r.move={to:9,id:x,record:read(x,9),source:read(1,7),refs:refs()};}
-     else if(item.state==='stored'){call('装备库取出',1,true,0);const x=await settle(7,tid);r.move={to:7,id:x,record:read(x,7),source:read(1,9),refs:refs()};}
-     else{call('卸下装备',item.slots[0],1,1,false,false);const x=await settle(7,tid,id=>a.At(1,15+item.slots[0],2)===0&&a.At(id,7,7)===0);r.move={to:7,id:x,record:read(x,7),source:read(1,9),refs:refs()};}
+     if(item.state==='backpack'){call('装备库存入',1,true,0,7);const x=await settle(9,tid);r.move={to:9,id:x,record:read(x,9),source:read(1,7),refs:refs()};}
+     else if(item.state==='stored'){call('装备库取出',1,true,0,7);const x=await settle(7,tid);r.move={to:7,id:x,record:read(x,7),source:read(1,9),refs:refs()};}
+     else{call('卸下装备',item.slots[0],1,1,false,false,7);const x=await settle(7,tid,id=>a.At(1,15+item.slots[0],2)===0&&a.At(id,7,7)===0);r.move={to:7,id:x,record:read(x,7),source:read(1,9),refs:refs()};}
     }
    }
    if(item.cap){

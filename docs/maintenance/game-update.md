@@ -2,7 +2,7 @@
 
 [維護索引](../maintenance.md) · [輕量開發流程](lightweight.md) · [版本遷移與本機快取](migration.md)
 
-遊戲改版依[輕量開發流程](lightweight.md#改-core-與遊戲改版)只對受影響的功能跑冒煙，不跑 `verify-migration.cjs` 的代表副本寫回。2026-10-25 V1.0.11.2→V1.0.12.2 第一次這樣做；該次的變動來源、編號位移與冒煙案例見[更新紀錄 v2.28](../releases.md#v228-遊戲-v10122)。來源快取與 `--plan` 的操作見[版本遷移](migration.md)。
+遊戲改版依[輕量開發流程](lightweight.md#改-core-與遊戲改版)只對受影響的功能跑冒煙，不跑 `verify-migration.cjs` 的代表副本寫回。2026-10-25 V1.0.11.2→V1.0.12.2 第一次這樣做（[更新紀錄 v2.28](../releases.md#v228-遊戲-v10122)）；2026-10-27 V1.0.12.2→V1.0.13.0 在 Mac 做，舊版來源已不在本機（[v2.33](../releases.md#v233-遊戲-v10130)）。來源快取與 `--plan` 的操作見[版本遷移](migration.md)。
 
 ## 步驟
 
@@ -15,7 +15,20 @@
 7. **歷史證明測試**：舊的複合證明綁 V1.0.11.2，測試會用目前 catalog 去核對它而失敗。V1.0.11.2 的 catalog／verification 已凍結在 `tests/fixtures/v1.0.11.2-release`（gzip），`tests/helpers/legacy-release.cjs` 與 `release-v1.0.11.2.cjs` 從那裡讀；下次改版不用再凍結，除非又寫了新的複合證明。直接比對「目前 catalog 的遊戲版本」的斷言改讀 `knowledge/catalog.json`。知識統計（函式數）照新版更新。
 8. 更新紀錄加新版本、README 知識基準與進度入口。Mac 啟動器的 `SCRIPT_SHA256` 可在 Windows 對新版 `c3runtime.js` 做靜態核對後登錄（V1.0.12.2 於 2026-10-25 這樣做，見 [Mac 研究](../research/macos-runtime-investigation.md#v10122-靜態核對2026-10-25)），不必等換到 Mac；Mac 實機啟動與存讀補驗到換 OS 時再做，見 [launcher 說明](../../launcher/README.md)。在 Mac 補驗時先看 appmanifest 的 `buildid`：Steam 正式分支只留最新版，若已更新，就改驗新版（2026-10-27 原本要補 V1.0.12.2，結果改驗 V1.0.13.0）。
 
+## 沒有舊版來源時
+
+Steam 正式分支只留最新版，換機器後舊版來源可能已拿不到（V1.0.13.0 在 Mac 改版時就是）。先用 repo 內能精確代表舊版的資料比，不夠才回頭找舊快取：
+
+- **函式、寫入點、表格、expression**：上一版的 `knowledge/catalog.json` 就是舊來源的萃取結果。對新來源跑 `inspectGame`，比 `functions`（名稱＋SID）、`evidence`（SID、actionSid、x／y／z，忽略 `refs` 的 expression 編號）與 `catalogs`；寫入點的增減就是存檔層面的全部改動。
+- **表格**：先算本機任何舊來源的表格指紋，和上一版 catalog 的 `fingerprints` 相同就能直接逐格比（V1.0.10.2 的 kj／jz 與 V1.0.12.2 相同）。
+- **已審核事件**：拿本機較舊的完整來源做正規化攤平比對（第 2 步），差異再用 `tests/fixtures/v1.0.11.2-release` 的凍結 catalog（寫入點）與工具註解歸屬到正確版本，不要全算在新版（`套装合成` 的選擇庫序號是 V1.0.11.2 的改動）。
+- 正規化時，expression 節點裡的 `[4,N]` 是系統函式綁定（文件說的 sysNN），去掉編號，不是物件；`[2,N,…]` 才是物件；函式呼叫 ACE 的 `a[0]` 是 -2、`a[1]` 是函式名。
+- 精簡來源沒有 `zddt.json`，版本改變時 `cityLayers` 會變 null：從 `package.nw` 取出 `zddt.json` 放進來源副本再重產（V1.0.13.0）。
+- 分析腳本留在 repo 外的改版資料夾（V1.0.13.0：`v1.0.13.0-update-20261027/analysis/`）。
+
 ## 踩過的坑
 
 - 新版從 `开始界面` 載入較慢，`--probe` 剛載入時讀到的是開始畫面的值；以 `--assert` 的通過為準（v2.28）。
 - 背景指令的寫法陷阱見[原生教訓的 Shell 與寫檔](native-lessons.md#shell-與寫檔)。
+- **原生函式多了參數**：新版在 `穿戴装备` 等函式末尾加參數時，驗證工具的舊呼叫少傳會變 0，函式靜默不動作。改版時先用 `v[1][2]` 比兩版參數清單，再補工具的呼叫（V1.0.13.0 的庫序號，見[原生教訓](native-lessons.md#冒煙工具)）。
+- **存檔層數會變**：新版可能在主場景開始時 `SetSize` 擴層（V1.0.13.0 由 22 變 23）。core 的深度檢查只要求下限，新層要在 `extract-game.cjs` 的 `planeNames` 登錄，並讓 `resolveField` 比照相近的層唯讀，否則它歸「未知層」，自訂座標寫得進去。

@@ -111,7 +111,7 @@ function eventDigest(game, sids) {
   return crypto.createHash('sha256').update(JSON.stringify(tree)).digest('hex');
 }
 
-const planeNames = ['山寨與全局', '存檔識別與建築', '角色基本資料', '招募候選角色', '角色職業等級', '角色職業經驗', '主地圖格網', '背包物品', '未辨識層 8', '裝備庫與穿戴', '戰鬥地圖格網', '城市商店', '角色衍生屬性', '鍛造佇列', '未辨識層 14', '引導任務', '角色重生／渡劫', '內丹', '靈物背包', '靈物配置', '角色戰鬥位置', '設施進程'];
+const planeNames = ['山寨與全局', '存檔識別與建築', '角色基本資料', '招募候選角色', '角色職業等級', '角色職業經驗', '主地圖格網', '背包物品', '未辨識層 8', '裝備庫與穿戴', '戰鬥地圖格網', '城市商店', '角色衍生屬性', '鍛造佇列', '未辨識層 14', '引導任務', '角色重生／渡劫', '內丹', '靈物背包', '靈物配置', '角色戰鬥位置', '設施進程', '武庫'];
 const tableSpecs = { materials: ['cl', 1, 3], characters: ['js', 1, null], professions: ['zy', 1, 2], attributes: ['sx', 1, 2], items: ['wp', 1, 5], technologies: ['kj', 1, 2], buildings: ['jz', 1, 3], quests: ['rw', 1, 2], talents: ['tf', 1, 4], facilities: ['ss', 1, 3], relics: ['lw', 1, 3] };
 
 function createCatalog(game) {
@@ -119,7 +119,8 @@ function createCatalog(game) {
     '6661d77209c0e98069219965908fd4d6b9ee3dca84763c158dcd5f0a863df665': { version: 'V1.0.9.1', runtimes: ['b5bf45f38e8165bbd5093702695486fe77797a27914bba8b1fdd5f46658396bc','58d634814f9ee8145ad553ffde60a6a511b5f68cf27f7ba86933d66216901998'] },
     '32a36accc1b97e9bb3498eb3be76950e1e72b2e8f7a0cf9ce293b57aa5e0d820': { version: 'V1.0.10.2', runtimes: ['1e1643722efc032824881f03ce4d81df1135e6a8cd8e08d9fd87e56e480ac9f6'] },
     'aac06ce18a840ae221d7683fba21182b0dcf4bb7ae1caf3431199264a1c5f62e': { version: 'V1.0.11.2', expressionOffset: 11, runtimes: ['3e0febeb8342138ed47d9e8499e3646f4e8ddc2ce89a9faa0bebbad9ba83280e'] },
-    '950a1c1d586617292e9c1497b09facd064988c1f720db4c2c262b0f9cd42adbf': { version: 'V1.0.12.2', expressionOffset: 15, runtimes: ['e6a6d629bf7320344445ac7e6e47085211496e5b6a9498aec13ab1a121abd04b'] }
+    '950a1c1d586617292e9c1497b09facd064988c1f720db4c2c262b0f9cd42adbf': { version: 'V1.0.12.2', expressionOffset: 15, runtimes: ['e6a6d629bf7320344445ac7e6e47085211496e5b6a9498aec13ab1a121abd04b'] },
+    '9e5697adeb11a0c1daf40be6086b56f58755562f3560ad1772d771445e167ed2': { version: 'V1.0.13.0', expressionOffset: 75, runtimes: ['2546ca0823f858f3ce2a2e1dd013ed70f7e4d330e8d6c33d7ce75fb2a75d6936'] }
   }[game.fingerprints['data.json']];
   if(!reviewed) {
     // Catalog coordinates and growth formulas must be reviewed when the event data changes.
@@ -174,7 +175,7 @@ function createCatalog(game) {
   const setEquipmentQuality=require('./set-equipment-quality-data.cjs').extract(game,eventDigest,batch2Data,setEquipmentLevel);
   // Reviewed equipment formula factories moved together in V1.0.11.2; keep source references on this build.
   if(reviewed.expressionOffset)for(const rules of [affixReplacement,equipmentQuality])for(const attribute of Object.values(rules.attributes))attribute.expression+=reviewed.expressionOffset;
-  const equipmentWorkflowLimits={version:1,planes:[7,9],backpack:{minTier:1,maxTier:9,minQuality:1,maxQuality:6,quantity:1,owner:0,advanced:false},newItemMarkers:[0,1],unknownStateColumns:[25,26,27],firstSelection:'all-flags-zero-explicit-atomic',identity:'plane-and-current-row',sourceSids:[166680919655131,666416688115651,644557287879738,196601779910507,775039415186059,564254928232839,959041203712077,418018161514165]};
+  const equipmentWorkflowLimits={version:1,planes:[7,9],backpack:{minTier:1,maxTier:9,minQuality:1,maxQuality:6,quantity:1,owner:0,advanced:false},newItemMarkers:[0,1],unknownStateColumns:[25,26,27],firstSelection:'all-flags-zero-explicit-atomic',identity:'plane-and-current-row',sourceSids:[166680919655131,666416688115651,644557287879738,196601779910507,775039415186059,564254928232839,204416519787196,574511591831477]};
   // Name conversion only; evidence identifiers and source paths remain unchanged.
   const glossaryFile = path.join(__dirname, '../knowledge/traditional-names.json');
   const glossary = fs.existsSync(glossaryFile) ? JSON.parse(fs.readFileSync(glossaryFile, 'utf8')) : {};

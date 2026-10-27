@@ -34,7 +34,7 @@ function nativeDriver(request){
   reset();const z=item.state==='backpack'?7:9,row=item.before.slice();row[7]=item.state==='equipped'?1:0;put(1,z,row);
   if(item.state==='equipped')a.Set(1,15+item.slot,2,1);
   const loaded=read(1,z);let targetId=1;
-  if(z===7){call('装备库存入',1,true,0);targetId=find(9,row[1]);}
+  if(z===7){call('装备库存入',1,true,0,7);targetId=find(9,row[1]);}
   const moved=read(targetId,9),beforeEffects=request.attributes.map(id=>[id,single(moved,id)]);
   const after=item.after.slice();after[7]=row[7];put(targetId,9,after);
   const effects=request.attributes.map(id=>[id,single(read(targetId,9),id)]);
@@ -55,10 +55,10 @@ function nativeDriver(request){
  if(request.op==='observe')return {records:request.locations.map(v=>({...v,record:read(v.id,v.plane)})),refs:refs()};
  if(request.op==='cycle'){
   const initial=read(1,request.plane),steps=[];let bag=1,z9=1;
-  if(request.plane===9){if(initial[7]){call('卸下装备',request.slot,1,1,false,false);}else call('装备库取出',1,true,0);bag=find(7,initial[1]);steps.push({phase:'takeout',id:bag,plane:7,record:read(bag,7),refs:refs()});}
-  call('穿戴装备',request.slot,bag,1,false,false);z9=a.At(1,15+request.slot,2);steps.push({phase:'equip',id:z9,plane:9,record:read(z9,9),refs:refs()});
+  if(request.plane===9){if(initial[7]){call('卸下装备',request.slot,1,1,false,false,7);}else call('装备库取出',1,true,0,7);bag=find(7,initial[1]);steps.push({phase:'takeout',id:bag,plane:7,record:read(bag,7),refs:refs()});}
+  call('穿戴装备',request.slot,bag,1,false,false,7);z9=a.At(1,15+request.slot,2);steps.push({phase:'equip',id:z9,plane:9,record:read(z9,9),refs:refs()});
   call('刷新单角色全属性',1,true,0);
-  call('卸下装备',request.slot,z9,1,false,false);bag=find(7,initial[1]);steps.push({phase:'unequip',id:bag,plane:7,record:read(bag,7),refs:refs()});
+  call('卸下装备',request.slot,z9,1,false,false,7);bag=find(7,initial[1]);steps.push({phase:'unequip',id:bag,plane:7,record:read(bag,7),refs:refs()});
   return {initial,steps,locations:[{id:bag,plane:7},{id:z9,plane:9}]};
  }
  throw Error('Unknown native set request '+request.op);
