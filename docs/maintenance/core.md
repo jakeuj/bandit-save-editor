@@ -69,7 +69,7 @@ node scripts/build-editor.cjs
 
 新功能依下列規範設計，目的是好維護：改一個功能不牽動其他功能的程式與測試。（2026-10-24 前這些規範也用來減少 core 切片重證；[輕量開發流程](lightweight.md#改-core-與遊戲改版)起改 core 不再重證。）
 
-1. 以**獨立具名入口**提供資格、預覽與交易（例如 `xxxInfo`／`previewXxx`／`setXxx`），UI 直接呼叫該入口；不在 `editingInfo`、`setEditingValue`、`resolveField` 等樞紐新增分支。寶物等級（v2.11）接入 `editingInfo`／`setEditingValue`，當時因此付了全部 19 份重證，是反例。v2.14 背包等級超限只是把 z7 納入既有進階判斷，仍改在樞紐內（另寫入口會複製整套背包檢查）；代價是要調整綁歷史證明的測試，見[輕量流程](lightweight.md#測試也不綁目前-core)。
+1. 以**獨立具名入口**提供資格、預覽與交易（例如 `xxxInfo`／`previewXxx`／`setXxx`），UI 直接呼叫該入口；不在 `editingInfo`、`setEditingValue`、`resolveField` 等樞紐新增分支。寶物等級（v2.11）接入 `editingInfo`／`setEditingValue`，當時因此付了全部 19 份重證，是反例。v2.14 背包等級超限只是把 z7 納入既有進階判斷，仍改在樞紐內（另寫入口會複製整套背包檢查）；代價是要調整綁歷史證明的測試，見[輕量流程](lightweight.md#測試也不綁目前-core)。v2.35 武庫同理：z22 列是 z7 的逐欄複製，把各處 `plane===7` 換成 `backpackLike`／`planeVerified`，不另寫入口。
 2. 新入口只新增 `globalThis.SaveCore` 匯出名稱；新增名稱不影響既有 family，改變既有名稱的指向則會影響。
 3. 新功能的唯讀保護若必須進入 `resolveField`（例如自訂座標不可繞過），優先把分類改成資料驅動，不為單一功能在樞紐加特例。
 4. 共用工具（座標、格存取、`put`、`transaction`、`parse`／`serialize`）少改、集中改；新功能需要的輔助函式放在自己的區塊。

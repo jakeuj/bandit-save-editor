@@ -9,6 +9,7 @@
 冒煙可沿用 `verify-game.cjs --scenario`（`setPillAptitudeBonus`、`setEquipmentLevel` 等具名操作）加 `verify-native-lifecycle.cjs`（`ascend`、`followup`、`pills`、`pillOverLimit`、`backpackOverLimit`、`relics`、`relicTakeOff`、`relicStandPrepare`、`placedRelicAura`、`wall`、`city`、`ascensionQuality`、`innerPillPrepare`、`innerPillLevel`、`ascendedInnerPillLevel`、`relicCrafting`、`recruitTechnology`、`affixPrepare`、`affixOverLimit` 等動作，以 `main()` 的清單為準；`pills` 可用 `pillCharacter` 指定角色；擺放類動作要在存檔重啟後另跑一次取下，才算驗過兩輪 IO；`穿戴装备` 後要等一拍再讀角色指標，同一次 evaluate 內讀到的是空列）；固定基準存檔先複製到 repo 外的新資料夾，步驟依 `.local/game-sources.json` 的 `nativeSmoke` 紀錄（雲存檔載入 → 存檔 → assert → stop → restart → 存檔載入 → assert）。
 
 - **只驗 Mac 啟動器、還沒改版時**：複製目前 catalog，只把 15 個來源指紋換成新版（`c3runtime.js` 用原始指紋）存到 repo 外當 `--catalog`，加 `--package` 指 Steam 安裝目錄。這只證明能存讀，不代表修改器支援新版（V1.0.13.0 Mac 補驗）。
+- **武庫裡的修改後物品**：用 `armoryEdited`（`rows` 為 z22 列號，`worn` 指定從武庫穿上的列與角色）：取出到背包再存回、換裝模式從武庫穿上並卸回。換裝模式穿上時，角色原本那格的裝備會進武庫而不是背包，基準存檔的武庫列數會多一（v2.35）。
 - **函式參數隨版本變多**：V1.0.13.0 的 `穿戴装备`／`卸下装备`／`装备库存入`／`装备库取出` 末尾多了庫序號（7 背包、22 武庫），工具的呼叫都補了 `7`；少傳時是 0，函式整個不動作也不報錯。武庫的原生動作用 `armory`（`仓库存入`／`仓库取出`，換裝模式先 `a.Set(37,1,0,1)`，再用庫序號 22 穿卸）（V1.0.13.0）。
 - **成本公式的原生核對**：`soulUpgrade` 讀 catalog 的 `treasureLevel.cost.growth`，從修改後等級呼叫 `升级装备` 一次，同時核對扣費＝公式與＝原生 `升级装备魂魄`。基準存檔沒有寶物或內丹時，先用 `innerPillPrepare`（寶物給 `slot: 6`）原生取得並穿上、存檔重啟當基準，再跑修改與核對（V1.0.14.0）。
 - **Mac 遊戲寫出的存檔檔名帶反斜線**：重讀遊戲寫出檔要讀副本 `game/` 下的 `save\ea1save.dat`，不是 `game/save/ea1save.dat`（V1.0.13.0）。
@@ -110,6 +111,9 @@
 - **瀏覽器規格不要點停用中的按鈕**：Playwright 會等到逾時。要證明「不合法值不能套用」，只填值，再斷言按鈕停用與提示文字（v2.30）。
 - **模擬測試的答案佇列**：同一個 test 裡連跑幾次被拒絕的案例時，前一次失敗會在佇列留下沒用到的答案；每次執行前先清空（`answers.length = 0`）（v2.30）。
 - **`#pendingCount` 數的是儲存格**：一次寫兩格（ID 與係數）的操作會讓計數加 2，瀏覽器規格要照格數斷言（v2.31）。
+- **B7 等價證明逐字固定 core 幾行**：`scripts/set-equipment-quality-equivalence.cjs` 從目前 core 反推 B7 前版本，`setEquipmentLevelInfo` 的跨池註解、`crossPool` 那行到詞條檢查那段必須逐字不變，否則 `set-equipment-quality-merge.test.cjs` 報「找不到唯一的 B7 跨池修補」。要改那幾行的行為時改在區塊外（v2.35 武庫因此在跨池判斷讀 z9 群組）。
+- **批次 API 要計時器**：`previewBatch`／`applyBatch` 會 `setTimeout` 讓出，`vm` context 要給 `{setTimeout,performance}`，否則報 `setTimeout is not defined`（v2.35）。
+- **每份 `vm` 載入是獨立的 core**：測試同時載入旗標開／關兩份時，要用該份自己的 `C` 操作它的 model；用錯實例會讀到另一份的 `KNOWLEDGE`，該拒絕的寫入會通過（v2.35）。
 
 ## Shell 與寫檔
 

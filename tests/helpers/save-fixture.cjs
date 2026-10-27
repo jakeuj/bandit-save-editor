@@ -7,11 +7,11 @@ function renderSave(data, patches = []) {
     ' ' + JSON.stringify(replacements.has(`${x},${y},${z}`) ? replacements.get(`${x},${y},${z}`) : value) + ' '
   ).join(',') + ']').join(',') + ']');
   return '\ufeff{ "unrelated":987654321098765432109876543210,"exponent":1e+03,\n"c2array":true,"size":[' +
-    data.length + ',60,22],"data":[' + rows.join(',') + ']}\n';
+    data.length + ',60,' + data[0][0].length + '],"data":[' + rows.join(',') + ']}\n';
 }
 
-function saveFixture({size = 221, characters = 0, exclusions = false} = {}) {
-  const data = Array.from({length: size}, () => Array.from({length: 60}, () => Array(22).fill(0)));
+function saveFixture({size = 221, characters = 0, exclusions = false, layers = 22} = {}) {
+  const data = Array.from({length: size}, () => Array.from({length: 60}, () => Array(layers).fill(0)));
   data[0][0][1] = 'szmnqea';
   data[1][1][0] = '合成測試山寨';
   for (let id = 1; id <= characters; id++) {

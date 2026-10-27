@@ -7,7 +7,7 @@
  function inventoryEntities(){
   const rows=C.listEntities(model,'inventory'),known=new Set(rows.map(r=>`${r.z}:${r.id}`));
   // Keep occupied but unrecognised records visible so an empty state never hides corrupt data.
-  for(const z of [7,9])for(let x=1;x<model.original.size[0];x++){
+  for(const z of [7,9,22].filter(z=>z<model.original.size[2]))for(let x=1;x<model.original.size[0];x++){
    const template=read(x,1,z);
    if((read(x,0,z)!==0||template!==0)&&!known.has(`${z}:${x}`))rows.push({id:x,z,name:`未辨識物品（範本 #${template}）`,detail:'資料異常或範本未支援'});
   }
@@ -15,7 +15,9 @@
  }
  const equipmentChoices=()=>inventoryEntities().filter(v=>!$('inventoryPlane').value||String(v.z)===$('inventoryPlane').value);
  const innerPillRow=(plane,itemId)=>K.catalogs.items.find(i=>i.id===read(itemId,1,plane))?.kind==='内丹';
- const equipmentLabel=v=>`${v.z===7?'背包':read(v.id,7,9)>0?'穿戴・'+read(read(v.id,7,9),1,2):'裝備庫'} #${v.id} ${v.name}`;
+ // z22 (武庫, V1.0.13.0) rows follow the backpack rules; older saves have no z22.
+ const planeName=z=>z===7?'背包':z===22?'武庫':'裝備庫';
+ const equipmentLabel=v=>`${v.z!==9?planeName(v.z):read(v.id,7,9)>0?'穿戴・'+read(read(v.id,7,9),1,2):'裝備庫'} #${v.id} ${v.name}`;
  function emptyEquipment(editor,title,message='此位置沒有可選物品。'){
   $(editor).innerHTML=`<h3>${title}</h3><p class="muted small-text" role="status">${message}</p><button class="small" data-all-positions>查看所有位置</button>`;
  }
@@ -27,7 +29,7 @@
   if(!choices.some(v=>v.id===state.id))state.id=choices[0]?.id??null;
   const [plane,itemId]=kind==='equipment'&&state.id?state.id.split(':').map(Number):[9,state.id];
   let info,error='';try{info=kind==='equipment'&&innerPillRow(plane,itemId)?C.innerPillLevelInfo(model,{itemId,plane}):C.editingInfo(model,kind,itemId,plane);}catch(e){error=e.message;}
-  const backpackNormalOnly=kind==='equipment'&&plane===7&&!info?.advancedVerified;
+  const backpackNormalOnly=kind==='equipment'&&plane!==9&&!info?.advancedVerified;
   if(backpackNormalOnly||info?.isSet||info?.isTreasure||info?.isInnerPill)state.advanced=false;
   const enabled=info?.verified&&(!state.advanced||info.advancedVerified),max=state.advanced?info?.advancedMax:Math.min(info?.normalMax??0,info?.advancedMax??0);
   let recruit=null;if(info&&kind==='technology'&&itemId===33&&state.advanced&&typeof C.recruitTechnologyInfo==='function')try{recruit=C.recruitTechnologyInfo(model);}catch(e){}
@@ -169,7 +171,7 @@
     if(!info)throw Error('請選擇有效套裝裝備。');
     const o={...target(),addedAffixes:additions()},p=C.previewSetEquipmentQualityCandidate(model,o),f=C.setEquipmentQualityCandidateEffects(model,o);
     const dir=p.direction==='upgrade'?'升品':p.direction==='downgrade'?'降品':'未變';
-    $('setQualityStatus').textContent=p.group?`${info.plane===7?'背包':'裝備庫'} · ${dir} · 群組 ${p.group} · ${p.verified?'已通過驗證':'尚待獨立遊戲驗證，套用停用'}`:'品質未改變。';
+    $('setQualityStatus').textContent=p.group?`${planeName(info.plane)} · ${dir} · 群組 ${p.group} · ${p.verified?'已通過驗證':'尚待獨立遊戲驗證，套用停用'}`:'品質未改變。';
     $('setQualityPreview').innerHTML=`<p>品質 ${p.previousQuality}・${names[p.previousQuality]} → ${p.quality}・${names[p.quality]} · 等級 ${htmlValue(p.level)}（上限 ${htmlValue(p.previousMax)} → ${htmlValue(p.normalMax)}）<br>主係數 ${htmlValue(p.mainCoefficient.before)} → ${htmlValue(p.mainCoefficient.after)} · 已選槽 ${p.selectedSlot??'無'}</p><div class="table-wrap"><table><thead><tr><th>槽位／動作</th><th>來源</th><th>目前詞條／係數／旗標</th><th>套用後</th></tr></thead><tbody>${p.slots.map(s=>`<tr><td>${s.slot}・${({added:'新增',removed:'移除',retained:'保留'})[s.kind]}</td><td>${({origin:'P原',set:'P套',both:'P原＋P套'})[s.source]}</td><td>${esc(attrName(s.before.attributeId))} / ${htmlValue(s.before.coefficient)} / ${s.before.flag}</td><td>${esc(attrName(s.after.attributeId))} / ${htmlValue(s.after.coefficient)} / ${s.after.flag}</td></tr>`).join('')}</tbody></table></div><div class="table-wrap"><table><thead><tr><th>裝備屬性</th><th>目前</th><th>套用後</th><th>差異</th></tr></thead><tbody>${f.effects.filter(e=>e.before||e.after).map(e=>`<tr><td>${esc(e.name)}</td><td>${htmlValue(e.before)}${esc(e.unit)}</td><td>${htmlValue(e.after)}${esc(e.unit)}</td><td>${htmlValue(Math.round(e.delta*100)/100)}${e.unit==='%'?' 百分點':''}</td></tr>`).join('')}</tbody></table></div><p>${p.unchanged?'品質未改變。':f.effectUnchanged?'取整後效果不變。':''}${esc(f.setBonusNote)}</p>`;
     $('setQualityRemovalLabel').hidden=!p.requiresRemovalConfirmation;
     $('setQualityApply').disabled=!p.verified||p.unchanged||p.requiresRemovalConfirmation&&!$('setQualityRemoval').checked;
@@ -324,7 +326,7 @@
  function renderInventory(){
   const q=$('inventorySearch').value.trim().toLowerCase(),z=$('inventoryPlane').value;
   const rows=inventoryEntities().filter(r=>(!z||r.z===Number(z))&&`${r.id} ${r.name} ${r.detail}`.toLowerCase().includes(q));
-  paged('inventory',rows,r=>`<tr><td class="mono">#${r.id} / ${esc(read(r.id,1,r.z))}</td><td>${esc(r.name)}</td><td>${r.z===7?'背包':'裝備庫／穿戴'}</td><td>${htmlValue(read(r.id,5,r.z))} / Lv ${htmlValue(read(r.id,6,r.z))}</td><td><button class="small" data-inspect-item="${r.id}" data-plane="${r.z}">查看欄位</button></td></tr>`,'inventoryRows');
+  paged('inventory',rows,r=>`<tr><td class="mono">#${r.id} / ${esc(read(r.id,1,r.z))}</td><td>${esc(r.name)}</td><td>${r.z===9?'裝備庫／穿戴':planeName(r.z)}</td><td>${htmlValue(read(r.id,5,r.z))} / Lv ${htmlValue(read(r.id,6,r.z))}</td><td><button class="small" data-inspect-item="${r.id}" data-plane="${r.z}">查看欄位</button></td></tr>`,'inventoryRows');
   renderEditing('equipment');renderAffixes();renderQuality();renderSetQuality();if(typeof renderRelics==='function')renderRelics();
  }
  function renderAtlas(){

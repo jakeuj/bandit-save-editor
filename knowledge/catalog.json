@@ -87354,6 +87354,7 @@
     "recruitTechnologyAdvanced": true,
     "equipmentAffixCoefficientAdvanced": true,
     "equipmentSixthAffix": true,
+    "armoryEquipment": true,
     "names": true,
     "characterExperience": true,
     "professionExperience": true,

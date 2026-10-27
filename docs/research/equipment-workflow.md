@@ -99,3 +99,17 @@ IAB的確認框曾阻塞dialog API及後續命令；改以原生Windows工具辨
 **隔離遊戲冒煙（2026-10-24，V1.0.11.2 完整快取，通過）**：基準存檔同 v2.13（SHA-256 `ebb0a4a2…`）。`verify-game.cjs` 以目前 core 把背包 #3 鐮刀（T1 Q1）1→1000、#6 礦鍬（T1 Q1）1→11；雲存檔載入、原版存檔、停止、新 PID 讀回一致。接著 `verify-native-lifecycle.cjs` 的 `backpackOverLimit`：#3 原生存入裝備庫，上限下對照（9→10）會升級扣費，1000 時 `升级装备`／`升级最大装备` 不改等級、不扣貨幣魂魄，取出回背包 50 欄不變；#6 由背包直接穿上角色 1，主屬性有限且等於 `装备主属性`，卸下回背包除 y7 外不變。再存檔、新 PID 讀回一致；最終原版存檔以修改器讀回，搬移後的新列號可降回 10、再升 1000、拒絕 1001。結果檔留在 repo 外，雜湊記於 `verification.json` 的 `lightweight`。
 
 **工具教訓**：`穿戴装备` 後要等一拍（500 ms）再讀角色指標，同一次 evaluate 內讀到的是空列（y0=0）；`装备库存入`／`装备库取出` 則可在同一次呼叫後立即以 50 欄內容定位新列。
+
+## 實作摘要（2026-10-27，v2.35 武庫裝備編輯）
+
+依[輕量開發流程](../maintenance/lightweight.md)實作，不建 SDD。
+
+**欄位與入口**：V1.0.13.0 的 `仓库存入`／`仓库取出` 在 z7 與 z22 間整列複製 y0–49，換裝模式（`[37,1,0]=1`）的穿卸也只改 y7，所以武庫列直接套背包的資格檢查與群組。core 加 `equipmentPlane`（7、9、22，且存檔要有 z22）、`backpackLike`（7 或 22）、`planeName`、`planeVerified`（群組開啟，且 z22 另需 `armoryEquipment`），原本各處 `plane===7` 的判斷改用它們；沒有新增具名入口，既有入口 `setEquipmentLevel`、`setEquipmentAffixCoefficient`(`Advanced`)、`setEquipmentAffix`、`setEquipmentQuality`、`setEquipmentSixthAffix`、`setInnerPillLevel`、套裝品質候選與批次 `equipmentMax` 都接受 `plane:22`。這和 v2.14 一樣改在樞紐內，另寫入口會複製整套背包檢查。UI 的位置選單與批次庫別加「武庫」，標籤用 `planeName`。
+
+**拒絕條件**：與背包相同（數量 1、歸屬 0、普通／非套裝、y24–27、詞條槽範圍、超限詞條與第六槽的互斥）；22 層存檔傳 22 時拒絕；`armoryEquipment` 關閉時所有資訊入口照常回報但 `verified=false`，寫入一律拒絕。欄位圖鑑、舊 `set` 與自訂座標仍唯讀。套裝等級的跨池接受判斷對 z22 讀 `setEquipmentLevelCrossPool`（z9），因為那幾行被 `scripts/set-equipment-quality-equivalence.cjs` 逐字固定；兩個跨池群組目前都開著，所以結果相同。
+
+**旗標**：`armoryEquipment`（`extract-game.cjs` 預設 false，`equipmentWorkflow` 欄位限制或裝備資料變更時與背包群組一起關閉），登記在 `verification-requirements.cjs`／`verification-suite.cjs` 的 `equipmentWorkflow`。
+
+**合成測試**：`tests/armory-equipment.test.cjs`（旗標登記；關閉時十種寫入全部拒絕而背包照常；開啟時每種寫入只改目標 token、標籤為武庫、undo／restore 回原 bytes；套裝品質候選走背包群組；歸屬與特殊狀態拒絕與 z7 一致；清單與批次只在 23 層時含武庫）。瀏覽器 `tests/browser/armory-equipment.spec.cjs`（1280／390px 選武庫、套用、下載逐字比對、重讀再調；旗標關閉時按鈕停用）。
+
+**隔離遊戲冒煙（2026-10-27，Mac Apple M4 Max、CrossOver 正式分支 V1.0.14.0，通過）**：基準沿用 v2.34 遊戲寫出的 23 層存檔（SHA-256 `fbdb5677…`）。`verify-game.cjs` 以候選 catalog（只開 `armoryEquipment`）把武庫 #1 鐮刀（T1 Q1 Lv1000）降到 10、#2 礦鍬（T1 Q1 Lv11）降到 5 再升品質 2（主係數 100→130、槽 1 暴擊幾率 25.5）；雲存檔載入、原版存檔、新 PID 讀回一致。`verify-native-lifecycle.cjs armoryEdited`：兩列 `仓库取出` 到背包再 `仓库存入` 回武庫，50 欄不變；換裝模式下角色 2 以 `穿戴装备(…,22)` 從武庫穿上 #2，除 y7 外 50 欄不變，`装备属性计算` 穿刺攻擊 14／採礦力 11／敏捷 0.46 等於 `装备主属性` 與修改器的品質預覽；`卸下装备(…,22)` 回武庫整列不變，原穿戴的柴斧依換裝模式進武庫。第二輪原版存檔、新 PID 讀回一致（3 個 PID、4 次 assert）。修改器重讀遊戲寫出檔逐字元往返，兩列仍可編輯、Lv16 超出一般上限被拒。腳本與結果在 repo 外 `armory-equipment-20261027/`。

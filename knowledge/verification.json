@@ -79,7 +79,8 @@
     "pillAptitudeBonusAdvanced": true,
     "recruitTechnologyAdvanced": true,
     "equipmentAffixCoefficientAdvanced": true,
-    "equipmentSixthAffix": true
+    "equipmentSixthAffix": true,
+    "armoryEquipment": true
   },
   "lightweight": {
     "randomCharacterBaseAptitudesAscended": {
@@ -425,6 +426,23 @@
       "passed": true,
       "smokeGameVersion": "V1.0.12.2",
       "gameUpdate": "V1.0.14.0 靜態核對沿用（來源事件與資料未變；有名角色天賦只影響範本 167／179）"
+    },
+    "armoryEquipment": {
+      "date": "2026-10-27",
+      "gameVersion": "V1.0.14.0",
+      "flow": "docs/maintenance/lightweight.md",
+      "smoke": "Mac（Apple M4 Max、CrossOver 正式分支 V1.0.14.0）隱藏隔離副本；基準沿用 v2.34 遊戲寫出的 23 層存檔（武庫兩列）；verify-game.cjs 以候選 catalog（armoryEquipment 開）執行 setEquipmentLevel／setEquipmentQuality（plane 22），雲存檔載入、原版存檔、新 PID 讀回；verify-native-lifecycle.cjs armoryEdited 原生核對，再存檔、新 PID 讀回，修改器重讀遊戲寫出檔",
+      "cases": [
+        "z22 #1 鐮刀 T1 Q1 Lv1000（超限）→10：一般模式降回原版上限",
+        "z22 #2 礦鍬 T1 Q1 Lv11→5，再升品質 1→2：主係數 100→130、新增槽 1 暴擊幾率 25.5（洗練旗標 0）",
+        "原生 仓库取出 到背包再 仓库存入 回武庫：兩列 50 欄不變、來源列清空；武庫換裝模式下 穿戴装备(库序号 22) 由角色 2 從武庫穿上 #2：除 y7 外 50 欄不變，装备属性计算 穿刺攻擊 14／採礦力 11／敏捷 0.46 等於 装备主属性 與修改器預覽；卸下装备 回武庫整列不變（原穿戴的柴斧依換裝模式進武庫）",
+        "兩輪原版存檔、新 PID 讀回一致（3 個 PID、4 次 assert）；修改器重讀遊戲寫出檔逐字元往返，#1 Lv10、#2 Q2 Lv5 仍可編輯，Lv16 超出一般上限被拒"
+      ],
+      "baselineSaveSha256": "fbdb5677e82aed4bd7d71e0e4dff52d56f5018d1a3f0ac0e8e12961580af7a2c",
+      "resultSha256": "42e9efa722028b852ba80609ea1ab2c94430e3a628186fc8bf335593e4bbc2a3",
+      "nativeResultSha256": "715d974f77c22a0d06b4fe49db31e87e969522b85ae39a9d34624870e8ac4573",
+      "passed": true,
+      "smokeGameVersion": "V1.0.14.0"
     }
   },
   "method": "按功能相依選跑；原生、沿用與 UI 未重驗分開記錄",

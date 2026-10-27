@@ -49,6 +49,11 @@
  const C=(x,y,z)=>({x,y,z});
  const activeCharacter=(m,x)=>Number.isInteger(x)&&x>0&&exists(m.original,C(x,0,2))&&typeof get(m,C(x,1,2))==='string'&&get(m,C(x,0,2))>0;
  const EDIT_GROUPS={equipment:'equipmentLevel',training:'professionTrainingCap',technology:'advancedTechnologyLevel'};
+ // V1.0.13.0 armory (z22): 仓库存入／仓库取出 copy y0–49 verbatim between z7 and z22, so an armory row takes the backpack
+ // rules and groups; every armory write also needs armoryEquipment. Saves from older versions have no z22.
+ const ARMORY=22,equipmentPlane=(m,plane)=>[7,9,ARMORY].includes(plane)&&plane<m.original.size[2];
+ const backpackLike=plane=>plane===7||plane===ARMORY,planeName=plane=>plane===7?'背包':plane===ARMORY?'武庫':'裝備庫';
+ const planeVerified=(plane,group)=>KNOWLEDGE.verification[group]===true&&(plane!==ARMORY||KNOWLEDGE.verification.armoryEquipment===true);
  function buildingLevel(m,template){
   let level=0;
   for(let x=1;x<m.original.size[0];x++)if(get(m,C(x,0,1))===x&&get(m,C(x,1,1))===template){const n=get(m,C(x,5,1));if(!Number.isSafeInteger(n)||n<0)throw Error('建築等級資料不符。');level=Math.max(level,n);}
@@ -81,7 +86,7 @@
  // Set-level candidates are independent of ordinary equipment and remain gated until their own first proof.
  function setEquipmentLevelInfo(m,{itemId,plane=9}){
   const fail=reason=>{throw Error('套裝等級：'+reason);},rules=KNOWLEDGE.setEquipmentLevel;
-  if(!rules||rules.version!==1||![7,9].includes(plane)||!Number.isSafeInteger(itemId)||itemId<1||itemId>=m.original.size[0])fail('庫別、資料或編號不符。');
+  if(!rules||rules.version!==1||!equipmentPlane(m,plane)||!Number.isSafeInteger(itemId)||itemId<1||itemId>=m.original.size[0])fail('庫別、資料或編號不符。');
   const record=Array.from({length:60},(_,y)=>get(m,C(itemId,y,plane))),item=catalogMaps.items.get(record[1]),t=rules.items[record[1]],origin=rules.origins[record[27]],quality=record[5],level=record[6],owner=record[7];
   if(!item||item.kind!=='套装'||!t||!rules.sets[t.setLink]?.members.includes(record[1])||t.slot!==item.slot||t.part!==t.slot)fail('範本或 setLink 尚未涵蓋。');
   if(!Number.isSafeInteger(record[0])||record[0]<1||record[0]>=m.original.size[0]||record[2]!==1||record[3]!==t.tier||!Number.isSafeInteger(t.tier)||t.tier<1||t.tier>9)fail('識別、數量或等階不符。');
@@ -89,6 +94,7 @@
   // Only the first conversion of an ordinary template is covered; repeated set conversion is unknown.
   if(!origin||origin.slot!==t.slot||origin.tier!==t.tier||!Number.isSafeInteger(record[23])||record[23]<1||record[23]>6||!decimal2(record[26])||record[26]<0||!Number.isSafeInteger(Math.round(record[26]*10))||Math.abs(record[26]*10-Math.round(record[26]*10))>1e-7)fail('合成來源 metadata 尚未涵蓋。');
   if(![0,1].includes(record[24])||record[25]!==0||!Number.isSafeInteger(record[8])||record[8]<80+30*(quality-1)||record[8]>80+30*quality||!Number.isSafeInteger(owner)||owner<0)fail('特殊狀態、主係數或歸屬不符。');
+  // The cross-pool lines below are pinned verbatim by the B7 equivalence (scripts/set-equipment-quality-equivalence.cjs), so z22 reads the z9 cross-pool group.
   // Cross-pool scope reuses the set-quality pool (P套) for the one selected slot, behind its own per-plane first proof; closed, it is the original-pool check.
   const crossPool=KNOWLEDGE.verification[plane===7?'backpackSetEquipmentLevelCrossPool':'setEquipmentLevelCrossPool']===true?KNOWLEDGE.setEquipmentQuality?.pools?.[record[1]]:undefined;
   let selected=0;
@@ -103,14 +109,14 @@
   for(let x=1;plane===9&&x<m.original.size[0];x++)for(let slot=1;slot<=6;slot++)if(get(m,C(x,15+slot,2))===itemId){
    references++;if(owner!==x||!activeCharacter(m,x)||slot!==t.slot)fail('穿戴雙向指標不一致。');
   }
-  if(plane===7&&owner!==0||owner>0&&(!activeCharacter(m,owner)||references!==1)||owner===0&&references!==0)fail('穿戴雙向指標不一致。');
-  const group=plane===7?'backpackSetEquipmentLevel':'setEquipmentLevel',normalMax=10+5*(quality-1);
-  return {kind:'equipment',isSet:true,id:itemId,itemId,plane,name:item.name,coordinate:C(itemId,6,plane),current:level,min:1,normalMax,advancedMax:normalMax,advancedVerified:false,verified:KNOWLEDGE.verification[group]===true,group,record,template:t,metadataStatus:'preserved; independent-native-proof-required'};
+  if(backpackLike(plane)&&owner!==0||owner>0&&(!activeCharacter(m,owner)||references!==1)||owner===0&&references!==0)fail('穿戴雙向指標不一致。');
+  const group=backpackLike(plane)?'backpackSetEquipmentLevel':'setEquipmentLevel',normalMax=10+5*(quality-1);
+  return {kind:'equipment',isSet:true,id:itemId,itemId,plane,name:item.name,coordinate:C(itemId,6,plane),current:level,min:1,normalMax,advancedMax:normalMax,advancedVerified:false,verified:planeVerified(plane,group),group,record,template:t,metadataStatus:'preserved; independent-native-proof-required'};
  }
  // Treasure-level candidates (y6 only) are independent of ordinary and set equipment; gated by their own first proof.
  function treasureLevelInfo(m,{itemId,plane=9}){
   const fail=reason=>{throw Error('寶物等級：'+reason);},rules=KNOWLEDGE.treasureLevel;
-  if(!rules||rules.version!==1||![7,9].includes(plane)||!Number.isSafeInteger(itemId)||itemId<1||itemId>=m.original.size[0])fail('庫別、資料或編號不符。');
+  if(!rules||rules.version!==1||!equipmentPlane(m,plane)||!Number.isSafeInteger(itemId)||itemId<1||itemId>=m.original.size[0])fail('庫別、資料或編號不符。');
   const record=Array.from({length:60},(_,y)=>get(m,C(itemId,y,plane))),item=catalogMaps.items.get(record[1]),t=rules.items[record[1]],quality=record[5],level=record[6],owner=record[7],limits=rules.limits;
   if(!item||item.kind!=='宝物'||!t||t.slot!==limits.slot)fail('範本尚未涵蓋。');
   if(record.some(v=>typeof v!=='number'||!Number.isFinite(v))||!Number.isSafeInteger(record[0])||record[0]<1||record[0]>=m.original.size[0])fail('識別或欄位型別不符。');
@@ -126,13 +132,13 @@
   }
   // references===1 is a worn row; references===0 with an active owner is the observed native stale-owner state.
   if(plane===9&&references>1)fail('穿戴雙向指標不一致。');
-  const group=plane===7?'backpackTreasureLevel':'treasureLevel';
-  return {kind:'equipment',isTreasure:true,id:itemId,itemId,plane,name:item.name,coordinate:C(itemId,6,plane),current:level,min:1,normalMax,advancedMax:normalMax,advancedVerified:false,verified:KNOWLEDGE.verification[group]===true,group,record,template:t,metadataStatus:'preserved; independent-native-proof-required'};
+  const group=backpackLike(plane)?'backpackTreasureLevel':'treasureLevel';
+  return {kind:'equipment',isTreasure:true,id:itemId,itemId,plane,name:item.name,coordinate:C(itemId,6,plane),current:level,min:1,normalMax,advancedMax:normalMax,advancedVerified:false,verified:planeVerified(plane,group),group,record,template:t,metadataStatus:'preserved; independent-native-proof-required'};
  }
  // Set-quality candidate eligibility (A3): read-only, cross-pool policy for isolated tests only. Formal level/quality entries keep their proven scope.
  function setEquipmentQualityCandidateInfo(m,{itemId,plane=9}){
   const fail=reason=>{throw Error('套裝品質候選：'+reason);},rules=KNOWLEDGE.setEquipmentQuality,levels=KNOWLEDGE.setEquipmentLevel;
-  if(!rules||rules.version!==1||!levels||levels.version!==1||!rules.limits.planes.includes(plane)||!Number.isSafeInteger(itemId)||itemId<1||itemId>=m.original.size[0])fail('庫別、資料或編號不符。');
+  if(!rules||rules.version!==1||!levels||levels.version!==1||!(rules.limits.planes.includes(plane)||plane===ARMORY&&rules.limits.planes.includes(7))||!equipmentPlane(m,plane)||!Number.isSafeInteger(itemId)||itemId<1||itemId>=m.original.size[0])fail('庫別、資料或編號不符。');
   const record=Array.from({length:60},(_,y)=>get(m,C(itemId,y,plane))),item=catalogMaps.items.get(record[1]),t=levels.items[record[1]],pool=rules.pools[record[1]],q=rules.quality,quality=record[5],level=record[6],owner=record[7];
   if(!item||item.kind!=='套装'||!t||!pool||!levels.sets[t.setLink]?.members.includes(record[1])||t.slot!==item.slot||t.part!==t.slot||pool.tier!==t.tier||pool.slot!==t.slot)fail('範本或詞條池尚未涵蓋。');
   if(!Number.isSafeInteger(record[0])||record[0]<1||record[0]>=m.original.size[0]||record[2]!==rules.limits.quantity||record[3]!==t.tier||t.tier<rules.limits.minTier||t.tier>rules.limits.maxTier)fail('識別、數量或等階不符。');
@@ -159,10 +165,10 @@
   for(let x=1;plane===9&&x<m.original.size[0];x++)for(let s=1;s<=6;s++)if(get(m,C(x,15+s,2))===itemId){
    references++;if(owner!==x||!activeCharacter(m,x)||s!==t.slot)fail('穿戴雙向指標不一致。');
   }
-  if(plane===7&&owner!==rules.limits.backpackOwner||owner>0&&(!activeCharacter(m,owner)||references!==1)||owner===0&&references!==0)fail('穿戴雙向指標不一致。');
-  const prefix=plane===7?'backpackSetEquipmentQuality':'setEquipmentQuality',groups={upgrade:prefix+'Upgrade',downgrade:prefix+'Downgrade'};
+  if(backpackLike(plane)&&owner!==rules.limits.backpackOwner||owner>0&&(!activeCharacter(m,owner)||references!==1)||owner===0&&references!==0)fail('穿戴雙向指標不一致。');
+  const prefix=backpackLike(plane)?'backpackSetEquipmentQuality':'setEquipmentQuality',groups={upgrade:prefix+'Upgrade',downgrade:prefix+'Downgrade'};
   return {kind:'setEquipmentQualityCandidate',candidate:true,itemId,plane,name:item.name,quality,level,normalMax,mainCoefficient:record[8],originId:record[27],selectedSlot:selected||null,slots,
-   groups,verified:{upgrade:KNOWLEDGE.verification[groups.upgrade]===true,downgrade:KNOWLEDGE.verification[groups.downgrade]===true},
+   groups,verified:{upgrade:planeVerified(plane,groups.upgrade),downgrade:planeVerified(plane,groups.downgrade)},
    pools:{origin:[...origin.affixIds],set:[...pool.affixIds]},policies:{...rules.policies},record,template:t,metadataStatus:'candidate-only; independent-native-proof-required'};
  }
  // Set-quality candidate preview (A4): read-only shift/slot/cap/pool plan dispatched to one of four groups; never writes or opens a transaction.
@@ -195,7 +201,7 @@
    const source=kind==='added'?'origin':info.slots[slot-1].source;
    slots.push({slot,kind,source,before:{attributeId:before[8+slot],coefficient:before[14+slot],flag:before[27+slot]},after:{attributeId:after[8+slot],coefficient:after[14+slot],flag:after[27+slot]}});
   }
-  const name=plane===7?'背包':'裝備庫',changes=after.flatMap((value,y)=>value!==before[y]?[{coordinate:C(itemId,y,plane),before:before[y],after:value,label:`${name} #${itemId}・套裝品質候選・${y===5?'品質':y===8?'主係數':y>=28?'槽 '+(y-27)+' 旗標':y>=15?'槽 '+(y-14)+' 係數':'槽 '+(y-8)+' 詞條'}`}]:[]);
+  const name=planeName(plane),changes=after.flatMap((value,y)=>value!==before[y]?[{coordinate:C(itemId,y,plane),before:before[y],after:value,label:`${name} #${itemId}・套裝品質候選・${y===5?'品質':y===8?'主係數':y>=28?'槽 '+(y-27)+' 旗標':y>=15?'槽 '+(y-14)+' 係數':'槽 '+(y-8)+' 詞條'}`}]:[]);
   return {kind:'setEquipmentQualityCandidatePreview',candidate:true,itemId,plane,quality,previousQuality:info.quality,direction,group,verified:group?info.verified[direction]:false,
    level:info.level,normalMax,previousMax:info.normalMax,targetSlots,previousSlots:currentSlots,mainCoefficient:{before:before[8],after:after[8]},selectedSlot:info.selectedSlot,slots,changes,
    pools:info.pools,requiresRemovalConfirmation:targetSlots<currentSlots,unchanged:changes.length===0,metadataStatus:info.metadataStatus};
@@ -239,7 +245,7 @@
   return {kind:'setEquipmentQualityCandidateEffects',candidate:true,itemId,plane,quality,effects,effectUnchanged:effects.every(v=>v.before===v.after),setBonusNote:'套裝積分、件數與額外套裝效果不隨品質改變。'};
  }
  function editingInfo(m,kind,id,plane=9){
-  if(kind==='equipment'&&![7,9].includes(plane))throw Error('裝備庫別只接受 7 或 9。');
+  if(kind==='equipment'&&!equipmentPlane(m,plane))throw Error('裝備庫別只接受背包、裝備庫或這份存檔的武庫。');
   if(!Number.isSafeInteger(id)||id<1||id>=m.original.size[0])throw Error('無效的資料編號。');
   if(kind==='equipment'&&catalogMaps.items.get(get(m,C(id,1,plane)))?.kind==='套装')return setEquipmentLevelInfo(m,{itemId:id,plane});
   if(kind==='equipment'&&catalogMaps.items.get(get(m,C(id,1,plane)))?.kind==='宝物')return treasureLevelInfo(m,{itemId:id,plane});
@@ -249,7 +255,7 @@
    const originSlot=get(m,C(id,0,plane));
    if(!Number.isSafeInteger(originSlot)||originSlot<1||originSlot>=m.original.size[0]||!item||item.category!=='裝備'||['宝物','内丹'].includes(item.kind)||!Number.isInteger(item.slot)||item.slot<1||item.slot>6)throw Error('只支援有效一般裝備，不包含寶物及內丹。');
    if(!Number.isSafeInteger(quality)||quality<1||!Number.isSafeInteger(owner)||owner<0)throw Error('裝備品質或歸屬資料不符。');
-   if(plane===7){
+   if(backpackLike(plane)){
     const rules=KNOWLEDGE.batch2Data?.items[item.id],tier=get(m,C(id,3,plane));
     if(get(m,C(id,2,plane))!==1||owner!==0)throw Error('背包普通裝備須數量為 1 且歸屬為 0。');
     if(item.kind!=='普通'||item.slot>4||!rules||rules.setLink!==0||quality>6||!Number.isSafeInteger(tier)||tier<1||tier>9||tier!==rules.tier)throw Error('背包只支援原版等階、品質的一般裝備，不包含套裝。');
@@ -273,15 +279,15 @@
    coordinate=C(id,4,0);normalMax=buildingNormalMax('technology',id,buildingLevel(m,5));name=technology.name;
   }else throw Error('未知的修改類型。');
   const current=get(m,coordinate);if(!Number.isSafeInteger(current)||current<0||kind==='equipment'&&current<1)throw Error('現有數值與欄位型別不符。');
-  const group=kind==='equipment'&&plane===7?'backpackEquipmentLevel':EDIT_GROUPS[kind],limits=KNOWLEDGE.editingLimits?.[kind];
-  return {kind,id,plane,name,coordinate,current,min,normalMax,advancedMax:limits?.maxById?.[id]??limits?.max??0,verified:!!KNOWLEDGE.verification[group],advancedVerified:!!KNOWLEDGE.verification[group+'Advanced']};
+  const group=kind==='equipment'&&backpackLike(plane)?'backpackEquipmentLevel':EDIT_GROUPS[kind],limits=KNOWLEDGE.editingLimits?.[kind];
+  return {kind,id,plane,name,coordinate,current,min,normalMax,advancedMax:limits?.maxById?.[id]??limits?.max??0,verified:planeVerified(plane,group),advancedVerified:planeVerified(plane,group+'Advanced')};
  }
  function setEditingValue(m,kind,id,value,advanced=false,plane=9){
   if(typeof advanced!=='boolean')throw Error('進階模式參數不正確。');
   const info=editingInfo(m,kind,id,plane);
   // Backpack over-limit (z7 advanced) keeps the structural checks but lets an already over-limit row be edited.
   // An over-limit affix coefficient or a sixth slot does not enter the level formula (副词条 forces L=0), so it does not block level edits.
-  if(kind==='equipment'&&plane===7&&!info.isSet&&!info.isTreasure)ordinaryEquipment(m,id,plane,info.advancedVerified,affixOverLimitAccepted(),sixthAffixAccepted());
+  if(kind==='equipment'&&backpackLike(plane)&&!info.isSet&&!info.isTreasure)ordinaryEquipment(m,id,plane,info.advancedVerified,affixOverLimitAccepted(),sixthAffixAccepted());
   if(!info.verified||advanced&&!info.advancedVerified)throw Error('此修改模式尚未完成隔離遊戲驗證，目前停用。');
   if(!Number.isSafeInteger(value)||value<info.min)throw Error(`請輸入不小於 ${info.min} 的安全整數；操練上限不得低於角色現有職業等級。`);
   const max=advanced?info.advancedMax:Math.min(info.normalMax,info.advancedMax);
@@ -366,7 +372,7 @@
  function affixInfo(m,itemId,slot,plane=9){
   const info=equipmentSlotInfo(m,itemId,slot,plane);
   if(!info.selected)throw Error('只可調整已選定的洗練槽；請先選槽洗練一次。');
-  return {...info,verified:!!KNOWLEDGE.verification[plane===7?'backpackEquipmentAffixCoefficient':'equipmentAffixCoefficient']};
+  return {...info,verified:planeVerified(plane,backpackLike(plane)?'backpackEquipmentAffixCoefficient':'equipmentAffixCoefficient')};
  }
  function batch2Put(m,info,value,group,label){
   const previous=m.currentGroup;m.currentGroup=group;
@@ -389,7 +395,7 @@
   if(!Number.isInteger(slot)||slot<1||slot>info.slots)throw Error('請選擇品質範圍內的既有詞條槽。');
   if(!info.selected)throw Error('只可調整已選定的洗練槽；請先選槽洗練一次。');
   if(info.selected!==slot)throw Error('只可調整已選定的洗練槽，不能更換選槽。');
-  return {...info,slot,coordinate:C(itemId,14+slot,plane),current:get(m,C(itemId,14+slot,plane)),attributeId:get(m,C(itemId,8+slot,plane)),min:10*(info.quality-1),normalMax:60+10*info.quality,max:affixOverLimitMax,verified:affixOverLimitAccepted()};
+  return {...info,slot,coordinate:C(itemId,14+slot,plane),current:get(m,C(itemId,14+slot,plane)),attributeId:get(m,C(itemId,8+slot,plane)),min:10*(info.quality-1),normalMax:60+10*info.quality,max:affixOverLimitMax,verified:planeVerified(plane,'equipmentAffixCoefficientAdvanced')};
  }
  function previewEquipmentAffixCoefficientAdvanced(m,{itemId,slot,coefficient,plane=9}){
   const info=affixAdvancedInfo(m,itemId,slot,plane);
@@ -417,7 +423,7 @@
    const formula=KNOWLEDGE.affixReplacement?.attributes[id],supported=!!formula&&KNOWLEDGE.affixReplacementLimits?.attributeIds.includes(id),duplicate=otherIds.includes(id);
    return {attributeId:id,name:catalogName('attributes',id),unit:formula?.unit||'',supported,reason:duplicate?'不能新增與其他槽重複的詞條':!supported?'此詞條尚未核對效果公式':''};
   });
-  return {...info,itemId,plane,attributeId,current,min:sixthAffixRange[0],max:sixthAffixRange[1],candidates,verified:sixthAffixAccepted()};
+  return {...info,itemId,plane,attributeId,current,min:sixthAffixRange[0],max:sixthAffixRange[1],candidates,verified:planeVerified(plane,'equipmentSixthAffix')};
  }
  // attributeId 0 clears the slot (coefficient 0). Effects add the sixth slot to the five-slot item contribution.
  function previewEquipmentSixthAffix(m,{itemId,plane=9,attributeId,coefficient}){
@@ -434,7 +440,7 @@
    const base=equipmentAffixEffect(m,calc,id),before=base+sixth(id,info.attributeId,info.current),after=base+sixth(id,attributeId,coefficient);
    return {attributeId:id,name:catalogName('attributes',id),unit:KNOWLEDGE.affixReplacement.attributes[id].unit,before,after,delta:after-before};
   });
-  const where=`${plane===7?'背包':'裝備庫'} #${itemId}・第六槽`,changes=[[14,info.attributeId,attributeId,where+'詞條'],[20,info.current,coefficient,where+'係數']].filter(([,b,a])=>b!==a).map(([y,before,after,label])=>({coordinate:C(itemId,y,plane),before,after,label}));
+  const where=`${planeName(plane)} #${itemId}・第六槽`,changes=[[14,info.attributeId,attributeId,where+'詞條'],[20,info.current,coefficient,where+'係數']].filter(([,b,a])=>b!==a).map(([y,before,after,label])=>({coordinate:C(itemId,y,plane),before,after,label}));
   return {...info,before:{attributeId:info.attributeId,coefficient:info.current},after:{attributeId,coefficient},changes,effects,cleared:attributeId===0,unchanged:!changes.length};
  }
  function setEquipmentSixthAffix(m,options){
@@ -455,7 +461,7 @@
  }
  function equipmentAffixReplacementInfo(m,{itemId,slot,plane=9}){
   const info=equipmentSlotInfo(m,itemId,slot,plane),requiresInitialSelection=!info.selected;
-  const enabled=!!KNOWLEDGE.verification[plane===7?'backpackEquipmentAffixReplacement':'equipmentAffixReplacement']&&(!requiresInitialSelection||!!KNOWLEDGE.verification.equipmentAffixInitialSelection);
+  const enabled=planeVerified(plane,backpackLike(plane)?'backpackEquipmentAffixReplacement':'equipmentAffixReplacement')&&(!requiresInitialSelection||!!KNOWLEDGE.verification.equipmentAffixInitialSelection);
   const otherIds=Array.from({length:info.slots},(_,i)=>i+1).filter(i=>i!==slot).map(i=>get(m,C(itemId,8+i,plane)));
   const candidates=info.rules.affixIds.map(attributeId=>{
    const formula=KNOWLEDGE.affixReplacement?.attributes[attributeId];
@@ -501,7 +507,7 @@
   const preview=previewEquipmentAffixReplacement(m,{itemId,slot,attributeId,coefficient,plane,selectUnwashedSlot});
   if(!preview.verified)throw Error('精準洗練尚未完成隔離遊戲驗證。');
   const previous=m.currentGroup;m.currentGroup=`editing:equipment:${plane}:${itemId}`;
-  try{transaction(m,()=>{if(preview.selectionChange)put(m,C(itemId,27+slot,plane),1,`${plane===7?'背包':'裝備庫'} #${itemId}・首次選定洗練槽 ${slot}`);put(m,C(itemId,8+slot,plane),attributeId,`${plane===7?'背包':'裝備庫'} #${itemId}・詞條 ${slot}・${catalogName('attributes',preview.before.attributeId)} → ${catalogName('attributes',attributeId)}`);put(m,C(itemId,14+slot,plane),coefficient,`${plane===7?'背包':'裝備庫'} #${itemId}・詞條 ${slot}・係數`);},'精準洗練');}finally{m.currentGroup=previous;}
+  try{transaction(m,()=>{if(preview.selectionChange)put(m,C(itemId,27+slot,plane),1,`${planeName(plane)} #${itemId}・首次選定洗練槽 ${slot}`);put(m,C(itemId,8+slot,plane),attributeId,`${planeName(plane)} #${itemId}・詞條 ${slot}・${catalogName('attributes',preview.before.attributeId)} → ${catalogName('attributes',attributeId)}`);put(m,C(itemId,14+slot,plane),coefficient,`${planeName(plane)} #${itemId}・詞條 ${slot}・係數`);},'精準洗練');}finally{m.currentGroup=previous;}
   return preview;
  }
  function equipmentQualityInfo(m,{itemId,plane=9}){
@@ -509,9 +515,9 @@
   if(!data||record[2]!==1)throw Error('品質調整只支援數量為 1 的普通裝備。');
   if(!Number.isSafeInteger(record[8])||record[8]<80+30*(info.quality-1)||record[8]>80+30*info.quality)throw Error('尚未支援此主係數範圍。');
   if(!data.mainSettings.every(v=>typeof v==='number'&&Number.isFinite(v)))throw Error('裝備主屬性設定尚未核對。');
-  const targets=Array.from({length:6},(_,i)=>{const quality=i+1,slots=quality-1,normalMax=10+5*(quality-1),group=(plane===7?'backpackEquipmentQuality':'equipmentQuality')+(quality>info.quality?'Upgrade':'Downgrade');
+  const targets=Array.from({length:6},(_,i)=>{const quality=i+1,slots=quality-1,normalMax=10+5*(quality-1),group=(backpackLike(plane)?'backpackEquipmentQuality':'equipmentQuality')+(quality>info.quality?'Upgrade':'Downgrade');
    const reason=record[6]>normalMax?'等級超過目標品質上限，請先降低裝備等級。':info.selected>slots?'已選洗練槽會被移除，不能降至此品質。':'';
-   return {quality,slots,normalMax,allowed:!reason,reason,group,verified:quality===info.quality||!!KNOWLEDGE.verification[group]};});
+   return {quality,slots,normalMax,allowed:!reason,reason,group,verified:quality===info.quality||planeVerified(plane,group)};});
   return {...info,record,data,mainCoefficient:record[8],selectedSlot:info.selected||null,targets,candidates:info.rules.affixIds.map(attributeId=>({attributeId,name:catalogName('attributes',attributeId)}))};
  }
  function qualityAttributeEffect(record,attributeId){
@@ -543,7 +549,7 @@
    else{after[8+slot]=0;after[14+slot]=0;after[27+slot]=0;}
    if(slot<=Math.max(info.slots,target.slots))slots.push({slot,kind:slot>info.slots?'added':slot>target.slots?'removed':'retained',before:{attributeId:before[8+slot],coefficient:before[14+slot],flag:before[27+slot]},after:{attributeId:after[8+slot],coefficient:after[14+slot],flag:after[27+slot]}});
   }
-  const changes=after.flatMap((value,y)=>value!==before[y]?[{coordinate:C(itemId,y,plane),before:before[y],after:value,label:`${plane===7?'背包':'裝備庫'} #${itemId}・品質調整・${y===5?'品質':y===8?'主係數':y>=28?'槽 '+(y-27)+' 旗標':y>=15?'槽 '+(y-14)+' 係數':'槽 '+(y-8)+' 詞條'}`}]:[]);
+  const changes=after.flatMap((value,y)=>value!==before[y]?[{coordinate:C(itemId,y,plane),before:before[y],after:value,label:`${planeName(plane)} #${itemId}・品質調整・${y===5?'品質':y===8?'主係數':y>=28?'槽 '+(y-27)+' 旗標':y>=15?'槽 '+(y-14)+' 係數':'槽 '+(y-8)+' 詞條'}`}]:[]);
   const effects=Object.keys(KNOWLEDGE.equipmentQuality.attributes).map(Number).map(attributeId=>{const old=qualityAttributeEffect(before,attributeId),value=qualityAttributeEffect(after,attributeId);return {attributeId,name:catalogName('attributes',attributeId),unit:KNOWLEDGE.equipmentQuality.attributes[attributeId].unit,before:old,after:value,delta:value-old};});
   return {itemId,plane,quality,previousQuality:info.quality,normalMax:target.normalMax,previousMax:info.normalMax,mainCoefficient:{before:before[8],after:after[8]},selectedSlot:info.selectedSlot,slots,changes,effects,requiresRemovalConfirmation:target.slots<info.slots,unchanged:changes.length===0,effectUnchanged:effects.every(v=>v.before===v.after),group:target.group,verified:target.verified};
  }
@@ -1007,7 +1013,7 @@
  const innerPillQualityMax=6;
  function innerPillLevelInfo(m,{itemId,plane=9}){
   const fail=reason=>{throw Error('內丹等級：'+reason);};
-  if(![7,9].includes(plane)||!Number.isSafeInteger(itemId)||itemId<1||itemId>=m.original.size[0])fail('庫別或編號不符。');
+  if(!equipmentPlane(m,plane)||!Number.isSafeInteger(itemId)||itemId<1||itemId>=m.original.size[0])fail('庫別或編號不符。');
   const record=Array.from({length:60},(_,y)=>get(m,C(itemId,y,plane))),item=catalogMaps.items.get(record[1]),t=KNOWLEDGE.batch2Data?.items[record[1]],quality=record[5],level=record[6],owner=record[7];
   if(!item||item.kind!=='内丹'||item.slot!==5||!t)fail('不是已辨識的內丹範本。');
   if(record.some(v=>typeof v!=='number'||!Number.isFinite(v))||!Number.isSafeInteger(record[0])||record[0]<1||record[0]>=m.original.size[0])fail('識別或欄位型別不符。');
@@ -1023,8 +1029,8 @@
    references++;if(owner!==x||!activeCharacter(m,x)||slot!==5)fail('穿戴雙向指標不一致。');
   }
   if(plane===9&&references!==1)fail('裝備庫只支援穿戴中的內丹。');
-  const group=plane===7?'backpackInnerPillLevel':'innerPillLevel';
-  return {kind:'equipment',isInnerPill:true,id:itemId,itemId,plane,name:item.name,coordinate:C(itemId,6,plane),current:level,min:1,normalMax,advancedMax:normalMax,advancedVerified:false,verified:KNOWLEDGE.verification[group]===true,group,record,tier:t.tier,quality,owner,worn:references===1};
+  const group=backpackLike(plane)?'backpackInnerPillLevel':'innerPillLevel';
+  return {kind:'equipment',isInnerPill:true,id:itemId,itemId,plane,name:item.name,coordinate:C(itemId,6,plane),current:level,min:1,normalMax,advancedMax:normalMax,advancedVerified:false,verified:planeVerified(plane,group),group,record,tier:t.tier,quality,owner,worn:references===1};
  }
  function previewInnerPillLevel(m,options){
   const {itemId,plane=9,level}=options,reasons=[];let info=null;
@@ -1515,7 +1521,7 @@
  function listEntities(m,kind){
   const rows=[];
   if(kind==='characters'){for(let x=1;x<m.original.size[0];x++)if(activeCharacter(m,x))rows.push({id:x,name:get(m,C(x,1,2)),detail:`Lv ${get(m,C(x,3,2))}・${catalogName('professions',get(m,C(x,6,2)))}`,z:2});}
-  else if(kind==='inventory'){for(const z of [7,9])for(let x=1;x<m.original.size[0];x++){const item=get(m,C(x,1,z));if(catalogMaps.items.has(item)&&get(m,C(x,0,z))>0)rows.push({id:x,z,name:catalogName('items',item),detail:`${z===7?'背包':'裝備庫／穿戴'}・品質 ${get(m,C(x,5,z))}・Lv ${get(m,C(x,6,z))}`});}}
+  else if(kind==='inventory'){for(const z of [7,9,ARMORY].filter(z=>z<m.original.size[2]))for(let x=1;x<m.original.size[0];x++){const item=get(m,C(x,1,z));if(catalogMaps.items.has(item)&&get(m,C(x,0,z))>0)rows.push({id:x,z,name:catalogName('items',item),detail:`${z===9?'裝備庫／穿戴':planeName(z)}・品質 ${get(m,C(x,5,z))}・Lv ${get(m,C(x,6,z))}`});}}
   return rows;
  }
  const batchLabels={characterExperience:'角色經驗',professionExperience:'已習得職業經驗',skillExperience:'九項技藝經驗',equipmentMax:'普通裝備升滿',technologyLevel:'進階科技同值'};
@@ -1534,10 +1540,10 @@
    const ids=r.kind==='skillExperience'?SKILLS.map((_,i)=>i+1):KNOWLEDGE.catalogs.professions.filter(p=>get(m,C(r.characterId,p.id,4))!==0).map(p=>p.id);
    for(const id of ids)targets.push(character(r.characterId,r.kind==='skillExperience'?'skill':'profession',id));
   }else if(r.kind==='equipmentMax'){
-   if(![7,9].includes(r.plane)||r.includeEquipped!==undefined&&typeof r.includeEquipped!=='boolean')throw Error('請選擇背包或裝備庫，穿戴選項須為布林值。');
+   if(!equipmentPlane(m,r.plane)||r.includeEquipped!==undefined&&typeof r.includeEquipped!=='boolean')throw Error('請選擇背包、裝備庫或這份存檔的武庫，穿戴選項須為布林值。');
    for(let x=1;x<m.original.size[0];x++){
     if(!get(m,C(x,0,r.plane)))continue;
-    const item=catalogMaps.items.get(get(m,C(x,1,r.plane))),name=`${r.plane===7?'背包':'裝備庫'} #${x}・${item?.name||'未知物品'}`;
+    const item=catalogMaps.items.get(get(m,C(x,1,r.plane))),name=`${planeName(r.plane)} #${x}・${item?.name||'未知物品'}`;
     if(!item||item.category!=='裝備'||item.kind!=='普通'){excluded.push({name,reason:'非本次範圍：只處理已辨識的普通裝備。',status:'excluded'});continue;}
     if(r.plane===9&&!r.includeEquipped&&get(m,C(x,7,9))>0){excluded.push({name,reason:'未勾選包含穿戴裝備。',status:'excluded'});continue;}
     targets.push({name,method:'equipment',options:{itemId:x,plane:r.plane},coordinates:[C(x,6,r.plane)]});

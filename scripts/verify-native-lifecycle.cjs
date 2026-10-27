@@ -216,6 +216,43 @@ async function armory(state, s) {
   return {store, takeout, restore, shelf, wear, back, mode: put.mode};
 }
 
+// Armory rows edited by the modifier (armoryEquipment): 仓库取出 to the backpack and 仓库存入 back keep all 50 fields; with
+// 武库换装 mode one row is worn straight from z22 (effects finite, ≥ the native 装备主属性 at the edited level and quality)
+// and unequipped back into z22 unchanged. Every row ends in z22 so the restart reads the edited armory back.
+async function armoryEdited(state, s) {
+  const {rows, worn} = s.armoryEdited, find = `const find=(z,v)=>{for(let x=1;x<a.GetWidth();x++){let ok=true;for(let y=0;y<50;y++)if(y!==7&&a.At(x,y,z)!==v[y]){ok=false;break;}if(ok)return x;}throw Error('Moved record missing in z'+z);};`;
+  const move = (fn, id, from, to) => evaluate(state, `(()=>{${prefix}${find}r.SetTimeScale(0);const before=record(${id},${from});call('${fn}',${id},true,0);const x=find(${to},before);return {before,id:x,moved:record(x,${to}),source:record(${id},${from})};})()`);
+  const moves = [], ids = {};
+  for (const id of rows) {
+    const takeout = await move('仓库取出', id, 22, 7), restore = await move('仓库存入', takeout.id, 7, 22);
+    for (const [name, m] of [['takeout', takeout], ['restore', restore]]) {
+      assert.deepEqual(m.moved, takeout.before, name + ' changed edited armory row ' + id);
+      assert.ok(m.source.every(v => v === 0), name + ' did not clear the source row of ' + id);
+    }
+    moves.push({id, takeout, restore});ids[id] = restore.id;
+  }
+  const put = await evaluate(state, `(()=>{${prefix}const wp=r.GetObjectClassByName('wp').GetInstances()[0].GetSdkInstance(),before=record(${ids[worn.id]},22),slot=wp.At(before[1],6,0),mode=a.At(37,1,0);
+    a.Set(37,1,0,1);call('穿戴装备',slot,${ids[worn.id]},${worn.character},false,false,22);return {slot,before,mode};})()`);
+  await pause(500);
+  const wear = await evaluate(state, `(()=>{${prefix}const wp=r.GetObjectClassByName('wp').GetInstances()[0].GetSdkInstance(),id=a.At(${worn.character},15+${put.slot},2),v=record(id,9);
+    const effects=[];for(let s=0;s<3;s++){const attr=wp.At(v[1],8+s,0);if(attr>0)effects.push({attr,actual:call('装备属性计算',${worn.character},attr,0,0,0,0,0,0,0),main:call('装备主属性',v[6],v[3],attr,v[8],wp.At(v[1],11+s,0),'主属性',0,v[5])});}
+    return {id,record:v,effects,source:record(${ids[worn.id]},22)};})()`);
+  for (let y = 0; y < 50; y++) if (y !== 7) assert.equal(wear.record[y], put.before[y], 'Wearing from z22 changed field ' + y);
+  assert.equal(wear.record[7], worn.character);
+  assert.ok(wear.source.every(v => v === 0), 'Wearing did not clear the z22 row');
+  assert.ok(wear.effects.length > 0, 'Worn armory row has no main attribute');
+  for (const e of wear.effects) assert.ok(Number.isFinite(e.actual) && Number.isFinite(e.main) && e.actual >= e.main, 'Non-finite or missing equipment effect ' + e.attr);
+  await evaluate(state, `(()=>{${prefix}call('卸下装备',${put.slot},${wear.id},${worn.character},false,false,22);return true;})()`);
+  await pause(500);
+  const back = await evaluate(state, `(()=>{${prefix}${find}const id=find(22,${JSON.stringify(put.before)});a.Set(37,1,0,${put.mode});return {id,record:record(id,22),pointer:a.At(${worn.character},${15 + put.slot},2)};})()`);
+  assert.deepEqual(back.record, put.before, 'Unequipping into z22 changed the edited row');
+  assert.notEqual(back.pointer, wear.id, 'Character still points at the unequipped row');
+  ids[worn.id] = back.id;
+  for (const id of Object.values(ids)) for (let y = 0; y < 50; y++) state.cells.push([id, y, 22]);
+  state.cells.push([worn.character, 15 + put.slot, 2], [37, 1, 0]);
+  return {moves, put, wear, back, ids};
+}
+
 const relicFind =`const same=(v,w)=>v.every((x,y)=>y===12||w[y]===x);const find=v=>{for(let x=1;x<a.GetWidth();x++)if(a.At(x,1,18)!==0&&same(v,record(x,18)))return x;throw Error('Relic missing in z18');};`;
 async function placeRelic(state, id, building) {
   await evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);if(a.At(${building},9,1)!==0)throw Error('Building already holds a relic');call('摆放灵物',${id},${building});return true;})()`);
@@ -742,7 +779,7 @@ async function main() {
   const statePath = opt('--state'), state = JSON.parse(fs.readFileSync(statePath)), scenario = JSON.parse(fs.readFileSync(opt('--scenario')));
   const rel = path.relative(path.resolve(__dirname, '..'), state.dir), child = path.relative(state.dir, state.game);
   if (!rel || (!path.isAbsolute(rel) && rel !== '..' && !rel.startsWith('..' + path.sep)) || !child || path.isAbsolute(child) || child.startsWith('..')) throw Error('External disposable state required');
-  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.pillOverLimit && !scenario.backpackOverLimit && !scenario.armory && !scenario.relics && !scenario.relicTakeOff && !scenario.relicStandPrepare && !scenario.placedRelicAura && !scenario.wall && !scenario.city && !scenario.ascensionQuality && !scenario.innerPillPrepare && !scenario.innerPillLevel && !scenario.soulUpgrade && !scenario.ascendedInnerPillLevel && !scenario.basicTechnology && !scenario.buildingLevel && !scenario.relicCrafting && !scenario.recruitTechnology && !scenario.affixPrepare && !scenario.affixOverLimit && !scenario.sixthAffix) throw Error('Scenario has no native follow-up actions');
+  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.pillOverLimit && !scenario.backpackOverLimit && !scenario.armory && !scenario.relics && !scenario.relicTakeOff && !scenario.relicStandPrepare && !scenario.placedRelicAura && !scenario.wall && !scenario.city && !scenario.ascensionQuality && !scenario.innerPillPrepare && !scenario.innerPillLevel && !scenario.soulUpgrade && !scenario.ascendedInnerPillLevel && !scenario.basicTechnology && !scenario.buildingLevel && !scenario.relicCrafting && !scenario.recruitTechnology && !scenario.affixPrepare && !scenario.affixOverLimit && !scenario.sixthAffix && !scenario.armoryEdited) throw Error('Scenario has no native follow-up actions');
   await waitMain(state);
   const result = {};
   if (scenario.ascend && !scenario.pills) result.ascend = await ascend(state, scenario);
@@ -751,6 +788,7 @@ async function main() {
   if (scenario.pillOverLimit) result.pillOverLimit = await pillOverLimit(state, scenario);
   if (scenario.backpackOverLimit) result.backpackOverLimit = await backpackOverLimit(state, scenario);
   if (scenario.armory) result.armory = await armory(state, scenario);
+  if (scenario.armoryEdited) result.armoryEdited = await armoryEdited(state, scenario);
   if (scenario.relics) result.relics = await relicPlacement(state, scenario);
   if (scenario.relicStandPrepare) result.relicStandPrepare = await relicStandPrepare(state, scenario);
   if (scenario.placedRelicAura) result.placedRelicAura = await placedRelicAura(state, scenario);
@@ -775,4 +813,4 @@ async function main() {
   console.log('PASS: native ' + Object.keys(result).join(' and ') + ' follow-up actions');
 }
 if (require.main === module) main().catch(e => { console.error(e.stack); process.exitCode = 1; });
-module.exports = {ascend, followup, pillsAndRebirth, pillOverLimit, backpackOverLimit, armory, relicPlacement, relicTakeOff, relicStandPrepare, placedRelicAura, wallUpgrade, cityLayer, ascensionQuality, innerPillPrepare, innerPillLevel, soulUpgrade, ascendedInnerPillLevel, basicTechnology, buildingLevel, recruitTechnology, affixPrepare, affixOverLimit, sixthAffix, relicCrafting};
+module.exports = {ascend, followup, pillsAndRebirth, pillOverLimit, backpackOverLimit, armory, armoryEdited, relicPlacement, relicTakeOff, relicStandPrepare, placedRelicAura, wallUpgrade, cityLayer, ascensionQuality, innerPillPrepare, innerPillLevel, soulUpgrade, ascendedInnerPillLevel, basicTechnology, buildingLevel, recruitTechnology, affixPrepare, affixOverLimit, sixthAffix, relicCrafting};
