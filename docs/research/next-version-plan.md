@@ -13,7 +13,7 @@
 | 更早 | v2.31 第六槽、v2.30 詞條係數超限、v2.29 招募科技超限、v2.28 遊戲 V1.0.12.2 與更早的功能見[各版紀錄](../releases.md)；靈物套裝合成與精煉的原生驗證（只驗證、無新旗標）見[靈物屬性研究](relic-attributes.md#原生驗證摘要2026-10-25修改後靈物用於套裝合成與內丹精煉) |
 | 目前主線 | 無功能主線 |
 | 下一步 | 無排定主線。候選：武庫裝備編輯（z22 目前唯讀，需要時比照背包裝備做獨立入口與旗標）；另線：有名角色 runtime 補丁提案 |
-| 文件維護 | 2026-10-25 完成文件整理五階段：舊流程入口對齊輕量流程、精簡技能、去除重複；新增 [`sdd/README.md`](../../sdd/README.md) 歷史索引；`lightweight.md` 只留常駐規則，改版步驟與各版教訓移到[遊戲改版](../maintenance/game-update.md)、[原生教訓](../maintenance/native-lessons.md)；候選集中研究依主題拆成[結丹與內丹](ascension-inner-pill.md)、[靈物](relic-attributes.md)、[城市與城牆](city-wall.md)、[科技與建築](technology-building.md)（§1 併入第二批研究，原頁留對照）；路線圖縮成總表，研究段與兩份舊 audit 移到 `archive/`。同日依 `291f725` 增量更新本機 [Repo 知識圖譜](repository-graph.md)（3894 節點、239 社群），Wiki 連結與 Project 卡片核對後無需調整。沒有待辦 |
+| 文件維護 | 2026-10-25 完成文件整理五階段：舊流程入口對齊輕量流程、精簡技能、去除重複；新增 [`sdd/README.md`](../../sdd/README.md) 歷史索引；`lightweight.md` 只留常駐規則，改版步驟與各版教訓移到[遊戲改版](../maintenance/game-update.md)、[原生教訓](../maintenance/native-lessons.md)；候選集中研究依主題拆成[結丹與內丹](ascension-inner-pill.md)、[靈物](relic-attributes.md)、[城市與城牆](city-wall.md)、[科技與建築](technology-building.md)（§1 併入第二批研究，原頁留對照）；路線圖縮成總表，研究段與兩份舊 audit 移到 `archive/`。同日依 `291f725` 增量更新本機 [Repo 知識圖譜](repository-graph.md)（3894 節點、239 社群），Wiki 連結與 Project 卡片核對後無需調整。2026-10-27 依使用者要求把 Wiki（首頁、操作教學、常見問題、開發進度）、公告 #3 與 Issue #13 同步到 v2.34／V1.0.14.0；Issue #4 與 Project 卡片核對後無需調整。沒有待辦 |
 | 授權 | v2.33／v2.34 已推送（2026-10-27）；後續提交／推送等使用者當次確認；Wiki／Project／公告預設不同步 |
 | 分派 | 預設在同一個 session 做完；查詢用子 agent，符合[分派判斷](../maintenance/dispatch.md#先判斷要不要分派)才開子 session |
 | 開放狀態 | 以目前 catalog／verification 為準；輕量開啟的群組與冒煙紀錄記在 `knowledge/verification.json` 的 `lightweight` |

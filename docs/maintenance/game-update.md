@@ -14,6 +14,7 @@
 6. **寫回**：重產 catalog（舊旗標照抄）；`verification.json` 換 `gameVersion`、build、指紋，加 `gameUpdate` 紀錄（變動來源、靜態核對結論、冒煙雜湊）。輕量群組的紀錄改成新版本，另記原冒煙版本 `smokeGameVersion` 與 `gameUpdate` 說明。
 7. **歷史證明測試**：舊的複合證明綁 V1.0.11.2，測試會用目前 catalog 去核對它而失敗。V1.0.11.2 的 catalog／verification 已凍結在 `tests/fixtures/v1.0.11.2-release`（gzip），`tests/helpers/legacy-release.cjs` 與 `release-v1.0.11.2.cjs` 從那裡讀；下次改版不用再凍結，除非又寫了新的複合證明。直接比對「目前 catalog 的遊戲版本」的斷言改讀 `knowledge/catalog.json`。知識統計（函式數）照新版更新。
 8. 更新紀錄加新版本、README 知識基準與進度入口。Mac 啟動器的 `SCRIPT_SHA256` 可在 Windows 對新版 `c3runtime.js` 做靜態核對後登錄（V1.0.12.2 於 2026-10-25 這樣做，見 [Mac 研究](../research/macos-runtime-investigation.md#v10122-靜態核對2026-10-25)），不必等換到 Mac；Mac 實機啟動與存讀補驗到換 OS 時再做，見 [launcher 說明](../../launcher/README.md)。在 Mac 補驗時先看 appmanifest 的 `buildid`：Steam 正式分支只留最新版，若已更新，就改驗新版（2026-10-27 原本要補 V1.0.12.2，結果改驗 V1.0.13.0）。
+9. Wiki（首頁、操作教學、常見問題、開發進度）與公告 #3 的版本段每次改版都會過時，但預設不同步；使用者要求時依[發布](release.md#wiki-維護)、[公告](discussions.md)與 [Issues](issues.md) 的維護規則一次補齊（2026-10-27 v2.33 與 v2.34 一起補）。
 
 ## 沒有舊版來源時
 
