@@ -10,7 +10,7 @@
 <CrossOver bottle>/drive_c/Program Files (x86)/Steam/steamapps/common/塔防山贼模拟器/package.nw
 ```
 
-以當次使用者指定的實際路徑為準。`launcher/prepare-macos.py` 目前先找 `common/塔防山贼模拟器`，找不到才使用歷史 `common/bandit`；準備工具已接受 V1.0.11.2 與 V1.0.12.2 路徑修正來源，但只完成靜態核對（Windows 可做，步驟見 launcher 說明），尚未重驗新版 Mac 啟動、Steam 清單、實際存讀及重啟續玩。`--source` 接受包含 `package.nw` 的遊戲目錄，不是封裝檔本身：
+以當次使用者指定的實際路徑為準。`launcher/prepare-macos.py` 目前先找 `common/塔防山贼模拟器`，找不到才使用歷史 `common/bandit`；準備工具接受 V1.0.9.1–V1.0.13.0 已核對的路徑修正來源。V1.0.13.0 已在 Mac 隔離驗證啟動、存讀與重啟讀回；V1.0.11.2／V1.0.12.2 只有靜態核對（Windows 可做，步驟見 launcher 說明）。Steam 正式分支只留最新版，補驗前先看 appmanifest 的 `buildid`，已更新就改驗新版。`--source` 接受包含 `package.nw` 的遊戲目錄，不是封裝檔本身：
 
 ```sh
 python3 launcher/prepare-macos.py --source "<SteamLibrary>/steamapps/common/塔防山贼模拟器"
@@ -34,7 +34,7 @@ python3 launcher/prepare-macos.py --source "<SteamLibrary>/steamapps/common/塔�
 | --- | --- |
 | 雲存檔下載快取 | `game/savedir/`，不等於已上傳 Steam Cloud |
 | 自動備份 | `game/backup/` |
-| 手動存檔／讀檔 | V1.0.9.1 仍使用含反斜線的 `save\eaNsave.dat` 檔名，位於 `game/` 下，不能當成 `save/` 子目錄 |
+| 手動存檔／讀檔 | 使用含反斜線的 `save\eaNsave.dat` 檔名，位於 `game/` 下，不能當成 `save/` 子目錄；原生存檔另寫 `savedir\eaNsave.dat`，不會更新 `savedir/`（V1.0.9.1 起，V1.0.13.0 實測） |
 
 修改副本放回取出時的相同位置，並選對應載入分頁。準備工具首次複製 `savedir` 與 `record.dat`，再次準備保留 Mac 進度；不要用 Windows 路徑假設覆蓋它。路徑正規化若有改動，驗證既有資料遷移、實際寫檔與重啟續玩，再更新 repo 文件。
 
@@ -44,7 +44,7 @@ Mac Steam 需另行啟動並登入；CrossOver 裡的 Windows Steam 不能提供
 
 repo 證據已涵蓋原生主選單、ARM64／繪圖、Steam 清單與 DLC 辨識，以及隔離副本修改後的載入、本機寫檔和重啟讀回。它們不證明真實 Cloud 上傳、成就／統計寫入、DLC 獎勵或長時間穩定性。
 
-重跑驗證沿用 `scripts/verify-game.cjs`，依維護指引逐步執行，每一步確認完成後才進下一步；僅操作測試 PID，保留來源存檔雜湊與隔離的 Steam 寫入鏡像。原始 runtime、遊戲 payload、state、profile、log 與 crash dump 全部留在 repo 外；公開文件只寫去識別證據。
+重跑驗證沿用 `scripts/verify-game.cjs`，依維護指引逐步執行；修改器還沒對新版改版時，用只換指紋的候選 catalog，見原生教訓的冒煙工具。每一步確認完成後才進下一步；僅操作測試 PID，保留來源存檔雜湊與隔離的 Steam 寫入鏡像。原始 runtime、遊戲 payload、state、profile、log 與 crash dump 全部留在 repo 外；公開文件只寫去識別證據。
 
 ## CrossOver 診斷
 
