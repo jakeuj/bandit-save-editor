@@ -42,7 +42,7 @@
 | 第六槽（品質 7 不開放） | v2.31 | `equipmentSixthAffix` | [batch2 實作摘要](../../../../docs/research/advanced-editing-batch2.md#實作摘要2026-10-25v231-第六槽品質-7-判定不開放) | — |
 | 武庫裝備編輯（z22 比照背包） | v2.35 | `armoryEquipment` | [裝備操作實作摘要](../../../../docs/research/equipment-workflow.md#實作摘要2026-10-27v235-武庫裝備編輯) | — |
 
-靈物用於套裝合成與內丹精煉的原生驗證（只驗證、無新旗標）見 [靈物 原生驗證摘要](../../../../docs/research/relic-attributes.md#原生驗證摘要2026-10-25修改後靈物用於套裝合成與內丹精煉)。有名角色資質、技藝上限、天賦回填與自然職業 30 級限制屬 [runtime 補丁提案](../../../../sdd/runtime-patch/proposal.md)，與網站修改器分開。
+靈物用於套裝合成與內丹精煉的原生驗證（只驗證、無新旗標）見 [靈物 原生驗證摘要](../../../../docs/research/relic-attributes.md#原生驗證摘要2026-10-25修改後靈物用於套裝合成與內丹精煉)。有名角色技藝上限、天賦回填與自然職業 30 級限制屬 [runtime 補丁提案](../../../../sdd/runtime-patch/proposal.md)，與網站修改器分開；有名角色資質已可用 v2.27 丹藥超限提高。只改全局職業上限會讓係數每級成長變小，見[職業上限研究](../../../../docs/research/job-level-cap.md)。
 
 ## 跨功能易錯點
 
