@@ -126,7 +126,23 @@ Nevergrind 的預設本機 runtime 快取路徑（由 script／README 得知，�
 | 未變檔案 | `package.json`（icon 仍用反斜線，準備工具照舊修正）、`scripts/main.js`、`greenworks-osx.node` 指紋與下方 V1.0.9.1 相同 |
 | 工具核對 | 用準備工具的 `patch_runtime` 產生修正副本，`--verify-runtime` 回報 `game_version` V1.0.12.2 |
 
-尚未做：Mac 原生啟動、Steam 清單、本機存檔／讀檔、新程序重啟讀回。這些要在 Apple Silicon Mac 上依[建議驗證順序](#建議驗證順序)與 `scripts/verify-game.cjs` 補驗，前幾版的實測不能沿用。
+尚未做：Mac 原生啟動、Steam 清單、本機存檔／讀檔、新程序重啟讀回。2026-10-27 要在 Mac 補驗時，Steam 正式分支已更新到 V1.0.13.0，V1.0.12.2 無法再取得，所以這版的 Mac 實測不會補；改驗 V1.0.13.0，見下節。
+
+## V1.0.13.0 Mac 補驗（2026-10-27）
+
+環境：Apple M4 Max、macOS 27、CrossOver `NGO-Steam-0` bottle 的正式分支 V1.0.13.0（Steam build 26194770，當天更新）、Mac 版 Steam 已啟動。只用隔離副本，Steam 安裝與原始存檔沒有改動。
+
+| 檢查 | 結果 |
+| --- | --- |
+| 靜態核對 | `package.nw` 共 273 個項目。`c3runtime.js` 的 4 種修正字串與 V1.0.9.1 已修正副本比對前後各 60 字元，10 處片段完全相同；命中次數 1／1／4／4，與前版相同。原始指紋登錄進 `SCRIPT_SHA256` |
+| 準備工具 | `prepare-macos.py --output <repo 外>` 重新下載官方 NW.js 並通過固定 SHA-256；`--verify-runtime` 回報 `game_version` V1.0.13.0 |
+| 原生啟動 | 兩個程序都是 `platform=darwin`、`arch=arm64`、NW.js 0.82.0，log 為 `rendering with WebGL 2 [ANGLE (Apple, Apple M4 Max, OpenGL 4.1)]`；遊戲帶來的 Greenworks 初始化成功 |
+| 存讀與重啟 | `verify-game.cjs`：雲存檔載入 → 原生存檔 → `--assert` 通過 → 停止 → 新 PID 重啟 → 存檔載入 → `--assert` 通過；兩次遊戲寫出的 `save\ea1save.dat` 雜湊相同，原始存檔與測試來源指紋不變 |
+| 隱藏執行 | 沿用 `LSBackgroundOnly` 測試 app、隱藏視窗與靜音設定；結束後沒有殘留程序 |
+
+- 候選 catalog 只把目前 catalog 的 15 個來源指紋換成 V1.0.13.0，放在 repo 外。`verify-game.cjs` 的基準編輯（角色 1 名稱與三類經驗）用的是 V1.0.12.2 知識，這次結果只證明啟動器能存讀，不代表修改器支援 V1.0.13.0。與 V1.0.12.2 相比，`data.json`、`c3runtime.js`、`kj.json`、`jz.json` 有變。
+- 原生「主动」存檔除了 `save\ea1save.dat`，也會在 `game/` 下寫出檔名含反斜線的 `savedir\ea1save.dat`、`savedir\saveinfo.dat`。來源是 `(AppFolder + 資料夾變數) + "\\ea"` 這組以變數組路徑的 expression，V1.0.9.1 就有，準備工具沒有正規化；不是 V1.0.13.0 的新問題。因此 Mac 上手動存檔不會更新 `savedir/` 資料夾裡的雲存檔快取。
+- 沒做：遊戲 UI 中的 Steam 雲存檔清單（測試不開視窗）、真實雲端上傳、成就、長時間遊玩。
 
 ```text
 V1.0.12.2 scripts/c3runtime.js  原始 e6a6d629bf7320344445ac7e6e47085211496e5b6a9498aec13ab1a121abd04b

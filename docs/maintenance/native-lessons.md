@@ -8,6 +8,8 @@
 
 冒煙可沿用 `verify-game.cjs --scenario`（`setPillAptitudeBonus`、`setEquipmentLevel` 等具名操作）加 `verify-native-lifecycle.cjs`（`ascend`、`followup`、`pills`、`pillOverLimit`、`backpackOverLimit`、`relics`、`relicTakeOff`、`relicStandPrepare`、`placedRelicAura`、`wall`、`city`、`ascensionQuality`、`innerPillPrepare`、`innerPillLevel`、`ascendedInnerPillLevel`、`relicCrafting`、`recruitTechnology`、`affixPrepare`、`affixOverLimit` 等動作，以 `main()` 的清單為準；`pills` 可用 `pillCharacter` 指定角色；擺放類動作要在存檔重啟後另跑一次取下，才算驗過兩輪 IO；`穿戴装备` 後要等一拍再讀角色指標，同一次 evaluate 內讀到的是空列）；固定基準存檔先複製到 repo 外的新資料夾，步驟依 `.local/game-sources.json` 的 `nativeSmoke` 紀錄（雲存檔載入 → 存檔 → assert → stop → restart → 存檔載入 → assert）。
 
+- **只驗 Mac 啟動器、還沒改版時**：複製目前 catalog，只把 15 個來源指紋換成新版（`c3runtime.js` 用原始指紋）存到 repo 外當 `--catalog`，加 `--package` 指 Steam 安裝目錄。這只證明能存讀，不代表修改器支援新版（V1.0.13.0 Mac 補驗）。
+- **zsh 寫冒煙腳本**：`V="node …/verify-game.cjs"` 再 `$V --setup` 不會斷詞，要寫成函式；`--setup` 的 `STATE` 那行要用 `sed -n 's/^STATE //p'` 取，不要取最後一行。setup 失敗時遊戲可能已經啟動，先查 `runs/` 裡的 state 接著跑或停掉，不要直接重跑（V1.0.13.0 Mac 補驗）。
 - `verify-game.cjs` 的 `editSave` 每次都會改角色 1（等級、y50 歸零、名稱與經驗），所以要測的狀態放在別的角色（v2.16）。
 - `--setup` 在讀 `--scenario` 前就建好副本目錄；情境檔路徑錯時，要清掉殘留目錄再重跑（v2.16）。
 - 半途失敗時，遊戲內狀態已經變了，不要在同一副本續跑，從 `--setup` 重來（v2.16）。

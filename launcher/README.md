@@ -8,7 +8,7 @@
 python3 launcher/prepare-macos.py
 ```
 
-預設從 `NGO-Steam-0` bottle 的 `塔防山贼模拟器` 安裝目錄複製（找不到時改用舊的 `bandit`），輸出到 `~/bandit-mac-port`；可用 `--source`、`--output` 指定其他位置。首次下載官方 runtime 約 141 MiB，並核對固定 SHA-256。工具只接受已核對路徑修正位置的遊戲腳本（目前為歷史 V1.0.9.1、V1.0.10.2、V1.0.11.2 及 V1.0.12.2）；未知來源更新時會停止，需重新調查。V1.0.11.2 與 V1.0.12.2 只完成路徑修正的靜態核對，尚未重驗 Mac 啟動、Steam 清單、實際存讀及重啟續玩；歷史實測不能擴張到新版。
+預設從 `NGO-Steam-0` bottle 的 `塔防山贼模拟器` 安裝目錄複製（找不到時改用舊的 `bandit`），輸出到 `~/bandit-mac-port`；可用 `--source`、`--output` 指定其他位置。首次下載官方 runtime 約 141 MiB，並核對固定 SHA-256。工具只接受已核對路徑修正位置的遊戲腳本（目前為歷史 V1.0.9.1、V1.0.10.2、V1.0.11.2、V1.0.12.2 及 V1.0.13.0）；未知來源更新時會停止，需重新調查。V1.0.13.0 已於 2026-10-27 在 Apple M4 Max 隔離驗證原生啟動、本機存讀及新程序重啟讀回；遊戲 UI 的 Steam 雲存檔清單沒有重看。V1.0.11.2 與 V1.0.12.2 只做過路徑修正的靜態核對。實測只算該版，不能套到其他版本。
 
 遊戲改版時不必先登錄；在 Mac 準備時工具停下再處理即可。新版登錄只做靜態核對，Windows 也能做：對照前一版 `c3runtime.js` 每個修正位置的前後文與命中次數，確認沒變才把原始指紋加進 `SCRIPT_SHA256`，再用下方 `--verify-runtime` 核對套用後的副本。
 
@@ -19,7 +19,7 @@ python3 launcher/prepare-macos.py
 - Steam 安裝目錄與原始存檔不會被改動。
 - 首次準備複製 `savedir` 與 `record.dat`；之後準備不會覆蓋 Mac 進度。
 - Mac「雲存檔」快取位於 `~/bandit-mac-port/game/savedir`，自動備份位於 `game/backup`，與 Windows 存檔分開。
-- V1.0.9.1 的手動「讀檔」使用 `save\\eaNsave.dat`。目前準備工具未正規化這組路徑，在 Mac 的 `game/` 下會產生檔名含反斜線的 `save\ea1save.dat` 等檔案。隔離測試已確認可寫入並重啟讀回；搬移或修改時保留實際檔名與位置，不能當成 `save/` 子目錄。
+- V1.0.9.1 的手動「讀檔」使用 `save\\eaNsave.dat`。目前準備工具未正規化這組路徑，在 Mac 的 `game/` 下會產生檔名含反斜線的 `save\ea1save.dat` 等檔案。隔離測試已確認可寫入並重啟讀回；搬移或修改時保留實際檔名與位置，不能當成 `save/` 子目錄。手動存檔也會寫出 `savedir\ea1save.dat` 這類含反斜線的檔案，不會更新 `savedir/` 資料夾（V1.0.13.0 實測；這組路徑 V1.0.9.1 就有）。
 - Chromium profile 位於 `~/bandit-mac-port/profile`，啟動 log 位於 `logs/game.log`。
 - 原版 Greenworks 與 Steam 驗證保留。若要使用 Steam 功能，需另外開啟並登入 **Mac 版 Steam**；CrossOver 裡的 Windows Steam 無法供 macOS dylib 使用。
 
