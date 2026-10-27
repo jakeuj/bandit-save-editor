@@ -4,8 +4,9 @@ const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypt
 const sourceSids=[601593514747018,605413626718369,290240793057956,713681756866045,940995553206160,924571110308816,501272375624196,791657421740250,204416519787196,654692930556623,574511591831477,754298301929487,311899301569964,714979671293604,163385542232476,981828147671074,761577193118513,565108901731936,131416746119248,773239288013696];
 // V1.0.12.2 differs only by object/bound-reference renumbering and the new delayed-refresh argument (false) of 刷新物品／刷新灵物.
 // V1.0.13.0 rebuilt the storage-move inner events (new SIDs) with a 库序号 argument (7 or the new armory 22); z7↔z9 copies y0–49 as before.
-const reviewedDigest='be73fe031f97c1dd637f4faa0b49d8730c2f648e2f805ec6e532b565d68b8b66';
-const reviewedDigests=new Set(['d538a7f4e8ca258d1b5583797806d9f9f125b9898f5e5be78fff3b5fbf6fdcd2','4db0a11781c417bef5206ab4156a7e7f56be6d88d6a615e60d4644aa1c9cabfe',reviewedDigest]);
+// V1.0.14.0 only lowered the 升级装备魂魄 growth from 1.05 to 1.04 (both the treasure and the inner-pill branch).
+const reviewedDigest='5740a6289df43193f4e6656dbec0ee484b94bc69e0b133564ebd2d13e57c6f3e';
+const reviewedDigests=new Set(['d538a7f4e8ca258d1b5583797806d9f9f125b9898f5e5be78fff3b5fbf6fdcd2','4db0a11781c417bef5206ab4156a7e7f56be6d88d6a615e60d4644aa1c9cabfe','be73fe031f97c1dd637f4faa0b49d8730c2f648e2f805ec6e532b565d68b8b66',reviewedDigest]);
 const groups=['backpackTreasureLevel','treasureLevel'];
 const hash=value=>crypto.createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const tierCounts={1:21,2:25,3:29,4:31,5:31,6:33};
@@ -23,8 +24,8 @@ function reviewedRules(digest,{wp}){
  if(JSON.stringify(counts)!==JSON.stringify(tierCounts))throw Error('寶物範本規模尚未核對');
  return {version:1,policy:'level-only',phase:'A-static-no-native-proof',sourceSids,sourceDigest:digest,items,
   qualities:{min:1,max:6,capBase:10,capStep:5},
-  // C(L,T)=round(10*1.05^((T-1)*30+4*L)-1): the -1 is applied inside round, outside the exponent.
-  cost:{currency:'souls',base:10,growth:1.05,tierStep:30,levelStep:4,offset:-1,rounding:'round'},
+  // C(L,T)=round(10*g^((T-1)*30+4*L)-1): the -1 is applied inside round, outside the exponent; g=1.04 from V1.0.14.0, 1.05 before.
+  cost:{currency:'souls',base:10,growth:digest===reviewedDigest?1.04:1.05,tierStep:30,levelStep:4,offset:-1,rounding:'round'},
   decompose:{currency:'souls',byTier:{...decompose},ignores:['level','quality','coefficient','investment']},
   limits:{planes:[7,9],slot:6,minTier:1,maxTier:6,quantity:1,backpackOwner:0,equipPointer:{y:21,z:2},moveColumns:50,columns:{level:6,owner:7,locked:22},experience:false,advanced:false,metadata:'native-conversion-witness-required'}};
 }

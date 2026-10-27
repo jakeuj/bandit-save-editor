@@ -11,7 +11,7 @@
 | 未知來源的純分析、SID 與 expression 追查 | [存檔參考](save-format.md#重建知識) |
 | 舊複合證明的沿用、續跑及寫回（歷史，讀舊證據或診斷時） | `docs/maintenance/migration.md`「舊複合遷移工具（歷史）」 |
 
-精簡來源只供分析；完整快取缺失／損壞或來源改變時，依主流程補建，不因例行查版本重新解包。遊戲改版做法（V1.0.12.2、V1.0.13.0，含沒有舊版來源時的比對）見 `docs/maintenance/game-update.md`，更早的 V1.0.11.2 完整實測與選跑重播見 `docs/research/archive/v1.0.11.2-audit.md`、`docs/research/selective-migration.md`（歷史）；Windows 證據不代表 Mac 已實測。
+精簡來源只供分析；完整快取缺失／損壞或來源改變時，依主流程補建，不因例行查版本重新解包。遊戲改版做法（V1.0.12.2、V1.0.13.0、V1.0.14.0，含沒有舊版來源時的比對）見 `docs/maintenance/game-update.md`，更早的 V1.0.11.2 完整實測與選跑重播見 `docs/research/archive/v1.0.11.2-audit.md`、`docs/research/selective-migration.md`（歷史）；Windows 證據不代表 Mac 已實測。
 
 ## 驗證與交付
 

@@ -56,6 +56,8 @@ test('V1.0.13.0 saves grow a z22 armory layer; it round-trips and stays read-onl
   const level = C.resolveField(model, { x: 5, y: 6, z: 22 }), mode = C.resolveField(model, { x: 37, y: 1, z: 0 });
   assert.deepEqual([level.category, level.label, level.known, level.editable], ['武庫', '物品等級', true, false]);
   assert.deepEqual([mode.label, mode.editable], ['武庫換裝模式', false]);
+  // y22 is the lock flag; V1.0.14.0 lets the 武庫換裝 page toggle it on z22 too.
+  for (const z of [7, 22]) assert.deepEqual([C.resolveField(model, { x: 5, y: 22, z }).label, C.resolveField(model, { x: 5, y: 22, z }).editable], ['物品鎖定', false]);
   assert.throws(() => C.set(model, { x: 5, y: 6, z: 22 }, 5));
   assert.throws(() => C.set(model, { x: 37, y: 1, z: 0 }, 0));
   assert.equal(C.serialize(model), raw);

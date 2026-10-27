@@ -21,6 +21,13 @@ test('affix invalid values, pool, slots, selected flag and special state reject 
  for(const [y,v]of [[9,104],[28,0],[29,1],[25,1],[5,7],[6,16]]){const {C,m}=setup();m.original.data[1][y][9]=v;assert.throws(()=>C.setEquipmentAffixCoefficient(m,{itemId:1,slot:1,coefficient:20}));}
  const {C,m}=setup();assert.throws(()=>C.setEquipmentAffixCoefficient(m,{itemId:1,slot:6,coefficient:20}));assert.throws(()=>C.setEquipmentAffixCoefficient(m,{itemId:1,slot:1,coefficient:20,advanced:true}));m.original.data[1][7][9]=1;assert.throws(()=>C.affixInfo(m,1,1),/雙向/);
 });
+test('V1.0.14.0 fixed-character talents: a 13.0 save keeps 穆桂英 old talents until the game reloads it (数值更新)',()=>{
+ const {C,m,pills}=setup(),K=C.KNOWLEDGE,d=m.original.data,template=K.batch2Data.characters[167];
+ assert.deepEqual([...template.talents],[50,56,11]);d[1][2][2]=167;
+ for(let i=0;i<3;i++){d[1][10+i][2]=template.base[i];d[1][1+i][12]=template.talents[i];d[1][21+i][12]=template.talentLevels[i];}
+ assert.ok(C.pillInfo(m,1,1,pills[0]).max>0);
+ d[1][2][12]=65;d[1][3][12]=2;assert.throws(()=>C.pillInfo(m,1,1,pills[0]),/載入範本/);
+});
 test('pill bounds include template talents, three aptitudes, zero and no material debit',()=>{
  const {C,m,pills}=setup();for(let aptitude=1;aptitude<=3;aptitude++){
  const info=C.pillInfo(m,1,aptitude,pills[aptitude-1]);assert.ok(info.base>0);assert.ok(info.max>0);

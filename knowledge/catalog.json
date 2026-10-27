@@ -1,7 +1,7 @@
 {
   "version": 1,
   "game": "szmnqea",
-  "gameVersion": "V1.0.13.0",
+  "gameVersion": "V1.0.14.0",
   "setEquipmentLevel": {
     "version": 1,
     "policy": "level-only",
@@ -12180,7 +12180,7 @@
       131416746119248,
       773239288013696
     ],
-    "sourceDigest": "be73fe031f97c1dd637f4faa0b49d8730c2f648e2f805ec6e532b565d68b8b66",
+    "sourceDigest": "5740a6289df43193f4e6656dbec0ee484b94bc69e0b133564ebd2d13e57c6f3e",
     "items": {
       "556": {
         "name": "铜护符",
@@ -14742,7 +14742,7 @@
     "cost": {
       "currency": "souls",
       "base": 10,
-      "growth": 1.05,
+      "growth": 1.04,
       "tierStep": 30,
       "levelStep": 4,
       "offset": -1,
@@ -25596,43 +25596,43 @@
         "kind": "aptitude",
         "unit": "",
         "format": "小数",
-        "expression": 5371
+        "expression": 5373
       },
       "2": {
         "kind": "aptitude",
         "unit": "",
         "format": "小数",
-        "expression": 5371
+        "expression": 5373
       },
       "3": {
         "kind": "aptitude",
         "unit": "",
         "format": "小数",
-        "expression": 5371
+        "expression": 5373
       },
       "4": {
         "kind": "attack",
         "unit": "",
         "format": "整数",
-        "expression": 5370
+        "expression": 5372
       },
       "5": {
         "kind": "attack",
         "unit": "",
         "format": "整数",
-        "expression": 5370
+        "expression": 5372
       },
       "6": {
         "kind": "attack",
         "unit": "",
         "format": "整数",
-        "expression": 5370
+        "expression": 5372
       },
       "12": {
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5374,
+        "expression": 5376,
         "base": 2,
         "tier": 0.75,
         "level": 0.01
@@ -25641,7 +25641,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5375,
+        "expression": 5377,
         "base": 8,
         "tier": 3,
         "level": 0.4
@@ -25650,7 +25650,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25659,7 +25659,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25668,7 +25668,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25677,7 +25677,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25686,7 +25686,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25695,7 +25695,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25704,7 +25704,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25713,7 +25713,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25722,7 +25722,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25731,7 +25731,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25740,7 +25740,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25749,7 +25749,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25758,7 +25758,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25767,7 +25767,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25776,7 +25776,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25785,7 +25785,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25794,7 +25794,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25803,7 +25803,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25812,61 +25812,61 @@
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5376
+        "expression": 5378
       },
       "41": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5376
+        "expression": 5378
       },
       "42": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5376
+        "expression": 5378
       },
       "43": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5376
+        "expression": 5378
       },
       "44": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5376
+        "expression": 5378
       },
       "45": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5376
+        "expression": 5378
       },
       "46": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5376
+        "expression": 5378
       },
       "47": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5376
+        "expression": 5378
       },
       "48": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5376
+        "expression": 5378
       },
       "51": {
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5374,
+        "expression": 5376,
         "base": 2,
         "tier": 0.75,
         "level": 0.01
@@ -25875,7 +25875,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5375,
+        "expression": 5377,
         "base": 8,
         "tier": 3,
         "level": 0.4
@@ -25884,7 +25884,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25893,7 +25893,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25902,7 +25902,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25911,7 +25911,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25920,7 +25920,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25929,7 +25929,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25938,7 +25938,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25947,7 +25947,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25956,7 +25956,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25965,7 +25965,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25974,7 +25974,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25983,7 +25983,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25992,7 +25992,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5377,
+        "expression": 5379,
         "base": 2,
         "tier": 0.75,
         "level": 0.1
@@ -26001,7 +26001,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5377,
+        "expression": 5379,
         "base": 2,
         "tier": 0.75,
         "level": 0.1
@@ -26010,7 +26010,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -26019,7 +26019,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -26028,7 +26028,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5381,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -26118,266 +26118,266 @@
         "base": 2,
         "tier": 0.75,
         "level": 0.01,
-        "expression": 5374
+        "expression": 5376
       },
       "13": {
         "unit": "%",
         "base": 8,
         "tier": 3,
         "level": 0.4,
-        "expression": 5375
+        "expression": 5377
       },
       "17": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "18": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "19": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "20": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "21": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "23": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "24": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "25": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "26": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "27": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "31": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "32": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "33": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "35": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "36": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "37": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "38": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "51": {
         "unit": "%",
         "base": 2,
         "tier": 0.75,
         "level": 0.01,
-        "expression": 5374
+        "expression": 5376
       },
       "52": {
         "unit": "%",
         "base": 8,
         "tier": 3,
         "level": 0.4,
-        "expression": 5375
+        "expression": 5377
       },
       "53": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "54": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "55": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "56": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "57": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "58": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "59": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "60": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "61": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "62": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "63": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "64": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "71": {
         "unit": "%",
         "base": 2,
         "tier": 0.75,
         "level": 0.1,
-        "expression": 5377
+        "expression": 5379
       },
       "72": {
         "unit": "%",
         "base": 2,
         "tier": 0.75,
         "level": 0.1,
-        "expression": 5377
+        "expression": 5379
       },
       "110": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "111": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       },
       "112": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5379
+        "expression": 5381
       }
     }
   },
@@ -26549,12 +26549,12 @@
     ]
   },
   "fingerprints": {
-    "data.json": "9e5697adeb11a0c1daf40be6086b56f58755562f3560ad1772d771445e167ed2",
-    "scripts/c3runtime.js": "2546ca0823f858f3ce2a2e1dd013ed70f7e4d330e8d6c33d7ce75fb2a75d6936",
+    "data.json": "a8b816ace9fa128dba89c1e3dcea43d5ed5fcb54855e894d8b1182f1931aaa0b",
+    "scripts/c3runtime.js": "9ced70d01f1a1b82da6952b21130401a017f3a2953b579ece1a97aedbb9cb097",
     "cl.json": "c121cf702eb6a4edb184d7180ad83d41aa90efca4a1e5e21e652dd1ff24f47b7",
-    "js.json": "5c360c93cd1248fe96d0373428ddae4649698574d032b333432e4b777fcc0ee4",
+    "js.json": "fee601bdbe6268fa5d847c3de8231dcd787cd0536c60104b82842d5a5ede147a",
     "zy.json": "97d59a029aefbfbba315c9cec7b83a168571def79282eec2be9edbfeb3759188",
-    "sx.json": "6a24e20ad0a70d5ad17a0310f0a9e7619dda5c4718d536a3df51d385abd748e7",
+    "sx.json": "fd8f85edd3483d23be3d81dc6e949ee41c3204ef560ab15f8e59ef4acb35c579",
     "wp.json": "c7b65aad4dc3ee9458221ca8fc16d91a8e6ad7e872686a820e97303de7bb6558",
     "kj.json": "fc7f6f219f9ebea75fc10b4af89fb2ecc1fccb8196919476478f3802f96ae37f",
     "jz.json": "3d5da9a57d55f8ec616bf514571bbd06e688ee456d3b3c348a390322de3e3b25",
@@ -55542,8 +55542,8 @@
         ],
         "talents": [
           50,
-          65,
-          2
+          56,
+          11
         ],
         "talentLevels": [
           5,
@@ -55746,7 +55746,7 @@
         ],
         "talents": [
           72,
-          65,
+          4,
           20
         ],
         "talentLevels": [
@@ -57979,16 +57979,16 @@
   },
   "counts": {
     "functions": 737,
-    "setXYZ": 856,
-    "arrayActions": 869,
-    "readSites": 2938
+    "setXYZ": 860,
+    "arrayActions": 873,
+    "readSites": 2941
   },
   "planes": [
     {
       "z": 0,
       "name": "山寨與全局",
       "status": "程式證據",
-      "writes": 267,
+      "writes": 268,
       "reads": 579,
       "sources": [
         {
@@ -58563,8 +58563,8 @@
       "z": 2,
       "name": "角色基本資料",
       "status": "程式證據",
-      "writes": 138,
-      "reads": 603,
+      "writes": 139,
+      "reads": 604,
       "sources": [
         {
           "function": "初始化／事件",
@@ -59558,9 +59558,14 @@
       "z": 22,
       "name": "武庫",
       "status": "程式證據",
-      "writes": 2,
-      "reads": 17,
+      "writes": 4,
+      "reads": 19,
       "sources": [
+        {
+          "function": "初始化／事件",
+          "sheet": "主事件",
+          "sid": 668209011809314
+        },
         {
           "function": "仓库存入",
           "sheet": "主事件",
@@ -59572,7 +59577,9 @@
           "sid": 507459344390517
         }
       ],
-      "columns": []
+      "columns": [
+        22
+      ]
     }
   ],
   "catalogs": {
@@ -62523,27 +62530,27 @@
       },
       {
         "id": 23,
-        "name": "金系克制",
+        "name": "對金系增傷",
         "category": "戰鬥附加"
       },
       {
         "id": 24,
-        "name": "水系克制",
+        "name": "對水系增傷",
         "category": "戰鬥附加"
       },
       {
         "id": 25,
-        "name": "火系克制",
+        "name": "對火系增傷",
         "category": "戰鬥附加"
       },
       {
         "id": 26,
-        "name": "木系克制",
+        "name": "對木系增傷",
         "category": "戰鬥附加"
       },
       {
         "id": 27,
-        "name": "土系克制",
+        "name": "對土系增傷",
         "category": "戰鬥附加"
       },
       {
@@ -74717,6 +74724,21 @@
       ]
     },
     {
+      "sid": 946060107800777,
+      "actionSid": 204179845255359,
+      "function": "初始化／事件",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 18,
+      "z": 0,
+      "refs": [
+        12,
+        null,
+        null,
+        null
+      ]
+    },
+    {
       "sid": 107425826227921,
       "actionSid": 748192276160109,
       "function": "初始化／事件",
@@ -74808,7 +74830,7 @@
     },
     {
       "sid": 107425826227921,
-      "actionSid": 206008559744612,
+      "actionSid": 240953427734492,
       "function": "初始化／事件",
       "sheet": "主事件",
       "x": "*",
@@ -75043,7 +75065,7 @@
         12,
         15,
         null,
-        71
+        72
       ]
     },
     {
@@ -75058,7 +75080,7 @@
         null,
         null,
         null,
-        75
+        76
       ]
     },
     {
@@ -76195,10 +76217,10 @@
       "y": 16,
       "z": 0,
       "refs": [
-        66,
+        67,
         null,
         null,
-        66
+        67
       ]
     },
     {
@@ -77305,10 +77327,10 @@
       "y": 3,
       "z": 21,
       "refs": [
-        66,
+        67,
         null,
         null,
-        66
+        67
       ]
     },
     {
@@ -77320,7 +77342,7 @@
       "y": 4,
       "z": 21,
       "refs": [
-        66,
+        67,
         null,
         null,
         null
@@ -77335,7 +77357,7 @@
       "y": 7,
       "z": 21,
       "refs": [
-        66,
+        67,
         null,
         null,
         null
@@ -77350,7 +77372,7 @@
       "y": 8,
       "z": 21,
       "refs": [
-        66,
+        67,
         null,
         null,
         null
@@ -77365,7 +77387,7 @@
       "y": 9,
       "z": 21,
       "refs": [
-        66,
+        67,
         null,
         null,
         null
@@ -77758,7 +77780,7 @@
         15,
         null,
         null,
-        66
+        67
       ]
     },
     {
@@ -77773,7 +77795,7 @@
         15,
         null,
         null,
-        66
+        67
       ]
     },
     {
@@ -78040,7 +78062,7 @@
       "y": 1,
       "z": 2,
       "refs": [
-        66,
+        67,
         null,
         null,
         12
@@ -78113,6 +78135,21 @@
       "sheet": "主事件",
       "x": "*",
       "y": 8,
+      "z": 2,
+      "refs": [
+        15,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 115016976236037,
+      "actionSid": 385883517954774,
+      "function": "初始化／事件",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 59,
       "z": 2,
       "refs": [
         15,
@@ -80428,7 +80465,7 @@
         null,
         null,
         null,
-        75
+        76
       ]
     },
     {
@@ -80473,7 +80510,7 @@
         null,
         null,
         null,
-        75
+        76
       ]
     },
     {
@@ -80488,7 +80525,7 @@
         null,
         null,
         null,
-        75
+        76
       ]
     },
     {
@@ -80500,7 +80537,7 @@
       "y": 0,
       "z": 3,
       "refs": [
-        66,
+        67,
         null,
         null,
         null
@@ -80515,10 +80552,10 @@
       "y": 0,
       "z": 3,
       "refs": [
-        66,
+        67,
         null,
         null,
-        66
+        67
       ]
     },
     {
@@ -81913,7 +81950,7 @@
         null,
         null,
         null,
-        66
+        67
       ]
     },
     {
@@ -81928,7 +81965,7 @@
         null,
         null,
         null,
-        66
+        67
       ]
     },
     {
@@ -81943,7 +81980,7 @@
         null,
         null,
         null,
-        66
+        67
       ]
     },
     {
@@ -81958,7 +81995,7 @@
         null,
         null,
         null,
-        66
+        67
       ]
     },
     {
@@ -81973,7 +82010,7 @@
         null,
         null,
         null,
-        66
+        67
       ]
     },
     {
@@ -81988,7 +82025,7 @@
         null,
         null,
         null,
-        66
+        67
       ]
     },
     {
@@ -82003,7 +82040,7 @@
         null,
         null,
         null,
-        66
+        67
       ]
     },
     {
@@ -82015,7 +82052,7 @@
       "y": 22,
       "z": 7,
       "refs": [
-        66,
+        67,
         null,
         null,
         null
@@ -82030,7 +82067,7 @@
       "y": 22,
       "z": 7,
       "refs": [
-        66,
+        67,
         null,
         null,
         null
@@ -82045,7 +82082,7 @@
       "y": 11,
       "z": 18,
       "refs": [
-        66,
+        67,
         null,
         null,
         null
@@ -82060,7 +82097,37 @@
       "y": 11,
       "z": 18,
       "refs": [
-        66,
+        67,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 419503474864484,
+      "actionSid": 385629459612476,
+      "function": "初始化／事件",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 22,
+      "z": 22,
+      "refs": [
+        67,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 668209011809314,
+      "actionSid": 230694504036109,
+      "function": "初始化／事件",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 22,
+      "z": 22,
+      "refs": [
+        67,
         null,
         null,
         null
@@ -82105,7 +82172,7 @@
       "y": 8,
       "z": 0,
       "refs": [
-        66,
+        67,
         null,
         null,
         null
@@ -82120,7 +82187,7 @@
       "y": 8,
       "z": 0,
       "refs": [
-        66,
+        67,
         null,
         null,
         null
@@ -82150,7 +82217,7 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3235,
+        3236,
         15,
         null,
         143
@@ -82165,7 +82232,7 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3236,
+        3237,
         15,
         null,
         143
@@ -82180,30 +82247,15 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3237,
+        3238,
         15,
         null,
-        3238
+        3239
       ]
     },
     {
       "sid": 667991859334985,
       "actionSid": 304512915298097,
-      "function": "刷新单城市商铺",
-      "sheet": "主事件",
-      "x": "*",
-      "y": "*",
-      "z": 11,
-      "refs": [
-        3235,
-        15,
-        null,
-        null
-      ]
-    },
-    {
-      "sid": 667991859334985,
-      "actionSid": 650974031742541,
       "function": "刷新单城市商铺",
       "sheet": "主事件",
       "x": "*",
@@ -82218,7 +82270,7 @@
     },
     {
       "sid": 667991859334985,
-      "actionSid": 988639891408777,
+      "actionSid": 650974031742541,
       "function": "刷新单城市商铺",
       "sheet": "主事件",
       "x": "*",
@@ -82226,6 +82278,21 @@
       "z": 11,
       "refs": [
         3237,
+        15,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 667991859334985,
+      "actionSid": 988639891408777,
+      "function": "刷新单城市商铺",
+      "sheet": "主事件",
+      "x": "*",
+      "y": "*",
+      "z": 11,
+      "refs": [
+        3238,
         15,
         null,
         null
@@ -82255,7 +82322,7 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3254,
+        3255,
         15,
         null,
         null
@@ -82270,7 +82337,7 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3255,
+        3256,
         15,
         null,
         null
@@ -82288,7 +82355,7 @@
         null,
         null,
         null,
-        3309
+        3310
       ]
     },
     {
@@ -82333,7 +82400,7 @@
         null,
         null,
         null,
-        3320
+        3321
       ]
     },
     {
@@ -82390,7 +82457,7 @@
       "y": 52,
       "z": 2,
       "refs": [
-        3374,
+        3375,
         null,
         null,
         null
@@ -83080,7 +83147,7 @@
       "y": 31,
       "z": 0,
       "refs": [
-        66,
+        67,
         null,
         null,
         null
@@ -83095,7 +83162,7 @@
       "y": 31,
       "z": 0,
       "refs": [
-        66,
+        67,
         null,
         null,
         null
@@ -83110,7 +83177,7 @@
       "y": 32,
       "z": 0,
       "refs": [
-        66,
+        67,
         null,
         null,
         null
@@ -83125,7 +83192,7 @@
       "y": 32,
       "z": 0,
       "refs": [
-        66,
+        67,
         null,
         null,
         null
@@ -83140,7 +83207,7 @@
       "y": 33,
       "z": 0,
       "refs": [
-        66,
+        67,
         null,
         null,
         null
@@ -83155,7 +83222,7 @@
       "y": 33,
       "z": 0,
       "refs": [
-        66,
+        67,
         null,
         null,
         null
@@ -83533,7 +83600,7 @@
         12,
         null,
         null,
-        3562
+        3563
       ]
     },
     {
@@ -83560,7 +83627,7 @@
       "y": 30,
       "z": 0,
       "refs": [
-        66,
+        67,
         null,
         null,
         null
@@ -83575,7 +83642,7 @@
       "y": 30,
       "z": 0,
       "refs": [
-        66,
+        67,
         null,
         null,
         null
@@ -83638,7 +83705,7 @@
         15,
         null,
         15,
-        3598
+        3599
       ]
     },
     {
@@ -83653,7 +83720,7 @@
         15,
         null,
         15,
-        3599
+        3600
       ]
     },
     {
@@ -83770,7 +83837,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        66,
+        67,
         null,
         null,
         null
@@ -83788,7 +83855,7 @@
         12,
         15,
         null,
-        3774
+        3775
       ]
     },
     {
@@ -83818,7 +83885,7 @@
         12,
         15,
         null,
-        3775
+        3776
       ]
     },
     {
@@ -83893,7 +83960,7 @@
         15,
         null,
         null,
-        3868
+        3869
       ]
     },
     {
@@ -83980,8 +84047,8 @@
       "y": "*",
       "z": 0,
       "refs": [
-        3878,
-        3882,
+        3879,
+        3883,
         null,
         null
       ]
@@ -84133,7 +84200,7 @@
         12,
         15,
         null,
-        3946
+        3947
       ]
     },
     {
@@ -84163,7 +84230,7 @@
         12,
         15,
         null,
-        3947
+        3948
       ]
     },
     {
@@ -84208,7 +84275,7 @@
         15,
         null,
         null,
-        4106
+        4107
       ]
     },
     {
@@ -84223,7 +84290,7 @@
         15,
         null,
         null,
-        4107
+        4108
       ]
     },
     {
@@ -84236,7 +84303,7 @@
       "z": 16,
       "refs": [
         15,
-        4108,
+        4109,
         null,
         15
       ]
@@ -84251,7 +84318,7 @@
       "z": 16,
       "refs": [
         15,
-        4109,
+        4110,
         null,
         15
       ]
@@ -84328,7 +84395,7 @@
         15,
         null,
         null,
-        4112
+        4113
       ]
     },
     {
@@ -84343,7 +84410,7 @@
         15,
         null,
         null,
-        4112
+        4113
       ]
     },
     {
@@ -84358,7 +84425,7 @@
         15,
         null,
         null,
-        4112
+        4113
       ]
     },
     {
@@ -84448,7 +84515,7 @@
         15,
         null,
         null,
-        4329
+        4331
       ]
     },
     {
@@ -84505,10 +84572,10 @@
       "y": "*",
       "z": 10,
       "refs": [
-        4358,
+        4360,
         15,
         null,
-        4361
+        4363
       ]
     },
     {
@@ -84535,10 +84602,10 @@
       "y": 7,
       "z": 1,
       "refs": [
-        66,
+        67,
         null,
         null,
-        66
+        67
       ]
     },
     {
@@ -84550,7 +84617,7 @@
       "y": 7,
       "z": 1,
       "refs": [
-        66,
+        67,
         null,
         null,
         null
@@ -84598,7 +84665,7 @@
         15,
         15,
         null,
-        4381
+        4383
       ]
     },
     {
@@ -84643,7 +84710,7 @@
         352,
         12,
         null,
-        4384
+        4386
       ]
     },
     {
@@ -84658,7 +84725,7 @@
         1578,
         12,
         null,
-        4385
+        4387
       ]
     },
     {
@@ -84688,7 +84755,7 @@
         12,
         null,
         null,
-        4384
+        4386
       ]
     },
     {
@@ -84733,7 +84800,7 @@
         12,
         null,
         null,
-        4387
+        4389
       ]
     },
     {
@@ -85093,7 +85160,7 @@
         null,
         null,
         null,
-        4481
+        4483
       ]
     },
     {
@@ -85108,7 +85175,7 @@
         null,
         null,
         null,
-        4487
+        4489
       ]
     },
     {
@@ -85123,7 +85190,7 @@
         null,
         null,
         null,
-        4488
+        4490
       ]
     },
     {
@@ -85138,7 +85205,7 @@
         null,
         null,
         null,
-        4487
+        4489
       ]
     },
     {
@@ -85153,7 +85220,7 @@
         null,
         null,
         null,
-        4488
+        4490
       ]
     },
     {
@@ -85198,7 +85265,7 @@
         15,
         15,
         null,
-        4381
+        4383
       ]
     },
     {
@@ -85333,7 +85400,7 @@
         15,
         null,
         null,
-        4583
+        4585
       ]
     },
     {
@@ -85348,7 +85415,7 @@
         null,
         null,
         null,
-        4584
+        4586
       ]
     },
     {
@@ -85363,7 +85430,7 @@
         15,
         null,
         null,
-        4585
+        4587
       ]
     },
     {
@@ -85378,7 +85445,7 @@
         15,
         null,
         null,
-        4583
+        4585
       ]
     },
     {
@@ -85393,7 +85460,7 @@
         null,
         null,
         null,
-        4584
+        4586
       ]
     },
     {
@@ -85408,7 +85475,7 @@
         15,
         null,
         null,
-        4585
+        4587
       ]
     },
     {
@@ -85438,7 +85505,7 @@
         15,
         null,
         null,
-        4609
+        4611
       ]
     },
     {
@@ -85483,7 +85550,7 @@
         15,
         null,
         null,
-        4611
+        4613
       ]
     },
     {
@@ -85498,7 +85565,7 @@
         15,
         null,
         null,
-        4612
+        4614
       ]
     },
     {
@@ -85525,7 +85592,7 @@
       "y": 35,
       "z": 0,
       "refs": [
-        66,
+        67,
         null,
         null,
         null
@@ -85540,7 +85607,7 @@
       "y": 35,
       "z": 0,
       "refs": [
-        66,
+        67,
         null,
         null,
         null
@@ -85556,9 +85623,9 @@
       "z": 0,
       "refs": [
         15,
-        4649,
+        4651,
         null,
-        4650
+        4652
       ]
     },
     {
@@ -85573,7 +85640,7 @@
         null,
         null,
         null,
-        4652
+        4654
       ]
     },
     {
@@ -85586,9 +85653,9 @@
       "z": 0,
       "refs": [
         15,
-        4649,
+        4651,
         null,
-        4650
+        4652
       ]
     },
     {
@@ -85603,7 +85670,7 @@
         15,
         null,
         null,
-        4659
+        4661
       ]
     },
     {
@@ -85633,7 +85700,7 @@
         15,
         null,
         null,
-        4612
+        4614
       ]
     },
     {
@@ -85648,7 +85715,7 @@
         15,
         null,
         null,
-        4662
+        4664
       ]
     },
     {
@@ -85678,7 +85745,7 @@
         15,
         null,
         null,
-        4665
+        4667
       ]
     },
     {
@@ -85798,7 +85865,7 @@
         15,
         null,
         null,
-        4611
+        4613
       ]
     },
     {
@@ -85813,7 +85880,7 @@
         15,
         null,
         null,
-        4612
+        4614
       ]
     },
     {
@@ -85873,7 +85940,7 @@
         null,
         null,
         null,
-        4768
+        4770
       ]
     },
     {
@@ -85888,7 +85955,7 @@
         null,
         null,
         null,
-        4769
+        4771
       ]
     },
     {
@@ -85903,7 +85970,7 @@
         null,
         null,
         null,
-        4780
+        4782
       ]
     },
     {
@@ -85918,7 +85985,7 @@
         null,
         null,
         null,
-        66
+        67
       ]
     },
     {
@@ -85933,7 +86000,7 @@
         15,
         2855,
         15,
-        4930
+        4932
       ]
     },
     {
@@ -85946,9 +86013,9 @@
       "z": "*",
       "refs": [
         15,
-        4931,
+        4933,
         15,
-        4932
+        4934
       ]
     },
     {
@@ -85978,7 +86045,7 @@
         null,
         null,
         null,
-        4994
+        4996
       ]
     },
     {
@@ -85993,7 +86060,7 @@
         15,
         null,
         null,
-        5068
+        5070
       ]
     },
     {
@@ -86008,7 +86075,7 @@
         15,
         null,
         null,
-        5165
+        5167
       ]
     },
     {
@@ -86023,7 +86090,7 @@
         15,
         null,
         null,
-        5168
+        5170
       ]
     },
     {
@@ -86038,7 +86105,7 @@
         15,
         null,
         null,
-        4585
+        4587
       ]
     },
     {
@@ -86083,7 +86150,7 @@
         15,
         15,
         null,
-        5175
+        5177
       ]
     },
     {
@@ -86098,7 +86165,7 @@
         15,
         15,
         null,
-        5177
+        5179
       ]
     },
     {
@@ -86113,7 +86180,7 @@
         15,
         15,
         null,
-        5178
+        5180
       ]
     },
     {
@@ -86128,7 +86195,7 @@
         15,
         15,
         null,
-        4277
+        4279
       ]
     },
     {
@@ -86185,10 +86252,10 @@
       "y": "*",
       "z": 6,
       "refs": [
-        5190,
+        5192,
         1782,
         null,
-        5191
+        5193
       ]
     },
     {
@@ -86203,7 +86270,7 @@
         15,
         null,
         null,
-        5192
+        5194
       ]
     },
     {
@@ -86263,7 +86330,7 @@
         15,
         null,
         null,
-        5195
+        5197
       ]
     },
     {
@@ -86278,7 +86345,7 @@
         15,
         null,
         null,
-        5198
+        5200
       ]
     },
     {
@@ -86353,7 +86420,7 @@
         15,
         null,
         null,
-        5201
+        5203
       ]
     },
     {
@@ -86368,7 +86435,7 @@
         15,
         null,
         null,
-        5203
+        5205
       ]
     },
     {
@@ -86443,7 +86510,7 @@
         15,
         null,
         null,
-        5207
+        5209
       ]
     },
     {
@@ -86458,7 +86525,7 @@
         15,
         null,
         null,
-        5210
+        5212
       ]
     },
     {
@@ -86518,7 +86585,7 @@
         15,
         null,
         null,
-        5209
+        5211
       ]
     },
     {
@@ -86533,7 +86600,7 @@
         15,
         null,
         null,
-        5207
+        5209
       ]
     },
     {
@@ -86548,7 +86615,7 @@
         15,
         null,
         null,
-        5210
+        5212
       ]
     },
     {
@@ -86605,10 +86672,10 @@
       "y": 4,
       "z": 1,
       "refs": [
-        66,
+        67,
         null,
         null,
-        5227
+        5229
       ]
     },
     {
@@ -86620,7 +86687,7 @@
       "y": 4,
       "z": 1,
       "refs": [
-        66,
+        67,
         null,
         null,
         null
@@ -86638,7 +86705,7 @@
         null,
         null,
         null,
-        5229
+        5231
       ]
     },
     {
@@ -86653,7 +86720,7 @@
         15,
         null,
         null,
-        5231
+        5233
       ]
     },
     {
@@ -86683,7 +86750,7 @@
         null,
         null,
         null,
-        5235
+        5237
       ]
     },
     {
@@ -86698,7 +86765,7 @@
         null,
         null,
         null,
-        5239
+        5241
       ]
     },
     {
@@ -86713,7 +86780,7 @@
         null,
         null,
         null,
-        5242
+        5244
       ]
     },
     {
@@ -86728,7 +86795,7 @@
         15,
         null,
         null,
-        5248
+        5250
       ]
     },
     {
@@ -86743,7 +86810,7 @@
         15,
         null,
         null,
-        5250
+        5252
       ]
     },
     {
@@ -86758,7 +86825,7 @@
         15,
         null,
         null,
-        5251
+        5253
       ]
     },
     {
@@ -86788,7 +86855,7 @@
         15,
         2010,
         null,
-        5272
+        5274
       ]
     },
     {
@@ -86803,7 +86870,7 @@
         15,
         2010,
         null,
-        5274
+        5276
       ]
     },
     {
@@ -86818,7 +86885,7 @@
         15,
         566,
         null,
-        5275
+        5277
       ]
     },
     {
@@ -86845,10 +86912,10 @@
       "y": 7,
       "z": 21,
       "refs": [
-        66,
+        67,
         null,
         null,
-        66
+        67
       ]
     },
     {
@@ -86860,10 +86927,10 @@
       "y": 9,
       "z": 21,
       "refs": [
-        66,
+        67,
         null,
         null,
-        5278
+        5280
       ]
     },
     {
@@ -86875,7 +86942,7 @@
       "y": 8,
       "z": 21,
       "refs": [
-        66,
+        67,
         null,
         null,
         null
@@ -86890,10 +86957,10 @@
       "y": 4,
       "z": 21,
       "refs": [
-        66,
+        67,
         null,
         null,
-        5282
+        5284
       ]
     },
     {
@@ -87148,7 +87215,7 @@
         15,
         null,
         null,
-        5309
+        5311
       ]
     },
     {
@@ -87163,7 +87230,7 @@
         null,
         null,
         null,
-        5313
+        5315
       ]
     },
     {
@@ -87178,7 +87245,7 @@
         null,
         null,
         null,
-        5315
+        5317
       ]
     },
     {
@@ -87193,7 +87260,7 @@
         null,
         null,
         null,
-        5317
+        5319
       ]
     },
     {
@@ -87208,7 +87275,7 @@
         null,
         null,
         null,
-        5319
+        5321
       ]
     },
     {
@@ -87223,7 +87290,7 @@
         15,
         null,
         null,
-        5321
+        5323
       ]
     }
   ],

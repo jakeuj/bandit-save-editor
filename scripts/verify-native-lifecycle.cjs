@@ -433,24 +433,41 @@ async function ascensionQuality(state, s) {
 // native 装备主属性系数), optionally worn with 穿戴装备. Returns the z7／z9 rows so the editor scenario can name them.
 async function innerPillPrepare(state, s) {
   const rows = [];
-  for (const {template, quality, level, wear} of s.innerPillPrepare.pills) {
+  // slot 6 obtains and wears a treasure the same way (pointer y15+slot).
+  for (const {template, quality, level, wear, slot = 5} of s.innerPillPrepare.pills) {
     const id = await evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);const wp=r.GetObjectClassByName('wp').GetInstances()[0].GetSdkInstance(),seen=new Set();for(let x=1;x<a.GetWidth();x++)if(a.At(x,1,7)>0)seen.add(x);
       call('获得物品',true,${template},${quality},${level},wp.At(${template},3,0),call('装备主属性系数',${quality},''),1,false,0,'特定装备',false,false);for(let x=1;x<a.GetWidth();x++)if(!seen.has(x)&&a.At(x,1,7)===${template})return x;throw Error('Obtained inner pill missing in z7');})()`);
     await pause(500);
     let row = {template, plane: 7, id, record: await evaluate(state, `(()=>{${prefix}return record(${id},7);})()`)};
     if (wear) {
-      await evaluate(state, `(()=>{${prefix}call('穿戴装备',5,${id},${wear},false,false,7);return true;})()`);
+      await evaluate(state, `(()=>{${prefix}call('穿戴装备',${slot},${id},${wear},false,false,7);return true;})()`);
       await pause(500);
-      const worn = await evaluate(state, `(()=>{${prefix}const id=a.At(${wear},20,2);return {id,record:record(id,9)};})()`);
+      const worn = await evaluate(state, `(()=>{${prefix}const id=a.At(${wear},${15 + slot},2);return {id,record:record(id,9)};})()`);
       assert.equal(worn.record[1], template, 'Inner pill was not worn'); assert.equal(worn.record[7], wear, 'Worn inner pill owner');
       row = {template, plane: 9, id: worn.id, character: wear, record: worn.record};
     }
     assert.deepEqual([row.record[2], row.record[5], row.record[6]], [1, quality, level], 'Obtained inner pill');
     for (let y = 0; y < 50; y++) state.cells.push([row.id, y, row.plane]);
-    if (wear) state.cells.push([wear, 20, 2]);
+    if (wear) state.cells.push([wear, 15 + slot, 2]);
     rows.push(row);
   }
   return rows;
+}
+
+// Native 升级装备 from an edited level pays round(10·g^d−1) souls, g = catalog treasureLevel.cost.growth (1.04 since V1.0.14.0);
+// d = (T−1)·30+4L for a treasure and (T·6/9−1)·30+4L for an inner pill (the Else branch).
+async function soulUpgrade(state, s) {
+  const growth = JSON.parse(fs.readFileSync(path.join(__dirname, '../knowledge/catalog.json'))).treasureLevel.cost.growth, out = [];
+  for (const {id, character, type} of s.soulUpgrade) {
+    const v = await evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);const p=record(${id},9),souls=a.At(3,2,0),cost=call('升级装备魂魄',p[6],p[3],0,${JSON.stringify(type)});call('升级装备',${id},${character});return {id:${id},type:${JSON.stringify(type)},tier:p[3],before:p[6],after:a.At(${id},6,9),souls,cost,soulsAfter:a.At(3,2,0)};})()`);
+    const d = type === '宝物' ? (v.tier - 1) * 30 + 4 * v.before : (v.tier * 6 / 9 - 1) * 30 + 4 * v.before;
+    assert.equal(v.cost, Math.round(10 * growth ** d - 1), `${type} soul cost formula`);
+    assert.deepEqual([v.after, v.soulsAfter], [v.before + 1, v.souls - v.cost], `${type} native upgrade from the edited level`);
+    state.cells.push([id, 6, 9]);
+    out.push(v);
+  }
+  state.cells.push([3, 2, 0]);
+  return out;
 }
 
 // Edited inner pill levels after a restart. Every row must load at the edited level; a worn pill's 内丹破镜值 follows
@@ -725,7 +742,7 @@ async function main() {
   const statePath = opt('--state'), state = JSON.parse(fs.readFileSync(statePath)), scenario = JSON.parse(fs.readFileSync(opt('--scenario')));
   const rel = path.relative(path.resolve(__dirname, '..'), state.dir), child = path.relative(state.dir, state.game);
   if (!rel || (!path.isAbsolute(rel) && rel !== '..' && !rel.startsWith('..' + path.sep)) || !child || path.isAbsolute(child) || child.startsWith('..')) throw Error('External disposable state required');
-  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.pillOverLimit && !scenario.backpackOverLimit && !scenario.armory && !scenario.relics && !scenario.relicTakeOff && !scenario.relicStandPrepare && !scenario.placedRelicAura && !scenario.wall && !scenario.city && !scenario.ascensionQuality && !scenario.innerPillPrepare && !scenario.innerPillLevel && !scenario.ascendedInnerPillLevel && !scenario.basicTechnology && !scenario.buildingLevel && !scenario.relicCrafting && !scenario.recruitTechnology && !scenario.affixPrepare && !scenario.affixOverLimit && !scenario.sixthAffix) throw Error('Scenario has no native follow-up actions');
+  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.pillOverLimit && !scenario.backpackOverLimit && !scenario.armory && !scenario.relics && !scenario.relicTakeOff && !scenario.relicStandPrepare && !scenario.placedRelicAura && !scenario.wall && !scenario.city && !scenario.ascensionQuality && !scenario.innerPillPrepare && !scenario.innerPillLevel && !scenario.soulUpgrade && !scenario.ascendedInnerPillLevel && !scenario.basicTechnology && !scenario.buildingLevel && !scenario.relicCrafting && !scenario.recruitTechnology && !scenario.affixPrepare && !scenario.affixOverLimit && !scenario.sixthAffix) throw Error('Scenario has no native follow-up actions');
   await waitMain(state);
   const result = {};
   if (scenario.ascend && !scenario.pills) result.ascend = await ascend(state, scenario);
@@ -743,6 +760,7 @@ async function main() {
   if (scenario.ascensionQuality) result.ascensionQuality = await ascensionQuality(state, scenario);
   if (scenario.innerPillPrepare) result.innerPillPrepare = await innerPillPrepare(state, scenario);
   if (scenario.innerPillLevel) result.innerPillLevel = await innerPillLevel(state, scenario);
+  if (scenario.soulUpgrade) result.soulUpgrade = await soulUpgrade(state, scenario);
   if (scenario.ascendedInnerPillLevel) result.ascendedInnerPillLevel = await ascendedInnerPillLevel(state, scenario);
   if (scenario.basicTechnology) result.basicTechnology = await basicTechnology(state, scenario);
   if (scenario.recruitTechnology) result.recruitTechnology = await recruitTechnology(state, scenario);
@@ -757,4 +775,4 @@ async function main() {
   console.log('PASS: native ' + Object.keys(result).join(' and ') + ' follow-up actions');
 }
 if (require.main === module) main().catch(e => { console.error(e.stack); process.exitCode = 1; });
-module.exports = {ascend, followup, pillsAndRebirth, pillOverLimit, backpackOverLimit, armory, relicPlacement, relicTakeOff, relicStandPrepare, placedRelicAura, wallUpgrade, cityLayer, ascensionQuality, innerPillPrepare, innerPillLevel, ascendedInnerPillLevel, basicTechnology, buildingLevel, recruitTechnology, affixPrepare, affixOverLimit, sixthAffix, relicCrafting};
+module.exports = {ascend, followup, pillsAndRebirth, pillOverLimit, backpackOverLimit, armory, relicPlacement, relicTakeOff, relicStandPrepare, placedRelicAura, wallUpgrade, cityLayer, ascensionQuality, innerPillPrepare, innerPillLevel, soulUpgrade, ascendedInnerPillLevel, basicTechnology, buildingLevel, recruitTechnology, affixPrepare, affixOverLimit, sixthAffix, relicCrafting};

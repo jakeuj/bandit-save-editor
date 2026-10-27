@@ -289,7 +289,8 @@
   if(kind==='equipment'){
    if([...m.changes.values()].some(c=>c.x===id&&c.z===plane&&((c.y>=9&&c.y<=20)||(c.y>=28&&c.y<=33)))&&value>info.normalMax)throw Error('已修改詞條係數或 ID 的裝備，本輪不能再調為超限等級。');
    const tier=get(m,C(id,3,plane));
-   if(!Number.isSafeInteger(tier)||tier<1||![(tier-1)*30+value,(tier*6/9-1)*30+4*value].every(d=>Number.isFinite(10*1.05**d-1)))throw Error('裝備等階或升級公式超出可計算範圍。');
+   // Souls use 1.04 since V1.0.14.0 (was 1.05); the currency difficulty keeps the 1.05 bound.
+   if(!Number.isSafeInteger(tier)||tier<1||!Number.isFinite(10*1.05**((tier-1)*30+value)-1)||!Number.isFinite(10*1.04**((tier*6/9-1)*30+4*value)-1))throw Error('裝備等階或升級公式超出可計算範圍。');
   }
   if(kind==='training'){
    const tier=catalogMaps.professions.get(id).tier,d=tier<4?10*(tier-1)+value+1:50*(tier-3)+(tier-1)*(value+1);
@@ -1386,7 +1387,7 @@
   else if(z===12&&[1,2,3,21,22,23].includes(y)){const k=y>20?y-20:y;named(`天賦 #${k}${y>20?'等級':'編號'}`,{entity:activeCharacter(m,x)?get(m,C(x,1,2)):`角色 #${x}`,type:'integer',reason:y>20?'請由角色養成的天賦等級具名預覽操作修改；有名角色依範本回填':'天賦 ID 依原版招募固定，不能更換',related:[1,2,3,21,22,23].map(y=>C(x,y,12))});}
   else if(z===12){named(`衍生屬性：${catalogName('attributes',y)}`,{entity:activeCharacter(m,x)?get(m,C(x,1,2)):`角色 #${x}`,type:'decimal'});}
   else if([7,9,22].includes(z)){
-   const labels={0:'初始背包列號',1:'物品範本',2:'物品數量／旗標',3:'物品等階',4:'物品狀態',5:'品質',6:'物品等級',7:'裝備歸屬／狀態',8:'主屬性品質係數',23:'取得參數／套裝關聯值',24:'新取得標記',25:'未辨識物品狀態 25',26:'套裝關聯值 26',27:'套裝原物品資訊'};
+   const labels={0:'初始背包列號',1:'物品範本',2:'物品數量／旗標',3:'物品等階',4:'物品狀態',5:'品質',6:'物品等級',7:'裝備歸屬／狀態',8:'主屬性品質係數',22:'物品鎖定',23:'取得參數／套裝關聯值',24:'新取得標記',25:'未辨識物品狀態 25',26:'套裝關聯值 26',27:'套裝原物品資訊'};
    if(labels[y])named(labels[y],{entity:catalogName('items',get(m,C(x,1,z)))});
    else if(y>=9&&y<=14)named(`裝備詞條 #${y-8}`,{entity:catalogName('items',get(m,C(x,1,z)))});
    else if(y>=28&&y<=33)named(`洗練槽標記 #${y-27}`);
