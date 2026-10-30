@@ -116,6 +116,6 @@ test('offline HTML embeds every executable dependency and requires no network AP
  const scripts=[...source.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)].map(m=>m[1]).join('\n');
  assert.doesNotMatch(scripts,/\b(?:fetch|XMLHttpRequest|WebSocket|importScripts)\s*\(/);
  assert.match(source,/connect-src 'none'/);
- assert.equal(CURRENT_HTML_CORE().KNOWLEDGE.gameVersion,'V1.0.14.0');
+ assert.equal(CURRENT_HTML_CORE().KNOWLEDGE.gameVersion,require('../knowledge/catalog.json').gameVersion);
  function CURRENT_HTML_CORE(){const ctx={};vm.runInNewContext(source.match(/<script id="save-core">([\s\S]*?)<\/script>/)[1],ctx);return ctx.SaveCore;}
 });

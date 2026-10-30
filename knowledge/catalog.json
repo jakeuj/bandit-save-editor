@@ -1,7 +1,7 @@
 {
   "version": 1,
   "game": "szmnqea",
-  "gameVersion": "V1.0.14.0",
+  "gameVersion": "V1.0.15.0",
   "setEquipmentLevel": {
     "version": 1,
     "policy": "level-only",
@@ -26549,17 +26549,17 @@
     ]
   },
   "fingerprints": {
-    "data.json": "a8b816ace9fa128dba89c1e3dcea43d5ed5fcb54855e894d8b1182f1931aaa0b",
-    "scripts/c3runtime.js": "9ced70d01f1a1b82da6952b21130401a017f3a2953b579ece1a97aedbb9cb097",
+    "data.json": "659df857761b611f113d7609715e4e73bef0e86e74ce202ab5b09f93d37ffae2",
+    "scripts/c3runtime.js": "efff92f5ad93a0e014f7afb841da59c422f31d3420872154555f8f21975232d2",
     "cl.json": "c121cf702eb6a4edb184d7180ad83d41aa90efca4a1e5e21e652dd1ff24f47b7",
-    "js.json": "fee601bdbe6268fa5d847c3de8231dcd787cd0536c60104b82842d5a5ede147a",
+    "js.json": "851dcb9722c23ec039f35e3e636100bfa39ed69ef1e1fe0edf8f8968fe9dd42f",
     "zy.json": "97d59a029aefbfbba315c9cec7b83a168571def79282eec2be9edbfeb3759188",
     "sx.json": "fd8f85edd3483d23be3d81dc6e949ee41c3204ef560ab15f8e59ef4acb35c579",
     "wp.json": "c7b65aad4dc3ee9458221ca8fc16d91a8e6ad7e872686a820e97303de7bb6558",
     "kj.json": "fc7f6f219f9ebea75fc10b4af89fb2ecc1fccb8196919476478f3802f96ae37f",
     "jz.json": "3d5da9a57d55f8ec616bf514571bbd06e688ee456d3b3c348a390322de3e3b25",
     "rw.json": "705f541917d9a62cff9ef5805032fd29496fdc98b03a7f065ff3fc6fab937b4b",
-    "tf.json": "c8a3005201d8f17a0899584baf7e0286b073aa84d4697807edcd44e00902fa1f",
+    "tf.json": "040335cfbbd0cd720000d7278ab0cde4bbe7777dfe9312cd58786acd76455f27",
     "ss.json": "4350cb979c4026ce0d8dc25e7807fde3d29a1d42fbd2e499673614a4f67e1bc7",
     "lw.json": "7a4f5a5bfd5967f3a74e36aa9a0c2cda132619b2908bdc39b1406da4b346bde6"
   },
@@ -52821,7 +52821,7 @@
           38
         ],
         "talents": [
-          36,
+          20,
           28,
           73
         ],
@@ -53163,7 +53163,7 @@
         "talents": [
           33,
           72,
-          36
+          71
         ],
         "talentLevels": [
           4,
@@ -53280,7 +53280,7 @@
           64
         ],
         "talents": [
-          36,
+          41,
           73,
           33
         ],
@@ -54164,7 +54164,7 @@
           89
         ],
         "talents": [
-          36,
+          41,
           64,
           68
         ],
@@ -54472,7 +54472,7 @@
         "talents": [
           3,
           34,
-          36
+          42
         ],
         "talentLevels": [
           4,
@@ -55373,7 +55373,7 @@
         "talents": [
           58,
           28,
-          36
+          42
         ],
         "talentLevels": [
           5,
@@ -56120,7 +56120,7 @@
         ],
         "talents": [
           38,
-          36,
+          22,
           57
         ],
         "talentLevels": [
@@ -56293,7 +56293,7 @@
           0
         ],
         "coefficients": [
-          3,
+          10,
           0,
           0
         ]
@@ -56317,7 +56317,7 @@
           0
         ],
         "coefficients": [
-          20,
+          23,
           0,
           0
         ]
@@ -56329,7 +56329,7 @@
           0
         ],
         "coefficients": [
-          20,
+          30,
           0,
           0
         ]
@@ -56473,7 +56473,7 @@
           0
         ],
         "coefficients": [
-          5,
+          8,
           0,
           0
         ]
@@ -56485,7 +56485,7 @@
           0
         ],
         "coefficients": [
-          5,
+          8,
           0,
           0
         ]
@@ -56497,7 +56497,7 @@
           0
         ],
         "coefficients": [
-          5,
+          8,
           0,
           0
         ]
@@ -56509,7 +56509,7 @@
           0
         ],
         "coefficients": [
-          5,
+          10,
           0,
           0
         ]
@@ -56713,7 +56713,7 @@
           0
         ],
         "coefficients": [
-          8,
+          9,
           0,
           0
         ]
@@ -56725,7 +56725,7 @@
           0
         ],
         "coefficients": [
-          8,
+          9,
           0,
           0
         ]
@@ -56737,7 +56737,7 @@
           0
         ],
         "coefficients": [
-          8,
+          9,
           0,
           0
         ]
@@ -56749,7 +56749,7 @@
           0
         ],
         "coefficients": [
-          8,
+          9,
           0,
           0
         ]

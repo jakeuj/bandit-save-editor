@@ -33,7 +33,8 @@ test('all 535 talent attribute values match the reviewed native branches and res
  for(const t of Object.values(k.batch2Data.talents))t.attributes.forEach((a,i)=>{if(!a)return;for(let L=1;L<=5;L++){assert.equal(C.talentEffect(a,t.coefficients[i],L),oracle(k,a,t.coefficients[i],L),JSON.stringify([a,L]));n++;}});
  assert.equal(n,535);
  const values=(id,slot)=>[1,2,3,4,5].map(L=>C.talentEffect(k.batch2Data.talents[id].attributes[slot],k.batch2Data.talents[id].coefficients[slot],L));
- eq(values(4,0),[5,7,9,11,13]);eq(values(6,0),[0.2,0.4,0.6,0.8,1]);eq(values(1,0),[0.5,1,1.5,2,2.5]);
+ // V1.0.15.0 raised tf coefficients: 暴击强化 3→10, 技点回能 20→23.
+ eq(values(4,0),[12,14,16,18,20]);eq(values(6,0),[0.23,0.46,0.69,0.92,1.15]);eq(values(1,0),[0.5,1,1.5,2,2.5]);
  eq(values(52,1),[0.03,0.05,0.09,0.17,0.3]);eq(values(52,0),[10,18,32,58,104]);
  for(const bad of [[999,1,1],[12,1,0],[12,1,1.5],[12,'1',1]])assert.equal(C.talentEffect(...bad),null);
 });
@@ -68,7 +69,7 @@ test('set writes only changed level tokens and preserves every other byte',()=>{
  const {C,m,raw,rawWith}=setup();
  const r=apply(C,m,{characterId:1,levels:[2,1,3]});
  eq(r.changes.map(x=>[x.slot,x.before,x.after]),[[1,1,2],[2,2,1]]);
- eq(r.changes[1].effects.map(e=>e.value),[5]);
+ eq(r.changes[1].effects.map(e=>e.value),[12]);
  assert.equal(C.serialize(m),rawWith([[1,21,12,2],[1,22,12,1]]));
  assert.ok(raw.startsWith('﻿')&&C.serialize(m).includes('987654321098765432109876543210')&&C.serialize(m).includes('1e+03'));
  assert.equal(m.history.length,1);eq([...m.changes.values()].map(v=>v.group),['aptitude:1','aptitude:1']);

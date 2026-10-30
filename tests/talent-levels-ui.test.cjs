@@ -92,7 +92,7 @@ test('candidate UI applies only changed levels, shows effects and blocks a pill 
  const h=await setup({gate:true});
  h.preview();assert.match(h.$('talentLevelsPreview').innerHTML,/均無變更/);assert.equal(h.$('talentLevelsApplyBtn').disabled,true);
  h.preview([1,3,3]);
- assert.match(h.$('talentLevelsPreview').innerHTML,/暴擊幾率 7% → 暴擊幾率 9%/);assert.doesNotMatch(h.$('talentLevelsPreview').innerHTML,/來源 A/);
+ assert.match(h.$('talentLevelsPreview').innerHTML,/暴擊幾率 14% → 暴擊幾率 16%/);assert.doesNotMatch(h.$('talentLevelsPreview').innerHTML,/來源 A/);
  assert.equal(h.$('talentLevelsApplyBtn').disabled,false);h.$('talentLevelsApplyBtn').onclick();
  assert.equal(h.C.serialize(h.model),h.expected([[1,22,12,3]]));assert.match(h.$('toast').textContent,/一起還原/);
  h.$('reviewBtn').onclick();assert.match(h.$('reviewRows').innerHTML,/12 欄/);

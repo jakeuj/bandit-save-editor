@@ -158,6 +158,15 @@ V1.0.14.0 scripts/c3runtime.js  原始 9ced70d01f1a1b82da6952b21130401a017f3a295
                                 修正 5739491ad1aa4ea3a04adc4d42e8970554ecd641bc3a02060778afe5d43184b3
 ```
 
+## V1.0.15.0 Mac 驗證（2026-10-30）
+
+同一台 Apple M4 Max、CrossOver 正式分支 V1.0.15.0（Steam build 26287157）。`c3runtime.js` 4 種修正字串前後各 150 字元與 V1.0.14.0 相同、命中 1／1／4／4，原始指紋登錄進 `SCRIPT_SHA256`；`prepare-macos.py --output <repo 外> --runtime-archive <既有官方壓縮檔>` 準備、`--verify-runtime` 回報 V1.0.15.0。修改器 v2.36 的冒煙（[各版紀錄](../releases.md#v236-遊戲-v10150)）涵蓋啟動、雲存檔載入、原生存檔與新 PID 讀回，隱藏執行、結束後沒有殘留程序。
+
+```text
+V1.0.15.0 scripts/c3runtime.js  原始 efff92f5ad93a0e014f7afb841da59c422f31d3420872154555f8f21975232d2
+                                修正 783debe8810a44505507a22edc7864a0a8ac51be843c09cd18ac47ce840726bf
+```
+
 ## 本次檔案指紋
 
 下列為 V1.0.9.1 `package.nw` 內檔案的 SHA-256，便於日後分辨遊戲更新；不包含遊戲程式或玩家資料本身。

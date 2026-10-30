@@ -28,6 +28,15 @@ test('V1.0.14.0 fixed-character talents: a 13.0 save keeps 穆桂英 old talents
  assert.ok(C.pillInfo(m,1,1,pills[0]).max>0);
  d[1][2][12]=65;d[1][3][12]=2;assert.throws(()=>C.pillInfo(m,1,1,pills[0]),/載入範本/);
 });
+test('V1.0.15.0 fixed-character talents: 时迁 lost 工作扩大 (36) for 穿刺强化 (20) and old saves wait for 数值更新',()=>{
+ const {C,m,pills}=setup(),K=C.KNOWLEDGE,d=m.original.data,template=K.batch2Data.characters[7];
+ assert.deepEqual([...template.talents],[20,28,73]);
+ for(const id of [7,27,34,86,104,157,201])assert.ok(!K.batch2Data.characters[id].talents.includes(36),String(id));
+ d[1][2][2]=7;
+ for(let i=0;i<3;i++){d[1][10+i][2]=template.base[i];d[1][1+i][12]=template.talents[i];d[1][21+i][12]=template.talentLevels[i];}
+ assert.ok(C.pillInfo(m,1,1,pills[0]).max>0);
+ d[1][1][12]=36;assert.throws(()=>C.pillInfo(m,1,1,pills[0]),/載入範本/);
+});
 test('pill bounds include template talents, three aptitudes, zero and no material debit',()=>{
  const {C,m,pills}=setup();for(let aptitude=1;aptitude<=3;aptitude++){
  const info=C.pillInfo(m,1,aptitude,pills[aptitude-1]);assert.ok(info.base>0);assert.ok(info.max>0);

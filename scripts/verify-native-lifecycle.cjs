@@ -507,6 +507,20 @@ async function soulUpgrade(state, s) {
   return out;
 }
 
+// Native 天赋属性计算(角色,屬性,0,0) sums every slot holding the attribute; it must equal the editor's displayed talent
+// effects, passed in as {attribute: value} from talentSlotEffects (V1.0.15.0 raised several tf coefficients).
+async function talentEffects(state, s) {
+  const out = [];
+  for (const {character, expected} of s.talentEffects) {
+    const v = await evaluate(state, `(()=>{${prefix}const tf=r.GetObjectClassByName('tf').GetInstances()[0].GetSdkInstance(),slots=[1,2,3].map(y=>({id:a.At(${character},y,12),level:a.At(${character},y+20,12)})),attributes=[...new Set(slots.flatMap(s=>[7,8,9].map(y=>tf.At(s.id,y,0))).filter(Boolean))];
+      return {character:${character},slots,native:Object.fromEntries(attributes.map(id=>[id,call('天赋属性计算',${character},id,0,0)]))};})()`);
+    assert.deepEqual(Object.keys(v.native).sort(), Object.keys(expected).sort(), `character ${character} talent attributes`);
+    for (const [attributeId, value] of Object.entries(v.native)) assert.ok(Math.abs(value - expected[attributeId]) < 1e-9, `character ${character} talent attribute ${attributeId}: native ${value}, editor ${expected[attributeId]}`);
+    out.push({...v, expected});
+  }
+  return out;
+}
+
 // Edited inner pill levels after a restart. Every row must load at the edited level; a worn pill's 内丹破镜值 follows
 // round(200·q²·(0.15·T²+0.3)·(1+0.025·L))/100; a backpack pill keeps its level when worn (装备库存入 copies y0–49); the
 // native 升级装备 continues from a lowered level and stops at the cap; 渡劫结束 copies the edited level into z17.
@@ -779,7 +793,7 @@ async function main() {
   const statePath = opt('--state'), state = JSON.parse(fs.readFileSync(statePath)), scenario = JSON.parse(fs.readFileSync(opt('--scenario')));
   const rel = path.relative(path.resolve(__dirname, '..'), state.dir), child = path.relative(state.dir, state.game);
   if (!rel || (!path.isAbsolute(rel) && rel !== '..' && !rel.startsWith('..' + path.sep)) || !child || path.isAbsolute(child) || child.startsWith('..')) throw Error('External disposable state required');
-  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.pillOverLimit && !scenario.backpackOverLimit && !scenario.armory && !scenario.relics && !scenario.relicTakeOff && !scenario.relicStandPrepare && !scenario.placedRelicAura && !scenario.wall && !scenario.city && !scenario.ascensionQuality && !scenario.innerPillPrepare && !scenario.innerPillLevel && !scenario.soulUpgrade && !scenario.ascendedInnerPillLevel && !scenario.basicTechnology && !scenario.buildingLevel && !scenario.relicCrafting && !scenario.recruitTechnology && !scenario.affixPrepare && !scenario.affixOverLimit && !scenario.sixthAffix && !scenario.armoryEdited) throw Error('Scenario has no native follow-up actions');
+  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.pillOverLimit && !scenario.backpackOverLimit && !scenario.armory && !scenario.relics && !scenario.relicTakeOff && !scenario.relicStandPrepare && !scenario.placedRelicAura && !scenario.wall && !scenario.city && !scenario.ascensionQuality && !scenario.innerPillPrepare && !scenario.innerPillLevel && !scenario.soulUpgrade && !scenario.talentEffects && !scenario.ascendedInnerPillLevel && !scenario.basicTechnology && !scenario.buildingLevel && !scenario.relicCrafting && !scenario.recruitTechnology && !scenario.affixPrepare && !scenario.affixOverLimit && !scenario.sixthAffix && !scenario.armoryEdited) throw Error('Scenario has no native follow-up actions');
   await waitMain(state);
   const result = {};
   if (scenario.ascend && !scenario.pills) result.ascend = await ascend(state, scenario);
@@ -799,6 +813,7 @@ async function main() {
   if (scenario.innerPillPrepare) result.innerPillPrepare = await innerPillPrepare(state, scenario);
   if (scenario.innerPillLevel) result.innerPillLevel = await innerPillLevel(state, scenario);
   if (scenario.soulUpgrade) result.soulUpgrade = await soulUpgrade(state, scenario);
+  if (scenario.talentEffects) result.talentEffects = await talentEffects(state, scenario);
   if (scenario.ascendedInnerPillLevel) result.ascendedInnerPillLevel = await ascendedInnerPillLevel(state, scenario);
   if (scenario.basicTechnology) result.basicTechnology = await basicTechnology(state, scenario);
   if (scenario.recruitTechnology) result.recruitTechnology = await recruitTechnology(state, scenario);
@@ -813,4 +828,4 @@ async function main() {
   console.log('PASS: native ' + Object.keys(result).join(' and ') + ' follow-up actions');
 }
 if (require.main === module) main().catch(e => { console.error(e.stack); process.exitCode = 1; });
-module.exports = {ascend, followup, pillsAndRebirth, pillOverLimit, backpackOverLimit, armory, armoryEdited, relicPlacement, relicTakeOff, relicStandPrepare, placedRelicAura, wallUpgrade, cityLayer, ascensionQuality, innerPillPrepare, innerPillLevel, soulUpgrade, ascendedInnerPillLevel, basicTechnology, buildingLevel, recruitTechnology, affixPrepare, affixOverLimit, sixthAffix, relicCrafting};
+module.exports = {ascend, followup, pillsAndRebirth, pillOverLimit, backpackOverLimit, armory, armoryEdited, relicPlacement, relicTakeOff, relicStandPrepare, placedRelicAura, wallUpgrade, cityLayer, ascensionQuality, innerPillPrepare, innerPillLevel, soulUpgrade, talentEffects, ascendedInnerPillLevel, basicTechnology, buildingLevel, recruitTechnology, affixPrepare, affixOverLimit, sixthAffix, relicCrafting};
