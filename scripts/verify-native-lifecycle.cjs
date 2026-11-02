@@ -615,10 +615,12 @@ async function basicTechnology(state, s) {
 // stored ones back and sets the z23 y0 set number; its own 刷新底部菜单 call then shows both buttons. The character may
 // start with nothing worn (all gear stored). Optional item {id, level, from}: a stored row the modifier edited
 // (backupSetEquipment) comes back worn with the edited level, and after 刷新单角色全属性 装备属性计算 reaches its 装备主属性,
-// which differs from the one at the original level.
+// which differs from the one at the original level. item may be a list; an inner pill (backupSetInnerPillLevel) that comes
+// back in slot 5 also gets the worn 内丹破镜值 of the edited level. Optional aptitudes [{aptitude, total}]: 角色资质计算
+// equals the editor's predicted total both before and after the swap (backupSetAptitude), so neither set moves A.
 async function outfitSwap(state, s) {
-  const {character, set, item} = s.outfitSwap;
-  const read = `const read=()=>({set:a.At(${character},0,23),stored:[1,2,3,4,5,6].map(y=>a.At(${character},y,23)),worn:[16,17,18,19,20,21].map(y=>a.At(${character},y,2))});`;
+  const {character, set, item, aptitudes = []} = s.outfitSwap, items = item ? [].concat(item) : [];
+  const read = `const read=()=>({set:a.At(${character},0,23),stored:[1,2,3,4,5,6].map(y=>a.At(${character},y,23)),worn:[16,17,18,19,20,21].map(y=>a.At(${character},y,2)),aptitudes:[1,2,3].map(t=>call('角色资质计算',${character},t))});`;
   const out = await evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);${read}const before=read(),unlock=call('科技解锁判断',30);call('角色换装',${character},${set},0,0,0,0,0,0);return {before,unlock,after:read()};})()`);
   await pause(500);
   out.buttons = await evaluate(state, `(()=>{${prefix}return r.GetObjectClassByName('换装按钮').GetInstances().map(i=>i.GetInstanceVariableValue(7)).sort();})()`);
@@ -627,16 +629,21 @@ async function outfitSwap(state, s) {
   assert.ok(before.set !== set && (before.worn.some(Boolean) || before.stored.some(Boolean)), 'Character already on that set or holds no gear');
   assert.deepEqual([after.set, after.worn, after.stored], [set, before.stored, before.worn], '角色换装 did not swap the gear sets');
   assert.deepEqual(buttons, [0, 1], '刷新底部菜单 did not show both 换装 buttons');
-  if (item) {
-    out.item = await evaluate(state, `(()=>{${prefix}const wp=r.GetObjectClassByName('wp').GetInstances()[0].GetSdkInstance(),v=record(${item.id},9),effects=[];
+  out.items = [];
+  for (const item of items) {
+    const got = await evaluate(state, `(()=>{${prefix}const wp=r.GetObjectClassByName('wp').GetInstances()[0].GetSdkInstance(),v=record(${item.id},9),effects=[];
       for(let s=0;s<3;s++){const attr=wp.At(v[1],8+s,0);if(attr>0)effects.push({attr,actual:call('装备属性计算',${character},attr,0,0,0,0,0,0,0),main:call('装备主属性',v[6],v[3],attr,v[8],wp.At(v[1],11+s,0),'主属性',0,v[5]),original:call('装备主属性',${item.from},v[3],attr,v[8],wp.At(v[1],11+s,0),'主属性',0,v[5])});}
-      return {record:v,effects};})()`);
-    const {record, effects} = out.item;
+      return {id:${item.id},record:v,effects,pill:a.At(${character},20,2)===${item.id}?call('内丹破镜值',v[5],v[6],v[3]):null};})()`);
+    const {record, effects, pill} = got;
     assert.ok(after.worn.includes(item.id), 'Edited row is not worn after the swap');
     assert.deepEqual([record[6], record[7]], [item.level, character], 'Edited row lost its level or owner');
     assert.ok(effects.length > 0, 'Edited row has no main attribute');
     for (const e of effects) assert.ok(Number.isFinite(e.actual) && Number.isFinite(e.main) && e.actual >= e.main && e.main !== e.original, 'Effect does not follow the edited level ' + e.attr);
+    if (pill !== null) assert.equal(pill, Math.round(200 * record[5] ** 2 * (0.15 * record[3] ** 2 + 0.3) * (1 + 0.025 * record[6])) / 100, '内丹破镜值 of the swapped-back pill');
+    out.items.push(got);
   }
+  if (items.length === 1) out.item = out.items[0];
+  for (const {aptitude, total} of aptitudes) assert.deepEqual([before.aptitudes[aptitude - 1], after.aptitudes[aptitude - 1]], [total, total], `角色资质计算 ${aptitude} before/after the swap`);
   for (let y = 0; y <= 6; y++) state.cells.push([character, y, 23]);
   for (let y = 16; y <= 21; y++) state.cells.push([character, y, 2]);
   return out;

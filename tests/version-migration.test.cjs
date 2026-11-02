@@ -236,6 +236,13 @@ test('outfit swap follow-up sends compilable page code and rejects a swap the ga
     answers.push({...good, unlock: 0}, [0, 1]);await assert.rejects(outfitSwap({cells: []}, scenario), /科技解锁判断\(30\)/);
     answers.push({...good, after: {...good.after, set: 0}}, [0, 1]);await assert.rejects(outfitSwap({cells: []}, scenario), /did not swap/);
     answers.push(good, []);await assert.rejects(outfitSwap({cells: []}, scenario), /换装 buttons/);
+    // Swapping back an edited inner pill (q2 T2 Lv3 → 内丹破镜值 7.74) with 角色资质计算 unchanged by the swap.
+    const back = {outfitSwap: {character: 2, set: 0, item: [{id: 41, level: 3, from: 8}], aptitudes: [{aptitude: 1, total: 4.4}]}};
+    const stored = {set: 1, stored: before.worn, worn: before.stored, aptitudes: [4.4, 3, 3.3]}, swapped = {before: stored, unlock: 1, after: {set: 0, stored: before.stored, worn: before.worn, aptitudes: [4.4, 3, 3.3]}};
+    const pill = {id: 41, record: [41, 485, 1, 2, 0, 2, 3, 2, 112], effects: [{attr: 2, actual: 6, main: 5, original: 9}], pill: 7.74};
+    answers.push(swapped, [0, 1], pill);assert.equal((await outfitSwap({cells: []}, back)).item.pill, 7.74);
+    answers.push(swapped, [0, 1], {...pill, pill: 8});await assert.rejects(outfitSwap({cells: []}, back), /内丹破镜值/);
+    answers.push({...swapped, after: {...swapped.after, aptitudes: [4.5, 3, 3.3]}}, [0, 1], pill);await assert.rejects(outfitSwap({cells: []}, back), /角色资质计算 1/);
   }finally{require.cache[gamePath].exports = real; delete require.cache[lifecyclePath];}
 });
 

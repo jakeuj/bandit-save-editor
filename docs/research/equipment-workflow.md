@@ -127,3 +127,17 @@ IAB的確認框曾阻塞dialog API及後續命令；改以原生Windows工具辨
 **合成測試**：`tests/backup-set.test.cjs`（旗標登記；關閉時照舊拒絕；開啟時一般裝備等級只寫 `[1,6,9]`、群組 `editing:equipment:9:1`，寶物等級可改，undo／restoreAll 回原 bytes，z23 仍唯讀；開啟時內丹、資質操作與部位不符仍拒絕；模擬 `角色换装` 換回後讀到修改後等級）。
 
 **隔離遊戲冒煙（2026-11-02，Mac Apple M4 Max、CrossOver 正式分支 V1.0.17.0，通過）**：基準為 v2.38 冒煙遊戲寫出的 24 層存檔（SHA-256 `a03d3a3b…`，角色 2 在套裝 1，原套裝 0 的 7,12,14,13,41,0 收在 z23）。`verify-game.cjs` 以候選 catalog（只開 `backupSetEquipment`）把收起的 #7 柴斧（T1 Q1）等級 10→5，雲存檔載入、原版存檔、新 PID 讀回一致。`verify-native-lifecycle.cjs outfitSwap`（`item: {id: 7, level: 5, from: 10}`）原生 `角色换装(2,0,…)`：z23 y0 1→0、z2 y16–21 變回 7,12,14,13,41,0；#7 穿戴後 y6=5、y7=2，`装备属性计算` 伐木力 9 等於 Lv5 的 `装备主属性`（Lv10 為 14），物理攻擊 43、力量 2.91 不小於柴斧本身的主屬性。第二輪原版存檔、新 PID 讀回一致（3 個 PID、4 次 assert），結束後沒有殘留程序；修改器重讀遊戲寫出檔（`17e7b0c9…`）逐字元往返，#7 已穿戴、Lv16 超出一般上限被拒。腳本與結果在 repo 外 `backup-set-edit-20261102/`。
+
+## 實作摘要（2026-11-02，v2.40 備用套裝內丹與資質）
+
+依[輕量開發流程](../maintenance/lightweight.md)實作，不建 SDD。使用者決定：內丹等級開放；資質相關操作兩套都檢查；旗標 `backupSetInnerPillLevel`、`backupSetAptitude`，family `equipmentWorkflow`。
+
+**靜態核對（V1.0.17.0）**：會讀 z23 的只有 `角色换装`、`卸下装备备用套`、`角色重生`／`角色解雇`（先卸下）與顯示用的 `刷新底部菜单`／tips。`角色换装` 只交換指標後呼叫 `刷新底部菜单`、`刷新单角色全属性`；`内丹入体存入` 只在 `渡劫结束` 成功分支讀 z2 y20，`渡劫结束` 與 `属性计算` 都不讀 z23。資質 A＝`属性计算(104–106)`＝基礎＋天賦＋入體內丹＋穿戴裝備，收起的那套不算；本版內丹、裝備、詞條池與套裝效果都沒有 104–106，所以換裝不改 A。
+
+**欄位與入口**：沒有新具名入口。`backupSetReferences` 多一個旗標參數；`innerPillLevelInfo` 在 z9 找不到穿戴參照時以 `backupSetInnerPillLevel` 呼叫它（部位須為 5），回傳 `stored:true`、`worn:false`，寫入仍是 `setInnerPillLevel` 的 `[id,6,9]` 與群組 `inner-pill:9:id`。資質端加 `backupSetAptitudeRows(m,c)`：旗標開啟時回傳 z23 y1–6 的 `[部位,列號]`，`aptitudeNeutralEquipment`（結丹路徑）與 `characterAptitudeSource` 的一般路徑把它們接在穿戴欄後面做同一套檢查。UI 內丹資訊標「備用套裝」（`knowledge-ui.js`）。
+
+**拒絕條件**：旗標關閉時照 v2.39 拒絕；內丹存放部位不是 5、owner 不是有效角色或同列重複時拒絕（「備用套裝指標與裝備部位不一致」）；備用套裝列號越界、同一件同時在穿戴與備用套裝時拒絕；收起的那套有 104–106 時結丹路徑拒絕，有寶物／內丹／套裝時一般路徑拒絕（與穿戴相同）。一般路徑的收起列經 `ordinaryEquipment`→`editingInfo` 驗證，所以 `backupSetEquipment` 關閉時會回「請先在遊戲換回這套」；兩旗標在 `equipmentWorkflow` 欄位限制或裝備資料變更時一起關閉。z23 欄位、舊 `set` 與自訂座標仍唯讀。
+
+**合成測試**：`tests/backup-set.test.cjs` 加三案（內丹旗標：只寫 y6、undo 回原 bytes、不需裝備旗標、部位不符拒絕；資質旗標：收起與穿戴兩種存檔的 `pillInfo` 上限相同、一般路徑錯誤訊息相同；收起列帶 104 與穿戴／收起重複時拒絕）；`tests/version-migration.test.cjs` 的 `outfitSwap` 模擬加 item 清單、`内丹破镜值` 與 aptitudes 的通過及拒絕。
+
+**隔離遊戲冒煙（2026-11-02，Mac Apple M4 Max、CrossOver 正式分支 V1.0.17.0，通過）**：基準同 v2.39（`a03d3a3b…`，角色 2 範本 0、Q1、未結丹，原套裝 0 的 7,12,14,13,41,0 收在 z23）。`verify-game.cjs` 以候選 catalog（只開兩個新旗標）把收起的 #41 蠻力內丹（T2 Q2）等級 8→3、角色 2 力量丹藥增量（#59）0→12，修改器預測三項資質 4.4／3／3.3；雲存檔載入、原版存檔、新 PID 讀回一致。`verify-native-lifecycle.cjs outfitSwap`（`item: [{id: 41, level: 3, from: 8}]`、`aptitudes` 三項）原生 `角色换装(2,0,…)`：#41 回到 y20，y6=3、y7=2，`装备属性计算` 力量 2.76 不小於 Lv3 的 `装备主属性` 1.14（Lv8 為 1.34），`内丹破镜值` 7.74 符合公式；換裝前後 `角色资质计算` 都是 4.4／3／3.3。第二輪原版存檔、新 PID 讀回一致（3 個 PID、4 次 assert），結束後沒有殘留程序；修改器重讀遊戲寫出檔（`3bd3b2a8…`）逐字元往返，#41 為穿戴中 Lv3、Lv16 超出上限被拒，三項資質仍為 4.4／3／3.3。腳本與結果在 repo 外 `backup-set-pill-aptitude-20261102/`。

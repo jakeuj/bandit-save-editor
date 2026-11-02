@@ -30,7 +30,7 @@ const sections = {
     checks: ['nativeEffects', 'load', 'save', 'restart', 'originalHashes', 'equipmentCycle', 'nativeWash']
   },
   equipmentWorkflow: {
-    groups: ['backpackEquipmentLevel', 'backpackEquipmentLevelAdvanced', 'backpackEquipmentAffixCoefficient', 'backpackEquipmentAffixReplacement', 'equipmentAffixInitialSelection', 'equipmentNewItemMarker', 'armoryEquipment', 'backupSetEquipment'],
+    groups: ['backpackEquipmentLevel', 'backpackEquipmentLevelAdvanced', 'backpackEquipmentAffixCoefficient', 'backpackEquipmentAffixReplacement', 'equipmentAffixInitialSelection', 'equipmentNewItemMarker', 'armoryEquipment', 'backupSetEquipment', 'backupSetInnerPillLevel', 'backupSetAptitude'],
     checks: nativeLifecycle,
     perGroup: true
   },

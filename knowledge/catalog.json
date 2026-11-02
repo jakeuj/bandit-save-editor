@@ -87730,6 +87730,8 @@
     "equipmentSixthAffix": true,
     "armoryEquipment": true,
     "backupSetEquipment": true,
+    "backupSetInnerPillLevel": true,
+    "backupSetAptitude": true,
     "names": true,
     "characterExperience": true,
     "professionExperience": true,

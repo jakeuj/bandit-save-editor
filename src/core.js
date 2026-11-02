@@ -55,16 +55,30 @@
  const backpackLike=plane=>plane===7||plane===ARMORY,planeName=plane=>plane===7?'背包':plane===ARMORY?'武庫':'裝備庫';
  // V1.0.17.0 backup set (z23, 角色换装): y0 is the active set number, y1–6 the z9 rows of the stored set. Those rows keep
  // owner=character but no z2 slot points at them. Behind backupSetEquipment the equipment editors treat a stored row as the
- // owner's one worn reference (z23 y1–6 mirror z2 y16–21 slot for slot); closed, they refuse with this reason. Inner pills
- // and aptitude edits stay refused: the swap back would bring the stored items into 内丹入体／属性计算.
+ // owner's one worn reference (z23 y1–6 mirror z2 y16–21 slot for slot); closed, they refuse with this reason. The swap
+ // never runs 内丹入体存入 (only 渡劫结束 does, on z2 y20) and 属性计算 never reads z23, so a stored inner pill swapped back
+ // is an ordinary worn pill (backupSetInnerPillLevel), and aptitude edits check the stored rows like worn ones so either
+ // set gives the same A (backupSetAptitude).
  const BACKUP_SET=23,inBackupSet=(m,itemId,owner)=>BACKUP_SET<m.original.size[2]&&owner>0&&[1,2,3,4,5,6].some(slot=>get(m,C(owner,slot,BACKUP_SET))===itemId);
  const backupSetReason='這件裝備在角色的備用套裝中，請先在遊戲換回這套再修改。',backupSetAptitudeReason='角色的備用套裝有裝備，請先在遊戲卸下備用套裝再修改資質相關項目。';
- function backupSetReferences(m,itemId,owner,slot){
+ function backupSetReferences(m,itemId,owner,slot,group='backupSetEquipment'){
   if(!inBackupSet(m,itemId,owner))return 0;
-  if(KNOWLEDGE.verification.backupSetEquipment!==true)throw Error(backupSetReason);
+  if(KNOWLEDGE.verification[group]!==true)throw Error(backupSetReason);
   const slots=[1,2,3,4,5,6].filter(s=>get(m,C(owner,s,BACKUP_SET))===itemId);
   if(!activeCharacter(m,owner)||slots.length!==1||slots[0]!==slot)throw Error('備用套裝指標與裝備部位不一致。');
   return 1;
+ }
+ // [slot,itemId] of the stored set when backupSetAptitude is open; aptitude checks then treat them as worn slots.
+ function backupSetAptitudeRows(m,characterId){
+  if(KNOWLEDGE.verification.backupSetAptitude!==true||BACKUP_SET>=m.original.size[2])return [];
+  const rows=[];
+  for(let slot=1;slot<=6;slot++){
+   const itemId=get(m,C(characterId,slot,BACKUP_SET));if(itemId===0)continue;
+   if(!Number.isSafeInteger(itemId)||itemId<1||itemId>=m.original.size[0])throw Error('備用套裝列號越界。');
+   if([1,2,3,4,5,6].some(s=>get(m,C(characterId,15+s,2))===itemId))throw Error('備用套裝與穿戴指向同一件裝備。');
+   rows.push([slot,itemId]);
+  }
+  return rows;
  }
  const planeVerified=(plane,group)=>KNOWLEDGE.verification[group]===true&&(plane!==ARMORY||KNOWLEDGE.verification.armoryEquipment===true);
  function buildingLevel(m,template){
@@ -841,8 +855,8 @@
  // 装备属性计算 reads every worn z9 row's wp main attributes, affix ids y9–14 and tz set effects; none may be an aptitude.
  function aptitudeNeutralEquipment(m,characterId){
   const worn=[];
-  for(let slot=1;slot<=6;slot++){
-   const itemId=get(m,C(characterId,15+slot,2));if(itemId===0)continue;
+  for(const [slot,itemId] of [...[1,2,3,4,5,6].map(slot=>[slot,get(m,C(characterId,15+slot,2))]),...backupSetAptitudeRows(m,characterId)]){
+   if(itemId===0)continue;
    if(!Number.isSafeInteger(itemId)||itemId<1||itemId>=m.original.size[0])throw Error('穿戴裝備列號越界。');
    const templateId=get(m,C(itemId,1,9)),item=catalogMaps.items.get(templateId),rules=KNOWLEDGE.batch2Data.items[templateId];
    if(get(m,C(itemId,7,9))!==characterId||!item||item.slot!==slot||!rules)throw Error('穿戴裝備與角色或部位不符。');
@@ -864,14 +878,14 @@
   for(let i=0;i<3;i++)if(get(m,C(characterId,10+i,2))!==template.base[i]||get(m,C(characterId,1+i,12))!==template.talents[i]||get(m,C(characterId,21+i,12))!==template.talentLevels[i])throw Error('角色基礎資質或天賦與載入範本不一致，請先回遊戲存檔。');
   if(ascended)aptitudeNeutralEquipment(m,characterId);
   else{
-   for(let slot=1;slot<=6;slot++){
-    const itemId=get(m,C(characterId,15+slot,2));if(itemId===0)continue;
+   for(const [slot,itemId] of [...[1,2,3,4,5,6].map(slot=>[slot,get(m,C(characterId,15+slot,2))]),...backupSetAptitudeRows(m,characterId)]){
+    if(itemId===0)continue;
     // Ordinary affix pools have no 104–106, so an over-limit coefficient or a sixth slot leaves the aptitude sum alone.
     const equipment=ordinaryEquipment(m,itemId,9,false,affixOverLimitAccepted(),sixthAffixAccepted());
     if(get(m,C(itemId,7,9))!==characterId||catalogMaps.items.get(get(m,C(itemId,1,9))).slot!==slot||equipment.rules.mainAttributes.some(id=>id>=104&&id<=106))throw Error('穿戴裝備的資質加成尚未涵蓋。');
    }
    // Also catch an orphan owner which is absent from the character's slot array.
-   for(let i=1;i<m.original.size[0];i++)if(get(m,C(i,7,9))===characterId&&get(m,C(i,0,9))>0&&inBackupSet(m,i,characterId))throw Error(backupSetAptitudeReason);
+   if(KNOWLEDGE.verification.backupSetAptitude!==true)for(let i=1;i<m.original.size[0];i++)if(get(m,C(i,7,9))===characterId&&get(m,C(i,0,9))>0&&inBackupSet(m,i,characterId))throw Error(backupSetAptitudeReason);
    for(let i=1;i<m.original.size[0];i++)if(get(m,C(i,7,9))===characterId&&get(m,C(i,0,9))>0)ordinaryEquipment(m,i,9,false,affixOverLimitAccepted(),sixthAffixAccepted());
   }
   let base=(baseRaw||template.base)[aptitude-1]/10;
@@ -1027,7 +1041,7 @@
  // Unabsorbed inner pill level (backpackInnerPillLevel z7／innerPillLevel z9). 升级装备／升级最大装备 share the treasure OR
  // branch: z9 y6+1 up to 装备等级上限(y5)=10+(q−1)×5, paid in souls; z7 has no native upgrade. A worn pill's y6 feeds
  // 装备属性计算, 内丹破镜值 (渡劫 speed) and is copied to z17 by 内丹入体存入, as after a native upgrade; 装备价格 ignores it.
- // 获得物品 zeroes y9–23 and 词条洗练 only takes category 装备, so the affix columns stay 0. z9 rows must be worn (slot 5).
+ // 获得物品 zeroes y9–23 and 词条洗练 only takes category 装备, so the affix columns stay 0. z9 rows must be worn (slot 5) or stored in the backup set.
  const innerPillQualityMax=6;
  function innerPillLevelInfo(m,{itemId,plane=9}){
   const fail=reason=>{throw Error('內丹等級：'+reason);};
@@ -1046,10 +1060,11 @@
   for(let x=1;plane===9&&x<m.original.size[0];x++)for(let slot=1;slot<=6;slot++)if(get(m,C(x,15+slot,2))===itemId){
    references++;if(owner!==x||!activeCharacter(m,x)||slot!==5)fail('穿戴雙向指標不一致。');
   }
-  if(plane===9&&!references&&inBackupSet(m,itemId,owner))fail(backupSetReason);
+  let stored=false;
+  if(plane===9&&!references){try{references=backupSetReferences(m,itemId,owner,5,'backupSetInnerPillLevel');}catch(e){fail(e.message);}stored=references===1;}
   if(plane===9&&references!==1)fail('裝備庫只支援穿戴中的內丹。');
   const group=backpackLike(plane)?'backpackInnerPillLevel':'innerPillLevel';
-  return {kind:'equipment',isInnerPill:true,id:itemId,itemId,plane,name:item.name,coordinate:C(itemId,6,plane),current:level,min:1,normalMax,advancedMax:normalMax,advancedVerified:false,verified:planeVerified(plane,group),group,record,tier:t.tier,quality,owner,worn:references===1};
+  return {kind:'equipment',isInnerPill:true,id:itemId,itemId,plane,name:item.name,coordinate:C(itemId,6,plane),current:level,min:1,normalMax,advancedMax:normalMax,advancedVerified:false,verified:planeVerified(plane,group),group,record,tier:t.tier,quality,owner,worn:references===1&&!stored,stored};
  }
  function previewInnerPillLevel(m,options){
   const {itemId,plane=9,level}=options,reasons=[];let info=null;

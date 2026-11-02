@@ -33,7 +33,7 @@ v2.3 已以功能提交 `a912466` 通過 [Pages 正式發布驗證](../research/
 
 ## v2.4 裝備操作
 
-裝備具名操作的options增加`plane=9`；`editingInfo(model,kind,id,plane=9)`及`affixInfo(model,itemId,slot,plane=9)`於最後傳庫別。接受7／9，v2.35起另接受22（武庫，存檔須有z22；套背包規則與群組，寫入另需`armoryEquipment`，見[實作摘要](../research/equipment-workflow.md#實作摘要2026-10-27v235-武庫裝備編輯)）；省略保持z9相容。v2.39起z9收在備用套裝（z23）的列經`backupSetReferences`視為穿戴中（需`backupSetEquipment`，內丹除外，見[實作摘要](../research/equipment-workflow.md#實作摘要2026-11-02v239-備用套裝裝備編輯)）。背包的普通範圍與新取得標記規則有獨立證明，進階模式自v2.14（`backpackEquipmentLevelAdvanced`）開放。
+裝備具名操作的options增加`plane=9`；`editingInfo(model,kind,id,plane=9)`及`affixInfo(model,itemId,slot,plane=9)`於最後傳庫別。接受7／9，v2.35起另接受22（武庫，存檔須有z22；套背包規則與群組，寫入另需`armoryEquipment`，見[實作摘要](../research/equipment-workflow.md#實作摘要2026-10-27v235-武庫裝備編輯)）；省略保持z9相容。v2.39起z9收在備用套裝（z23）的列經`backupSetReferences`視為穿戴中（需`backupSetEquipment`，見[實作摘要](../research/equipment-workflow.md#實作摘要2026-11-02v239-備用套裝裝備編輯)）；v2.40起內丹等級另以`backupSetInnerPillLevel`開放，資質相關操作經`backupSetAptitudeRows`把收起的那套比照穿戴檢查（`backupSetAptitude`，見[實作摘要](../research/equipment-workflow.md#實作摘要2026-11-02v240-備用套裝內丹與資質)）。背包的普通範圍與新取得標記規則有獨立證明，進階模式自v2.14（`backpackEquipmentLevelAdvanced`）開放。
 
 候選資訊增加`selectedSlot`、`selectableSlots`與`requiresInitialSelection`；預覽／套用增加`selectUnwashedSlot=false`，預覽回傳`selectionChange`。未選槽須明確true，已選槽再傳true拒絕。群組`editing:equipment:庫別:列號`避免同列號不同庫互相還原。旗標、詞條、係數為同一交易；首次純鎖槽不是無變更。
 

@@ -58,7 +58,7 @@ const families = {
     checks: {nativeEffects: 'oracleCompare', load: 'load', save: 'save', restart: 'reload', originalHashes: 'assert', equipmentCycle: 'lifecycle', nativeWash: 'lifecycle'}
   },
   equipmentWorkflow: {
-    groups: ['backpackEquipmentLevel', 'backpackEquipmentLevelAdvanced', 'backpackEquipmentAffixCoefficient', 'backpackEquipmentAffixReplacement', 'equipmentAffixInitialSelection', 'equipmentNewItemMarker', 'armoryEquipment', 'backupSetEquipment'],
+    groups: ['backpackEquipmentLevel', 'backpackEquipmentLevelAdvanced', 'backpackEquipmentAffixCoefficient', 'backpackEquipmentAffixReplacement', 'equipmentAffixInitialSelection', 'equipmentNewItemMarker', 'armoryEquipment', 'backupSetEquipment', 'backupSetInnerPillLevel', 'backupSetAptitude'],
     oracle: 'verify-affixes.cjs',
     lifecycle: ['verify-equipment-workflow.cjs'],
     checks: {...nativeLifecycleChecks, selectionUi: 'ui'}

@@ -81,7 +81,9 @@
     "equipmentAffixCoefficientAdvanced": true,
     "equipmentSixthAffix": true,
     "armoryEquipment": true,
-    "backupSetEquipment": true
+    "backupSetEquipment": true,
+    "backupSetInnerPillLevel": true,
+    "backupSetAptitude": true
   },
   "lightweight": {
     "randomCharacterBaseAptitudesAscended": {
@@ -476,6 +478,42 @@
       "resultSha256": "fd5f01cc67073b5e9e0cce5484718c4268c4b3ef5cc320c71239204dbfd2f392",
       "nativeResultSha256": "2ed638ecea1b8e5992f2993e98f8ccf3c5b569841edd778117b4dc57a07e60f1",
       "result": "repo 外 backup-set-edit-20261102/result.json",
+      "passed": true,
+      "smokeGameVersion": "V1.0.17.0"
+    },
+    "backupSetInnerPillLevel": {
+      "date": "2026-11-02",
+      "gameVersion": "V1.0.17.0",
+      "flow": "docs/maintenance/lightweight.md",
+      "smoke": "Mac（Apple M4 Max、CrossOver 正式分支 V1.0.17.0）隱藏隔離副本，不開遊戲視窗、沒有 Dock 圖示，結束後沒有殘留程序；基準為 v2.38 冒煙遊戲寫出的 24 層存檔（角色 2 在套裝 1，原套裝 0 的 z9 列 7,12,14,13,41,0 收在 z23[2,1..6]）；verify-game.cjs 以候選 catalog（只開 backupSetInnerPillLevel、backupSetAptitude）執行 setInnerPillLevel 與 setPillAptitudeBonus，雲存檔載入、原版存檔、新 PID 讀回；verify-native-lifecycle.cjs outfitSwap（含 item 清單與 aptitudes 核對）原生換回，再存檔、新 PID 讀回，修改器重讀遊戲寫出檔",
+      "cases": [
+        "收在 z23 的 #41 蠻力內丹（T2 Q2，owner 2、z2 沒有指標）等級 8→3：只寫 [41,6,9]；雲存檔載入、原版存檔、新 PID 讀回一致，z23 與 z2 指標不動",
+        "原生 角色换装(2,0,0,0,0,0,0,0)：z2 y16–21 變回 7,12,14,13,41,0、z23 y1–6 清空；#41 在 y20 穿戴，y6=3、y7=2；装备属性计算 力量 2.76≥Lv3 的 装备主属性 1.14（Lv8 為 1.34）；内丹破镜值 7.74＝round(200·q²·(0.15·T²+0.3)·(1+0.025·L))/100",
+        "兩輪原版存檔、新 PID 讀回一致（3 個 PID、4 次 assert）；修改器重讀遊戲寫出檔逐字元往返，#41 為穿戴中 Lv3 可編輯，Lv16 超出上限 15 被拒"
+      ],
+      "baselineSaveSha256": "a03d3a3bd79ffc4bf237acebe1cbcf66af88bbd2c4bddc550f1fa7bca0cb3a73",
+      "finalSaveSha256": "3bd3b2a82482d7ed162261589aba80952eddc38e75f76f9b3f91325cfe9d577d",
+      "resultSha256": "33ec82163c0c1451f759b4b289e10bfa5bdbb7517ed9147032b5b7e3af40dd48",
+      "nativeResultSha256": "c97ac27f2f90d4d2bf74aae00749eff0a2042ba792e6f5773f6ea0132a618962",
+      "result": "repo 外 backup-set-pill-aptitude-20261102/result.json",
+      "passed": true,
+      "smokeGameVersion": "V1.0.17.0"
+    },
+    "backupSetAptitude": {
+      "date": "2026-11-02",
+      "gameVersion": "V1.0.17.0",
+      "flow": "docs/maintenance/lightweight.md",
+      "smoke": "Mac（Apple M4 Max、CrossOver 正式分支 V1.0.17.0）隱藏隔離副本，不開遊戲視窗、沒有 Dock 圖示，結束後沒有殘留程序；基準為 v2.38 冒煙遊戲寫出的 24 層存檔（角色 2 在套裝 1，原套裝 0 的 z9 列 7,12,14,13,41,0 收在 z23[2,1..6]）；verify-game.cjs 以候選 catalog（只開 backupSetInnerPillLevel、backupSetAptitude）執行 setInnerPillLevel 與 setPillAptitudeBonus，雲存檔載入、原版存檔、新 PID 讀回；verify-native-lifecycle.cjs outfitSwap（含 item 清單與 aptitudes 核對）原生換回，再存檔、新 PID 讀回，修改器重讀遊戲寫出檔",
+      "cases": [
+        "角色 2（範本 0、Q1、未結丹）的備用套裝收著 4 件一般裝備與 #41 內丹：setPillAptitudeBonus 力量（丹藥 #59）0→12，只寫 [2,13,2]；修改器預測三項資質 4.4／3／3.3",
+        "原生 角色换装 前後 角色资质计算 都是 4.4／3／3.3，等於修改器預測：收起或穿上這套都不改 A",
+        "兩輪原版存檔、新 PID 讀回一致；修改器重讀遊戲寫出檔，增量 12、三項資質 4.4／3／3.3"
+      ],
+      "baselineSaveSha256": "a03d3a3bd79ffc4bf237acebe1cbcf66af88bbd2c4bddc550f1fa7bca0cb3a73",
+      "finalSaveSha256": "3bd3b2a82482d7ed162261589aba80952eddc38e75f76f9b3f91325cfe9d577d",
+      "resultSha256": "33ec82163c0c1451f759b4b289e10bfa5bdbb7517ed9147032b5b7e3af40dd48",
+      "nativeResultSha256": "c97ac27f2f90d4d2bf74aae00749eff0a2042ba792e6f5773f6ea0132a618962",
+      "result": "repo 外 backup-set-pill-aptitude-20261102/result.json",
       "passed": true,
       "smokeGameVersion": "V1.0.17.0"
     }
