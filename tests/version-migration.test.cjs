@@ -223,6 +223,22 @@ test('basic technology follow-up sends compilable page code and rejects research
   }finally{require.cache[gamePath].exports = real; delete require.cache[lifecyclePath];}
 });
 
+test('outfit swap follow-up sends compilable page code and rejects a swap the game did not make',async()=>{
+  const gamePath = require.resolve('../scripts/verify-game.cjs'), lifecyclePath = require.resolve('../scripts/verify-native-lifecycle.cjs');
+  const real = require(gamePath), answers = [];
+  const fake = {...real, waitMain: async () => {}, evaluate: async (state, expression) => { new Function('return ' + expression); return answers.shift(); }};
+  delete require.cache[lifecyclePath]; require.cache[gamePath] = {...require.cache[gamePath], exports: fake};
+  try{
+    const {outfitSwap} = require(lifecyclePath), scenario = {outfitSwap: {character: 2, set: 1}};
+    const before = {set: 0, stored: [0, 0, 0, 0, 0, 0], worn: [7, 12, 14, 13, 41, 0]}, good = {before, unlock: 1, after: {set: 1, stored: before.worn, worn: before.stored}};
+    answers.push(good, [0, 1]);const state = {cells: []};await outfitSwap(state, scenario);
+    assert.equal(state.cells.length, 13);assert.deepEqual([state.cells[0], state.cells.at(-1)], [[2, 0, 23], [2, 21, 2]]);
+    answers.push({...good, unlock: 0}, [0, 1]);await assert.rejects(outfitSwap({cells: []}, scenario), /科技解锁判断\(30\)/);
+    answers.push({...good, after: {...good.after, set: 0}}, [0, 1]);await assert.rejects(outfitSwap({cells: []}, scenario), /did not swap/);
+    answers.push(good, []);await assert.rejects(outfitSwap({cells: []}, scenario), /换装 buttons/);
+  }finally{require.cache[gamePath].exports = real; delete require.cache[lifecyclePath];}
+});
+
 test('recruit technology follow-up sends compilable page code and rejects a search the countdown should have refused',async()=>{
   const gamePath = require.resolve('../scripts/verify-game.cjs'), lifecyclePath = require.resolve('../scripts/verify-native-lifecycle.cjs');
   const real = require(gamePath), answers = [];

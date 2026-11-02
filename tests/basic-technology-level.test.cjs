@@ -1,26 +1,25 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
-// Basic technologies [t,4,0] (kj 1–29; #29 武庫 since V1.0.13.0) are 0/1 unlocks. Raising writes 1, clears the research points y12 as 采集核心碰撞
+// Basic technologies [t,4,0] (kj 1–30; #29 武庫 since V1.0.13.0, #30 備用裝備 since V1.0.17.0) are 0/1 unlocks. Raising writes 1, clears the research points y12 as 采集核心碰撞
 // does, and unlocks the missing prerequisite chain (kj column 7); techs under research are refused and lowering is not offered.
-// The fixture mirrors the smoke base: 13, 14, 15, 17, 18, 24–27 and 29 locked.
-const lockedIds=[13,14,15,17,18,24,25,26,27,29];
+// The fixture mirrors the smoke base: 13, 14, 15, 17, 18, 24–27, 29 and 30 locked.
+const lockedIds=[13,14,15,17,18,24,25,26,27,29,30];
 function setup(gates={},edit=()=>{}){
  const k=JSON.parse(fs.readFileSync('knowledge/catalog.json'));for(const group of Object.keys(k.verification))k.verification[group]=true;Object.assign(k.verification,gates);
  const ctx={setTimeout};vm.runInNewContext(fs.readFileSync('src/core.js','utf8').replace('/*__KNOWLEDGE__*/null',JSON.stringify(k)),ctx);const C=ctx.SaveCore;
  const data=Array.from({length:221},()=>Array.from({length:60},()=>Array(22).fill(0)));data[0][0][1]='szmnqea';
- for(let t=1;t<=29;t++)data[t][4][0]=lockedIds.includes(t)?0:1;
+ for(let t=1;t<=30;t++)data[t][4][0]=lockedIds.includes(t)?0:1;
  data[15][12][0]=1234.5;data[31][4][0]=1;
  edit(data);
  const text='﻿'+JSON.stringify({c2array:true,size:[221,60,22],data}).replace('{','{\r\n"large":987654321098765432109876543210,');return {C,m:C.parse(text),text,data};
 }
 const level=(C,m,t)=>C.get(m,{x:t,y:4,z:0});
-test('catalog carries the 29 editable basic prerequisites; gate defaults closed in the extractor',()=>{
+test('catalog carries the 30 editable basic prerequisites; gate defaults closed in the extractor',()=>{
  const k=JSON.parse(fs.readFileSync('knowledge/catalog.json'));
  assert.match(fs.readFileSync('scripts/extract-game.cjs','utf8'),/basicTechnologyLevel:false/);
- // #30 備用裝備 (V1.0.17.0, second gear set) is a basic tech too, but the editor stays on 1–29.
- const basic=k.catalogs.technologies.filter(t=>'prerequisite' in t&&t.id<=29);
- assert.deepEqual(basic.map(t=>t.id),Array.from({length:29},(_,i)=>i+1));
- assert.equal(k.catalogs.technologies.find(t=>t.id===30).prerequisite,27);
- assert.deepEqual([1,2,8,14,20,26,29].map(id=>basic.find(t=>t.id===id).prerequisite),[0,1,5,16,21,15,19]);
+ // #30 備用裝備 (V1.0.17.0) unlocks the second gear set (z23); its prerequisite is 27 監牢.
+ const basic=k.catalogs.technologies.filter(t=>'prerequisite' in t);
+ assert.deepEqual(basic.map(t=>t.id),Array.from({length:30},(_,i)=>i+1));
+ assert.deepEqual([1,2,8,14,20,26,29,30].map(id=>basic.find(t=>t.id===id).prerequisite),[0,1,5,16,21,15,19,27]);
  assert.ok(basic.every(t=>t.tableLimit===1&&!t.advanced));
 });
 test('closed gate previews but refuses to write',()=>{
@@ -28,9 +27,9 @@ test('closed gate previews but refuses to write',()=>{
  const p=C.previewBasicTechnology(m,{technologyId:14});assert.equal(p.verified,false);assert.equal(p.changes.length,1);
  assert.throws(()=>C.setBasicTechnology(m,{technologyId:14}),/尚未完成/);assert.equal(C.serialize(m),text);
 });
-test('info lists all 29 with level, points and research state',()=>{
+test('info lists all 30 with level, points and research state',()=>{
  const {C,m}=setup();const info=C.basicTechnologiesInfo(m);
- assert.deepEqual([info.technologies.length,info.unlocked,info.verified],[29,19,true]);
+ assert.deepEqual([info.technologies.length,info.unlocked,info.verified],[30,19,true]);
  assert.deepEqual([...info.technologies.filter(t=>t.level===0).map(t=>t.id)],lockedIds);
  const t15=info.technologies.find(t=>t.id===15);assert.deepEqual([t15.name,t15.prerequisite,t15.points,t15.researching],['礦坑',16,1234.5,false]);
 });
@@ -59,6 +58,23 @@ test('missing prerequisites unlock in the same step and the research points clea
  assert.deepEqual([...C.previewBasicTechnology(m,{technologyId:25}).chain.map(t=>t.id)],[17,18,25]);
  C.undo(m);assert.equal(C.serialize(m),text);
 });
+test('30 備用裝備 unlocks with 27 監牢 in one step, restores as a chain and is refused under research',()=>{
+ const {C,m,text}=setup();
+ // 30 needs 27 監牢 (locked), which needs 22 (unlocked).
+ const p=C.previewBasicTechnology(m,{technologyId:30});
+ assert.deepEqual([p.technology.name,[...p.chain.map(t=>t.id)]],['備用裝備',[27,30]]);
+ C.setBasicTechnology(m,{technologyId:30});
+ assert.deepEqual([level(C,m,27),level(C,m,30)],[1,1]);
+ assert.equal(C.serialize(m),setup({},d=>{d[27][4][0]=1;d[30][4][0]=1;}).text);
+ C.restore(m,{x:30,y:4,z:0});assert.equal(C.serialize(m),text);
+ // One step short (27 already unlocked) writes only 30 and clears its leftover research points.
+ const short=setup({},d=>{d[27][4][0]=1;d[30][12][0]=88;});
+ const q=short.C.setBasicTechnology(short.m,{technologyId:30});
+ assert.deepEqual([...q.chain.map(t=>t.id)],[30]);assert.equal(short.m.changes.size,2);
+ assert.equal(short.C.serialize(short.m),setup({},d=>{d[27][4][0]=1;d[30][4][0]=1;}).text);
+ short.C.undo(short.m);assert.equal(short.C.serialize(short.m),short.text);
+ for(const id of [27,30]){const busy=setup({},d=>{d[id][13][0]=1;});assert.throws(()=>busy.C.previewBasicTechnology(busy.m,{technologyId:30}),/正在研究/);assert.throws(()=>busy.C.setBasicTechnology(busy.m,{technologyId:30}));assert.equal(busy.C.serialize(busy.m),busy.text);}
+});
 test('restoring any basic tech change restores the whole chain together',()=>{
  const {C,m,text}=setup();
  C.setBasicTechnology(m,{technologyId:26});C.setBasicTechnology(m,{technologyId:14});assert.equal(m.changes.size,4);
@@ -68,7 +84,7 @@ test('unlocked techs are a no-op; invalid ids and lowering are not offered',()=>
  const {C,m,text}=setup();
  for(const technologyId of [1,2,8,28]){assert.equal(C.previewBasicTechnology(m,{technologyId}).unchanged,true);C.setBasicTechnology(m,{technologyId});}
  assert.equal(C.serialize(m),text);
- for(const technologyId of [0,30,31,44,'14',1.5,null])assert.throws(()=>C.previewBasicTechnology(m,{technologyId}),/只支援基礎科技/);
+ for(const technologyId of [0,31,44,'14',1.5,null])assert.throws(()=>C.previewBasicTechnology(m,{technologyId}),/只支援基礎科技/);
  assert.equal(typeof C.lowerBasicTechnology,'undefined');
 });
 test('a tech or prerequisite under research is refused',()=>{

@@ -610,6 +610,25 @@ async function basicTechnology(state, s) {
   return out;
 }
 
+// Backup gear set after #30 备用装备 is unlocked: 科技解锁判断(30) gates only the two 换装 buttons that 刷新底部菜单 creates for the
+// 角色 page; 角色换装 itself reads no tech. One native swap moves the worn z9 rows (z2 y16–21) into z23 y1–6, brings the
+// stored ones back and sets the z23 y0 set number; its own 刷新底部菜单 call then shows both buttons.
+async function outfitSwap(state, s) {
+  const {character, set} = s.outfitSwap;
+  const read = `const read=()=>({set:a.At(${character},0,23),stored:[1,2,3,4,5,6].map(y=>a.At(${character},y,23)),worn:[16,17,18,19,20,21].map(y=>a.At(${character},y,2))});`;
+  const out = await evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);${read}const before=read(),unlock=call('科技解锁判断',30);call('角色换装',${character},${set},0,0,0,0,0,0);return {before,unlock,after:read()};})()`);
+  await pause(500);
+  out.buttons = await evaluate(state, `(()=>{${prefix}return r.GetObjectClassByName('换装按钮').GetInstances().map(i=>i.GetInstanceVariableValue(7)).sort();})()`);
+  const {before, unlock, after, buttons} = out;
+  assert.equal(unlock, 1, '科技解锁判断(30) does not see the unlock');
+  assert.ok(before.set !== set && before.worn.some(Boolean), 'Character already on that set or wears nothing');
+  assert.deepEqual([after.set, after.worn, after.stored], [set, before.stored, before.worn], '角色换装 did not swap the gear sets');
+  assert.deepEqual(buttons, [0, 1], '刷新底部菜单 did not show both 换装 buttons');
+  for (let y = 0; y <= 6; y++) state.cells.push([character, y, 23]);
+  for (let y = 16; y <= 21; y++) state.cells.push([character, y, 2]);
+  return out;
+}
+
 // Recruitment technology #33 over 299 (recruitTechnologyAdvanced) after a restart: 加成属性效果(24) returns the edited L, and
 // 科技等级上限 still stops research at 299. A native 主动寻访 charges its fee and resets the countdown to 600−L; a few seconds of
 // game time then run the per-second countdown. It runs only while 游戏暂停 is off; SetBoolVar stores 0/1, so the check is
@@ -793,7 +812,7 @@ async function main() {
   const statePath = opt('--state'), state = JSON.parse(fs.readFileSync(statePath)), scenario = JSON.parse(fs.readFileSync(opt('--scenario')));
   const rel = path.relative(path.resolve(__dirname, '..'), state.dir), child = path.relative(state.dir, state.game);
   if (!rel || (!path.isAbsolute(rel) && rel !== '..' && !rel.startsWith('..' + path.sep)) || !child || path.isAbsolute(child) || child.startsWith('..')) throw Error('External disposable state required');
-  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.pillOverLimit && !scenario.backpackOverLimit && !scenario.armory && !scenario.relics && !scenario.relicTakeOff && !scenario.relicStandPrepare && !scenario.placedRelicAura && !scenario.wall && !scenario.city && !scenario.ascensionQuality && !scenario.innerPillPrepare && !scenario.innerPillLevel && !scenario.soulUpgrade && !scenario.talentEffects && !scenario.ascendedInnerPillLevel && !scenario.basicTechnology && !scenario.buildingLevel && !scenario.relicCrafting && !scenario.recruitTechnology && !scenario.affixPrepare && !scenario.affixOverLimit && !scenario.sixthAffix && !scenario.armoryEdited) throw Error('Scenario has no native follow-up actions');
+  if (!scenario.ascend && !scenario.followup && !scenario.pills && !scenario.pillOverLimit && !scenario.backpackOverLimit && !scenario.armory && !scenario.relics && !scenario.relicTakeOff && !scenario.relicStandPrepare && !scenario.placedRelicAura && !scenario.wall && !scenario.city && !scenario.ascensionQuality && !scenario.innerPillPrepare && !scenario.innerPillLevel && !scenario.soulUpgrade && !scenario.talentEffects && !scenario.ascendedInnerPillLevel && !scenario.basicTechnology && !scenario.buildingLevel && !scenario.relicCrafting && !scenario.recruitTechnology && !scenario.affixPrepare && !scenario.affixOverLimit && !scenario.sixthAffix && !scenario.armoryEdited && !scenario.outfitSwap) throw Error('Scenario has no native follow-up actions');
   await waitMain(state);
   const result = {};
   if (scenario.ascend && !scenario.pills) result.ascend = await ascend(state, scenario);
@@ -816,6 +835,7 @@ async function main() {
   if (scenario.talentEffects) result.talentEffects = await talentEffects(state, scenario);
   if (scenario.ascendedInnerPillLevel) result.ascendedInnerPillLevel = await ascendedInnerPillLevel(state, scenario);
   if (scenario.basicTechnology) result.basicTechnology = await basicTechnology(state, scenario);
+  if (scenario.outfitSwap) result.outfitSwap = await outfitSwap(state, scenario);
   if (scenario.recruitTechnology) result.recruitTechnology = await recruitTechnology(state, scenario);
   if (scenario.affixPrepare) result.affixPrepare = await affixPrepare(state, scenario);
   if (scenario.affixOverLimit) result.affixOverLimit = await affixOverLimit(state, scenario);
@@ -828,4 +848,4 @@ async function main() {
   console.log('PASS: native ' + Object.keys(result).join(' and ') + ' follow-up actions');
 }
 if (require.main === module) main().catch(e => { console.error(e.stack); process.exitCode = 1; });
-module.exports = {ascend, followup, pillsAndRebirth, pillOverLimit, backpackOverLimit, armory, armoryEdited, relicPlacement, relicTakeOff, relicStandPrepare, placedRelicAura, wallUpgrade, cityLayer, ascensionQuality, innerPillPrepare, innerPillLevel, soulUpgrade, talentEffects, ascendedInnerPillLevel, basicTechnology, buildingLevel, recruitTechnology, affixPrepare, affixOverLimit, sixthAffix, relicCrafting};
+module.exports = {ascend, followup, pillsAndRebirth, pillOverLimit, backpackOverLimit, armory, armoryEdited, relicPlacement, relicTakeOff, relicStandPrepare, placedRelicAura, wallUpgrade, cityLayer, ascensionQuality, innerPillPrepare, innerPillLevel, soulUpgrade, talentEffects, ascendedInnerPillLevel, basicTechnology, outfitSwap, buildingLevel, recruitTechnology, affixPrepare, affixOverLimit, sixthAffix, relicCrafting};

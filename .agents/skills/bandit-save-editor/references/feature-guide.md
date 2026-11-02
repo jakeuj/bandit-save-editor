@@ -33,7 +33,7 @@
 | 結丹品質 | v2.21 | `ascensionQuality` | [結丹內丹 實作摘要](../../../../docs/research/ascension-inner-pill.md#實作摘要2026-10-24v221-結丹品質) | — |
 | 未入體內丹等級 | v2.22 | `backpackInnerPillLevel`、`innerPillLevel` | [結丹內丹 實作摘要](../../../../docs/research/ascension-inner-pill.md#實作摘要2026-10-24v222-未入體內丹等級) | — |
 | 入體內丹等級 | v2.23 | `ascendedInnerPillLevel` | [結丹內丹 實作摘要](../../../../docs/research/ascension-inner-pill.md#實作摘要2026-10-24v223-入體內丹等級) | — |
-| 基礎科技解鎖 | v2.24 | `basicTechnologyLevel` | [科技建築 實作摘要](../../../../docs/research/technology-building.md#實作摘要2026-10-24v224-基礎科技解鎖) | — |
+| 基礎科技解鎖（#29 v2.33、#30 v2.38） | v2.24 | `basicTechnologyLevel` | [科技建築 實作摘要](../../../../docs/research/technology-building.md#實作摘要2026-10-24v224-基礎科技解鎖) | — |
 | 建築等級 | v2.25 | `buildingLevel` | [科技建築 實作摘要](../../../../docs/research/technology-building.md#實作摘要2026-10-24v225-建築等級) | — |
 | 已擺放靈物五行 | v2.26 | `placedRelicAttributes` | [靈物 實作摘要](../../../../docs/research/relic-attributes.md#實作摘要2026-10-24v226-已擺放靈物五行) | — |
 | 丹藥超限 | v2.27 | `pillAptitudeBonusAdvanced` | [batch2 實作摘要](../../../../docs/research/advanced-editing-batch2.md#實作摘要2026-10-25v227-丹藥超限) | — |

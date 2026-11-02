@@ -1291,15 +1291,16 @@
   try{transaction(m,()=>{for(const c of preview.changes)put(m,c.coordinate,c.after,c.label);},`${preview.city.name}・城市層數調整`);}finally{m.currentGroup=previous;}
   return preview;
  }
- // Basic technologies (basicTechnologyLevel). kj 1–29 are 0/1 unlocks (#29 武库 since V1.0.13.0, was an empty row): 科技等级上限 returns kj[id,5]=1 for 基础 rows. Every
- // reader of [id,4,0] is a UI gate (build menu, feature buttons, research page) or the research flow; building caps read the
- // advanced techs only (jz column 34), and #8 only enables the expansion button. Research completion (采集核心碰撞) adds 1
- // without a cap check, so a tech under research is refused. Raising writes 1 and clears the research points y12 as that
- // completion does, unlocking the missing prerequisite chain (kj column 7) in the same step. Nothing lowers a tech natively,
- // so lowering is not offered; 初始化设置 starts every game with #1 and #2 at 1.
- const basicTechnologyIds=KNOWLEDGE.catalogs.technologies.filter(t=>t.id>=1&&t.id<=29&&!t.advanced&&Number.isSafeInteger(t.prerequisite)).map(t=>t.id);
+ // Basic technologies (basicTechnologyLevel). kj 1–30 are 0/1 unlocks (#29 武库 since V1.0.13.0, #30 备用装备 since V1.0.17.0;
+ // both were empty rows): 科技等级上限 returns kj[id,5]=1 for 基础 rows. Every reader of [id,4,0] is a UI gate (build menu,
+ // feature buttons, research page) or the research flow; building caps read the advanced techs only (jz column 34), #8 only
+ // enables the expansion button and #30 only shows the two 换装 buttons (角色换装 itself reads no tech). Research completion
+ // (采集核心碰撞) adds 1 without a cap check, so a tech under research is refused. Raising writes 1 and clears the research
+ // points y12 as that completion does, unlocking the missing prerequisite chain (kj column 7) in the same step. Nothing lowers
+ // a tech natively, so lowering is not offered; 初始化设置 starts every game with #1 and #2 at 1.
+ const basicTechnologyIds=KNOWLEDGE.catalogs.technologies.filter(t=>t.id>=1&&t.id<=30&&!t.advanced&&Number.isSafeInteger(t.prerequisite)).map(t=>t.id);
  function basicTechnologiesInfo(m){
-  if(basicTechnologyIds.length!==29)throw Error('知識目錄缺少基礎科技前置資料。');
+  if(basicTechnologyIds.length!==30)throw Error('知識目錄缺少基礎科技前置資料。');
   const technologies=basicTechnologyIds.map(id=>{
    const t=catalogMaps.technologies.get(id),level=get(m,C(id,4,0)),points=get(m,C(id,12,0)),flag=get(m,C(id,13,0));
    if(level!==0&&level!==1)throw Error(`${t.name}的科技等級不是 0 或 1。`);
@@ -1311,7 +1312,7 @@
  }
  function previewBasicTechnology(m,{technologyId}){
   const info=basicTechnologiesInfo(m),byId=new Map(info.technologies.map(t=>[t.id,t])),target=byId.get(technologyId);
-  if(!target)throw Error('只支援基礎科技 1–29。');
+  if(!target)throw Error('只支援基礎科技 1–30。');
   if(target.level===1)return {technology:{id:target.id,name:target.name},chain:[],changes:[],unchanged:true,verified:info.verified};
   const chain=[];
   for(let t=target;t&&t.level===0;t=byId.get(t.prerequisite)){if(chain.includes(t))throw Error('前置科技形成循環。');chain.unshift(t);}
