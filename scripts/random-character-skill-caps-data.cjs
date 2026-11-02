@@ -3,9 +3,10 @@ const fs = require('node:fs');
 const path = require('node:path');
 // Reviewed static rules only. A matching digest is not a native verification result.
 const sourceSids = [390673545485827,907064845535449,890068128550912,360229107749216,858555530911324,884525457994003,940056460112238,180031394399295,748584357810010,176292127127652];
-const reviewedDigest = 'e931bd43946f2d02175d8c5c759d404f6764ee91560d0f3d980350d045b26b83';
+// V1.0.17.0: 角色重生／角色解雇 also unequip the new backup set (z23) and 司职卸任 takes a 属性刷新 argument; the cap rules are unchanged.
+const reviewedDigest = 'e7b959cc5858a45dcbaaa007d6b7ea1b2325e41c0eaf9262ac7924521776a2a1';
 // V1.0.10.2 through V1.0.13.0: the reviewed skill rules agree after resolving bound-reference renumbering.
-const reviewedDigests = new Set(['1754eb477c345e31ef8251bc2f405b6299e0b780355bff57fbc526fa312e52d0', '752f9932ac9f233524c7af09a8e91e3c88f09a555090bdcb2692f43e72c42cc3', '54cc0530f54a82b96aea1823e270a7e34262b8357239b7c0514f4499bd027f0d', reviewedDigest]);
+const reviewedDigests = new Set(['1754eb477c345e31ef8251bc2f405b6299e0b780355bff57fbc526fa312e52d0', '752f9932ac9f233524c7af09a8e91e3c88f09a555090bdcb2692f43e72c42cc3', '54cc0530f54a82b96aea1823e270a7e34262b8357239b7c0514f4499bd027f0d', 'e931bd43946f2d02175d8c5c759d404f6764ee91560d0f3d980350d045b26b83', reviewedDigest]);
 function reviewedRules(digest, growth, rows) {
   if (!reviewedDigests.has(digest)) throw Error('技藝上限來源事件／SID已改變，需重新核對');
   const talents = {};
@@ -13,7 +14,10 @@ function reviewedRules(digest, growth, rows) {
     const [id] = row;
     if (id === 0) return;
     if (!Number.isSafeInteger(id) || id !== index || typeof row[4] !== 'string' || typeof row[6] !== 'string' || row.slice(13,22).length !== 9 || row.slice(13,22).some(v => ![0,1].includes(v))) throw Error('天賦選取資料尚未核對');
-    talents[id] = {category:row[4], orientation:row[6], excludedPrimary:row.slice(13,22).flatMap((v,i) => v === 1 ? [i+1] : [])};
+    // V1.0.16.0 marks 36 工作扩大 excluded for all nine primaries so it no longer rolls; characters generated earlier still hold
+    // it under the old (no exclusion) rule, and an all-primaries exclusion never matters for a new character.
+    const excluded = row.slice(13,22).flatMap((v,i) => v === 1 ? [i+1] : []);
+    talents[id] = {category:row[4], orientation:row[6], excludedPrimary:excluded.length === 9 ? [] : excluded};
   });
   return {version:1, policy:'fixed-aptitudes-and-talents',
     ranges:Array.from({length:6}, (_,i) => { const q=i+1; return {base:[1+3*q,11+3*q],primary:[8+10*q,28+10*q],secondary:[1+8*q,19+8*q]}; }),

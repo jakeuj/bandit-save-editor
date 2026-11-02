@@ -13,11 +13,13 @@ function setup(gates={},edit=()=>{}){
  const text='﻿'+JSON.stringify({c2array:true,size:[221,60,22],data}).replace('{','{\r\n"large":987654321098765432109876543210,');return {C,m:C.parse(text),text,data};
 }
 const level=(C,m,t)=>C.get(m,{x:t,y:4,z:0});
-test('catalog carries the 29 basic prerequisites; gate defaults closed in the extractor',()=>{
+test('catalog carries the 29 editable basic prerequisites; gate defaults closed in the extractor',()=>{
  const k=JSON.parse(fs.readFileSync('knowledge/catalog.json'));
  assert.match(fs.readFileSync('scripts/extract-game.cjs','utf8'),/basicTechnologyLevel:false/);
- const basic=k.catalogs.technologies.filter(t=>'prerequisite' in t);
+ // #30 備用裝備 (V1.0.17.0, second gear set) is a basic tech too, but the editor stays on 1–29.
+ const basic=k.catalogs.technologies.filter(t=>'prerequisite' in t&&t.id<=29);
  assert.deepEqual(basic.map(t=>t.id),Array.from({length:29},(_,i)=>i+1));
+ assert.equal(k.catalogs.technologies.find(t=>t.id===30).prerequisite,27);
  assert.deepEqual([1,2,8,14,20,26,29].map(id=>basic.find(t=>t.id===id).prerequisite),[0,1,5,16,21,15,19]);
  assert.ok(basic.every(t=>t.tableLimit===1&&!t.advanced));
 });

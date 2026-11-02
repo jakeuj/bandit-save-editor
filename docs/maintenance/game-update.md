@@ -2,7 +2,7 @@
 
 [維護索引](../maintenance.md) · [輕量開發流程](lightweight.md) · [版本遷移與本機快取](migration.md)
 
-遊戲改版依[輕量開發流程](lightweight.md#改-core-與遊戲改版)只對受影響的功能跑冒煙，不跑 `verify-migration.cjs` 的代表副本寫回。2026-10-25 V1.0.11.2→V1.0.12.2 第一次這樣做（[更新紀錄 v2.28](../releases.md#v228-遊戲-v10122)）；2026-10-27 V1.0.12.2→V1.0.13.0 在 Mac 做，舊版來源已不在本機（[v2.33](../releases.md#v233-遊戲-v10130)）；同日又更新到 V1.0.14.0，用 v2.33 留在 repo 外的精簡來源直接比對（[v2.34](../releases.md#v234-遊戲-v10140)）；2026-10-30 V1.0.15.0 只改資料（天賦係數、有名角色範本），寫入點與已審核摘要都沒變（[v2.36](../releases.md#v236-遊戲-v10150)）。來源快取與 `--plan` 的操作見[版本遷移](migration.md)。
+遊戲改版依[輕量開發流程](lightweight.md#改-core-與遊戲改版)只對受影響的功能跑冒煙，不跑 `verify-migration.cjs` 的代表副本寫回。2026-10-25 V1.0.11.2→V1.0.12.2 第一次這樣做（[更新紀錄 v2.28](../releases.md#v228-遊戲-v10122)）；2026-10-27 V1.0.12.2→V1.0.13.0 在 Mac 做，舊版來源已不在本機（[v2.33](../releases.md#v233-遊戲-v10130)）；同日又更新到 V1.0.14.0，用 v2.33 留在 repo 外的精簡來源直接比對（[v2.34](../releases.md#v234-遊戲-v10140)）；2026-10-30 V1.0.15.0 只改資料（天賦係數、有名角色範本），寫入點與已審核摘要都沒變（[v2.36](../releases.md#v236-遊戲-v10150)）；2026-11-02 V1.0.17.0（跳過 V1.0.16.0）是第一次用 `game-update.cjs` 處理的特別版更：新 z23 備用套裝層、寫入點 860→877（[v2.37](../releases.md#v237-遊戲-v10170)）。來源快取與 `--plan` 的操作見[版本遷移](migration.md)。
 
 ## 自動流程（「遊戲版更」）
 
@@ -11,15 +11,17 @@
 1. **判定**：`node scripts/game-update.cjs check`。它讀 Steam `package.nw` 的 `gg.json` 版號與 appmanifest build，跟 `verification.json` 比；有新版就把精簡來源（含 `zddt.json`）解到 repo 外 `~/bandit-verification/artifacts/v<版本>-update-<日期>/source`，自動找上一版來源（data.json／c3runtime 指紋等於目前知識的那份），做下方第 2–4 步的比對，產生候選 catalog，結果寫 `report.json` 並印出結論：
    - **已是最新**：回一句結束，不提交。版號相同但 build 不同時照常比對；15 個來源都沒變就只更新 `verification.json` 的 build，不加修改器版號（公告版號與遊戲內版號不同的情形，見下方踩過的坑）。
    - **例行**：寫入點、函式參數、已審核事件、引用的 expression、Mac 路徑修正命中數都沒變，候選 catalog 也沒有關閉任何旗標（可以有新函式、新事件或資料表變動，報告會列出來）。
-   - **資料變動**：同上，但修改器讀的資料（例如 `batch2Data` 的天賦係數、有名角色範本）有變，`mergeCatalog` 關了相關旗標（V1.0.15.0 屬於這類）。
+   - **資料變動**：同上，但修改器讀的資料（例如 `batch2Data` 的天賦係數、有名角色範本）有變，`mergeCatalog` 關了相關旗標（V1.0.15.0 屬於這類）。比較前先把舊 catalog 的 `fingerprints`、資料腳本摘要、`cityLayers.source` 與 expression 編號換成新版（`comparable`），只差編號不會關旗標；各資料腳本的 `canPreserve` 直接比這些欄位，改版時一定不同。
    - **特別**：報告的 ✖ 項目非空（寫入點增減、函式參數改變、陣列 `SetSize`、已審核事件內容改變、expression 找不到一致位移、Mac 命中數改變、候選 catalog 產生失敗）。
 2. **登錄**（例行／資料變動）：`node scripts/game-update.cjs apply`。在 `extract-game.cjs` 的 `reviewedVersions` 與 `prepare-macos.py` 的 `SCRIPT_SHA256` 各加一行，重產 `knowledge/catalog.json`（舊旗標照抄，資料變動關的旗標維持關閉），`verification.json` 換版本、build、指紋，舊 `gameUpdate` 移進 `gameUpdateHistory`，新紀錄帶自動產生的靜態核對摘要；輕量群組記錄改成新版本。
-3. **冒煙**：`node scripts/game-update.cjs smoke`（Mac）。它在 artifacts 準備 Mac 副本，拿上一輪冒煙由遊戲寫出的存檔當基準（保存在各版 `smoke/final-save.dat`），以修改器預設編輯做隱藏隔離的雲存檔載入、原版存檔、新 PID 讀回，確認沒有殘留程序、修改器重讀逐字元往返，把結果寫進 `gameUpdate.smokes`。資料變動時，另依[原生教訓](native-lessons.md#冒煙工具)對關閉旗標的功能各挑一個代表案例冒煙（V1.0.15.0 用 `talentEffects`），通過後把 catalog 的旗標開回、在 `smokes` 補一筆。
+3. **冒煙**：`node scripts/game-update.cjs smoke`（Mac）。它在 artifacts 準備 Mac 副本，拿上一輪冒煙由遊戲寫出的存檔當基準（保存在各版 `smoke/final-save.dat`），以修改器預設編輯做隱藏隔離的雲存檔載入、原版存檔、新 PID 讀回，確認沒有殘留程序、修改器重讀逐字元往返，把結果寫進 `gameUpdate.smokes`。資料變動時，另依[原生教訓](native-lessons.md#冒煙工具)對關閉旗標的功能各挑一個代表案例冒煙（V1.0.15.0 用 `talentEffects`），通過後把 catalog 的旗標開回、在 `smokes` 補一筆；代表案例可用 `smoke --save-file 基準存檔 --scenario 情境.json --name 名稱`，同樣隱藏、檢查殘留程序並寫進 `smokes`（V1.0.17.0 用例行冒煙寫出的 24 層存檔改穿戴寶物等級）。關閉的旗標若依規則根本不讀變動的資料（V1.0.17.0 只有寶物 674 改主屬性，卻因 `batch2Data.items` 整包比較關掉一般裝備、丹藥與武庫旗標），可靜態重開，理由寫進 `gameUpdate.carried`。
 4. **測試**：`npm test`。只因綁舊資料值而失敗的測試，改成新值或改讀 catalog（V1.0.15.0 的天賦係數），仍算例行；其他失敗改判特別。
 5. **發布文字**：修改器版號加一（`index.html` 側欄版號與日期、更新紀錄對話框加一則），`docs/releases.md` 加一節（變動來源、報告列出的資料變動與公告要點、冒煙雜湊），`README.md` 知識基準句與[進度入口](../research/next-version-plan.md)「剛完成」換新版；Mac 範圍字樣（`launcher/README.md`、技能的 Mac 參考與操作補充）延到新版本。改到 `src/` 或 `index.html` 後跑 `node scripts/build-editor.cjs`。
 6. **提交推送**：[待提交快照檢查](release.md#待提交快照檢查)、提交、推送，推送成功即結束，回覆一段結論（判定、變動摘要、冒煙結果、提交連結）。
 
 下列情況改走下方手動步驟，**不提交、不推送**，先回報 `report.json` 的 ✖ 項目、公告要點與建議做法，等使用者決定：判定為特別、例行／資料變動的冒煙失敗、要改 `src/core.js` 或寫入規則、要新增驗證工具動作，或測試失敗不是因為資料值。已審核摘要只差物件編號時（候選 catalog 產生失敗的常見原因），依第 2 步正規化比對確認後登錄新摘要，再重跑 `check`。
+
+使用者同意處理特別版更後：逐項看 ✖（`report.json` 有完整清單；攤平後的事件可用 `game-update.cjs` 匯出的 `flatten`／`normalize` 印出），需要時改 core、登錄摘要、補測試，再跑 `node scripts/game-update.cjs apply --reviewed`（仍需候選 catalog 產生成功），之後照第 3–6 步做完並推送；每個 ✖ 的結論寫進 `gameUpdate.staticReview`。
 
 ## 手動步驟（資料變動與特別版更）
 
@@ -51,6 +53,9 @@ Steam 正式分支只留最新版，換機器後舊版來源可能已拿不到�
 - **版本號在 `gg.json`**：精簡來源與 `data.json` 都沒有版本字串；`package.nw` 的 `gg.json` 第一段就是版本號與該版公告（`unzip -p package.nw gg.json`），用它確認版本並對照改動。解出的檔放 scratchpad 或 repo 外，不要放進 repo（V1.0.14.0）。
 - **Steam 公告版號不等於遊戲內版號**：公告「正式更新 版本号1.0.14.2」（2026-10-27）就是 build 26234362，`gg.json` 只寫 V1.0.14.0，更新說明逐字相同，v2.34 已處理。收到新公告時先比 appmanifest 的 `buildid` 與已登錄 build，再拿公告條目對 `gg.json` 第三欄的更新說明；兩者都對得上就不用重做改版。第三方 build 查詢（api.steamcmd.net）可能落後，不能拿來當依據。
 - **公式常數改了**：改版可能只改公式的底數（V1.0.14.0 魂魄 1.05→1.04）。資料腳本要依摘要區分新舊值，core 裡用同一公式做的可計算檢查也要跟著改；冒煙時從修改後的等級原生升一級，核對扣費等於新公式。
+- **登錄新摘要時**：資料腳本的 `reviewedDigest` 是最新版摘要（測試拿它比 catalog 的 `sourceDigest`），舊的放進 `reviewedDigests`。若規則依摘要分版（寶物的魂魄底數），改用摘要集合判斷，不要再寫 `digest===reviewedDigest`（V1.0.17.0）。套裝品質的 `previousDigests` 可以是陣列；摘要可能剛好回到更早版本的值（V1.0.17.0 的 Q2–Q4 等於 V1.0.12.2）。
+- **新的存檔層**：除了 `planeNames` 與 `resolveField` 唯讀，還要看新層有沒有改變既有的指標關係。V1.0.17.0 的 z23 讓 z9 裝備可以 owner 指向角色、z2 卻沒有指標，原本的「穿戴雙向指標」會擋下但訊息看不懂；用 `inBackupSet` 給出明確原因。順便查哪些函式讀這層，確認屬性計算是否算進去。
+- **天賦不再生成**：tf y13–21 是隨機角色的主技藝排除。某天賦九項全排除代表不再生成，舊角色仍持有，技藝上限資料把它當成沒有排除（V1.0.16.0 的 36 工作擴大）。
 - **只改資料表時**：函式、寫入點與已審核摘要都沒變，但 tf／js 之類的表格會進 catalog（`batch2Data`）。`check` 報告的 catalog 逐格差異就是這些值，找出修改器哪裡讀到它們；只影響顯示時，冒煙就核對原生計算等於修改器顯示（V1.0.15.0 用 `talentEffects`），並把綁舊數值的測試例改成新值。
 - 新版從 `开始界面` 載入較慢，`--probe` 剛載入時讀到的是開始畫面的值；以 `--assert` 的通過為準（v2.28）。
 - 背景指令的寫法陷阱見[原生教訓的 Shell 與寫檔](native-lessons.md#shell-與寫檔)。

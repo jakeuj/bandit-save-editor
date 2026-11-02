@@ -12,9 +12,9 @@ function fixture(nx=221){
  for(let k=1;k<=9;k++){put(1,30+k,2,1);put(1,21+k,2,50);}
  return '\ufeff'+JSON.stringify({c2array:true,size:[nx,60,22],data}).replace('{','{"unrelated":987654321098765432109876543210,\n');
 }
-test('catalog includes 23 planes, 737 functions, 860 write sites and localized names',()=>{
+test('catalog includes 24 planes, 750 functions, 877 write sites and localized names',()=>{
  const C=core(),K=C.KNOWLEDGE;
- assert.equal(K.planes.length,23);assert.equal(K.planes[22].name,'武庫');assert.equal(K.functions.length,737);assert.equal(K.evidence.length,860);
+ assert.equal(K.planes.length,24);assert.equal(K.planes[22].name,'武庫');assert.equal(K.planes[23].name,'備用套裝');assert.equal(K.functions.length,750);assert.equal(K.evidence.length,877);
  assert.equal(K.catalogs.attributes.find(v=>v.id===23).name,'對金系增傷');assert.equal(K.treasureLevel.cost.growth,1.04);
  assert.equal(K.catalogs.attributes.find(v=>v.id===72).name,'最終增產');
  const versionLabels=[...source.matchAll(/<span data-knowledge-version>(.*?)<\/span>/g)];

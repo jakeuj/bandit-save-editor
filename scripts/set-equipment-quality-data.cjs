@@ -22,16 +22,18 @@ const reviewedDigests={
  Q6:'2b5c23a09bed9815cc76f542347911263bcaadf1eb3a3a6aa4be7d8c86bb44c9',
  Q7:'5f1719fe9bacb71e4949bf4e15ce8629c0336cade95625917579f4676a007ac4',
  Q8:'02a08ac78766217c08f69f6712299c2de9ea1b1a5c79eaa08c486fd94bfa7c6b',
- Q9:'cff27728febe1c540fe9d16c1e619279dc70ec7e632ddec1e4963892b23fc9e2',
- Q10:'0b4ec7c994ff1624b9a700bb5e3e3282c25a392c9224e43bd6890a4d16e8d4bb'
+ Q9:'872d9291071cb459fdc74bf17b1d5b5b6914d9a6db90de8513fe6e373d88fe40',
+ Q10:'1cba060063a3fc8dfa681bec213a5798e5ab6eceff9103777feeda354a42ef16'
 };
 // V1.0.12.2 digests of the same reviewed events (Q8/Q9 SIDs were rebuilt in V1.0.13.0, so they have none). V1.0.13.0 differs
 // only by object/bound-reference renumbering and the 库序号 argument (7 or the new armory 22) of the equip/unequip/storage moves.
+// V1.0.13.0–V1.0.15.0 Q9/Q10 digests: V1.0.17.0 differs only by object and expression renumbering.
 const previousDigests={
+ Q9:['cff27728febe1c540fe9d16c1e619279dc70ec7e632ddec1e4963892b23fc9e2'],
  Q2:'8e5e3e17aa815b0967bf9045f7a3f88d7e24ed4c270aa1cb6c282e0220607c57',
  Q3:'746f9a73dfd09c9891c433506951e153be8469bd59a2da75e6efa76277eceb12',
  Q4:'2d4529ff52d269bfaf8ab1f2795b7e0993399059fce5832e670fc4b2d381fa0e',
- Q10:'0dff003d8f73542180ec3777c4d1cf09ee09b83a5182a7f8d44032cd745ae1f6'
+ Q10:['0dff003d8f73542180ec3777c4d1cf09ee09b83a5182a7f8d44032cd745ae1f6','0b4ec7c994ff1624b9a700bb5e3e3282c25a392c9224e43bd6890a4d16e8d4bb']
 };
 const groups=['backpackSetEquipmentQualityUpgrade','backpackSetEquipmentQualityDowngrade','setEquipmentQualityUpgrade','setEquipmentQualityDowngrade'];
 // Flag registration is deferred to A10; until then these keys must be absent or false. Ordinary-equipment quality flags are separate.
@@ -40,7 +42,7 @@ const sourceSids=[...new Set(Object.values(dependencies).flatMap(d=>d.sids))];
 const quality={min:1,max:6,mainBase:80,mainStep:30,subStep:10,subSpan:60,slotsMin:0,levelCapBase:10,levelCapStep:5,shift:{main:30,sub:10},precision:'hundredths-integer'};
 const poolKinds=['通用','战斗','生产'];
 function reviewedRules(digests,{wp},batch2,setLevel){
- for(const q of Object.keys(dependencies))if(!reviewedDigests[q]||digests[q]!==reviewedDigests[q]&&digests[q]!==previousDigests[q])throw Error('套裝品質來源事件已改變，需重新核對：'+q);
+ for(const q of Object.keys(dependencies))if(!reviewedDigests[q]||digests[q]!==reviewedDigests[q]&&![previousDigests[q]].flat().includes(digests[q]))throw Error('套裝品質來源事件已改變，需重新核對：'+q);
  if(!setLevel?.items||!setLevel.origins||!batch2?.items)throw Error('缺少套裝等級或原裝備詞條來源');
  const pools={},counts={};
  for(const [key,item] of Object.entries(setLevel.items)){

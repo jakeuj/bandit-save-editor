@@ -167,6 +167,15 @@ V1.0.15.0 scripts/c3runtime.js  原始 efff92f5ad93a0e014f7afb841da59c422f31d342
                                 修正 783debe8810a44505507a22edc7864a0a8ac51be843c09cd18ac47ce840726bf
 ```
 
+## V1.0.17.0 Mac 驗證（2026-11-02）
+
+同一台 Apple M4 Max、CrossOver 正式分支 V1.0.17.0（Steam build 26370474，正式分支跳過 V1.0.16.0）。`prepare-macos.py --review-script` 對新 `c3runtime.js` 的 4 種修正字串命中 1／1／4／4，與歷來相同，由 `scripts/game-update.cjs apply` 登錄進 `SCRIPT_SHA256`；`game-update.cjs smoke` 在 repo 外準備副本並以隱藏隔離副本冒煙：V1.0.15.0 遊戲寫出的 23 層存檔雲存檔載入、原版存檔、新 PID 讀回，遊戲寫出 24 層存檔，修改器重讀逐字元往返；再以這份 24 層存檔修改穿戴中的寶物等級做第二份，讀回一致；結束後都沒有殘留程序。
+
+```text
+V1.0.17.0 scripts/c3runtime.js  原始 b011af449b80e0d3568a9ee2114d45ccf2c13edb14295abf467ef7556178170e
+                                修正 4e4447b9880b189de44c14721336c9671a7d698786e9b5ff96ce47b735582152
+```
+
 ## 本次檔案指紋
 
 下列為 V1.0.9.1 `package.nw` 內檔案的 SHA-256，便於日後分辨遊戲更新；不包含遊戲程式或玩家資料本身。

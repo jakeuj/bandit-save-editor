@@ -5,6 +5,7 @@
 const fs=require('node:fs'),path=require('node:path'),os=require('node:os'),crypto=require('node:crypto');
 const {execFileSync,spawnSync}=require('node:child_process');
 const {members,files:sourceFiles}=require('./migration-source.cjs');
+const mergeCatalog=(...a)=>require('./extract-game.cjs').mergeCatalog(...a);
 const root=path.resolve(__dirname,'..');
 const args=process.argv.slice(2),command=['check','apply','smoke'].includes(args[0])?args[0]:'check';
 const opt=(key,fallback)=>{const i=args.indexOf(key);return i<0?fallback:args[i+1];};
@@ -117,6 +118,7 @@ function reviewedRoots(catalog){
  for(const v of Object.values(catalog))if(Array.isArray(v?.sourceSids))v.sourceSids.forEach(s=>roots.add(s));
  return roots;
 }
+const dir0=report=>workDir(report.to);
 const MAC_SCRIPT=path.join(root,'launcher/prepare-macos.py');
 function macReview(pkg){return JSON.parse(execFileSync('python3',[MAC_SCRIPT,'--source',pkg,'--review-script'],{encoding:'utf8'}));}
 function jsonDiff(a,b,prefix,out,limit=40){
@@ -126,6 +128,22 @@ function jsonDiff(a,b,prefix,out,limit=40){
  out.count=(out.count||0)+1;if(out.length<limit)out.push(`${prefix}: ${JSON.stringify(a)?.slice(0,120)} → ${JSON.stringify(b)?.slice(0,120)}`);return out;
 }
 
+// The previous catalog as it would read on the new build when nothing but numbering changed: the data scripts' canPreserve
+// compares fingerprints, digests and expression indexes, which every update moves. What still differs is a real data change.
+function comparable(old,candidate,delta){
+ const c=structuredClone(old);c.fingerprints=candidate.fingerprints;
+ const follow=(a,b)=>{if(!a||!b||typeof a!=='object'||typeof b!=='object')return;for(const k of Object.keys(a))if(['sourceDigest','digest'].includes(k)&&typeof b[k]==='string')a[k]=b[k];else follow(a[k],b[k]);};
+ for(const k of ['setEquipmentLevel','treasureLevel','setEquipmentQuality','randomCharacterSkillCaps','randomCharacterTalents'])follow(c[k],candidate[k]);
+ for(const r of [c.affixReplacement,c.equipmentQuality])for(const a of Object.values(r?.attributes||{}))if(Number.isInteger(a.expression))a.expression+=delta;
+ if(c.cityLayers&&candidate.cityLayers)c.cityLayers.source=candidate.cityLayers.source;
+ return c;
+}
+function carryFlags(old,candidate,delta){
+ candidate.verification={...candidate.verification,...old.verification};
+ mergeCatalog(comparable(old,candidate,delta),candidate);
+ return Object.keys(old.verification).filter(k=>old.verification[k]===true&&candidate.verification[k]!==true);
+}
+
 function check(){
  // --source/--version/--build replay an update from an already extracted source (no package, no Mac review).
  const pkg=opt('--source')?null:packageDir(),proof=readJson(proofFile),catalog=readJson(knowledgeFile);
@@ -133,7 +151,7 @@ function check(){
  const version=opt('--version')||String(gg.data[2][0][0]).trim(),build=opt('--build')||(pkg&&steamBuild(pkg));
  if(version===proof.gameVersion&&(!build||build===proof.steamBuildId)){console.log(`已是最新：${version}（build ${build??'未知'}），不用改版。`);return {verdict:'current',version,build};}
  const dir=workDir(version);fs.mkdirSync(dir,{recursive:true});
- const {inspectGame,createCatalog,mergeCatalog,reviewedVersions}=require('./extract-game.cjs');
+ const {inspectGame,createCatalog,reviewedVersions}=require('./extract-game.cjs');
  const source=pkg?extractSource(pkg,dir):path.resolve(opt('--source')),previous=previousSource(proof);
  const g=inspectGame(source),o=inspectGame(previous);
  const blockers=[],notices=[];
@@ -192,13 +210,12 @@ function check(){
  // Candidate knowledge with the old flags carried over, then closed where their source data changed.
  const entry={version,...(expressionOffset?{expressionOffset}:{}),runtimes:[g.fingerprints['scripts/c3runtime.js']]};
  report.register={dataFingerprint:g.fingerprints['data.json'],entry,reused:!!reviewedVersions[g.fingerprints['data.json']]};
- if(!blockers.length)try{
+ try{
   const {catalog:candidate}=createCatalog(g,reviewedVersions[g.fingerprints['data.json']]||entry);
-  candidate.verification={...candidate.verification,...catalog.verification};
-  mergeCatalog(catalog,candidate);
-  report.closedFlags=Object.keys(catalog.verification).filter(k=>catalog.verification[k]===true&&candidate.verification[k]!==true);
-  for(const k of new Set([...Object.keys(catalog),...Object.keys(candidate)]))if(!['gameVersion','fingerprints','verification','counts','functions','evidence','planes'].includes(k)&&JSON.stringify(catalog[k])!==JSON.stringify(candidate[k]))report.catalogChanges.push(k);
-  for(const k of report.catalogChanges){const d=jsonDiff(catalog[k],candidate[k],k,[]);report.tableChanges[k]={count:d.count||0,sample:[...d]};}
+  report.closedFlags=carryFlags(catalog,candidate,delta||0);
+  const before=comparable(catalog,candidate,delta||0);
+  for(const k of new Set([...Object.keys(before),...Object.keys(candidate)]))if(!['gameVersion','fingerprints','verification','counts','functions','evidence','planes'].includes(k)&&JSON.stringify(before[k])!==JSON.stringify(candidate[k]))report.catalogChanges.push(k);
+  for(const k of report.catalogChanges){const d=jsonDiff(before[k],candidate[k],k,[]);report.tableChanges[k]={count:d.count||0,sample:[...d]};}
   fs.mkdirSync(path.join(dir,'candidate'),{recursive:true});writeJson(path.join(dir,'candidate/catalog.json'),candidate);
  }catch(e){blockers.push('候選知識產生失敗（多半是已審核摘要只差物件編號，需登錄新摘要）：'+e.message);}
  report.verdict=blockers.length?'special':report.closedFlags.length?'data':'routine';
@@ -229,16 +246,18 @@ function insertBefore(file,anchor,line){
 }
 function apply(){
  const report=check();if(report.verdict==='current')return;
- if(report.verdict==='special')throw Error('特別版更不自動登錄：依 report.json 的 blockers 逐項核對');
+ // --reviewed: a special update whose ✖ items were each checked (and fixed) with the user's go-ahead.
+ if(report.verdict==='special'&&!args.includes('--reviewed'))throw Error('特別版更不自動登錄：依 report.json 的 blockers 逐項核對，處理完再加 --reviewed');
+ if(!fs.existsSync(path.join(dir0(report),'candidate/catalog.json')))throw Error('候選知識沒有產生，不能登錄');
  const dir=workDir(report.to),proof=readJson(proofFile),old=readJson(knowledgeFile),{register}=report;
  const extract=path.join(root,'scripts/extract-game.cjs');
  if(!register.reused)insertBefore(extract,'\n};\n\nfunction createCatalog',`  '${register.dataFingerprint}': ${JSON.stringify(register.entry).replace(/"(\w+)":/g,'$1: ').replace(/"/g,"'").replace(/,(?=\w)/g,', ').replace(/^\{/,'{ ').replace(/\}$/,' }')}`);
  const runtime=register.entry.runtimes[0];
  if(report.mac&&!report.mac.registered)insertBefore(MAC_SCRIPT,'\n}\nSTEAM_COMMON',`    "${runtime}": "${report.to}",`);
  delete require.cache[require.resolve('./extract-game.cjs')];
- const {inspectGame,createCatalog,mergeCatalog}=require('./extract-game.cjs'),g=inspectGame(report.source);
+ const {inspectGame,createCatalog}=require('./extract-game.cjs'),g=inspectGame(report.source);
  const {glossary,catalog}=createCatalog(g);
- catalog.verification={...catalog.verification,...old.verification};mergeCatalog(old,catalog);
+ carryFlags(old,catalog,report.expressions.delta||0);
  writeJson(knowledgeFile,catalog);writeJson(path.join(root,'knowledge/traditional-names.json'),glossary);
  const note=`${report.to} 靜態核對沿用（寫入點、已審核事件與引用公式未變${report.catalogChanges.length?'；資料變動：'+report.catalogChanges.join('、'):''}）`;
  for(const [name,record]of Object.entries(proof.lightweight||{}))if(catalog.verification[name]!==false){record.gameVersion=report.to;record.gameUpdate=note;}
@@ -285,7 +304,9 @@ async function smoke(){
  const archive=path.join(os.homedir(),'bandit-verification/mac-port/downloads/nwjs-sdk-v0.82.0-osx-arm64.zip');
  execFileSync('python3',[MAC_SCRIPT,'--source',pkg,'--output',port,...(fs.existsSync(archive)?['--runtime-archive',archive]:[])],{stdio:'inherit'});
  const save=baseSave(proof),baseline=sha(fs.readFileSync(save));
- const setup=tool('verify-game.cjs',['--setup','--source',path.join(port,'game'),'--runtime',path.join(port,'runtime/nwjs-sdk-v0.82.0-osx-arm64/nwjs.app/Contents/MacOS/nwjs'),'--package',pkg,'--save-file',save,'--artifacts',runs]);
+ // --scenario adds a representative edit (data-change or special updates); --name labels its gameUpdate.smokes entry.
+ const scenario=opt('--scenario'),name=opt('--name',scenario?path.basename(scenario,'.json'):'routine-round-trip');
+ const setup=tool('verify-game.cjs',[...(scenario?['--scenario',path.resolve(scenario)]:[]),'--setup','--source',path.join(port,'game'),'--runtime',path.join(port,'runtime/nwjs-sdk-v0.82.0-osx-arm64/nwjs.app/Contents/MacOS/nwjs'),'--package',pkg,'--save-file',save,'--artifacts',runs]);
  if(setup.status!==0)throw Error('冒煙 setup 失敗：'+setup.stderr);
  const state=setup.stdout.match(/^STATE (.+)$/m)[1],st=['--state',state];
  const stop=()=>tool('verify-game.cjs',[...st,'--stop']);
@@ -303,15 +324,16 @@ async function smoke(){
  if(left)throw Error('冒煙結束後仍有遊戲程序：'+left);
  const {loadCore}=require('./verify-game.cjs'),C=loadCore(catalog),raw=fs.readFileSync(written,'utf8');
  if(C.serialize(C.parse(raw))!==raw)throw Error('修改器重讀遊戲寫出的存檔沒有逐字元往返');
- const final=sha(fs.readFileSync(written));fs.copyFileSync(written,path.join(dir,'smoke/final-save.dat'));
- proof.gameUpdate.smokes.push({name:'routine-round-trip',scenario:`以上一版遊戲寫出的存檔為基準，修改器改名稱與角色／職業／技藝經驗；雲存檔載入、原版存檔、新 PID 讀回；修改器重讀遊戲寫出檔逐字元往返`,baselineSaveSha256:baseline,finalSaveSha256:final,passed:true});
+ const final=sha(fs.readFileSync(written));if(!scenario)fs.copyFileSync(written,path.join(dir,'smoke/final-save.dat'));
+ const edits=scenario?`另加情境 ${path.basename(scenario)} 的修改（${(readJson(scenario).operations||[]).map(o=>o.method).join('、')}）`:'';
+ proof.gameUpdate.smokes.push({name,scenario:`以${opt('--save-file')?' '+path.basename(save)+' ':'上一版遊戲寫出的存檔'}為基準，修改器改名稱與角色／職業／技藝經驗${edits}；雲存檔載入、原版存檔、新 PID 讀回；修改器重讀遊戲寫出檔逐字元往返`,baselineSaveSha256:baseline,finalSaveSha256:final,passed:true});
  proof.gameUpdate.rounds=`Mac（${os.cpus()[0].model}、CrossOver 正式分支 ${proof.gameVersion}）隱藏隔離副本：雲存檔載入、原版存檔、新 PID 讀回；修改器重讀遊戲寫出的存檔`;
  writeJson(proofFile,proof);
  console.log(`冒煙通過：${s.dir}（最終存檔 ${final}），已寫入 verification.json`);
 }
 
 if(require.main===module){
- if(args.includes('--help')){console.log('node scripts/game-update.cjs [check|apply|smoke] [--package STEAM_GAME_DIR] [--artifacts OUTSIDE_REPO] [--previous OLD_SOURCE] [--save-file BASE.dat] [--source EXTRACTED --version V --build N]');process.exit(0);}
+ if(args.includes('--help')){console.log('node scripts/game-update.cjs [check|apply|smoke] [--package STEAM_GAME_DIR] [--artifacts OUTSIDE_REPO] [--previous OLD_SOURCE] [--save-file BASE.dat] [--source EXTRACTED --version V --build N] [smoke --scenario EDITS.json --name LABEL]');process.exit(0);}
  Promise.resolve(({check,apply,smoke})[command]()).catch(e=>{console.error(e.message);process.exit(1);});
 }
 module.exports={flatten,normalize,insertBefore,announcements};

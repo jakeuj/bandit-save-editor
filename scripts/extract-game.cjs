@@ -111,7 +111,7 @@ function eventDigest(game, sids) {
   return crypto.createHash('sha256').update(JSON.stringify(tree)).digest('hex');
 }
 
-const planeNames = ['山寨與全局', '存檔識別與建築', '角色基本資料', '招募候選角色', '角色職業等級', '角色職業經驗', '主地圖格網', '背包物品', '未辨識層 8', '裝備庫與穿戴', '戰鬥地圖格網', '城市商店', '角色衍生屬性', '鍛造佇列', '未辨識層 14', '引導任務', '角色重生／渡劫', '內丹', '靈物背包', '靈物配置', '角色戰鬥位置', '設施進程', '武庫'];
+const planeNames = ['山寨與全局', '存檔識別與建築', '角色基本資料', '招募候選角色', '角色職業等級', '角色職業經驗', '主地圖格網', '背包物品', '未辨識層 8', '裝備庫與穿戴', '戰鬥地圖格網', '城市商店', '角色衍生屬性', '鍛造佇列', '未辨識層 14', '引導任務', '角色重生／渡劫', '內丹', '靈物背包', '靈物配置', '角色戰鬥位置', '設施進程', '武庫', '備用套裝'];
 const tableSpecs = { materials: ['cl', 1, 3], characters: ['js', 1, null], professions: ['zy', 1, 2], attributes: ['sx', 1, 2], items: ['wp', 1, 5], technologies: ['kj', 1, 2], buildings: ['jz', 1, 3], quests: ['rw', 1, 2], talents: ['tf', 1, 4], facilities: ['ss', 1, 3], relics: ['lw', 1, 3] };
 
 // data.json fingerprint -> reviewed version. scripts/game-update.cjs --apply appends new routine versions here.
@@ -122,7 +122,8 @@ const reviewedVersions = {
   '950a1c1d586617292e9c1497b09facd064988c1f720db4c2c262b0f9cd42adbf': { version: 'V1.0.12.2', expressionOffset: 15, runtimes: ['e6a6d629bf7320344445ac7e6e47085211496e5b6a9498aec13ab1a121abd04b'] },
   '9e5697adeb11a0c1daf40be6086b56f58755562f3560ad1772d771445e167ed2': { version: 'V1.0.13.0', expressionOffset: 75, runtimes: ['2546ca0823f858f3ce2a2e1dd013ed70f7e4d330e8d6c33d7ce75fb2a75d6936'] },
   'a8b816ace9fa128dba89c1e3dcea43d5ed5fcb54855e894d8b1182f1931aaa0b': { version: 'V1.0.14.0', expressionOffset: 77, runtimes: ['9ced70d01f1a1b82da6952b21130401a017f3a2953b579ece1a97aedbb9cb097'] },
-  '659df857761b611f113d7609715e4e73bef0e86e74ce202ab5b09f93d37ffae2': { version: 'V1.0.15.0', expressionOffset: 77, runtimes: ['efff92f5ad93a0e014f7afb841da59c422f31d3420872154555f8f21975232d2'] }
+  '659df857761b611f113d7609715e4e73bef0e86e74ce202ab5b09f93d37ffae2': { version: 'V1.0.15.0', expressionOffset: 77, runtimes: ['efff92f5ad93a0e014f7afb841da59c422f31d3420872154555f8f21975232d2'] },
+  'e7b9e60ebcc9d8557bf00542827bc04f8182002966761b883cb0408fe994d9cd': { version: 'V1.0.17.0', expressionOffset: 184, runtimes: ['b011af449b80e0d3568a9ee2114d45ccf2c13edb14295abf467ef7556178170e'] }
 };
 
 function createCatalog(game, reviewed = reviewedVersions[game.fingerprints['data.json']]) {

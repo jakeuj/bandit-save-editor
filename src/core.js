@@ -53,6 +53,10 @@
  // rules and groups; every armory write also needs armoryEquipment. Saves from older versions have no z22.
  const ARMORY=22,equipmentPlane=(m,plane)=>[7,9,ARMORY].includes(plane)&&plane<m.original.size[2];
  const backpackLike=plane=>plane===7||plane===ARMORY,planeName=plane=>plane===7?'背包':plane===ARMORY?'武庫':'裝備庫';
+ // V1.0.17.0 backup set (z23, 角色换装): y0 is the active set number, y1–6 the z9 rows of the stored set. Those rows keep
+ // owner=character but no z2 slot points at them; editing them is not smoke-tested yet, so they are refused with this reason.
+ const BACKUP_SET=23,inBackupSet=(m,itemId,owner)=>BACKUP_SET<m.original.size[2]&&owner>0&&[1,2,3,4,5,6].some(slot=>get(m,C(owner,slot,BACKUP_SET))===itemId);
+ const backupSetReason='這件裝備在角色的備用套裝中，請先在遊戲換回這套再修改。',backupSetAptitudeReason='角色的備用套裝有裝備，請先在遊戲卸下備用套裝再修改資質相關項目。';
  const planeVerified=(plane,group)=>KNOWLEDGE.verification[group]===true&&(plane!==ARMORY||KNOWLEDGE.verification.armoryEquipment===true);
  function buildingLevel(m,template){
   let level=0;
@@ -109,6 +113,7 @@
   for(let x=1;plane===9&&x<m.original.size[0];x++)for(let slot=1;slot<=6;slot++)if(get(m,C(x,15+slot,2))===itemId){
    references++;if(owner!==x||!activeCharacter(m,x)||slot!==t.slot)fail('穿戴雙向指標不一致。');
   }
+  if(plane===9&&!references&&inBackupSet(m,itemId,owner))fail(backupSetReason);
   if(backpackLike(plane)&&owner!==0||owner>0&&(!activeCharacter(m,owner)||references!==1)||owner===0&&references!==0)fail('穿戴雙向指標不一致。');
   const group=backpackLike(plane)?'backpackSetEquipmentLevel':'setEquipmentLevel',normalMax=10+5*(quality-1);
   return {kind:'equipment',isSet:true,id:itemId,itemId,plane,name:item.name,coordinate:C(itemId,6,plane),current:level,min:1,normalMax,advancedMax:normalMax,advancedVerified:false,verified:planeVerified(plane,group),group,record,template:t,metadataStatus:'preserved; independent-native-proof-required'};
@@ -130,6 +135,7 @@
   for(let x=1;plane===9&&x<m.original.size[0];x++)for(let slot=1;slot<=6;slot++)if(get(m,C(x,15+slot,2))===itemId){
    references++;if(owner!==x||!activeCharacter(m,x)||slot!==limits.slot)fail('穿戴雙向指標不一致。');
   }
+  if(plane===9&&!references&&inBackupSet(m,itemId,owner))fail(backupSetReason);
   // references===1 is a worn row; references===0 with an active owner is the observed native stale-owner state.
   if(plane===9&&references>1)fail('穿戴雙向指標不一致。');
   const group=backpackLike(plane)?'backpackTreasureLevel':'treasureLevel';
@@ -165,6 +171,7 @@
   for(let x=1;plane===9&&x<m.original.size[0];x++)for(let s=1;s<=6;s++)if(get(m,C(x,15+s,2))===itemId){
    references++;if(owner!==x||!activeCharacter(m,x)||s!==t.slot)fail('穿戴雙向指標不一致。');
   }
+  if(plane===9&&!references&&inBackupSet(m,itemId,owner))fail(backupSetReason);
   if(backpackLike(plane)&&owner!==rules.limits.backpackOwner||owner>0&&(!activeCharacter(m,owner)||references!==1)||owner===0&&references!==0)fail('穿戴雙向指標不一致。');
   const prefix=backpackLike(plane)?'backpackSetEquipmentQuality':'setEquipmentQuality',groups={upgrade:prefix+'Upgrade',downgrade:prefix+'Downgrade'};
   return {kind:'setEquipmentQualityCandidate',candidate:true,itemId,plane,name:item.name,quality,level,normalMax,mainCoefficient:record[8],originId:record[27],selectedSlot:selected||null,slots,
@@ -265,6 +272,7 @@
     if(item.kind!=='普通'||!rules||rules.setLink!==0)throw Error('只支援一般裝備，套裝等級尚未隔離驗證。');
     let references=0;
     for(let x=1;x<m.original.size[0];x++)if(activeCharacter(m,x))for(let slot=1;slot<=6;slot++)if(get(m,C(x,15+slot,2))===id){references++;if(owner!==x||slot!==item.slot)throw Error('裝備穿戴雙向指標不一致。');}
+    if(plane===9&&!references&&inBackupSet(m,id,owner))throw Error(backupSetReason);
     if(owner>0&&(!activeCharacter(m,owner)||references!==1)||owner===0&&references!==0)throw Error('裝備穿戴雙向指標不一致。');
    }
    coordinate=C(id,6,plane);normalMax=10+(quality-1)*5;name=item.name;
@@ -834,7 +842,7 @@
    if(rules.mainAttributes.some(aptitudeAttribute)||Array.from({length:6},(_,i)=>get(m,C(itemId,9+i,9))).some(aptitudeAttribute)||set?.effects.some(e=>aptitudeAttribute(e.attributeId)))throw Error('穿戴裝備的資質加成尚未涵蓋。');
    worn.push(itemId);
   }
-  for(let i=1;i<m.original.size[0];i++)if(get(m,C(i,7,9))===characterId&&get(m,C(i,0,9))>0&&!worn.includes(i))throw Error('有 owner 指向角色但未穿戴的裝備。');
+  for(let i=1;i<m.original.size[0];i++)if(get(m,C(i,7,9))===characterId&&get(m,C(i,0,9))>0&&!worn.includes(i))throw Error(inBackupSet(m,i,characterId)?backupSetAptitudeReason:'有 owner 指向角色但未穿戴的裝備。');
  }
  function characterAptitudeSource(m,characterId,aptitude,baseRaw,ascended=false){
   if(!activeCharacter(m,characterId)||get(m,C(characterId,0,2))!==characterId)throw Error('找不到有效角色。');
@@ -854,6 +862,7 @@
     if(get(m,C(itemId,7,9))!==characterId||catalogMaps.items.get(get(m,C(itemId,1,9))).slot!==slot||equipment.rules.mainAttributes.some(id=>id>=104&&id<=106))throw Error('穿戴裝備的資質加成尚未涵蓋。');
    }
    // Also catch an orphan owner which is absent from the character's slot array.
+   for(let i=1;i<m.original.size[0];i++)if(get(m,C(i,7,9))===characterId&&get(m,C(i,0,9))>0&&inBackupSet(m,i,characterId))throw Error(backupSetAptitudeReason);
    for(let i=1;i<m.original.size[0];i++)if(get(m,C(i,7,9))===characterId&&get(m,C(i,0,9))>0)ordinaryEquipment(m,i,9,false,affixOverLimitAccepted(),sixthAffixAccepted());
   }
   let base=(baseRaw||template.base)[aptitude-1]/10;
@@ -1028,6 +1037,7 @@
   for(let x=1;plane===9&&x<m.original.size[0];x++)for(let slot=1;slot<=6;slot++)if(get(m,C(x,15+slot,2))===itemId){
    references++;if(owner!==x||!activeCharacter(m,x)||slot!==5)fail('穿戴雙向指標不一致。');
   }
+  if(plane===9&&!references&&inBackupSet(m,itemId,owner))fail(backupSetReason);
   if(plane===9&&references!==1)fail('裝備庫只支援穿戴中的內丹。');
   const group=backpackLike(plane)?'backpackInnerPillLevel':'innerPillLevel';
   return {kind:'equipment',isInnerPill:true,id:itemId,itemId,plane,name:item.name,coordinate:C(itemId,6,plane),current:level,min:1,normalMax,advancedMax:normalMax,advancedVerified:false,verified:planeVerified(plane,group),group,record,tier:t.tier,quality,owner,worn:references===1};
@@ -1401,6 +1411,7 @@
   }else if(z===15)named(`任務記錄欄位 ${y}`,{entity:catalogName('quests',x)});
   else if(z===16&&y>=1&&y<=16)named(y%2?`第 ${(y+1)/2} 次結丹品質`:`第 ${y/2} 次入體內丹列號`,{entity:activeCharacter(m,x)?get(m,C(x,1,2)):`角色 #${x}`,reason:'請使用角色養成的結丹品質具名操作；入體內丹係數一起結算'});
   else if(z===17)named(({1:'入體內丹範本',3:'入體內丹等階',5:'入體內丹品質',6:'入體內丹等級',7:'入體內丹歸屬角色',8:'入體內丹主屬性品質係數'})[y]||(y>=15&&y<=17?`${aptitudeNames[y-15]}上限係數`:`入體內丹欄位 ${y}`),{entity:catalogName('items',get(m,C(x,1,17))),reason:'入體後原生流程不再修改；結丹係數與等級請使用結丹品質面板的具名操作'});
+  else if(z===BACKUP_SET)named(y===0?'目前套裝序號':y<=6?`備用套裝部位 ${y} 裝備列號`:`備用套裝欄位 ${y}`,{entity:activeCharacter(m,x)?get(m,C(x,1,2)):`角色 #${x}`,reason:'換裝由遊戲管理，裝備列號與穿戴歸屬需一起核實，唯讀'});
   else if([1,6,10,11,13,16,17,18,19,20,21].includes(z))named(`${plane.name}・欄位 ${y}`,{entity:`資料 #${x}`});
   f.source=(evidenceIndex.get(`${z},${y}`)||evidenceIndex.get(`${z},*`)||[]).filter(e=>e.x==='*'||e.x===x).slice(0,4).map(e=>({function:e.function,sheet:e.sheet,sid:e.sid,actionSid:e.actionSid}));
   if(f.known&&f.editable&&f.verification)f={...f,status:'遊戲驗證',reason:''};

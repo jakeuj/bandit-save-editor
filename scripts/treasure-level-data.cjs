@@ -5,8 +5,11 @@ const sourceSids=[601593514747018,605413626718369,290240793057956,71368175686604
 // V1.0.12.2 differs only by object/bound-reference renumbering and the new delayed-refresh argument (false) of 刷新物品／刷新灵物.
 // V1.0.13.0 rebuilt the storage-move inner events (new SIDs) with a 库序号 argument (7 or the new armory 22); z7↔z9 copies y0–49 as before.
 // V1.0.14.0 only lowered the 升级装备魂魄 growth from 1.05 to 1.04 (both the treasure and the inner-pill branch).
-const reviewedDigest='5740a6289df43193f4e6656dbec0ee484b94bc69e0b133564ebd2d13e57c6f3e';
-const reviewedDigests=new Set(['d538a7f4e8ca258d1b5583797806d9f9f125b9898f5e5be78fff3b5fbf6fdcd2','4db0a11781c417bef5206ab4156a7e7f56be6d88d6a615e60d4644aa1c9cabfe','be73fe031f97c1dd637f4faa0b49d8730c2f648e2f805ec6e532b565d68b8b66',reviewedDigest]);
+// V1.0.17.0 differs only by object and expression renumbering.
+const reviewedDigest='1a33ab75054250b86dd66e1f26602e636aabaa5923e221bf586756dba86d7439';
+// Digests whose 升级装备魂魄 growth is 1.04 (V1.0.14.0 on); the older ones use 1.05.
+const growth104Digests=new Set(['5740a6289df43193f4e6656dbec0ee484b94bc69e0b133564ebd2d13e57c6f3e',reviewedDigest]);
+const reviewedDigests=new Set(['d538a7f4e8ca258d1b5583797806d9f9f125b9898f5e5be78fff3b5fbf6fdcd2','4db0a11781c417bef5206ab4156a7e7f56be6d88d6a615e60d4644aa1c9cabfe','be73fe031f97c1dd637f4faa0b49d8730c2f648e2f805ec6e532b565d68b8b66',...growth104Digests]);
 const groups=['backpackTreasureLevel','treasureLevel'];
 const hash=value=>crypto.createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const tierCounts={1:21,2:25,3:29,4:31,5:31,6:33};
@@ -25,7 +28,7 @@ function reviewedRules(digest,{wp}){
  return {version:1,policy:'level-only',phase:'A-static-no-native-proof',sourceSids,sourceDigest:digest,items,
   qualities:{min:1,max:6,capBase:10,capStep:5},
   // C(L,T)=round(10*g^((T-1)*30+4*L)-1): the -1 is applied inside round, outside the exponent; g=1.04 from V1.0.14.0, 1.05 before.
-  cost:{currency:'souls',base:10,growth:digest===reviewedDigest?1.04:1.05,tierStep:30,levelStep:4,offset:-1,rounding:'round'},
+  cost:{currency:'souls',base:10,growth:growth104Digests.has(digest)?1.04:1.05,tierStep:30,levelStep:4,offset:-1,rounding:'round'},
   decompose:{currency:'souls',byTier:{...decompose},ignores:['level','quality','coefficient','investment']},
   limits:{planes:[7,9],slot:6,minTier:1,maxTier:6,quantity:1,backpackOwner:0,equipPointer:{y:21,z:2},moveColumns:50,columns:{level:6,owner:7,locked:22},experience:false,advanced:false,metadata:'native-conversion-witness-required'}};
 }

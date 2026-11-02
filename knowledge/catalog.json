@@ -1,7 +1,7 @@
 {
   "version": 1,
   "game": "szmnqea",
-  "gameVersion": "V1.0.15.0",
+  "gameVersion": "V1.0.17.0",
   "setEquipmentLevel": {
     "version": 1,
     "policy": "level-only",
@@ -26,7 +26,7 @@
       601593514747018,
       699971245656002
     ],
-    "sourceDigest": "d40f4f3f4222f4df71fc1a13fe3d958b14b024379b804461fd0aa3a1858d12fc",
+    "sourceDigest": "2aa2909a35971f9fd2cbdad4deacfb5dc98dad4796f6385fa92f907ef50918d3",
     "sets": {
       "1": {
         "name": "土匪",
@@ -12180,7 +12180,7 @@
       131416746119248,
       773239288013696
     ],
-    "sourceDigest": "5740a6289df43193f4e6656dbec0ee484b94bc69e0b133564ebd2d13e57c6f3e",
+    "sourceDigest": "1a33ab75054250b86dd66e1f26602e636aabaa5923e221bf586756dba86d7439",
     "items": {
       "556": {
         "name": "铜护符",
@@ -13958,7 +13958,7 @@
         "slot": 6,
         "mainAttributes": [
           101,
-          13,
+          18,
           71
         ],
         "mainSettings": [
@@ -14838,7 +14838,7 @@
       819450314280438,
       338766607025535
     ],
-    "sourceDigest": "09e0ad7f521be3712e7ef9091520671be399ec16b8b92439773829535c870271",
+    "sourceDigest": "db1355cfac19aa9204af86d74cd91da21d1c3d15346125b8449c70c4a887ca7c",
     "dependencies": {
       "Q1": {
         "sids": [
@@ -14871,7 +14871,7 @@
           3012
         ],
         "topic": "level cap by quality",
-        "digest": "03140745c58a0f1cd9837eff8861967cc90e12bbe01a90dafb2042acad5703d5"
+        "digest": "8e5e3e17aa815b0967bf9045f7a3f88d7e24ed4c270aa1cb6c282e0220607c57"
       },
       "Q3": {
         "sids": [
@@ -14892,7 +14892,7 @@
           3570
         ],
         "topic": "acquisition and synthesis keep y5 and affixes",
-        "digest": "be467a282c1228cfce75fbe7efb44068d3564ab9e3e8df6032ba4c61dd681fa8"
+        "digest": "746f9a73dfd09c9891c433506951e153be8469bd59a2da75e6efa76277eceb12"
       },
       "Q4": {
         "sids": [
@@ -14909,7 +14909,7 @@
           2902
         ],
         "topic": "affix pool follows current y1 template",
-        "digest": "3919b33bea681bf41e59edf8a92e0da5e1524004a4f9f8430955fd3b34aabde9"
+        "digest": "2d4529ff52d269bfaf8ab1f2795b7e0993399059fce5832e670fc4b2d381fa0e"
       },
       "Q5": {
         "sids": [
@@ -15012,7 +15012,7 @@
           3610
         ],
         "topic": "equip/unequip owner pointers, synthesis refresh",
-        "digest": "cff27728febe1c540fe9d16c1e619279dc70ec7e632ddec1e4963892b23fc9e2"
+        "digest": "872d9291071cb459fdc74bf17b1d5b5b6914d9a6db90de8513fe6e373d88fe40"
       },
       "Q10": {
         "sids": [
@@ -15039,7 +15039,7 @@
           4865
         ],
         "topic": "slot generation, refine page limits and refresh",
-        "digest": "0b4ec7c994ff1624b9a700bb5e3e3282c25a392c9224e43bd6890a4d16e8d4bb"
+        "digest": "1cba060063a3fc8dfa681bec213a5798e5ab6eceff9103777feeda354a42ef16"
       }
     },
     "quality": {
@@ -21832,7 +21832,7 @@
       748584357810010,
       176292127127652
     ],
-    "sourceDigest": "e931bd43946f2d02175d8c5c759d404f6764ee91560d0f3d980350d045b26b83"
+    "sourceDigest": "e7b959cc5858a45dcbaaa007d6b7ea1b2325e41c0eaf9262ac7924521776a2a1"
   },
   "randomCharacterTalents": {
     "version": 1,
@@ -22183,7 +22183,7 @@
       211049884056972,
       176292127127652
     ],
-    "sourceDigest": "d2120ed077224f379e3469f687fda26007f2eb366a7bd38e8777de011f2c6105"
+    "sourceDigest": "38f8630daafe8c08c46a60a2ce32ca7fde102c96c82d18fc069d443135db1e7d"
   },
   "equipmentQuality": {
     "version": 1,
@@ -25596,43 +25596,43 @@
         "kind": "aptitude",
         "unit": "",
         "format": "小数",
-        "expression": 5373
+        "expression": 5480
       },
       "2": {
         "kind": "aptitude",
         "unit": "",
         "format": "小数",
-        "expression": 5373
+        "expression": 5480
       },
       "3": {
         "kind": "aptitude",
         "unit": "",
         "format": "小数",
-        "expression": 5373
+        "expression": 5480
       },
       "4": {
         "kind": "attack",
         "unit": "",
         "format": "整数",
-        "expression": 5372
+        "expression": 5479
       },
       "5": {
         "kind": "attack",
         "unit": "",
         "format": "整数",
-        "expression": 5372
+        "expression": 5479
       },
       "6": {
         "kind": "attack",
         "unit": "",
         "format": "整数",
-        "expression": 5372
+        "expression": 5479
       },
       "12": {
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5376,
+        "expression": 5483,
         "base": 2,
         "tier": 0.75,
         "level": 0.01
@@ -25641,7 +25641,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5377,
+        "expression": 5484,
         "base": 8,
         "tier": 3,
         "level": 0.4
@@ -25650,7 +25650,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25659,7 +25659,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25668,7 +25668,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25677,7 +25677,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25686,7 +25686,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25695,7 +25695,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25704,7 +25704,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25713,7 +25713,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25722,7 +25722,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25731,7 +25731,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25740,7 +25740,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25749,7 +25749,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25758,7 +25758,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25767,7 +25767,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25776,7 +25776,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25785,7 +25785,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25794,7 +25794,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25803,7 +25803,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25812,61 +25812,61 @@
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5378
+        "expression": 5485
       },
       "41": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5378
+        "expression": 5485
       },
       "42": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5378
+        "expression": 5485
       },
       "43": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5378
+        "expression": 5485
       },
       "44": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5378
+        "expression": 5485
       },
       "45": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5378
+        "expression": 5485
       },
       "46": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5378
+        "expression": 5485
       },
       "47": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5378
+        "expression": 5485
       },
       "48": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5378
+        "expression": 5485
       },
       "51": {
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5376,
+        "expression": 5483,
         "base": 2,
         "tier": 0.75,
         "level": 0.01
@@ -25875,7 +25875,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5377,
+        "expression": 5484,
         "base": 8,
         "tier": 3,
         "level": 0.4
@@ -25884,7 +25884,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25893,7 +25893,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25902,7 +25902,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25911,7 +25911,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25920,7 +25920,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25929,7 +25929,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25938,7 +25938,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25947,7 +25947,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25956,7 +25956,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25965,7 +25965,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25974,7 +25974,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25983,7 +25983,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25992,7 +25992,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5486,
         "base": 2,
         "tier": 0.75,
         "level": 0.1
@@ -26001,7 +26001,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5379,
+        "expression": 5486,
         "base": 2,
         "tier": 0.75,
         "level": 0.1
@@ -26010,7 +26010,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -26019,7 +26019,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -26028,7 +26028,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5381,
+        "expression": 5488,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -26118,266 +26118,266 @@
         "base": 2,
         "tier": 0.75,
         "level": 0.01,
-        "expression": 5376
+        "expression": 5483
       },
       "13": {
         "unit": "%",
         "base": 8,
         "tier": 3,
         "level": 0.4,
-        "expression": 5377
+        "expression": 5484
       },
       "17": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "18": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "19": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "20": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "21": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "23": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "24": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "25": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "26": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "27": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "31": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "32": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "33": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "35": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "36": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "37": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "38": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "51": {
         "unit": "%",
         "base": 2,
         "tier": 0.75,
         "level": 0.01,
-        "expression": 5376
+        "expression": 5483
       },
       "52": {
         "unit": "%",
         "base": 8,
         "tier": 3,
         "level": 0.4,
-        "expression": 5377
+        "expression": 5484
       },
       "53": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "54": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "55": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "56": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "57": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "58": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "59": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "60": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "61": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "62": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "63": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "64": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "71": {
         "unit": "%",
         "base": 2,
         "tier": 0.75,
         "level": 0.1,
-        "expression": 5379
+        "expression": 5486
       },
       "72": {
         "unit": "%",
         "base": 2,
         "tier": 0.75,
         "level": 0.1,
-        "expression": 5379
+        "expression": 5486
       },
       "110": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "111": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       },
       "112": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5381
+        "expression": 5488
       }
     }
   },
@@ -26433,7 +26433,7 @@
   "cityLayers": {
     "source": {
       "file": "zddt.json",
-      "sha256": "4d2bb4c4c3fd1903ec8afee2b195c56c83f9fd0583980cf2f73562eff5a60560"
+      "sha256": "73b3f79234bb70e10c65d71e9b65acc4d78d5e4108e2598bd548075ccc293e7c"
     },
     "layerCap": 150,
     "maxLayer": 149,
@@ -26549,17 +26549,17 @@
     ]
   },
   "fingerprints": {
-    "data.json": "659df857761b611f113d7609715e4e73bef0e86e74ce202ab5b09f93d37ffae2",
-    "scripts/c3runtime.js": "efff92f5ad93a0e014f7afb841da59c422f31d3420872154555f8f21975232d2",
+    "data.json": "e7b9e60ebcc9d8557bf00542827bc04f8182002966761b883cb0408fe994d9cd",
+    "scripts/c3runtime.js": "b011af449b80e0d3568a9ee2114d45ccf2c13edb14295abf467ef7556178170e",
     "cl.json": "c121cf702eb6a4edb184d7180ad83d41aa90efca4a1e5e21e652dd1ff24f47b7",
     "js.json": "851dcb9722c23ec039f35e3e636100bfa39ed69ef1e1fe0edf8f8968fe9dd42f",
     "zy.json": "97d59a029aefbfbba315c9cec7b83a168571def79282eec2be9edbfeb3759188",
     "sx.json": "fd8f85edd3483d23be3d81dc6e949ee41c3204ef560ab15f8e59ef4acb35c579",
-    "wp.json": "c7b65aad4dc3ee9458221ca8fc16d91a8e6ad7e872686a820e97303de7bb6558",
-    "kj.json": "fc7f6f219f9ebea75fc10b4af89fb2ecc1fccb8196919476478f3802f96ae37f",
-    "jz.json": "3d5da9a57d55f8ec616bf514571bbd06e688ee456d3b3c348a390322de3e3b25",
+    "wp.json": "77b20b396b750fccb527a8d767fac00b0a3dc7eacc21067d1cbf3aa9c9c6d324",
+    "kj.json": "98dca371d8e203503410e5197cd9d7d5332c727b999b1418f384fe1d52092ac8",
+    "jz.json": "6cb5868c159aa763318a19a05a0b321389e67c3ab9d37574aa045ea695594e8d",
     "rw.json": "705f541917d9a62cff9ef5805032fd29496fdc98b03a7f065ff3fc6fab937b4b",
-    "tf.json": "040335cfbbd0cd720000d7278ab0cde4bbe7777dfe9312cd58786acd76455f27",
+    "tf.json": "6949a2cfe322fd856222ea21454b4a8e434bacb51accd8e96c65d35e86c49cfe",
     "ss.json": "4350cb979c4026ce0d8dc25e7807fde3d29a1d42fbd2e499673614a4f67e1bc7",
     "lw.json": "7a4f5a5bfd5967f3a74e36aa9a0c2cda132619b2908bdc39b1406da4b346bde6"
   },
@@ -50235,7 +50235,7 @@
         "setLink": "",
         "mainAttributes": [
           101,
-          13,
+          18,
           71
         ],
         "affixIds": [
@@ -57978,23 +57978,23 @@
     }
   },
   "counts": {
-    "functions": 737,
-    "setXYZ": 860,
-    "arrayActions": 873,
-    "readSites": 2941
+    "functions": 750,
+    "setXYZ": 877,
+    "arrayActions": 890,
+    "readSites": 2973
   },
   "planes": [
     {
       "z": 0,
       "name": "山寨與全局",
       "status": "程式證據",
-      "writes": 268,
-      "reads": 579,
+      "writes": 270,
+      "reads": 590,
       "sources": [
         {
           "function": "初始化／事件",
           "sheet": "主事件",
-          "sid": 573820528911630
+          "sid": 740979987036499
         },
         {
           "function": "初始化设置",
@@ -58327,6 +58327,11 @@
           "sid": 191145773597051
         },
         {
+          "function": "战役胜利",
+          "sheet": "主事件",
+          "sid": 397641204457535
+        },
+        {
           "function": "战斗碰撞伤害",
           "sheet": "主事件",
           "sid": 675671394056404
@@ -58451,7 +58456,7 @@
       "name": "存檔識別與建築",
       "status": "程式證據",
       "writes": 54,
-      "reads": 401,
+      "reads": 404,
       "sources": [
         {
           "function": "存档",
@@ -58563,8 +58568,8 @@
       "z": 2,
       "name": "角色基本資料",
       "status": "程式證據",
-      "writes": 139,
-      "reads": 604,
+      "writes": 145,
+      "reads": 610,
       "sources": [
         {
           "function": "初始化／事件",
@@ -58722,6 +58727,11 @@
           "sid": 125328261158501
         },
         {
+          "function": "角色换装",
+          "sheet": "主事件",
+          "sid": 686795710430163
+        },
+        {
           "function": "获得角色经验",
           "sheet": "主事件",
           "sid": 124828538016640
@@ -58747,7 +58757,12 @@
         13,
         14,
         15,
+        16,
+        17,
+        18,
+        19,
         20,
+        21,
         22,
         23,
         24,
@@ -59579,6 +59594,34 @@
       ],
       "columns": [
         22
+      ]
+    },
+    {
+      "z": 23,
+      "name": "備用套裝",
+      "status": "程式證據",
+      "writes": 8,
+      "reads": 12,
+      "sources": [
+        {
+          "function": "卸下装备备用套",
+          "sheet": "主事件",
+          "sid": 462573580987370
+        },
+        {
+          "function": "角色换装",
+          "sheet": "主事件",
+          "sid": 686795710430163
+        }
+      ],
+      "columns": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
       ]
     }
   ],
@@ -68380,10 +68423,11 @@
       },
       {
         "id": 30,
-        "name": "空白",
-        "category": "",
+        "name": "備用裝備",
+        "category": "基礎",
         "advanced": false,
-        "tableLimit": null
+        "tableLimit": 1,
+        "prerequisite": 27
       },
       {
         "id": 31,
@@ -69233,6 +69277,16 @@
         "id": 150,
         "name": "桃花潭",
         "category": "裝飾"
+      },
+      {
+        "id": 151,
+        "name": "中軍大帳",
+        "category": "城市"
+      },
+      {
+        "id": 152,
+        "name": "小型軍帳",
+        "category": "城市"
       }
     ],
     "quests": [
@@ -71817,6 +71871,11 @@
       "sid": 501272375624196
     },
     {
+      "name": "卸下装备备用套",
+      "sheet": "主事件",
+      "sid": 902017517639477
+    },
+    {
       "name": "空余装备格",
       "sheet": "主事件",
       "sid": 307181065845834
@@ -73042,6 +73101,11 @@
       "sid": 731617509482280
     },
     {
+      "name": "角色换装",
+      "sheet": "主事件",
+      "sid": 874826841935746
+    },
+    {
       "name": "开始城市波次",
       "sheet": "主事件",
       "sid": 867172235058730
@@ -73425,6 +73489,56 @@
       "name": "装备已洗词条数",
       "sheet": "主事件",
       "sid": 316241056309469
+    },
+    {
+      "name": "刷新开启战役",
+      "sheet": "主事件",
+      "sid": 742677845988959
+    },
+    {
+      "name": "刷新战役进度",
+      "sheet": "主事件",
+      "sid": 809774568700869
+    },
+    {
+      "name": "开始战役挑战",
+      "sheet": "主事件",
+      "sid": 321656320535409
+    },
+    {
+      "name": "战役波次刷新",
+      "sheet": "主事件",
+      "sid": 304960248089359
+    },
+    {
+      "name": "战役敌军数量",
+      "sheet": "主事件",
+      "sid": 998570766447202
+    },
+    {
+      "name": "战役胜利",
+      "sheet": "主事件",
+      "sid": 804771022375286
+    },
+    {
+      "name": "战役抽宝",
+      "sheet": "主事件",
+      "sid": 490620066888117
+    },
+    {
+      "name": "打开战役抽宝页面",
+      "sheet": "主事件",
+      "sid": 697156444624883
+    },
+    {
+      "name": "战役副本难度",
+      "sheet": "主事件",
+      "sid": 361347441246105
+    },
+    {
+      "name": "战役难度文本",
+      "sheet": "主事件",
+      "sid": 246260645090645
     },
     {
       "name": "强制结束战斗",
@@ -73855,6 +73969,11 @@
       "name": "刷新全角色全属性",
       "sheet": "主事件",
       "sid": 107008596985001
+    },
+    {
+      "name": "刷新全角色单属性",
+      "sheet": "主事件",
+      "sid": 182661925723932
     },
     {
       "name": "刷新单角色全属性",
@@ -74695,7 +74814,7 @@
     },
     {
       "sid": 168223690030527,
-      "actionSid": 402658790185759,
+      "actionSid": 448661171335424,
       "function": "初始化／事件",
       "sheet": "主事件",
       "x": "*",
@@ -74725,7 +74844,7 @@
     },
     {
       "sid": 946060107800777,
-      "actionSid": 204179845255359,
+      "actionSid": 303635112628527,
       "function": "初始化／事件",
       "sheet": "主事件",
       "x": "*",
@@ -74830,7 +74949,7 @@
     },
     {
       "sid": 107425826227921,
-      "actionSid": 240953427734492,
+      "actionSid": 307217687445978,
       "function": "初始化／事件",
       "sheet": "主事件",
       "x": "*",
@@ -75065,7 +75184,7 @@
         12,
         15,
         null,
-        72
+        65
       ]
     },
     {
@@ -75080,7 +75199,7 @@
         null,
         null,
         null,
-        76
+        69
       ]
     },
     {
@@ -75245,7 +75364,7 @@
         null,
         null,
         null,
-        183
+        177
       ]
     },
     {
@@ -75260,7 +75379,7 @@
         null,
         null,
         null,
-        183
+        177
       ]
     },
     {
@@ -75515,7 +75634,7 @@
         null,
         null,
         null,
-        257
+        252
       ]
     },
     {
@@ -75545,7 +75664,7 @@
         null,
         null,
         null,
-        484
+        479
       ]
     },
     {
@@ -75620,7 +75739,7 @@
         12,
         null,
         null,
-        548
+        543
       ]
     },
     {
@@ -75635,7 +75754,7 @@
         12,
         null,
         null,
-        549
+        544
       ]
     },
     {
@@ -75650,7 +75769,7 @@
         12,
         null,
         null,
-        550
+        545
       ]
     },
     {
@@ -75665,7 +75784,7 @@
         12,
         null,
         null,
-        551
+        546
       ]
     },
     {
@@ -75680,7 +75799,7 @@
         12,
         null,
         null,
-        552
+        547
       ]
     },
     {
@@ -75695,7 +75814,7 @@
         12,
         null,
         null,
-        553
+        548
       ]
     },
     {
@@ -75710,7 +75829,7 @@
         12,
         null,
         null,
-        554
+        549
       ]
     },
     {
@@ -75725,7 +75844,7 @@
         12,
         null,
         null,
-        555
+        550
       ]
     },
     {
@@ -75740,7 +75859,7 @@
         12,
         null,
         null,
-        556
+        551
       ]
     },
     {
@@ -75755,7 +75874,7 @@
         12,
         null,
         null,
-        557
+        552
       ]
     },
     {
@@ -75770,7 +75889,7 @@
         12,
         null,
         null,
-        558
+        553
       ]
     },
     {
@@ -75785,7 +75904,7 @@
         12,
         null,
         null,
-        559
+        554
       ]
     },
     {
@@ -75800,7 +75919,7 @@
         12,
         null,
         null,
-        560
+        555
       ]
     },
     {
@@ -75815,7 +75934,7 @@
         12,
         null,
         null,
-        561
+        556
       ]
     },
     {
@@ -75830,7 +75949,7 @@
         12,
         null,
         null,
-        562
+        557
       ]
     },
     {
@@ -75845,7 +75964,7 @@
         12,
         null,
         null,
-        563
+        558
       ]
     },
     {
@@ -75860,7 +75979,7 @@
         12,
         null,
         null,
-        564
+        559
       ]
     },
     {
@@ -75875,7 +75994,7 @@
         12,
         null,
         null,
-        565
+        560
       ]
     },
     {
@@ -75888,9 +76007,9 @@
       "z": 2,
       "refs": [
         12,
-        566,
+        561,
         null,
-        567
+        562
       ]
     },
     {
@@ -75905,7 +76024,7 @@
         null,
         null,
         null,
-        1198
+        1203
       ]
     },
     {
@@ -75920,7 +76039,7 @@
         null,
         null,
         null,
-        1199
+        1204
       ]
     },
     {
@@ -76127,8 +76246,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1459,
-        1007,
+        1486,
+        1013,
         null,
         null
       ]
@@ -76142,8 +76261,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1460,
-        1007,
+        1487,
+        1013,
         null,
         null
       ]
@@ -76157,8 +76276,8 @@
       "y": "*",
       "z": 10,
       "refs": [
-        1019,
-        1007,
+        1025,
+        1013,
         null,
         null
       ]
@@ -76172,8 +76291,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1459,
-        1007,
+        1486,
+        1013,
         null,
         null
       ]
@@ -76187,8 +76306,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1460,
-        1007,
+        1487,
+        1013,
         null,
         null
       ]
@@ -76202,8 +76321,8 @@
       "y": "*",
       "z": 10,
       "refs": [
-        1019,
-        1007,
+        1025,
+        1013,
         null,
         null
       ]
@@ -76217,10 +76336,10 @@
       "y": 16,
       "z": 0,
       "refs": [
-        67,
+        60,
         null,
         null,
-        67
+        60
       ]
     },
     {
@@ -76355,7 +76474,7 @@
         12,
         null,
         null,
-        1507
+        1534
       ]
     },
     {
@@ -76367,8 +76486,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1459,
-        1007,
+        1486,
+        1013,
         null,
         15
       ]
@@ -76382,10 +76501,10 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1460,
-        1007,
+        1487,
+        1013,
         null,
-        1514
+        1541
       ]
     },
     {
@@ -76397,10 +76516,10 @@
       "y": "*",
       "z": 10,
       "refs": [
-        1019,
-        1007,
+        1025,
+        1013,
         null,
-        1514
+        1541
       ]
     },
     {
@@ -76412,8 +76531,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1007,
-        1007,
+        1013,
+        1013,
         null,
         15
       ]
@@ -76445,7 +76564,7 @@
         15,
         null,
         null,
-        979
+        985
       ]
     },
     {
@@ -76550,7 +76669,7 @@
         15,
         null,
         null,
-        1652
+        1679
       ]
     },
     {
@@ -76565,7 +76684,7 @@
         15,
         null,
         null,
-        979
+        985
       ]
     },
     {
@@ -76907,8 +77026,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1712,
-        1007,
+        1739,
+        1013,
         null,
         12
       ]
@@ -76922,8 +77041,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1712,
-        1007,
+        1739,
+        1013,
         null,
         null
       ]
@@ -77222,7 +77341,7 @@
       "y": 13,
       "z": 0,
       "refs": [
-        1065,
+        1071,
         null,
         null,
         null
@@ -77282,7 +77401,7 @@
       "y": 15,
       "z": 0,
       "refs": [
-        1065,
+        1071,
         null,
         null,
         null
@@ -77327,10 +77446,10 @@
       "y": 3,
       "z": 21,
       "refs": [
-        67,
+        60,
         null,
         null,
-        67
+        60
       ]
     },
     {
@@ -77342,7 +77461,7 @@
       "y": 4,
       "z": 21,
       "refs": [
-        67,
+        60,
         null,
         null,
         null
@@ -77357,7 +77476,7 @@
       "y": 7,
       "z": 21,
       "refs": [
-        67,
+        60,
         null,
         null,
         null
@@ -77372,7 +77491,7 @@
       "y": 8,
       "z": 21,
       "refs": [
-        67,
+        60,
         null,
         null,
         null
@@ -77387,7 +77506,7 @@
       "y": 9,
       "z": 21,
       "refs": [
-        67,
+        60,
         null,
         null,
         null
@@ -77402,10 +77521,10 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1781,
-        1782,
+        1808,
+        1809,
         null,
-        1783
+        1810
       ]
     },
     {
@@ -77417,8 +77536,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1781,
-        1782,
+        1808,
+        1809,
         null,
         null
       ]
@@ -77585,7 +77704,7 @@
         null,
         null,
         null,
-        1815
+        1842
       ]
     },
     {
@@ -77750,7 +77869,7 @@
         null,
         null,
         null,
-        1843
+        1870
       ]
     },
     {
@@ -77765,7 +77884,7 @@
         null,
         null,
         null,
-        1843
+        1870
       ]
     },
     {
@@ -77780,7 +77899,7 @@
         15,
         null,
         null,
-        67
+        60
       ]
     },
     {
@@ -77795,7 +77914,7 @@
         15,
         null,
         null,
-        67
+        60
       ]
     },
     {
@@ -77807,7 +77926,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        1955,
+        1981,
         null,
         null,
         null
@@ -77822,7 +77941,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        1955,
+        1981,
         null,
         null,
         null
@@ -78062,7 +78181,7 @@
       "y": 1,
       "z": 2,
       "refs": [
-        67,
+        60,
         null,
         null,
         12
@@ -78077,7 +78196,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        1955,
+        1981,
         null,
         null,
         null
@@ -78245,7 +78364,7 @@
         15,
         null,
         null,
-        2270
+        2297
       ]
     },
     {
@@ -78260,7 +78379,7 @@
         15,
         null,
         null,
-        2271
+        2298
       ]
     },
     {
@@ -78275,7 +78394,7 @@
         15,
         null,
         null,
-        2272
+        2299
       ]
     },
     {
@@ -78395,7 +78514,7 @@
         15,
         null,
         null,
-        2289
+        2316
       ]
     },
     {
@@ -78410,7 +78529,7 @@
         15,
         null,
         null,
-        2289
+        2316
       ]
     },
     {
@@ -78425,7 +78544,7 @@
         15,
         null,
         null,
-        2289
+        2316
       ]
     },
     {
@@ -78440,7 +78559,7 @@
         15,
         null,
         null,
-        2292
+        2319
       ]
     },
     {
@@ -78455,7 +78574,7 @@
         15,
         null,
         null,
-        2292
+        2319
       ]
     },
     {
@@ -78470,7 +78589,7 @@
         15,
         null,
         null,
-        2292
+        2319
       ]
     },
     {
@@ -78485,7 +78604,7 @@
         15,
         null,
         null,
-        2292
+        2319
       ]
     },
     {
@@ -78500,7 +78619,7 @@
         15,
         null,
         null,
-        2292
+        2319
       ]
     },
     {
@@ -78515,7 +78634,7 @@
         15,
         null,
         null,
-        2292
+        2319
       ]
     },
     {
@@ -78530,7 +78649,7 @@
         15,
         null,
         null,
-        2292
+        2319
       ]
     },
     {
@@ -78545,7 +78664,7 @@
         15,
         null,
         null,
-        2292
+        2319
       ]
     },
     {
@@ -78560,7 +78679,7 @@
         15,
         null,
         null,
-        2292
+        2319
       ]
     },
     {
@@ -78573,9 +78692,9 @@
       "z": 3,
       "refs": [
         15,
-        2293,
+        2320,
         null,
-        2294
+        2321
       ]
     },
     {
@@ -78588,9 +78707,9 @@
       "z": 3,
       "refs": [
         15,
-        2293,
+        2320,
         null,
-        2295
+        2322
       ]
     },
     {
@@ -78605,7 +78724,7 @@
         15,
         null,
         null,
-        2296
+        2323
       ]
     },
     {
@@ -78620,7 +78739,7 @@
         15,
         null,
         null,
-        2297
+        2324
       ]
     },
     {
@@ -78635,7 +78754,7 @@
         15,
         null,
         null,
-        2298
+        2325
       ]
     },
     {
@@ -78650,7 +78769,7 @@
         15,
         null,
         null,
-        2300
+        2327
       ]
     },
     {
@@ -78665,7 +78784,7 @@
         15,
         null,
         null,
-        2301
+        2328
       ]
     },
     {
@@ -78680,7 +78799,7 @@
         15,
         null,
         null,
-        2302
+        2329
       ]
     },
     {
@@ -78695,7 +78814,7 @@
         15,
         null,
         null,
-        2303
+        2330
       ]
     },
     {
@@ -78710,7 +78829,7 @@
         15,
         null,
         null,
-        2304
+        2331
       ]
     },
     {
@@ -78725,7 +78844,7 @@
         15,
         null,
         null,
-        2306
+        2333
       ]
     },
     {
@@ -78873,9 +78992,9 @@
       "z": 3,
       "refs": [
         15,
-        2309,
+        2336,
         null,
-        143
+        136
       ]
     },
     {
@@ -78980,7 +79099,7 @@
         15,
         null,
         null,
-        2313
+        2339
       ]
     },
     {
@@ -78995,7 +79114,7 @@
         15,
         null,
         null,
-        2314
+        2340
       ]
     },
     {
@@ -79010,7 +79129,7 @@
         15,
         null,
         null,
-        2315
+        2341
       ]
     },
     {
@@ -79025,7 +79144,7 @@
         15,
         null,
         null,
-        2316
+        2342
       ]
     },
     {
@@ -79040,7 +79159,7 @@
         15,
         null,
         null,
-        2317
+        2343
       ]
     },
     {
@@ -79055,7 +79174,7 @@
         15,
         null,
         null,
-        2318
+        2344
       ]
     },
     {
@@ -79070,7 +79189,7 @@
         15,
         null,
         null,
-        2319
+        2345
       ]
     },
     {
@@ -79085,7 +79204,7 @@
         15,
         null,
         null,
-        2320
+        2346
       ]
     },
     {
@@ -79100,7 +79219,7 @@
         15,
         null,
         null,
-        2321
+        2347
       ]
     },
     {
@@ -79115,7 +79234,7 @@
         15,
         null,
         null,
-        2322
+        2348
       ]
     },
     {
@@ -79235,7 +79354,7 @@
         15,
         null,
         null,
-        2324
+        2350
       ]
     },
     {
@@ -79250,7 +79369,7 @@
         15,
         null,
         null,
-        2325
+        2351
       ]
     },
     {
@@ -79265,7 +79384,7 @@
         15,
         null,
         null,
-        2327
+        2353
       ]
     },
     {
@@ -79280,7 +79399,7 @@
         15,
         null,
         null,
-        2328
+        2354
       ]
     },
     {
@@ -79295,7 +79414,7 @@
         15,
         null,
         null,
-        2331
+        2357
       ]
     },
     {
@@ -79400,7 +79519,7 @@
         15,
         15,
         null,
-        2336
+        2362
       ]
     },
     {
@@ -79430,7 +79549,7 @@
         12,
         15,
         null,
-        2414
+        2440
       ]
     },
     {
@@ -79443,9 +79562,9 @@
       "z": 12,
       "refs": [
         12,
-        1191,
+        1196,
         null,
-        2415
+        2441
       ]
     },
     {
@@ -79458,9 +79577,9 @@
       "z": 12,
       "refs": [
         12,
-        2416,
+        2442,
         null,
-        2417
+        2443
       ]
     },
     {
@@ -79535,7 +79654,7 @@
         12,
         null,
         null,
-        2330
+        2356
       ]
     },
     {
@@ -79548,7 +79667,7 @@
       "z": 4,
       "refs": [
         12,
-        2418,
+        2444,
         null,
         null
       ]
@@ -79562,7 +79681,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        2420,
+        2446,
         null,
         null,
         null
@@ -79595,7 +79714,7 @@
         12,
         15,
         null,
-        2414
+        2440
       ]
     },
     {
@@ -79608,9 +79727,9 @@
       "z": 12,
       "refs": [
         12,
-        1191,
+        1196,
         null,
-        2415
+        2441
       ]
     },
     {
@@ -79623,9 +79742,9 @@
       "z": 12,
       "refs": [
         12,
-        2416,
+        2442,
         null,
-        2417
+        2443
       ]
     },
     {
@@ -79700,7 +79819,7 @@
         12,
         null,
         null,
-        2330
+        2356
       ]
     },
     {
@@ -79713,7 +79832,7 @@
       "z": 4,
       "refs": [
         12,
-        2418,
+        2444,
         null,
         null
       ]
@@ -79727,7 +79846,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        2420,
+        2446,
         null,
         null,
         null
@@ -79760,7 +79879,7 @@
         12,
         15,
         null,
-        2414
+        2440
       ]
     },
     {
@@ -79773,9 +79892,9 @@
       "z": 12,
       "refs": [
         12,
-        1191,
+        1196,
         null,
-        2415
+        2441
       ]
     },
     {
@@ -79788,9 +79907,9 @@
       "z": 12,
       "refs": [
         12,
-        2416,
+        2442,
         null,
-        2417
+        2443
       ]
     },
     {
@@ -79865,7 +79984,7 @@
         12,
         null,
         null,
-        2330
+        2356
       ]
     },
     {
@@ -79878,7 +79997,7 @@
       "z": 4,
       "refs": [
         12,
-        2418,
+        2444,
         null,
         null
       ]
@@ -79910,7 +80029,7 @@
         12,
         15,
         null,
-        2414
+        2440
       ]
     },
     {
@@ -79923,9 +80042,9 @@
       "z": 12,
       "refs": [
         12,
-        1191,
+        1196,
         null,
-        2415
+        2441
       ]
     },
     {
@@ -79938,9 +80057,9 @@
       "z": 12,
       "refs": [
         12,
-        2416,
+        2442,
         null,
-        2417
+        2443
       ]
     },
     {
@@ -80015,7 +80134,7 @@
         12,
         null,
         null,
-        2330
+        2356
       ]
     },
     {
@@ -80028,7 +80147,7 @@
       "z": 4,
       "refs": [
         12,
-        2418,
+        2444,
         null,
         null
       ]
@@ -80057,7 +80176,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        2420,
+        2446,
         null,
         null,
         null
@@ -80090,7 +80209,7 @@
         12,
         15,
         null,
-        2414
+        2440
       ]
     },
     {
@@ -80103,9 +80222,9 @@
       "z": 12,
       "refs": [
         12,
-        1191,
+        1196,
         null,
-        2415
+        2441
       ]
     },
     {
@@ -80118,9 +80237,9 @@
       "z": 12,
       "refs": [
         12,
-        2416,
+        2442,
         null,
-        2417
+        2443
       ]
     },
     {
@@ -80195,7 +80314,7 @@
         12,
         null,
         null,
-        2330
+        2356
       ]
     },
     {
@@ -80208,7 +80327,7 @@
       "z": 4,
       "refs": [
         12,
-        2418,
+        2444,
         null,
         null
       ]
@@ -80237,7 +80356,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        2420,
+        2446,
         null,
         null,
         null
@@ -80270,7 +80389,7 @@
         12,
         15,
         null,
-        2336
+        2362
       ]
     },
     {
@@ -80283,9 +80402,9 @@
       "z": 12,
       "refs": [
         12,
-        1191,
+        1196,
         null,
-        2424
+        2450
       ]
     },
     {
@@ -80298,9 +80417,9 @@
       "z": 12,
       "refs": [
         12,
-        2416,
+        2442,
         null,
-        2425
+        2451
       ]
     },
     {
@@ -80375,7 +80494,7 @@
         12,
         null,
         null,
-        2426
+        2452
       ]
     },
     {
@@ -80388,7 +80507,7 @@
       "z": 4,
       "refs": [
         12,
-        2418,
+        2444,
         null,
         null
       ]
@@ -80435,7 +80554,7 @@
         null,
         null,
         null,
-        2486
+        2512
       ]
     },
     {
@@ -80465,7 +80584,7 @@
         null,
         null,
         null,
-        76
+        69
       ]
     },
     {
@@ -80480,7 +80599,7 @@
         15,
         null,
         null,
-        2496
+        2522
       ]
     },
     {
@@ -80510,7 +80629,7 @@
         null,
         null,
         null,
-        76
+        69
       ]
     },
     {
@@ -80525,7 +80644,7 @@
         null,
         null,
         null,
-        76
+        69
       ]
     },
     {
@@ -80537,7 +80656,7 @@
       "y": 0,
       "z": 3,
       "refs": [
-        67,
+        60,
         null,
         null,
         null
@@ -80552,10 +80671,10 @@
       "y": 0,
       "z": 3,
       "refs": [
-        67,
+        60,
         null,
         null,
-        67
+        60
       ]
     },
     {
@@ -80612,7 +80731,7 @@
       "y": 3,
       "z": 21,
       "refs": [
-        1671,
+        1698,
         null,
         null,
         15
@@ -80642,7 +80761,7 @@
       "y": 3,
       "z": 21,
       "refs": [
-        1671,
+        1698,
         null,
         null,
         15
@@ -80672,7 +80791,7 @@
       "y": 3,
       "z": 21,
       "refs": [
-        1671,
+        1698,
         null,
         null,
         15
@@ -80868,9 +80987,9 @@
       "z": 7,
       "refs": [
         12,
-        2855,
+        2883,
         null,
-        354
+        349
       ]
     },
     {
@@ -80883,9 +81002,9 @@
       "z": 7,
       "refs": [
         12,
-        2856,
+        2884,
         null,
-        2857
+        2885
       ]
     },
     {
@@ -80975,7 +81094,7 @@
         12,
         null,
         null,
-        2865
+        2893
       ]
     },
     {
@@ -80990,7 +81109,7 @@
         12,
         null,
         null,
-        2866
+        2894
       ]
     },
     {
@@ -81020,7 +81139,7 @@
         12,
         null,
         null,
-        2867
+        2895
       ]
     },
     {
@@ -81063,9 +81182,9 @@
       "z": 7,
       "refs": [
         12,
-        2855,
+        2883,
         null,
-        354
+        349
       ]
     },
     {
@@ -81078,9 +81197,9 @@
       "z": 7,
       "refs": [
         12,
-        2856,
+        2884,
         null,
-        2857
+        2885
       ]
     },
     {
@@ -81515,7 +81634,7 @@
         12,
         null,
         null,
-        242
+        236
       ]
     },
     {
@@ -81545,7 +81664,7 @@
         12,
         null,
         null,
-        2878
+        2906
       ]
     },
     {
@@ -81560,7 +81679,7 @@
         12,
         null,
         null,
-        2878
+        2906
       ]
     },
     {
@@ -81575,7 +81694,7 @@
         12,
         null,
         null,
-        2878
+        2906
       ]
     },
     {
@@ -81590,7 +81709,7 @@
         12,
         null,
         null,
-        2878
+        2906
       ]
     },
     {
@@ -81605,7 +81724,7 @@
         12,
         null,
         null,
-        2878
+        2906
       ]
     },
     {
@@ -81620,7 +81739,7 @@
         12,
         null,
         null,
-        2879
+        2907
       ]
     },
     {
@@ -81648,7 +81767,7 @@
       "z": 2,
       "refs": [
         15,
-        803,
+        808,
         null,
         15
       ]
@@ -81678,7 +81797,7 @@
       "z": 2,
       "refs": [
         15,
-        803,
+        808,
         null,
         15
       ]
@@ -81708,7 +81827,7 @@
       "z": 2,
       "refs": [
         15,
-        803,
+        808,
         null,
         null
       ]
@@ -81717,6 +81836,36 @@
       "sid": 314497106398393,
       "actionSid": 646854225296867,
       "function": "卸下装备",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 7,
+      "z": "*",
+      "refs": [
+        15,
+        null,
+        15,
+        null
+      ]
+    },
+    {
+      "sid": 462573580987370,
+      "actionSid": 419066335018489,
+      "function": "卸下装备备用套",
+      "sheet": "主事件",
+      "x": "*",
+      "y": "*",
+      "z": 23,
+      "refs": [
+        15,
+        15,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 462573580987370,
+      "actionSid": 953206841044879,
+      "function": "卸下装备备用套",
       "sheet": "主事件",
       "x": "*",
       "y": 7,
@@ -81740,7 +81889,7 @@
         12,
         15,
         null,
-        2900
+        2928
       ]
     },
     {
@@ -81770,7 +81919,7 @@
         12,
         15,
         15,
-        2901
+        2929
       ]
     },
     {
@@ -81830,7 +81979,7 @@
         15,
         null,
         null,
-        3044
+        3072
       ]
     },
     {
@@ -81845,7 +81994,7 @@
         15,
         null,
         null,
-        3044
+        3072
       ]
     },
     {
@@ -81860,7 +82009,7 @@
         null,
         null,
         null,
-        3049
+        3077
       ]
     },
     {
@@ -81875,7 +82024,7 @@
         15,
         null,
         null,
-        3044
+        3072
       ]
     },
     {
@@ -81890,7 +82039,7 @@
         null,
         null,
         null,
-        3050
+        3078
       ]
     },
     {
@@ -81905,7 +82054,7 @@
         15,
         null,
         null,
-        3044
+        3072
       ]
     },
     {
@@ -81950,7 +82099,7 @@
         null,
         null,
         null,
-        67
+        60
       ]
     },
     {
@@ -81965,7 +82114,7 @@
         null,
         null,
         null,
-        67
+        60
       ]
     },
     {
@@ -81980,7 +82129,7 @@
         null,
         null,
         null,
-        67
+        60
       ]
     },
     {
@@ -81995,7 +82144,7 @@
         null,
         null,
         null,
-        67
+        60
       ]
     },
     {
@@ -82010,7 +82159,7 @@
         null,
         null,
         null,
-        67
+        60
       ]
     },
     {
@@ -82025,7 +82174,7 @@
         null,
         null,
         null,
-        67
+        60
       ]
     },
     {
@@ -82040,7 +82189,7 @@
         null,
         null,
         null,
-        67
+        60
       ]
     },
     {
@@ -82052,7 +82201,7 @@
       "y": 22,
       "z": 7,
       "refs": [
-        67,
+        60,
         null,
         null,
         null
@@ -82067,7 +82216,7 @@
       "y": 22,
       "z": 7,
       "refs": [
-        67,
+        60,
         null,
         null,
         null
@@ -82082,7 +82231,7 @@
       "y": 11,
       "z": 18,
       "refs": [
-        67,
+        60,
         null,
         null,
         null
@@ -82097,7 +82246,7 @@
       "y": 11,
       "z": 18,
       "refs": [
-        67,
+        60,
         null,
         null,
         null
@@ -82112,7 +82261,7 @@
       "y": 22,
       "z": 22,
       "refs": [
-        67,
+        60,
         null,
         null,
         null
@@ -82127,7 +82276,7 @@
       "y": 22,
       "z": 22,
       "refs": [
-        67,
+        60,
         null,
         null,
         null
@@ -82172,7 +82321,7 @@
       "y": 8,
       "z": 0,
       "refs": [
-        67,
+        60,
         null,
         null,
         null
@@ -82187,7 +82336,7 @@
       "y": 8,
       "z": 0,
       "refs": [
-        67,
+        60,
         null,
         null,
         null
@@ -82217,10 +82366,10 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3236,
+        3264,
         15,
         null,
-        143
+        136
       ]
     },
     {
@@ -82232,10 +82381,10 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3237,
+        3265,
         15,
         null,
-        143
+        136
       ]
     },
     {
@@ -82247,10 +82396,10 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3238,
+        3266,
         15,
         null,
-        3239
+        3267
       ]
     },
     {
@@ -82262,7 +82411,7 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3236,
+        3264,
         15,
         null,
         null
@@ -82277,7 +82426,7 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3237,
+        3265,
         15,
         null,
         null
@@ -82292,7 +82441,7 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3238,
+        3266,
         15,
         null,
         null
@@ -82322,7 +82471,7 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3255,
+        3283,
         15,
         null,
         null
@@ -82337,7 +82486,7 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3256,
+        3284,
         15,
         null,
         null
@@ -82355,7 +82504,7 @@
         null,
         null,
         null,
-        3310
+        3338
       ]
     },
     {
@@ -82400,7 +82549,7 @@
         null,
         null,
         null,
-        3321
+        3349
       ]
     },
     {
@@ -82412,7 +82561,7 @@
       "y": 36,
       "z": 0,
       "refs": [
-        2040,
+        2066,
         null,
         null,
         null
@@ -82457,7 +82606,7 @@
       "y": 52,
       "z": 2,
       "refs": [
-        3375,
+        3403,
         null,
         null,
         null
@@ -82490,7 +82639,7 @@
         12,
         15,
         null,
-        2336
+        2362
       ]
     },
     {
@@ -82503,9 +82652,9 @@
       "z": 12,
       "refs": [
         12,
-        1191,
+        1196,
         null,
-        2424
+        2450
       ]
     },
     {
@@ -82518,9 +82667,9 @@
       "z": 12,
       "refs": [
         12,
-        2416,
+        2442,
         null,
-        2425
+        2451
       ]
     },
     {
@@ -82595,7 +82744,7 @@
         12,
         null,
         null,
-        2426
+        2452
       ]
     },
     {
@@ -82608,7 +82757,7 @@
       "z": 4,
       "refs": [
         12,
-        2418,
+        2444,
         null,
         null
       ]
@@ -82640,7 +82789,7 @@
         12,
         15,
         null,
-        2336
+        2362
       ]
     },
     {
@@ -82653,9 +82802,9 @@
       "z": 12,
       "refs": [
         12,
-        1191,
+        1196,
         null,
-        2424
+        2450
       ]
     },
     {
@@ -82668,9 +82817,9 @@
       "z": 12,
       "refs": [
         12,
-        2416,
+        2442,
         null,
-        2425
+        2451
       ]
     },
     {
@@ -82745,7 +82894,7 @@
         12,
         null,
         null,
-        2426
+        2452
       ]
     },
     {
@@ -82758,7 +82907,7 @@
       "z": 4,
       "refs": [
         12,
-        2418,
+        2444,
         null,
         null
       ]
@@ -82790,7 +82939,7 @@
         12,
         15,
         null,
-        2336
+        2362
       ]
     },
     {
@@ -82803,9 +82952,9 @@
       "z": 12,
       "refs": [
         12,
-        1191,
+        1196,
         null,
-        2424
+        2450
       ]
     },
     {
@@ -82818,9 +82967,9 @@
       "z": 12,
       "refs": [
         12,
-        2416,
+        2442,
         null,
-        2425
+        2451
       ]
     },
     {
@@ -82850,7 +82999,7 @@
         12,
         null,
         null,
-        1811
+        1838
       ]
     },
     {
@@ -82925,7 +83074,7 @@
         12,
         null,
         null,
-        2426
+        2452
       ]
     },
     {
@@ -82938,7 +83087,7 @@
       "z": 4,
       "refs": [
         12,
-        2418,
+        2444,
         null,
         null
       ]
@@ -82967,7 +83116,7 @@
       "y": 31,
       "z": 0,
       "refs": [
-        248,
+        242,
         null,
         null,
         null
@@ -82982,7 +83131,7 @@
       "y": 31,
       "z": 0,
       "refs": [
-        248,
+        242,
         null,
         null,
         null
@@ -82997,7 +83146,7 @@
       "y": 31,
       "z": 0,
       "refs": [
-        248,
+        242,
         null,
         null,
         null
@@ -83012,7 +83161,7 @@
       "y": 31,
       "z": 0,
       "refs": [
-        248,
+        242,
         null,
         null,
         null
@@ -83027,7 +83176,7 @@
       "y": 32,
       "z": 0,
       "refs": [
-        248,
+        242,
         null,
         null,
         null
@@ -83042,7 +83191,7 @@
       "y": 32,
       "z": 0,
       "refs": [
-        248,
+        242,
         null,
         null,
         null
@@ -83057,7 +83206,7 @@
       "y": 32,
       "z": 0,
       "refs": [
-        248,
+        242,
         null,
         null,
         null
@@ -83072,7 +83221,7 @@
       "y": 32,
       "z": 0,
       "refs": [
-        248,
+        242,
         null,
         null,
         null
@@ -83087,7 +83236,7 @@
       "y": 33,
       "z": 0,
       "refs": [
-        248,
+        242,
         null,
         null,
         null
@@ -83102,7 +83251,7 @@
       "y": 33,
       "z": 0,
       "refs": [
-        248,
+        242,
         null,
         null,
         null
@@ -83117,7 +83266,7 @@
       "y": 33,
       "z": 0,
       "refs": [
-        248,
+        242,
         null,
         null,
         null
@@ -83132,7 +83281,7 @@
       "y": 33,
       "z": 0,
       "refs": [
-        248,
+        242,
         null,
         null,
         null
@@ -83147,7 +83296,7 @@
       "y": 31,
       "z": 0,
       "refs": [
-        67,
+        60,
         null,
         null,
         null
@@ -83162,7 +83311,7 @@
       "y": 31,
       "z": 0,
       "refs": [
-        67,
+        60,
         null,
         null,
         null
@@ -83177,7 +83326,7 @@
       "y": 32,
       "z": 0,
       "refs": [
-        67,
+        60,
         null,
         null,
         null
@@ -83192,7 +83341,7 @@
       "y": 32,
       "z": 0,
       "refs": [
-        67,
+        60,
         null,
         null,
         null
@@ -83207,7 +83356,7 @@
       "y": 33,
       "z": 0,
       "refs": [
-        67,
+        60,
         null,
         null,
         null
@@ -83222,7 +83371,7 @@
       "y": 33,
       "z": 0,
       "refs": [
-        67,
+        60,
         null,
         null,
         null
@@ -83237,7 +83386,7 @@
       "y": 3,
       "z": 21,
       "refs": [
-        1671,
+        1698,
         null,
         null,
         15
@@ -83525,7 +83674,7 @@
         12,
         null,
         null,
-        248
+        242
       ]
     },
     {
@@ -83600,7 +83749,7 @@
         12,
         null,
         null,
-        3563
+        3591
       ]
     },
     {
@@ -83612,7 +83761,7 @@
       "y": 30,
       "z": 0,
       "refs": [
-        248,
+        242,
         null,
         null,
         null
@@ -83627,7 +83776,7 @@
       "y": 30,
       "z": 0,
       "refs": [
-        67,
+        60,
         null,
         null,
         null
@@ -83642,7 +83791,7 @@
       "y": 30,
       "z": 0,
       "refs": [
-        67,
+        60,
         null,
         null,
         null
@@ -83660,7 +83809,7 @@
         15,
         null,
         15,
-        2775
+        2801
       ]
     },
     {
@@ -83705,7 +83854,7 @@
         15,
         null,
         15,
-        3599
+        3627
       ]
     },
     {
@@ -83720,7 +83869,7 @@
         15,
         null,
         15,
-        3600
+        3628
       ]
     },
     {
@@ -83732,7 +83881,7 @@
       "y": 34,
       "z": 0,
       "refs": [
-        248,
+        242,
         null,
         null,
         null
@@ -83762,7 +83911,7 @@
       "y": 20,
       "z": 0,
       "refs": [
-        802,
+        807,
         null,
         null,
         null
@@ -83792,7 +83941,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        1955,
+        1981,
         null,
         null,
         null
@@ -83822,7 +83971,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        1955,
+        1981,
         null,
         null,
         null
@@ -83837,7 +83986,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        67,
+        60,
         null,
         null,
         null
@@ -83855,7 +84004,7 @@
         12,
         15,
         null,
-        3775
+        3803
       ]
     },
     {
@@ -83885,7 +84034,7 @@
         12,
         15,
         null,
-        3776
+        3804
       ]
     },
     {
@@ -83927,7 +84076,7 @@
       "y": 20,
       "z": 0,
       "refs": [
-        802,
+        807,
         null,
         null,
         null
@@ -83960,7 +84109,7 @@
         15,
         null,
         null,
-        3869
+        3897
       ]
     },
     {
@@ -83988,7 +84137,7 @@
       "z": 0,
       "refs": [
         15,
-        2010,
+        2036,
         null,
         15
       ]
@@ -84047,8 +84196,8 @@
       "y": "*",
       "z": 0,
       "refs": [
-        3879,
-        3883,
+        3907,
+        3911,
         null,
         null
       ]
@@ -84200,7 +84349,7 @@
         12,
         15,
         null,
-        3947
+        3979
       ]
     },
     {
@@ -84230,7 +84379,7 @@
         12,
         15,
         null,
-        3948
+        3980
       ]
     },
     {
@@ -84275,7 +84424,7 @@
         15,
         null,
         null,
-        4107
+        4139
       ]
     },
     {
@@ -84290,7 +84439,7 @@
         15,
         null,
         null,
-        4108
+        4140
       ]
     },
     {
@@ -84303,7 +84452,7 @@
       "z": 16,
       "refs": [
         15,
-        4109,
+        4141,
         null,
         15
       ]
@@ -84318,7 +84467,7 @@
       "z": 16,
       "refs": [
         15,
-        4110,
+        4142,
         null,
         15
       ]
@@ -84395,7 +84544,7 @@
         15,
         null,
         null,
-        4113
+        4145
       ]
     },
     {
@@ -84410,7 +84559,7 @@
         15,
         null,
         null,
-        4113
+        4145
       ]
     },
     {
@@ -84425,7 +84574,7 @@
         15,
         null,
         null,
-        4113
+        4145
       ]
     },
     {
@@ -84440,7 +84589,7 @@
         12,
         15,
         null,
-        2901
+        2929
       ]
     },
     {
@@ -84515,7 +84664,7 @@
         15,
         null,
         null,
-        4331
+        4363
       ]
     },
     {
@@ -84572,10 +84721,10 @@
       "y": "*",
       "z": 10,
       "refs": [
-        4360,
+        4392,
         15,
         null,
-        4363
+        4395
       ]
     },
     {
@@ -84602,10 +84751,10 @@
       "y": 7,
       "z": 1,
       "refs": [
-        67,
+        60,
         null,
         null,
-        67
+        60
       ]
     },
     {
@@ -84617,7 +84766,7 @@
       "y": 7,
       "z": 1,
       "refs": [
-        67,
+        60,
         null,
         null,
         null
@@ -84665,7 +84814,7 @@
         15,
         15,
         null,
-        4383
+        4415
       ]
     },
     {
@@ -84707,10 +84856,10 @@
       "y": "*",
       "z": 6,
       "refs": [
-        352,
+        347,
         12,
         null,
-        4386
+        4418
       ]
     },
     {
@@ -84722,10 +84871,10 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1578,
+        1605,
         12,
         null,
-        4387
+        4419
       ]
     },
     {
@@ -84755,7 +84904,7 @@
         12,
         null,
         null,
-        4386
+        4418
       ]
     },
     {
@@ -84770,7 +84919,7 @@
         12,
         null,
         null,
-        1589
+        1616
       ]
     },
     {
@@ -84785,7 +84934,7 @@
         12,
         null,
         null,
-        1589
+        1616
       ]
     },
     {
@@ -84800,7 +84949,7 @@
         12,
         null,
         null,
-        4389
+        4421
       ]
     },
     {
@@ -84948,9 +85097,9 @@
       "z": 20,
       "refs": [
         12,
-        1970,
+        1996,
         null,
-        1433
+        1460
       ]
     },
     {
@@ -84963,9 +85112,9 @@
       "z": 20,
       "refs": [
         12,
-        1969,
+        1995,
         null,
-        1434
+        1461
       ]
     },
     {
@@ -85145,7 +85294,7 @@
         null,
         null,
         null,
-        143
+        136
       ]
     },
     {
@@ -85160,7 +85309,7 @@
         null,
         null,
         null,
-        4483
+        4515
       ]
     },
     {
@@ -85175,7 +85324,7 @@
         null,
         null,
         null,
-        4489
+        4521
       ]
     },
     {
@@ -85190,7 +85339,7 @@
         null,
         null,
         null,
-        4490
+        4522
       ]
     },
     {
@@ -85205,7 +85354,7 @@
         null,
         null,
         null,
-        4489
+        4521
       ]
     },
     {
@@ -85220,7 +85369,7 @@
         null,
         null,
         null,
-        4490
+        4522
       ]
     },
     {
@@ -85265,7 +85414,7 @@
         15,
         15,
         null,
-        4383
+        4415
       ]
     },
     {
@@ -85337,7 +85486,7 @@
       "y": 5,
       "z": 21,
       "refs": [
-        1671,
+        1698,
         null,
         null,
         null
@@ -85352,7 +85501,7 @@
       "y": 5,
       "z": 21,
       "refs": [
-        1671,
+        1698,
         null,
         null,
         null
@@ -85400,7 +85549,7 @@
         15,
         null,
         null,
-        4585
+        4617
       ]
     },
     {
@@ -85415,7 +85564,7 @@
         null,
         null,
         null,
-        4586
+        4618
       ]
     },
     {
@@ -85430,7 +85579,7 @@
         15,
         null,
         null,
-        4587
+        4619
       ]
     },
     {
@@ -85445,7 +85594,7 @@
         15,
         null,
         null,
-        4585
+        4617
       ]
     },
     {
@@ -85460,7 +85609,7 @@
         null,
         null,
         null,
-        4586
+        4618
       ]
     },
     {
@@ -85475,7 +85624,202 @@
         15,
         null,
         null,
-        4587
+        4619
+      ]
+    },
+    {
+      "sid": 686795710430163,
+      "actionSid": 909953306444239,
+      "function": "角色换装",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 16,
+      "z": 2,
+      "refs": [
+        15,
+        null,
+        null,
+        4636
+      ]
+    },
+    {
+      "sid": 686795710430163,
+      "actionSid": 797835498734891,
+      "function": "角色换装",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 17,
+      "z": 2,
+      "refs": [
+        15,
+        null,
+        null,
+        4637
+      ]
+    },
+    {
+      "sid": 686795710430163,
+      "actionSid": 254686932872595,
+      "function": "角色换装",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 18,
+      "z": 2,
+      "refs": [
+        15,
+        null,
+        null,
+        4638
+      ]
+    },
+    {
+      "sid": 686795710430163,
+      "actionSid": 922845468990840,
+      "function": "角色换装",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 19,
+      "z": 2,
+      "refs": [
+        15,
+        null,
+        null,
+        4639
+      ]
+    },
+    {
+      "sid": 686795710430163,
+      "actionSid": 883143990549128,
+      "function": "角色换装",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 20,
+      "z": 2,
+      "refs": [
+        15,
+        null,
+        null,
+        4640
+      ]
+    },
+    {
+      "sid": 686795710430163,
+      "actionSid": 309870967399603,
+      "function": "角色换装",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 21,
+      "z": 2,
+      "refs": [
+        15,
+        null,
+        null,
+        4641
+      ]
+    },
+    {
+      "sid": 686795710430163,
+      "actionSid": 874430555394059,
+      "function": "角色换装",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 1,
+      "z": 23,
+      "refs": [
+        15,
+        null,
+        null,
+        15
+      ]
+    },
+    {
+      "sid": 686795710430163,
+      "actionSid": 765207107378807,
+      "function": "角色换装",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 2,
+      "z": 23,
+      "refs": [
+        15,
+        null,
+        null,
+        15
+      ]
+    },
+    {
+      "sid": 686795710430163,
+      "actionSid": 958979008639888,
+      "function": "角色换装",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 3,
+      "z": 23,
+      "refs": [
+        15,
+        null,
+        null,
+        15
+      ]
+    },
+    {
+      "sid": 686795710430163,
+      "actionSid": 405012669133254,
+      "function": "角色换装",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 4,
+      "z": 23,
+      "refs": [
+        15,
+        null,
+        null,
+        15
+      ]
+    },
+    {
+      "sid": 686795710430163,
+      "actionSid": 120166131163870,
+      "function": "角色换装",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 5,
+      "z": 23,
+      "refs": [
+        15,
+        null,
+        null,
+        15
+      ]
+    },
+    {
+      "sid": 686795710430163,
+      "actionSid": 333603008253033,
+      "function": "角色换装",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 6,
+      "z": 23,
+      "refs": [
+        15,
+        null,
+        null,
+        15
+      ]
+    },
+    {
+      "sid": 686795710430163,
+      "actionSid": 769211445079402,
+      "function": "角色换装",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 0,
+      "z": 23,
+      "refs": [
+        15,
+        null,
+        null,
+        15
       ]
     },
     {
@@ -85505,7 +85849,7 @@
         15,
         null,
         null,
-        4611
+        4659
       ]
     },
     {
@@ -85550,7 +85894,7 @@
         15,
         null,
         null,
-        4613
+        4661
       ]
     },
     {
@@ -85565,7 +85909,7 @@
         15,
         null,
         null,
-        4614
+        4662
       ]
     },
     {
@@ -85592,7 +85936,7 @@
       "y": 35,
       "z": 0,
       "refs": [
-        67,
+        60,
         null,
         null,
         null
@@ -85607,7 +85951,7 @@
       "y": 35,
       "z": 0,
       "refs": [
-        67,
+        60,
         null,
         null,
         null
@@ -85623,9 +85967,9 @@
       "z": 0,
       "refs": [
         15,
-        4651,
+        4699,
         null,
-        4652
+        4700
       ]
     },
     {
@@ -85640,7 +85984,7 @@
         null,
         null,
         null,
-        4654
+        4702
       ]
     },
     {
@@ -85653,9 +85997,9 @@
       "z": 0,
       "refs": [
         15,
-        4651,
+        4699,
         null,
-        4652
+        4700
       ]
     },
     {
@@ -85670,7 +86014,7 @@
         15,
         null,
         null,
-        4661
+        4709
       ]
     },
     {
@@ -85700,7 +86044,7 @@
         15,
         null,
         null,
-        4614
+        4662
       ]
     },
     {
@@ -85715,7 +86059,7 @@
         15,
         null,
         null,
-        4664
+        4712
       ]
     },
     {
@@ -85745,7 +86089,7 @@
         15,
         null,
         null,
-        4667
+        4715
       ]
     },
     {
@@ -85760,7 +86104,7 @@
         15,
         null,
         null,
-        1312
+        1316
       ]
     },
     {
@@ -85865,7 +86209,7 @@
         15,
         null,
         null,
-        4613
+        4661
       ]
     },
     {
@@ -85880,7 +86224,7 @@
         15,
         null,
         null,
-        4614
+        4662
       ]
     },
     {
@@ -85940,7 +86284,7 @@
         null,
         null,
         null,
-        4770
+        4818
       ]
     },
     {
@@ -85955,7 +86299,7 @@
         null,
         null,
         null,
-        4771
+        4819
       ]
     },
     {
@@ -85970,7 +86314,7 @@
         null,
         null,
         null,
-        4782
+        4830
       ]
     },
     {
@@ -85985,7 +86329,7 @@
         null,
         null,
         null,
-        67
+        60
       ]
     },
     {
@@ -85998,9 +86342,9 @@
       "z": "*",
       "refs": [
         15,
-        2855,
+        2883,
         15,
-        4932
+        4980
       ]
     },
     {
@@ -86013,9 +86357,9 @@
       "z": "*",
       "refs": [
         15,
-        4933,
+        4981,
         15,
-        4934
+        4982
       ]
     },
     {
@@ -86028,9 +86372,39 @@
       "z": "*",
       "refs": [
         15,
-        2928,
+        2956,
         15,
         null
+      ]
+    },
+    {
+      "sid": 740979987036499,
+      "actionSid": 491557335347054,
+      "function": "初始化／事件",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 21,
+      "z": 0,
+      "refs": [
+        15,
+        null,
+        null,
+        60
+      ]
+    },
+    {
+      "sid": 397641204457535,
+      "actionSid": 845042010741409,
+      "function": "战役胜利",
+      "sheet": "主事件",
+      "x": 40,
+      "y": 21,
+      "z": 0,
+      "refs": [
+        null,
+        null,
+        null,
+        4819
       ]
     },
     {
@@ -86045,7 +86419,7 @@
         null,
         null,
         null,
-        4996
+        5102
       ]
     },
     {
@@ -86060,7 +86434,7 @@
         15,
         null,
         null,
-        5070
+        5178
       ]
     },
     {
@@ -86075,7 +86449,7 @@
         15,
         null,
         null,
-        5167
+        5274
       ]
     },
     {
@@ -86090,7 +86464,7 @@
         15,
         null,
         null,
-        5170
+        5277
       ]
     },
     {
@@ -86105,7 +86479,7 @@
         15,
         null,
         null,
-        4587
+        4619
       ]
     },
     {
@@ -86120,7 +86494,7 @@
         15,
         null,
         null,
-        236
+        230
       ]
     },
     {
@@ -86150,7 +86524,7 @@
         15,
         15,
         null,
-        5177
+        5284
       ]
     },
     {
@@ -86165,7 +86539,7 @@
         15,
         15,
         null,
-        5179
+        5286
       ]
     },
     {
@@ -86180,7 +86554,7 @@
         15,
         15,
         null,
-        5180
+        5287
       ]
     },
     {
@@ -86195,7 +86569,7 @@
         15,
         15,
         null,
-        4279
+        4311
       ]
     },
     {
@@ -86252,10 +86626,10 @@
       "y": "*",
       "z": 6,
       "refs": [
-        5192,
-        1782,
+        5299,
+        1809,
         null,
-        5193
+        5300
       ]
     },
     {
@@ -86270,7 +86644,7 @@
         15,
         null,
         null,
-        5194
+        5301
       ]
     },
     {
@@ -86330,7 +86704,7 @@
         15,
         null,
         null,
-        5197
+        5304
       ]
     },
     {
@@ -86345,7 +86719,7 @@
         15,
         null,
         null,
-        5200
+        5307
       ]
     },
     {
@@ -86420,7 +86794,7 @@
         15,
         null,
         null,
-        5203
+        5310
       ]
     },
     {
@@ -86435,7 +86809,7 @@
         15,
         null,
         null,
-        5205
+        5312
       ]
     },
     {
@@ -86510,7 +86884,7 @@
         15,
         null,
         null,
-        5209
+        5316
       ]
     },
     {
@@ -86525,7 +86899,7 @@
         15,
         null,
         null,
-        5212
+        5319
       ]
     },
     {
@@ -86585,7 +86959,7 @@
         15,
         null,
         null,
-        5211
+        5318
       ]
     },
     {
@@ -86600,7 +86974,7 @@
         15,
         null,
         null,
-        5209
+        5316
       ]
     },
     {
@@ -86615,7 +86989,7 @@
         15,
         null,
         null,
-        5212
+        5319
       ]
     },
     {
@@ -86672,10 +87046,10 @@
       "y": 4,
       "z": 1,
       "refs": [
-        67,
+        60,
         null,
         null,
-        5229
+        5336
       ]
     },
     {
@@ -86687,7 +87061,7 @@
       "y": 4,
       "z": 1,
       "refs": [
-        67,
+        60,
         null,
         null,
         null
@@ -86705,7 +87079,7 @@
         null,
         null,
         null,
-        5231
+        5338
       ]
     },
     {
@@ -86720,7 +87094,7 @@
         15,
         null,
         null,
-        5233
+        5340
       ]
     },
     {
@@ -86750,7 +87124,7 @@
         null,
         null,
         null,
-        5237
+        5344
       ]
     },
     {
@@ -86765,7 +87139,7 @@
         null,
         null,
         null,
-        5241
+        5348
       ]
     },
     {
@@ -86780,7 +87154,7 @@
         null,
         null,
         null,
-        5244
+        5351
       ]
     },
     {
@@ -86795,7 +87169,7 @@
         15,
         null,
         null,
-        5250
+        5357
       ]
     },
     {
@@ -86810,7 +87184,7 @@
         15,
         null,
         null,
-        5252
+        5359
       ]
     },
     {
@@ -86825,7 +87199,7 @@
         15,
         null,
         null,
-        5253
+        5360
       ]
     },
     {
@@ -86853,9 +87227,9 @@
       "z": 2,
       "refs": [
         15,
-        2010,
+        2036,
         null,
-        5274
+        5381
       ]
     },
     {
@@ -86868,9 +87242,9 @@
       "z": 2,
       "refs": [
         15,
-        2010,
+        2036,
         null,
-        5276
+        5383
       ]
     },
     {
@@ -86883,9 +87257,9 @@
       "z": 2,
       "refs": [
         15,
-        566,
+        561,
         null,
-        5277
+        5384
       ]
     },
     {
@@ -86898,7 +87272,7 @@
       "z": 2,
       "refs": [
         15,
-        2010,
+        2036,
         null,
         null
       ]
@@ -86912,10 +87286,10 @@
       "y": 7,
       "z": 21,
       "refs": [
-        67,
+        60,
         null,
         null,
-        67
+        60
       ]
     },
     {
@@ -86927,10 +87301,10 @@
       "y": 9,
       "z": 21,
       "refs": [
-        67,
+        60,
         null,
         null,
-        5280
+        5387
       ]
     },
     {
@@ -86942,7 +87316,7 @@
       "y": 8,
       "z": 21,
       "refs": [
-        67,
+        60,
         null,
         null,
         null
@@ -86957,10 +87331,10 @@
       "y": 4,
       "z": 21,
       "refs": [
-        67,
+        60,
         null,
         null,
-        5284
+        5391
       ]
     },
     {
@@ -87215,7 +87589,7 @@
         15,
         null,
         null,
-        5311
+        5418
       ]
     },
     {
@@ -87230,7 +87604,7 @@
         null,
         null,
         null,
-        5315
+        5422
       ]
     },
     {
@@ -87245,7 +87619,7 @@
         null,
         null,
         null,
-        5317
+        5424
       ]
     },
     {
@@ -87260,7 +87634,7 @@
         null,
         null,
         null,
-        5319
+        5426
       ]
     },
     {
@@ -87275,7 +87649,7 @@
         null,
         null,
         null,
-        5321
+        5428
       ]
     },
     {
@@ -87290,7 +87664,7 @@
         15,
         null,
         null,
-        5323
+        5430
       ]
     }
   ],
