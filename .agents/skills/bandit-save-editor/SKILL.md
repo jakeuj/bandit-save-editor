@@ -1,6 +1,6 @@
 ---
 name: bandit-save-editor
-description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模擬器存檔修改器）的資源與成長編輯、存檔知識、離線版、SEO／分享預覽、GitHub Pages、專案 Wiki／Project／Discussions／Issues，以及 repo 內的實驗性 macOS ARM64 啟動器。用於此專案的進度查詢（現在做到哪、下一步做什麼）、續做下一版、開發、驗證、發布、Wiki／Project／公告／Issue 維護與 Mac／CrossOver 啟動調查；其他專案的一般 GitHub 操作或其他遊戲不適用。
+description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模擬器存檔修改器）的資源與成長編輯、存檔知識、離線版、SEO／分享預覽、GitHub Pages、專案 Wiki／Project／Discussions／Issues，以及 repo 內的實驗性 macOS ARM64 啟動器。用於此專案的遊戲版更（使用者說「遊戲版更」）、進度查詢（現在做到哪、下一步做什麼）、續做下一版、開發、驗證、發布、Wiki／Project／公告／Issue 維護與 Mac／CrossOver 啟動調查；其他專案的一般 GitHub 操作或其他遊戲不適用。
 ---
 
 # 山寨帳房 Repo 維護
@@ -14,6 +14,10 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 技能未載入或連結異常時，讀[技能載入與連結修復](references/skill-loading.md)；正常任務不執行修復。
 
 先讀 repo 的 `AGENTS.md`、`README.md` 與任務相關文件。技能提供入口與維護約束；公式、SID、指紋、實測證據及未完成項目以 repo 文件為準。舊對話 `outputs/` 的離線 HTML 不是開發來源。
+
+## 遊戲版更
+
+使用者說「遊戲版更」（或說遊戲又更新了要跟上）時，依[遊戲改版的自動流程](../../../docs/maintenance/game-update.md#自動流程遊戲版更)從 `node scripts/game-update.cjs check` 開始一路做完：例行與資料變動的版更在冒煙、測試通過後直接提交推送，不逐步詢問；判定為特別或任一步失敗才停下，回報報告的 ✖ 項目與建議做法，不提交。
 
 ## 進度查詢與承接
 
@@ -36,7 +40,7 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 | 架構與跨檔關係 | 若有 `graphify-out/graph.json` 先查圖譜並核對目前來源；建立、更新與完整性限制見 `docs/research/repository-graph.md` |
 | 存檔讀寫、名稱、經驗、知識重建 | [存檔參考](references/save-format.md)、`src/core.js`、`docs/research/save-knowledge.md`、`docs/maintenance/core.md` |
 | 裝備、丹藥、資質、技藝上限、天賦、批次或職業圖鑑 | [功能導覽](references/feature-guide.md) 的對應條目，接著讀該功能研究（舊功能另有 `sdd/` 歷史紀錄；新功能不建 SDD） |
-| 遊戲改版、來源快取、原生驗證 | `docs/maintenance/game-update.md`、`docs/maintenance/migration.md`、[操作補充](references/operations.md) 的版本更新入口；冒煙工具與原生陷阱見 `docs/maintenance/native-lessons.md` |
+| 遊戲改版、來源快取、原生驗證 | `docs/maintenance/game-update.md`（「遊戲版更」走該頁自動流程與 `scripts/game-update.cjs`）、`docs/maintenance/migration.md`、[操作補充](references/operations.md) 的版本更新入口；冒煙工具與原生陷阱見 `docs/maintenance/native-lessons.md` |
 | 開發測試與驗收 | `docs/testing.md`；新增功能依 `docs/maintenance/lightweight.md`，隱藏原生測試先讀 `docs/maintenance/migration.md`「本機開發快取」並核對 `.local/game-sources.json` 的 `preferredDevelopmentSourceId` |
 | PWA、直接開檔、離線驗收 | `docs/maintenance/pwa.md`、`docs/testing.md` |
 | 提交、發布、版本標示、SEO、分享預覽 | `docs/maintenance/release.md`、[Pages 參考](references/pages.md)；交付證據界線見[操作補充](references/operations.md) |

@@ -43,6 +43,10 @@ def digest(path):
 def patch_runtime(script):
     if hashlib.sha256(script).hexdigest() not in SCRIPT_SHA256:
         raise SystemExit("遊戲版本已變更：請重新核對路徑修正，尚未修改任何遊戲副本。")
+    return apply_path_patches(script)
+
+
+def apply_path_patches(script):
     text = script.decode("utf-8")
     replacements = {
         'this._appFolder=this._path["dirname"](this._process["execPath"])+this._slash':
@@ -84,7 +88,19 @@ def main():
     parser.add_argument("--runtime-archive", type=Path, help="Reuse an official downloaded archive")
     parser.add_argument("--verify-runtime", type=Path, metavar="GAME_DIR",
                         help="Only check a prepared game directory against --source; writes nothing")
+    parser.add_argument("--review-script", action="store_true",
+                        help="Report path patch counts of --source before its runtime is registered; writes nothing")
     args = parser.parse_args()
+    if args.review_script:
+        with zipfile.ZipFile(args.source.expanduser().resolve() / "package.nw") as package:
+            original = package.read("scripts/c3runtime.js")
+        counts = apply_path_patches(original)[1]
+        print(json.dumps({
+            "original_c3runtime_sha256": hashlib.sha256(original).hexdigest(),
+            "registered": SCRIPT_SHA256.get(hashlib.sha256(original).hexdigest()),
+            "path_replacements": counts,
+        }, ensure_ascii=False))
+        return
     if args.verify_runtime:
         return verify_runtime(args.source.expanduser().resolve(), args.verify_runtime.expanduser().resolve())
     source, output = args.source.expanduser().resolve(), args.output.expanduser().resolve()

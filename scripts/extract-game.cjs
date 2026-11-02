@@ -114,16 +114,18 @@ function eventDigest(game, sids) {
 const planeNames = ['山寨與全局', '存檔識別與建築', '角色基本資料', '招募候選角色', '角色職業等級', '角色職業經驗', '主地圖格網', '背包物品', '未辨識層 8', '裝備庫與穿戴', '戰鬥地圖格網', '城市商店', '角色衍生屬性', '鍛造佇列', '未辨識層 14', '引導任務', '角色重生／渡劫', '內丹', '靈物背包', '靈物配置', '角色戰鬥位置', '設施進程', '武庫'];
 const tableSpecs = { materials: ['cl', 1, 3], characters: ['js', 1, null], professions: ['zy', 1, 2], attributes: ['sx', 1, 2], items: ['wp', 1, 5], technologies: ['kj', 1, 2], buildings: ['jz', 1, 3], quests: ['rw', 1, 2], talents: ['tf', 1, 4], facilities: ['ss', 1, 3], relics: ['lw', 1, 3] };
 
-function createCatalog(game) {
-  const reviewed = {
-    '6661d77209c0e98069219965908fd4d6b9ee3dca84763c158dcd5f0a863df665': { version: 'V1.0.9.1', runtimes: ['b5bf45f38e8165bbd5093702695486fe77797a27914bba8b1fdd5f46658396bc','58d634814f9ee8145ad553ffde60a6a511b5f68cf27f7ba86933d66216901998'] },
-    '32a36accc1b97e9bb3498eb3be76950e1e72b2e8f7a0cf9ce293b57aa5e0d820': { version: 'V1.0.10.2', runtimes: ['1e1643722efc032824881f03ce4d81df1135e6a8cd8e08d9fd87e56e480ac9f6'] },
-    'aac06ce18a840ae221d7683fba21182b0dcf4bb7ae1caf3431199264a1c5f62e': { version: 'V1.0.11.2', expressionOffset: 11, runtimes: ['3e0febeb8342138ed47d9e8499e3646f4e8ddc2ce89a9faa0bebbad9ba83280e'] },
-    '950a1c1d586617292e9c1497b09facd064988c1f720db4c2c262b0f9cd42adbf': { version: 'V1.0.12.2', expressionOffset: 15, runtimes: ['e6a6d629bf7320344445ac7e6e47085211496e5b6a9498aec13ab1a121abd04b'] },
-    '9e5697adeb11a0c1daf40be6086b56f58755562f3560ad1772d771445e167ed2': { version: 'V1.0.13.0', expressionOffset: 75, runtimes: ['2546ca0823f858f3ce2a2e1dd013ed70f7e4d330e8d6c33d7ce75fb2a75d6936'] },
-    'a8b816ace9fa128dba89c1e3dcea43d5ed5fcb54855e894d8b1182f1931aaa0b': { version: 'V1.0.14.0', expressionOffset: 77, runtimes: ['9ced70d01f1a1b82da6952b21130401a017f3a2953b579ece1a97aedbb9cb097'] },
-    '659df857761b611f113d7609715e4e73bef0e86e74ce202ab5b09f93d37ffae2': { version: 'V1.0.15.0', expressionOffset: 77, runtimes: ['efff92f5ad93a0e014f7afb841da59c422f31d3420872154555f8f21975232d2'] }
-  }[game.fingerprints['data.json']];
+// data.json fingerprint -> reviewed version. scripts/game-update.cjs --apply appends new routine versions here.
+const reviewedVersions = {
+  '6661d77209c0e98069219965908fd4d6b9ee3dca84763c158dcd5f0a863df665': { version: 'V1.0.9.1', runtimes: ['b5bf45f38e8165bbd5093702695486fe77797a27914bba8b1fdd5f46658396bc','58d634814f9ee8145ad553ffde60a6a511b5f68cf27f7ba86933d66216901998'] },
+  '32a36accc1b97e9bb3498eb3be76950e1e72b2e8f7a0cf9ce293b57aa5e0d820': { version: 'V1.0.10.2', runtimes: ['1e1643722efc032824881f03ce4d81df1135e6a8cd8e08d9fd87e56e480ac9f6'] },
+  'aac06ce18a840ae221d7683fba21182b0dcf4bb7ae1caf3431199264a1c5f62e': { version: 'V1.0.11.2', expressionOffset: 11, runtimes: ['3e0febeb8342138ed47d9e8499e3646f4e8ddc2ce89a9faa0bebbad9ba83280e'] },
+  '950a1c1d586617292e9c1497b09facd064988c1f720db4c2c262b0f9cd42adbf': { version: 'V1.0.12.2', expressionOffset: 15, runtimes: ['e6a6d629bf7320344445ac7e6e47085211496e5b6a9498aec13ab1a121abd04b'] },
+  '9e5697adeb11a0c1daf40be6086b56f58755562f3560ad1772d771445e167ed2': { version: 'V1.0.13.0', expressionOffset: 75, runtimes: ['2546ca0823f858f3ce2a2e1dd013ed70f7e4d330e8d6c33d7ce75fb2a75d6936'] },
+  'a8b816ace9fa128dba89c1e3dcea43d5ed5fcb54855e894d8b1182f1931aaa0b': { version: 'V1.0.14.0', expressionOffset: 77, runtimes: ['9ced70d01f1a1b82da6952b21130401a017f3a2953b579ece1a97aedbb9cb097'] },
+  '659df857761b611f113d7609715e4e73bef0e86e74ce202ab5b09f93d37ffae2': { version: 'V1.0.15.0', expressionOffset: 77, runtimes: ['efff92f5ad93a0e014f7afb841da59c422f31d3420872154555f8f21975232d2'] }
+};
+
+function createCatalog(game, reviewed = reviewedVersions[game.fingerprints['data.json']]) {
   if(!reviewed) {
     // Catalog coordinates and growth formulas must be reviewed when the event data changes.
     throw Error('遊戲事件指紋已變更，請先重新核對欄位及規則；未產生可編輯知識。');
@@ -200,6 +202,23 @@ function createCatalog(game) {
   return { glossary, catalog: { version: 1, game: 'szmnqea', gameVersion: reviewed.version, setEquipmentLevel, treasureLevel, setEquipmentQuality, randomCharacterGrowth:require('./random-character-growth-data.cjs')(game), randomCharacterSkillCaps:require('./random-character-skill-caps-data.cjs').extract(game,eventDigest), randomCharacterTalents:require('./random-character-talents-data.cjs').extract(game,eventDigest), equipmentQuality, equipmentWorkflowLimits, affixReplacement, affixReplacementLimits, cityLayers:require('./city-layer-data.cjs').extract(game,glossary), fingerprints: game.fingerprints, batch2Fingerprints, batch2Data, batch2Limits:{equipmentAffixCoefficient:{plane:9,maxTier:9,maxQuality:6,selectedSlotOnly:true},pillAptitudeBonus:{maxStage:0,integerBonus:true,ownedPillRequired:true}}, counts: { functions: game.functions.length, setXYZ: writes.length, arrayActions: game.operations.length,readSites:game.reads.length }, planes, catalogs, functions: game.functions, evidence, editingLimits: {equipment:{max:1000},training:{max:1000},technology:{max:1000,maxById:{33:299}}}, verification: { backpackSetEquipmentLevel:false,setEquipmentLevel:false,backpackTreasureLevel:false,treasureLevel:false,backpackSetEquipmentQualityUpgrade:false,backpackSetEquipmentQualityDowngrade:false,setEquipmentQualityUpgrade:false,setEquipmentQualityDowngrade:false,backpackSetEquipmentLevelCrossPool:false,setEquipmentLevelCrossPool:false,randomCharacterTalents:false, randomCharacterSkillCaps:false, randomCharacterBaseAptitudes:false,randomCharacterBaseAptitudesAscended:false,randomCharacterTalentsAscended:false,randomCharacterSkillCapsAscended:false,backpackEquipmentQualityUpgrade:false,backpackEquipmentQualityDowngrade:false,equipmentQualityUpgrade:false,equipmentQualityDowngrade:false,backpackEquipmentLevel:false,backpackEquipmentLevelAdvanced:false,backpackEquipmentAffixCoefficient:false,backpackEquipmentAffixReplacement:false,equipmentAffixInitialSelection:false,equipmentNewItemMarker:false,equipmentAffixReplacement:false,equipmentAffixCoefficient:false,pillAptitudeBonus:false,pillAptitudeBonusDecimal:false,pillAptitudeBonusAscended:false,relicAttributes:false,wallEnhancementLevel:false,cityLayerLevel:false,ascensionQuality:false,backpackInnerPillLevel:false,innerPillLevel:false,ascendedInnerPillLevel:false,basicTechnologyLevel:false,buildingLevel:false,placedRelicAttributes:false,pillAptitudeBonusAdvanced:false,recruitTechnologyAdvanced:false,equipmentAffixCoefficientAdvanced:false,equipmentSixthAffix:false,armoryEquipment:false,names: false, characterExperience: false, professionExperience: false, skillExperience: false, equipmentLevel:false,equipmentLevelAdvanced:false,professionTrainingCap:false,professionTrainingCapAdvanced:false,advancedTechnologyLevel:false,advancedTechnologyLevelAdvanced:false } } };
 }
 
+// Carry reviewed rows and open flags from the previous catalog; close the flags whose source data changed.
+function mergeCatalog(old, catalog) {
+  // Static caches lack zddt.json; keep the reviewed city rows of the same build, close the gate when they change.
+  if (catalog.cityLayers === null && old.gameVersion === catalog.gameVersion) catalog.cityLayers = old.cityLayers ?? null;
+  if (JSON.stringify(old.fingerprints) === JSON.stringify(catalog.fingerprints)) catalog.verification = {...catalog.verification,...old.verification};
+  if(!require('./set-equipment-level-data.cjs').canPreserve(old,catalog))for(const group of require('./set-equipment-level-data.cjs').groups)catalog.verification[group]=false;
+  if(!require('./random-character-skill-caps-data.cjs').canPreserve(old,catalog))catalog.verification.randomCharacterSkillCaps=false;
+  if(!require('./random-character-talents-data.cjs').canPreserve(old,catalog))catalog.verification.randomCharacterTalents=false;
+  if(JSON.stringify(old.randomCharacterGrowth)!==JSON.stringify(catalog.randomCharacterGrowth)||JSON.stringify(old.batch2Data.talents)!==JSON.stringify(catalog.batch2Data.talents)||JSON.stringify(old.batch2Data.items)!==JSON.stringify(catalog.batch2Data.items)||JSON.stringify(old.batch2Fingerprints)!==JSON.stringify(catalog.batch2Fingerprints))catalog.verification.randomCharacterBaseAptitudes=false;
+  if(JSON.stringify(old.equipmentQuality)!==JSON.stringify(catalog.equipmentQuality)||JSON.stringify(old.batch2Data.items)!==JSON.stringify(catalog.batch2Data.items)||JSON.stringify(old.equipmentWorkflowLimits)!==JSON.stringify(catalog.equipmentWorkflowLimits)||JSON.stringify(old.batch2Fingerprints)!==JSON.stringify(catalog.batch2Fingerprints))for(const group of ['backpackEquipmentQualityUpgrade','backpackEquipmentQualityDowngrade','equipmentQualityUpgrade','equipmentQualityDowngrade'])catalog.verification[group]=false;
+  if(JSON.stringify(old.equipmentWorkflowLimits)!==JSON.stringify(catalog.equipmentWorkflowLimits)||JSON.stringify(old.affixReplacement)!==JSON.stringify(catalog.affixReplacement)||JSON.stringify(old.batch2Data.items)!==JSON.stringify(catalog.batch2Data.items)||JSON.stringify(old.batch2Fingerprints)!==JSON.stringify(catalog.batch2Fingerprints))for(const group of ['backpackEquipmentLevel','backpackEquipmentLevelAdvanced','backpackEquipmentAffixCoefficient','backpackEquipmentAffixReplacement','equipmentAffixInitialSelection','equipmentNewItemMarker','armoryEquipment'])catalog.verification[group]=false;
+  if(JSON.stringify(old.affixReplacement)!==JSON.stringify(catalog.affixReplacement)||JSON.stringify(old.affixReplacementLimits)!==JSON.stringify(catalog.affixReplacementLimits)||JSON.stringify(old.batch2Fingerprints)!==JSON.stringify(catalog.batch2Fingerprints))catalog.verification.equipmentAffixReplacement=false;
+  if(JSON.stringify(old.cityLayers)!==JSON.stringify(catalog.cityLayers))catalog.verification.cityLayerLevel=false;
+  if(JSON.stringify(old.batch2Fingerprints)!==JSON.stringify(catalog.batch2Fingerprints)||JSON.stringify(old.batch2Data)!==JSON.stringify(catalog.batch2Data)||JSON.stringify(old.batch2Limits)!==JSON.stringify(catalog.batch2Limits)){catalog.verification.equipmentAffixCoefficient=false;catalog.verification.pillAptitudeBonus=false;catalog.verification.pillAptitudeBonusDecimal=false;}
+  return catalog;
+}
+
 if (require.main === module) {
   const args = process.argv.slice(2), value = (flag, fallback) => { const i = args.indexOf(flag); return i < 0 ? fallback : args[i + 1]; };
   if (args.includes('--help') || !value('--source')) { console.log('node scripts/extract-game.cjs --source /path/to/unpacked/game [--output knowledge/catalog.json] [--audit /outside/repo/audit.json]\n未知版本只做分析：加上 --audit-only --audit /outside/repo/audit.json，不產生或修改知識目錄。'); process.exit(args.includes('--help') ? 0 : 1); }
@@ -224,25 +243,11 @@ if (require.main === module) {
   }
   const { glossary, catalog } = createCatalog(game);
   const output = path.resolve(value('--output', 'knowledge/catalog.json'));
-  if (fs.existsSync(output)) {
-    const old = JSON.parse(fs.readFileSync(output, 'utf8'));
-    // Static caches lack zddt.json; keep the reviewed city rows of the same build, close the gate when they change.
-    if (catalog.cityLayers === null && old.gameVersion === catalog.gameVersion) catalog.cityLayers = old.cityLayers ?? null;
-    if (JSON.stringify(old.fingerprints) === JSON.stringify(catalog.fingerprints)) catalog.verification = {...catalog.verification,...old.verification};
-    if(!require('./set-equipment-level-data.cjs').canPreserve(old,catalog))for(const group of require('./set-equipment-level-data.cjs').groups)catalog.verification[group]=false;
-    if(!require('./random-character-skill-caps-data.cjs').canPreserve(old,catalog))catalog.verification.randomCharacterSkillCaps=false;
-    if(!require('./random-character-talents-data.cjs').canPreserve(old,catalog))catalog.verification.randomCharacterTalents=false;
-    if(JSON.stringify(old.randomCharacterGrowth)!==JSON.stringify(catalog.randomCharacterGrowth)||JSON.stringify(old.batch2Data.talents)!==JSON.stringify(catalog.batch2Data.talents)||JSON.stringify(old.batch2Data.items)!==JSON.stringify(catalog.batch2Data.items)||JSON.stringify(old.batch2Fingerprints)!==JSON.stringify(catalog.batch2Fingerprints))catalog.verification.randomCharacterBaseAptitudes=false;
-    if(JSON.stringify(old.equipmentQuality)!==JSON.stringify(catalog.equipmentQuality)||JSON.stringify(old.batch2Data.items)!==JSON.stringify(catalog.batch2Data.items)||JSON.stringify(old.equipmentWorkflowLimits)!==JSON.stringify(catalog.equipmentWorkflowLimits)||JSON.stringify(old.batch2Fingerprints)!==JSON.stringify(catalog.batch2Fingerprints))for(const group of ['backpackEquipmentQualityUpgrade','backpackEquipmentQualityDowngrade','equipmentQualityUpgrade','equipmentQualityDowngrade'])catalog.verification[group]=false;
-    if(JSON.stringify(old.equipmentWorkflowLimits)!==JSON.stringify(catalog.equipmentWorkflowLimits)||JSON.stringify(old.affixReplacement)!==JSON.stringify(catalog.affixReplacement)||JSON.stringify(old.batch2Data.items)!==JSON.stringify(catalog.batch2Data.items)||JSON.stringify(old.batch2Fingerprints)!==JSON.stringify(catalog.batch2Fingerprints))for(const group of ['backpackEquipmentLevel','backpackEquipmentLevelAdvanced','backpackEquipmentAffixCoefficient','backpackEquipmentAffixReplacement','equipmentAffixInitialSelection','equipmentNewItemMarker','armoryEquipment'])catalog.verification[group]=false;
-    if(JSON.stringify(old.affixReplacement)!==JSON.stringify(catalog.affixReplacement)||JSON.stringify(old.affixReplacementLimits)!==JSON.stringify(catalog.affixReplacementLimits)||JSON.stringify(old.batch2Fingerprints)!==JSON.stringify(catalog.batch2Fingerprints))catalog.verification.equipmentAffixReplacement=false;
-    if(JSON.stringify(old.cityLayers)!==JSON.stringify(catalog.cityLayers))catalog.verification.cityLayerLevel=false;
-    if(JSON.stringify(old.batch2Fingerprints)!==JSON.stringify(catalog.batch2Fingerprints)||JSON.stringify(old.batch2Data)!==JSON.stringify(catalog.batch2Data)||JSON.stringify(old.batch2Limits)!==JSON.stringify(catalog.batch2Limits)){catalog.verification.equipmentAffixCoefficient=false;catalog.verification.pillAptitudeBonus=false;catalog.verification.pillAptitudeBonusDecimal=false;}
-  }
+  if (fs.existsSync(output)) mergeCatalog(JSON.parse(fs.readFileSync(output, 'utf8')), catalog);
   fs.mkdirSync(path.dirname(output), { recursive: true });
   fs.writeFileSync(output, JSON.stringify(catalog, null, 2) + '\n');
   fs.writeFileSync(path.join(path.dirname(output), 'traditional-names.json'), JSON.stringify(glossary, null, 2) + '\n');
   writeAudit();
   console.log(JSON.stringify({ ...catalog.counts, planes: catalog.planes.length, catalogRows: Object.values(catalog.catalogs).reduce((n, rows) => n + rows.length, 0) }));
 }
-module.exports = { inspectGame, createCatalog, eventDigest, semanticDigest: (...args) => require('./migration-analysis.cjs').semanticDigest(...args) };
+module.exports = { inspectGame, createCatalog, mergeCatalog, reviewedVersions, eventDigest, semanticDigest: (...args) => require('./migration-analysis.cjs').semanticDigest(...args) };

@@ -7,7 +7,7 @@
 | 情境 | 讀取位置 |
 | --- | --- |
 | 開發或原生測試：定位完整來源、獨立 runtime、manifest 與快取冒煙證據 | `docs/maintenance/migration.md`「本機開發快取」 |
-| 遊戲改版：本機索引、公告、build／套件指紋、事件比對與冒煙 | 先讀 `docs/maintenance/game-update.md`，再依 `docs/maintenance/migration.md`「日常更新入口」解來源；公告來源與 API 備援見 `docs/maintenance/core.md`「重建知識與開放寫入」 |
+| 遊戲改版（「遊戲版更」）：公告、build／套件指紋、事件比對與冒煙 | `docs/maintenance/game-update.md`「自動流程」，由 `scripts/game-update.cjs` 自行解精簡來源、判定與冒煙；`docs/maintenance/migration.md`「日常更新入口」只在要用 `--plan` 或本機索引時讀；公告來源與 API 備援見 `docs/maintenance/core.md`「重建知識與開放寫入」 |
 | 未知來源的純分析、SID 與 expression 追查 | [存檔參考](save-format.md#重建知識) |
 | 舊複合證明的沿用、續跑及寫回（歷史，讀舊證據或診斷時） | `docs/maintenance/migration.md`「舊複合遷移工具（歷史）」 |
 

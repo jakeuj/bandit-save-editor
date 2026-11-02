@@ -14,6 +14,8 @@ python3 launcher/prepare-macos.py
 
 `--verify-runtime GAME_DIR` 只做檢查、不寫入：確認準備好的副本的 `scripts/c3runtime.js` 恰好等於 `--source` 原始腳本套用已核對路徑修正的結果，並輸出原始與修正後的 SHA-256。隔離驗證工具用它確認 Mac 副本與 catalog 指紋的對應關係。
 
+`--review-script` 也只做檢查：對 `--source` 的 `package.nw` 套用路徑修正，不核對白名單，輸出原始指紋、是否已登錄與四處命中數。`scripts/game-update.cjs check` 用它判斷新版能否自動登錄（歷來都是 1/1/4/4），`apply` 再把指紋加進 `SCRIPT_SHA256`。
+
 準備完成後，雙擊 `~/bandit-mac-port/啟動山賊.command`。遊戲必須由此啟動器開啟，因為修正後的資料根目錄使用啟動時的 working directory。
 
 - Steam 安裝目錄與原始存檔不會被改動。

@@ -14,6 +14,8 @@
 
 ## 日常更新入口
 
+遊戲版更先走[遊戲改版的自動流程](game-update.md#自動流程遊戲版更)：`scripts/game-update.cjs` 自行解精簡來源並比對，不需要先跑下列 `--plan`。本節留給要用 `--plan` 分析未知來源或維護本機索引時。
+
 新工作階段先讀 `.local/game-sources.json`；人類可查 `.local/game-sources.md`。這是 Git 忽略的本機版本／路徑索引，包含來源種類、已核對 build、套件與 15 來源雜湊，以及固定快取根目錄。先查索引並核對檔案，不重掃磁碟或重解同一包；`--package` 沿用索引中的 artifacts 根目錄即可命中既有快取，舊版本比較直接使用記錄的 `--source`。套件已更新或快取缺失／不符時才補建並更新索引。索引只記 metadata，真實存檔及 payload 留在 repo 外，機器路徑不提交。
 
 1. 核對正式分支公告、公告日期與 `appmanifest_4267800.acf` buildid。公告協助縮小範圍，實際判斷仍以來源差異為準。
