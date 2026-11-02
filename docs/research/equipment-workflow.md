@@ -113,3 +113,17 @@ IAB的確認框曾阻塞dialog API及後續命令；改以原生Windows工具辨
 **合成測試**：`tests/armory-equipment.test.cjs`（旗標登記；關閉時十種寫入全部拒絕而背包照常；開啟時每種寫入只改目標 token、標籤為武庫、undo／restore 回原 bytes；套裝品質候選走背包群組；歸屬與特殊狀態拒絕與 z7 一致；清單與批次只在 23 層時含武庫）。瀏覽器 `tests/browser/armory-equipment.spec.cjs`（1280／390px 選武庫、套用、下載逐字比對、重讀再調；旗標關閉時按鈕停用）。
 
 **隔離遊戲冒煙（2026-10-27，Mac Apple M4 Max、CrossOver 正式分支 V1.0.14.0，通過）**：基準沿用 v2.34 遊戲寫出的 23 層存檔（SHA-256 `fbdb5677…`）。`verify-game.cjs` 以候選 catalog（只開 `armoryEquipment`）把武庫 #1 鐮刀（T1 Q1 Lv1000）降到 10、#2 礦鍬（T1 Q1 Lv11）降到 5 再升品質 2（主係數 100→130、槽 1 暴擊幾率 25.5）；雲存檔載入、原版存檔、新 PID 讀回一致。`verify-native-lifecycle.cjs armoryEdited`：兩列 `仓库取出` 到背包再 `仓库存入` 回武庫，50 欄不變；換裝模式下角色 2 以 `穿戴装备(…,22)` 從武庫穿上 #2，除 y7 外 50 欄不變，`装备属性计算` 穿刺攻擊 14／採礦力 11／敏捷 0.46 等於 `装备主属性` 與修改器的品質預覽；`卸下装备(…,22)` 回武庫整列不變，原穿戴的柴斧依換裝模式進武庫。第二輪原版存檔、新 PID 讀回一致（3 個 PID、4 次 assert）。修改器重讀遊戲寫出檔逐字元往返，兩列仍可編輯、Lv16 超出一般上限被拒。腳本與結果在 repo 外 `armory-equipment-20261027/`。
+
+## 實作摘要（2026-11-02，v2.39 備用套裝裝備編輯）
+
+依[輕量開發流程](../maintenance/lightweight.md)實作，不建 SDD。使用者決定：裝備類全開、內丹除外；資質相關操作維持拒絕；旗標 `backupSetEquipment`，family `equipmentWorkflow`。
+
+**欄位與入口**：V1.0.17.0 的 `角色换装` 只交換 z2 y16–21 與 z23 y1–6 的 z9 列號（z23 y0 記目前套裝），收起的列內容不變、owner 仍指向角色，交換後呼叫 `刷新单角色全属性`；屬性計算不讀 z23。所以收起的列和穿戴中的列一樣編輯，沒有新具名入口。core 加 `backupSetReferences(m,itemId,owner,slot)`：一般裝備（`editingInfo`，等級、詞條係數與超限、精準洗練、品質、第六槽都經過它）、`setEquipmentLevelInfo`、`setEquipmentQualityCandidateInfo`、`treasureLevelInfo` 在 z9 找不到穿戴參照時呼叫它，旗標開啟就算一筆參照，之後的雙向指標檢查照舊。UI 的裝備選單把這種列標成「備用套裝・角色名」（`knowledge-ui.js` 的 `storedInBackupSet`）。
+
+**拒絕條件**：旗標關閉時照 v2.37 拒絕（「請先在遊戲換回這套」）；owner 不是有效角色、同一列在 z23 出現多次、存放部位與裝備部位不符時拒絕（「備用套裝指標與裝備部位不一致」）；內丹等級（`innerPillLevelInfo`）不論旗標都拒絕，換回時內丹入體的行為沒有核對；`aptitudeNeutralEquipment`、`characterAptitudeSource` 遇到備用套裝裝備仍拒絕資質相關操作。z23 欄位、舊 `set` 與自訂座標仍唯讀。
+
+**旗標**：`backupSetEquipment`（`extract-game.cjs` 預設 false，與武庫一樣在 `equipmentWorkflow` 欄位限制或裝備資料變更時關閉），登記在 `verification-requirements.cjs`／`verification-suite.cjs` 的 `equipmentWorkflow`。
+
+**合成測試**：`tests/backup-set.test.cjs`（旗標登記；關閉時照舊拒絕；開啟時一般裝備等級只寫 `[1,6,9]`、群組 `editing:equipment:9:1`，寶物等級可改，undo／restoreAll 回原 bytes，z23 仍唯讀；開啟時內丹、資質操作與部位不符仍拒絕；模擬 `角色换装` 換回後讀到修改後等級）。
+
+**隔離遊戲冒煙（2026-11-02，Mac Apple M4 Max、CrossOver 正式分支 V1.0.17.0，通過）**：基準為 v2.38 冒煙遊戲寫出的 24 層存檔（SHA-256 `a03d3a3b…`，角色 2 在套裝 1，原套裝 0 的 7,12,14,13,41,0 收在 z23）。`verify-game.cjs` 以候選 catalog（只開 `backupSetEquipment`）把收起的 #7 柴斧（T1 Q1）等級 10→5，雲存檔載入、原版存檔、新 PID 讀回一致。`verify-native-lifecycle.cjs outfitSwap`（`item: {id: 7, level: 5, from: 10}`）原生 `角色换装(2,0,…)`：z23 y0 1→0、z2 y16–21 變回 7,12,14,13,41,0；#7 穿戴後 y6=5、y7=2，`装备属性计算` 伐木力 9 等於 Lv5 的 `装备主属性`（Lv10 為 14），物理攻擊 43、力量 2.91 不小於柴斧本身的主屬性。第二輪原版存檔、新 PID 讀回一致（3 個 PID、4 次 assert），結束後沒有殘留程序；修改器重讀遊戲寫出檔（`17e7b0c9…`）逐字元往返，#7 已穿戴、Lv16 超出一般上限被拒。腳本與結果在 repo 外 `backup-set-edit-20261102/`。

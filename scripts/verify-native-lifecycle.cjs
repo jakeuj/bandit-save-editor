@@ -612,18 +612,31 @@ async function basicTechnology(state, s) {
 
 // Backup gear set after #30 备用装备 is unlocked: 科技解锁判断(30) gates only the two 换装 buttons that 刷新底部菜单 creates for the
 // 角色 page; 角色换装 itself reads no tech. One native swap moves the worn z9 rows (z2 y16–21) into z23 y1–6, brings the
-// stored ones back and sets the z23 y0 set number; its own 刷新底部菜单 call then shows both buttons.
+// stored ones back and sets the z23 y0 set number; its own 刷新底部菜单 call then shows both buttons. The character may
+// start with nothing worn (all gear stored). Optional item {id, level, from}: a stored row the modifier edited
+// (backupSetEquipment) comes back worn with the edited level, and after 刷新单角色全属性 装备属性计算 reaches its 装备主属性,
+// which differs from the one at the original level.
 async function outfitSwap(state, s) {
-  const {character, set} = s.outfitSwap;
+  const {character, set, item} = s.outfitSwap;
   const read = `const read=()=>({set:a.At(${character},0,23),stored:[1,2,3,4,5,6].map(y=>a.At(${character},y,23)),worn:[16,17,18,19,20,21].map(y=>a.At(${character},y,2))});`;
   const out = await evaluate(state, `(()=>{${prefix}r.SetTimeScale(0);${read}const before=read(),unlock=call('科技解锁判断',30);call('角色换装',${character},${set},0,0,0,0,0,0);return {before,unlock,after:read()};})()`);
   await pause(500);
   out.buttons = await evaluate(state, `(()=>{${prefix}return r.GetObjectClassByName('换装按钮').GetInstances().map(i=>i.GetInstanceVariableValue(7)).sort();})()`);
   const {before, unlock, after, buttons} = out;
   assert.equal(unlock, 1, '科技解锁判断(30) does not see the unlock');
-  assert.ok(before.set !== set && before.worn.some(Boolean), 'Character already on that set or wears nothing');
+  assert.ok(before.set !== set && (before.worn.some(Boolean) || before.stored.some(Boolean)), 'Character already on that set or holds no gear');
   assert.deepEqual([after.set, after.worn, after.stored], [set, before.stored, before.worn], '角色换装 did not swap the gear sets');
   assert.deepEqual(buttons, [0, 1], '刷新底部菜单 did not show both 换装 buttons');
+  if (item) {
+    out.item = await evaluate(state, `(()=>{${prefix}const wp=r.GetObjectClassByName('wp').GetInstances()[0].GetSdkInstance(),v=record(${item.id},9),effects=[];
+      for(let s=0;s<3;s++){const attr=wp.At(v[1],8+s,0);if(attr>0)effects.push({attr,actual:call('装备属性计算',${character},attr,0,0,0,0,0,0,0),main:call('装备主属性',v[6],v[3],attr,v[8],wp.At(v[1],11+s,0),'主属性',0,v[5]),original:call('装备主属性',${item.from},v[3],attr,v[8],wp.At(v[1],11+s,0),'主属性',0,v[5])});}
+      return {record:v,effects};})()`);
+    const {record, effects} = out.item;
+    assert.ok(after.worn.includes(item.id), 'Edited row is not worn after the swap');
+    assert.deepEqual([record[6], record[7]], [item.level, character], 'Edited row lost its level or owner');
+    assert.ok(effects.length > 0, 'Edited row has no main attribute');
+    for (const e of effects) assert.ok(Number.isFinite(e.actual) && Number.isFinite(e.main) && e.actual >= e.main && e.main !== e.original, 'Effect does not follow the edited level ' + e.attr);
+  }
   for (let y = 0; y <= 6; y++) state.cells.push([character, y, 23]);
   for (let y = 16; y <= 21; y++) state.cells.push([character, y, 2]);
   return out;

@@ -87729,6 +87729,7 @@
     "equipmentAffixCoefficientAdvanced": true,
     "equipmentSixthAffix": true,
     "armoryEquipment": true,
+    "backupSetEquipment": true,
     "names": true,
     "characterExperience": true,
     "professionExperience": true,

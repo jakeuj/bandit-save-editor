@@ -54,9 +54,18 @@
  const ARMORY=22,equipmentPlane=(m,plane)=>[7,9,ARMORY].includes(plane)&&plane<m.original.size[2];
  const backpackLike=plane=>plane===7||plane===ARMORY,planeName=plane=>plane===7?'背包':plane===ARMORY?'武庫':'裝備庫';
  // V1.0.17.0 backup set (z23, 角色换装): y0 is the active set number, y1–6 the z9 rows of the stored set. Those rows keep
- // owner=character but no z2 slot points at them; editing them is not smoke-tested yet, so they are refused with this reason.
+ // owner=character but no z2 slot points at them. Behind backupSetEquipment the equipment editors treat a stored row as the
+ // owner's one worn reference (z23 y1–6 mirror z2 y16–21 slot for slot); closed, they refuse with this reason. Inner pills
+ // and aptitude edits stay refused: the swap back would bring the stored items into 内丹入体／属性计算.
  const BACKUP_SET=23,inBackupSet=(m,itemId,owner)=>BACKUP_SET<m.original.size[2]&&owner>0&&[1,2,3,4,5,6].some(slot=>get(m,C(owner,slot,BACKUP_SET))===itemId);
  const backupSetReason='這件裝備在角色的備用套裝中，請先在遊戲換回這套再修改。',backupSetAptitudeReason='角色的備用套裝有裝備，請先在遊戲卸下備用套裝再修改資質相關項目。';
+ function backupSetReferences(m,itemId,owner,slot){
+  if(!inBackupSet(m,itemId,owner))return 0;
+  if(KNOWLEDGE.verification.backupSetEquipment!==true)throw Error(backupSetReason);
+  const slots=[1,2,3,4,5,6].filter(s=>get(m,C(owner,s,BACKUP_SET))===itemId);
+  if(!activeCharacter(m,owner)||slots.length!==1||slots[0]!==slot)throw Error('備用套裝指標與裝備部位不一致。');
+  return 1;
+ }
  const planeVerified=(plane,group)=>KNOWLEDGE.verification[group]===true&&(plane!==ARMORY||KNOWLEDGE.verification.armoryEquipment===true);
  function buildingLevel(m,template){
   let level=0;
@@ -113,7 +122,7 @@
   for(let x=1;plane===9&&x<m.original.size[0];x++)for(let slot=1;slot<=6;slot++)if(get(m,C(x,15+slot,2))===itemId){
    references++;if(owner!==x||!activeCharacter(m,x)||slot!==t.slot)fail('穿戴雙向指標不一致。');
   }
-  if(plane===9&&!references&&inBackupSet(m,itemId,owner))fail(backupSetReason);
+  if(plane===9&&!references)references=backupSetReferences(m,itemId,owner,t.slot);
   if(backpackLike(plane)&&owner!==0||owner>0&&(!activeCharacter(m,owner)||references!==1)||owner===0&&references!==0)fail('穿戴雙向指標不一致。');
   const group=backpackLike(plane)?'backpackSetEquipmentLevel':'setEquipmentLevel',normalMax=10+5*(quality-1);
   return {kind:'equipment',isSet:true,id:itemId,itemId,plane,name:item.name,coordinate:C(itemId,6,plane),current:level,min:1,normalMax,advancedMax:normalMax,advancedVerified:false,verified:planeVerified(plane,group),group,record,template:t,metadataStatus:'preserved; independent-native-proof-required'};
@@ -135,7 +144,7 @@
   for(let x=1;plane===9&&x<m.original.size[0];x++)for(let slot=1;slot<=6;slot++)if(get(m,C(x,15+slot,2))===itemId){
    references++;if(owner!==x||!activeCharacter(m,x)||slot!==limits.slot)fail('穿戴雙向指標不一致。');
   }
-  if(plane===9&&!references&&inBackupSet(m,itemId,owner))fail(backupSetReason);
+  if(plane===9&&!references)references=backupSetReferences(m,itemId,owner,limits.slot);
   // references===1 is a worn row; references===0 with an active owner is the observed native stale-owner state.
   if(plane===9&&references>1)fail('穿戴雙向指標不一致。');
   const group=backpackLike(plane)?'backpackTreasureLevel':'treasureLevel';
@@ -171,7 +180,7 @@
   for(let x=1;plane===9&&x<m.original.size[0];x++)for(let s=1;s<=6;s++)if(get(m,C(x,15+s,2))===itemId){
    references++;if(owner!==x||!activeCharacter(m,x)||s!==t.slot)fail('穿戴雙向指標不一致。');
   }
-  if(plane===9&&!references&&inBackupSet(m,itemId,owner))fail(backupSetReason);
+  if(plane===9&&!references)references=backupSetReferences(m,itemId,owner,t.slot);
   if(backpackLike(plane)&&owner!==rules.limits.backpackOwner||owner>0&&(!activeCharacter(m,owner)||references!==1)||owner===0&&references!==0)fail('穿戴雙向指標不一致。');
   const prefix=backpackLike(plane)?'backpackSetEquipmentQuality':'setEquipmentQuality',groups={upgrade:prefix+'Upgrade',downgrade:prefix+'Downgrade'};
   return {kind:'setEquipmentQualityCandidate',candidate:true,itemId,plane,name:item.name,quality,level,normalMax,mainCoefficient:record[8],originId:record[27],selectedSlot:selected||null,slots,
@@ -272,7 +281,7 @@
     if(item.kind!=='普通'||!rules||rules.setLink!==0)throw Error('只支援一般裝備，套裝等級尚未隔離驗證。');
     let references=0;
     for(let x=1;x<m.original.size[0];x++)if(activeCharacter(m,x))for(let slot=1;slot<=6;slot++)if(get(m,C(x,15+slot,2))===id){references++;if(owner!==x||slot!==item.slot)throw Error('裝備穿戴雙向指標不一致。');}
-    if(plane===9&&!references&&inBackupSet(m,id,owner))throw Error(backupSetReason);
+    if(plane===9&&!references)references=backupSetReferences(m,id,owner,item.slot);
     if(owner>0&&(!activeCharacter(m,owner)||references!==1)||owner===0&&references!==0)throw Error('裝備穿戴雙向指標不一致。');
    }
    coordinate=C(id,6,plane);normalMax=10+(quality-1)*5;name=item.name;

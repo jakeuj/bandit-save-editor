@@ -80,7 +80,8 @@
     "recruitTechnologyAdvanced": true,
     "equipmentAffixCoefficientAdvanced": true,
     "equipmentSixthAffix": true,
-    "armoryEquipment": true
+    "armoryEquipment": true,
+    "backupSetEquipment": true
   },
   "lightweight": {
     "randomCharacterBaseAptitudesAscended": {
@@ -458,6 +459,25 @@
       "passed": true,
       "smokeGameVersion": "V1.0.14.0",
       "gameUpdate": "V1.0.17.0 靜態核對沿用（已審核事件只多卸下備用套裝與 司职卸任 的屬性刷新參數；資料只改寶物 674 主屬性、天賦 36 不再生成）"
+    },
+    "backupSetEquipment": {
+      "date": "2026-11-02",
+      "gameVersion": "V1.0.17.0",
+      "flow": "docs/maintenance/lightweight.md",
+      "smoke": "Mac（Apple M4 Max、CrossOver 正式分支 V1.0.17.0）隱藏隔離副本，不開遊戲視窗、沒有 Dock 圖示，結束後沒有殘留程序；基準為 v2.38 冒煙遊戲寫出的 24 層存檔（#30 已解鎖，角色 2 換到套裝 1，原套裝 0 的 z9 列 7,12,14,13,41,0 收在 z23[2,1..6]）；verify-game.cjs 以候選 catalog（只開 backupSetEquipment）執行 setEquipmentLevel，雲存檔載入、原版存檔、新 PID 讀回；verify-native-lifecycle.cjs outfitSwap（含 item 核對）原生換回，再存檔、新 PID 讀回，修改器重讀遊戲寫出檔",
+      "cases": [
+        "收在 z23 的 #7 柴斧（T1 Q1，owner 2、z2 沒有指標）等級 10→5：只寫 [7,6,9]；雲存檔載入、原版存檔、新 PID 讀回一致，z23 與 z2 指標不動",
+        "原生 角色换装(2,0,0,0,0,0,0,0)：z23 y0 1→0、z2 y16–21 變回 7,12,14,13,41,0、z23 y1–6 清空，兩個換裝按鈕仍在；#7 穿戴後 y6=5、y7=2；刷新单角色全属性 之後 装备属性计算 伐木力 9＝Lv5 的 装备主属性 9（Lv10 為 14），物理攻擊 43≥7、力量 2.91≥0.31",
+        "兩輪原版存檔、新 PID 讀回一致（3 個 PID、4 次 assert）；修改器重讀遊戲寫出檔逐字元往返，#7 已穿戴 Lv5 可編輯，Lv16 超出一般上限被拒",
+        "內丹（#41）與資質相關操作維持拒絕，只有合成測試"
+      ],
+      "baselineSaveSha256": "a03d3a3bd79ffc4bf237acebe1cbcf66af88bbd2c4bddc550f1fa7bca0cb3a73",
+      "finalSaveSha256": "17e7b0c9d21005d7d9df319ea7f3890d4d0c606894451c5d9d808f54e37c5620",
+      "resultSha256": "fd5f01cc67073b5e9e0cce5484718c4268c4b3ef5cc320c71239204dbfd2f392",
+      "nativeResultSha256": "2ed638ecea1b8e5992f2993e98f8ccf3c5b569841edd778117b4dc57a07e60f1",
+      "result": "repo 外 backup-set-edit-20261102/result.json",
+      "passed": true,
+      "smokeGameVersion": "V1.0.17.0"
     }
   },
   "method": "按功能相依選跑；原生、沿用與 UI 未重驗分開記錄",
