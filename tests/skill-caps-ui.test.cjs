@@ -5,7 +5,7 @@ const root=path.resolve(__dirname,'..'),caps=[28,20,10,10,10,10,10,10,10];
 
 // The production UI and core run unchanged. Only this VM's candidate gate is set
 // for success-branch unit tests; it is never a native proof or release artifact.
-async function setup({gate=false,mutate}={}){
+async function setup({gate=false,initialGate=false,advancedGate=false,mutate}={}){
  const elements=new Map(),listeners=new Map(),downloads=[],blobs=new Map();
  const attr=(source,name)=>new RegExp('(?:^|\\s)'+name+'="([^"«]*)"').exec(source)?.[1];
  function element(){let html='',value='',text='';return {
@@ -37,6 +37,8 @@ async function setup({gate=false,mutate}={}){
  };
  const knowledge=JSON.parse(fs.readFileSync(path.join(root,'knowledge/catalog.json'),'utf8'));
  knowledge.verification.randomCharacterSkillCaps=gate;
+ knowledge.verification.randomCharacterSkillCapsInitial=initialGate;
+ knowledge.verification.randomCharacterSkillCapsAdvanced=advancedGate;
  vm.runInNewContext(fs.readFileSync(path.join(root,'src/core.js'),'utf8').replace('/*__KNOWLEDGE__*/null',JSON.stringify(knowledge)),context);
  const source=fs.readFileSync(path.join(root,'src/ui.js'),'utf8')
   .replace('/*__KNOWLEDGE_UI__*/',()=>fs.readFileSync(path.join(root,'src/knowledge-ui.js'),'utf8'))
@@ -126,4 +128,19 @@ test('candidate UI interleaves cap, single and batch experience with cumulative 
  const bytes=Buffer.from(await output.blob.arrayBuffer());assert.deepEqual(bytes,Buffer.from(h.expected([[1,22,2,29],[1,40,2,1],[2,40,2,7]])));
  assert.equal(bytes.subarray(0,3).toString('hex'),'efbbbf');assert.ok(bytes.includes(Buffer.from('987654321098765432109876543210')));assert.ok(bytes.includes(Buffer.from('1e+03')));
  await h.load(bytes.toString('utf8'),'downloaded.dat');h.select(1);assert.equal(h.$('skillCap1').value,'29');assert.equal(h.model.changes.size,0);
+});
+
+test('initial-source and advanced UI keep independent gates and invalidate previews on mode changes',async()=>{
+ const initial=[15,23,4,28,1,4,10,37,1],h=await setup({gate:true,initialGate:true,advancedGate:true,mutate:data=>initial.forEach((v,i)=>data[1][22+i][2]=v)});
+ assert.equal(h.$('skillCapsAdvanced').checked,false);assert.match(h.$('skillCapsStatus').textContent,/初始角色/);
+ h.preview([16,...initial.slice(1)]);assert.equal(h.$('skillCapsApplyBtn').disabled,false);
+ h.$('skillCapsAdvanced').checked=true;h.$('skillCapsAdvanced').onchange();
+ assert.equal(h.$('skillCapsApplyBtn').disabled,true);assert.match(h.$('skillCapsEditor').innerHTML,/可超出原版共同生成/);
+ h.preview(Array(9).fill(100));assert.equal(h.$('skillCapsApplyBtn').disabled,false);h.$('skillCapsApplyBtn').onclick();
+ assert.equal(h.$('skillCapsAdvanced').checked,true);assert.equal(h.C.serialize(h.model),h.expected(initial.flatMap((v,i)=>v!==100?[[1,22+i,2,100]]:[])));
+ h.$('skillCapsAdvanced').checked=false;h.$('skillCapsAdvanced').onchange();assert.equal(h.$('skillCapsPreviewBtn').disabled,true);
+ h.select(2);assert.equal(h.$('skillCapsAdvanced').checked,false);
+ const closed=await setup({gate:true});closed.$('skillCapsAdvanced').checked=true;closed.$('skillCapsAdvanced').onchange();closed.preview(Array(9).fill(100));
+ assert.equal(closed.$('skillCapsApplyBtn').disabled,true);assert.match(closed.$('skillCapsStatus').textContent,/可預覽，套用停用/);
+ closed.$('skillCapsApplyBtn').onclick();assert.equal(closed.model.changes.size,0);
 });

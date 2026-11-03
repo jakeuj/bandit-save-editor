@@ -1,5 +1,5 @@
 'use strict';
-const {test}=require('node:test'),assert=require('node:assert/strict');
+const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs');
 const D=require('../scripts/random-character-skill-caps-data.cjs'),k=require('../knowledge/catalog.json');
 const rows=()=>[[0],...[1,2,3].map(id=>[id,'',0,0,'通用',0,'力量',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])];
 test('reviewed cap rules retain all six rounded endpoints and readonly talent selectors',()=>{
@@ -17,4 +17,21 @@ test('unreviewed events, malformed tf and any bound data drift fail closed',()=>
  assert.equal(D.canPreserve(k,structuredClone(k)),true);
  for(const field of ['fingerprints','batch2Fingerprints','randomCharacterSkillCaps']){const n=structuredClone(k);n[field].changed=true;assert.equal(D.canPreserve(k,n),false);}
  assert.equal(D.canPreserve({},k),false);
+});
+
+test('initial rules bind all native generation and recruitment entrypoints and reject source drift',()=>{
+ const initial=D.reviewedInitialRules(D.reviewedInitialDigest);
+ assert.deepEqual(initial,{quality:1,ranges:{base:[1,30],primary:[36,44],secondary:[26,34]},sourceSids:[822838674776648,820431404775607,213875126173692,480540019440160],sourceDigest:D.reviewedInitialDigest});
+ assert.deepEqual(k.randomCharacterSkillCaps.initial,initial);
+ assert.throws(()=>D.reviewedInitialRules('changed'),/初始角色.*SID/);
+ for(const field of ['ranges','sourceDigest']){const next=structuredClone(k);next.randomCharacterSkillCaps.initial[field]='changed';assert.equal(D.canPreserve(k,next),false);}
+ for(const flag of ['randomCharacterSkillCapsInitial','randomCharacterSkillCapsAdvanced']){
+  assert.equal(typeof k.verification[flag],'boolean');
+  assert.ok(fs.readFileSync('scripts/extract-game.cjs','utf8').includes(flag+':false'));
+  assert.equal(require('../scripts/verification-suite.cjs').familyOf(flag),'randomCharacterSkillCaps');
+  if(k.verification[flag]){
+   const proof=require('../knowledge/verification.json'),record=proof.lightweight[flag];
+   assert.equal(proof.groups[flag],true);assert.equal(record.passed,true);assert.equal(record.gameVersion,k.gameVersion);assert.match(record.resultSha256,/^[0-9a-f]{64}$/);
+  }
+ }
 });

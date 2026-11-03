@@ -26,6 +26,26 @@ function setup({flag=true,rounds=[[3,400],[5,401]],patch=()=>{}}={}){
 const preview=(C,m,v)=>C.previewCharacterSkillCaps(m,{characterId:2,caps:v});
 const apply=(C,m,v)=>C.setCharacterSkillCaps(m,{characterId:2,caps:v},{preview:preview(C,m,v)});
 
+test('advanced ascended caps require both gates and preserve ascension data through exact export',()=>{
+ const {C,m,rawWith}=setup();
+ const options={characterId:2,caps:Array(9).fill(100)};
+ const run=()=>C.previewCharacterSkillCapsAdvanced(m,options);
+ C.KNOWLEDGE.verification.randomCharacterSkillCapsAdvanced=false;
+ assert.equal(run().canApply,false);
+ C.KNOWLEDGE.verification.randomCharacterSkillCapsAdvanced=true;
+ assert.equal(run().canApply,true);C.setCharacterSkillCapsAdvanced(m,options,{preview:run()});
+ assert.equal(C.serialize(m),rawWith(options.caps.map((v,i)=>[2,22+i,2,v])));
+ C.KNOWLEDGE.verification.randomCharacterSkillCapsAscended=false;
+ assert.equal(run().canApply,false);assert.match(run().reasons.join(),/無結丹/);
+});
+
+test('advanced caps retain full ascension consistency checks',()=>{
+ const {C,m}=setup({patch:a=>{a[401][7][17]=1;}});
+ C.KNOWLEDGE.verification.randomCharacterSkillCapsAdvanced=true;
+ const info=C.randomCharacterSkillCapsAdvancedInfo(m,{characterId:2});
+ assert.equal(info.eligible,false);assert.match(info.reasons.join(),/owner/);
+});
+
 test('flag off keeps ascended characters closed and plain characters unchanged',()=>{
  const {C,m}=setup({flag:false});
  assert.match(C.randomCharacterSkillCapsInfo(m,{characterId:2}).reasons.join(),/無結丹/);

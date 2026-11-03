@@ -34,7 +34,7 @@ test('scenario operations and batch requests of every representative copy are ro
 test('verify-game shared steps are shared roots; its family-specific calls and operation whitelist are owned',()=>{
  const text=read('verify-game.cjs'),editSave=text.slice(text.indexOf('function editSave'),text.indexOf('async function applyBatchRequests'));
  assert.ok(editSave.length>100);
- const specific={previewBatch:'randomCharacterSkillCaps',applyBatch:'randomCharacterSkillCaps',previewCharacterSkillCaps:'randomCharacterSkillCaps',previewCharacterTalents:'randomCharacterTalents'};
+ const specific={previewBatch:'randomCharacterSkillCaps',applyBatch:'randomCharacterSkillCaps',previewCharacterSkillCaps:'randomCharacterSkillCaps',previewCharacterSkillCapsAdvanced:'randomCharacterSkillCaps',previewCharacterTalents:'randomCharacterTalents'};
  for(const m of used(editSave))assert.ok(A.sharedCoreRoots.includes(m)||A.coreRoots[specific[m]]?.includes(m),'editSave: '+m);
  for(const m of used(text))assert.ok(union.has(m),'verify-game: '+m);
  const list=/\[('setCharacterTalents'[^\]]*)\]\.includes\(operation\.method\)/.exec(text);assert.ok(list,'找不到操作白名單');

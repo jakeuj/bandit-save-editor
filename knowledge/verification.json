@@ -83,7 +83,9 @@
     "armoryEquipment": true,
     "backupSetEquipment": true,
     "backupSetInnerPillLevel": true,
-    "backupSetAptitude": true
+    "backupSetAptitude": true,
+    "randomCharacterSkillCapsInitial": true,
+    "randomCharacterSkillCapsAdvanced": true
   },
   "lightweight": {
     "randomCharacterBaseAptitudesAscended": {
@@ -516,6 +518,37 @@
       "result": "repo 外 backup-set-pill-aptitude-20261102/result.json",
       "passed": true,
       "smokeGameVersion": "V1.0.17.0"
+    },
+    "randomCharacterSkillCapsInitial": {
+      "date": "2026-11-03",
+      "gameVersion": "V1.0.17.0",
+      "flow": "docs/maintenance/lightweight.md",
+      "smokeGameVersion": "V1.0.17.0",
+      "smoke": "Windows 隱藏／靜音隔離副本，verify-game 以具名預覽交易產生修改檔；數值更新、三階段原版存檔／新 PID 讀回，4 個不同 PID、6 筆存讀斷言；原始基準與來源雜湊不變，已停止自己的程序。",
+      "cases": [
+        "Q1 初始規則合成代表：15/23/4/28/1/4/10/37/1→10/23/4/29/1/4/10/38/1（含合法降至目前 Lv10、E0）；固定資質30/30/30、天賦1/2/3 Lv1、技藝L/E與結丹紀錄保持。"
+      ],
+      "baselineSaveSha256": "39a7c42075ccf4fc5d0c2842476a3235c26aa0422a7f100afd4ca716ef0a0ce1",
+      "finalSaveSha256": "17a749fee714c4d116f0cffab947299899971a39c33d3ad45a45ae12e1dec7a1",
+      "resultSha256": "c62d0cbf2aa3892472f04d1d9d02dd15a70f175f7fd0c47fc9e1670af7d84bef",
+      "result": "repo 外 skill-caps-modes-20261103/bandit-editor-validation-kYMcm7/skill-caps-modes.json",
+      "passed": true
+    },
+    "randomCharacterSkillCapsAdvanced": {
+      "date": "2026-11-03",
+      "gameVersion": "V1.0.17.0",
+      "flow": "docs/maintenance/lightweight.md",
+      "smokeGameVersion": "V1.0.17.0",
+      "smoke": "Windows 隱藏／靜音隔離副本，verify-game 以具名預覽交易產生修改檔；數值更新、三階段原版存檔／新 PID 讀回，4 個不同 PID、6 筆存讀斷言；原始基準與來源雜湊不變，已停止自己的程序。",
+      "cases": [
+        "未結丹與原生備料基準中結丹2次角色，九上限均改100；基礎資質、天賦、結丹紀錄及L/E保留。",
+        "兩角色第一技藝99級／E1241999：單次原生gain10→100級／E9；下一次已封頂呼叫→E0。三階段皆原版存檔／新PID讀回，修改器重讀一致。"
+      ],
+      "baselineSaveSha256": "39a7c42075ccf4fc5d0c2842476a3235c26aa0422a7f100afd4ca716ef0a0ce1",
+      "finalSaveSha256": "17a749fee714c4d116f0cffab947299899971a39c33d3ad45a45ae12e1dec7a1",
+      "resultSha256": "c62d0cbf2aa3892472f04d1d9d02dd15a70f175f7fd0c47fc9e1670af7d84bef",
+      "result": "repo 外 skill-caps-modes-20261103/bandit-editor-validation-kYMcm7/skill-caps-modes.json",
+      "passed": true
     }
   },
   "method": "按功能相依選跑；原生、沿用與 UI 未重驗分開記錄",

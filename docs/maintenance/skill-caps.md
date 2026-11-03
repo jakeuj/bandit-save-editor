@@ -4,6 +4,12 @@
 
 > 下列 core 摘要、選跑重證與實測數字是 2026-10-24 輕量流程前的歷史紀錄；現行驗證與建置閘門見[輕量開發流程](lightweight.md)。
 
+## 初始角色與進階 1–100（2026-11-03，v2.41）
+
+一般模式現在列舉「一般招募／初始角色」兩種來源；初始規則限 Q1，須有 `randomCharacterSkillCapsInitial` 旗標才可寫入。進階模式另用 `randomCharacterSkillCapsAdvancedInfo`／`previewCharacterSkillCapsAdvanced`／`setCharacterSkillCapsAdvanced`，須有 `randomCharacterSkillCapsAdvanced` 與原技藝上限旗標；已結丹者另依原結丹旗標與紀錄檢查。兩個新旗標在產生器預設關閉；2026-11-03 已通過 Windows 隔離原生冒煙，現行 catalog 已開放，以 v2.41 發布。
+
+UI 預設一般模式，切換角色／存檔重設模式；切換模式會清除預覽，同一角色成功套用後保留模式。進階模式略過共同生成條件，但仍限定目前及目標九上限都在 1–100；保留其餘資格、L／E 與 27 欄還原。來源 SID、公式與實測範圍見[實作摘要](../research/random-character-skill-caps.md#實作摘要2026-11-03v241-初始角色與進階-1100)。冒煙工具為 `node scripts/verify-skill-caps-modes.cjs --state EXTERNAL_STATE --scenario EXTERNAL_SCENARIO`，會存檔並重啟自己的隔離程序；執行前依輕量流程取得當次啟動授權。
+
 ## v2.8 A 交付紀錄：技藝上限核心，當時尚未開放
 
 詳見[研究與A／B界線](../research/random-character-skill-caps.md)及[SDD任務](../../sdd/random-character-skill-caps/tasks.md)。`randomCharacterSkillCapsInfo(model,{characterId})`查資格；`previewCharacterSkillCaps(model,{characterId,caps})`接受九個安全整數，回九列C／L／E、共同生成見證及差異；`setCharacterSkillCaps(model,request,{preview})`要求同模型、同請求且未過期的核心預覽，重驗後一次提交。同值不新增歷史；降低到有餘額的目前等級時阻擋。預覽物件的changes不具執行權限。

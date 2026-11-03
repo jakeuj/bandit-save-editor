@@ -626,20 +626,22 @@
   const rules=KNOWLEDGE.randomCharacterSkillCaps;
   if(!rules||!Number.isInteger(quality)||quality<1||quality>6||!Array.isArray(caps)||caps.length!==9||Array.from(caps).some(v=>!Number.isSafeInteger(v))||!Array.isArray(talents)||talents.length!==3||new Set(talents).size!==3||!Array.isArray(talentLevels)||talentLevels.length!==3)return [];
   if(Array.from(talents).some((id,i)=>!Number.isSafeInteger(id)||id<=0||!rules.talents[id]||!Number.isSafeInteger(talentLevels[i])||!rules.talentLevels[quality-1].includes(talentLevels[i])))return [];
-  const witnesses=[],ranges=rules.ranges[quality-1],within=(v,r)=>v>=r[0]&&v<=r[1];
+  const witnesses=[],sources=[{source:'recruitment',ranges:rules.ranges[quality-1]}],within=(v,r)=>v>=r[0]&&v<=r[1];
+  if(rules.initial?.quality===quality)sources.push({source:'initial',ranges:rules.initial.ranges});
   for(let orientation=0;orientation<4;orientation++){
    const aptitude=skillCapAptitudeWitness(quality,raw,orientation);if(!aptitude)continue;
    const selected=talents.map(id=>rules.talents[id]);
    if(quality!==1&&selected.some(t=>orientation===3?!['生产','通用'].includes(t.category):![rules.orientations[orientation],'通用'].includes(t.orientation)))continue;
-   for(let primary=1;primary<=9;primary++){
+   for(const {source,ranges} of sources)for(let primary=1;primary<=9;primary++){
     if(!within(caps[primary-1],ranges.primary)||selected.some(t=>t.excludedPrimary.includes(primary)))continue;
-    for(let secondary=1;secondary<=9;secondary++)if(primary!==secondary&&caps.every((v,i)=>within(v,i+1===primary?ranges.primary:i+1===secondary?ranges.secondary:ranges.base)))witnesses.push({...aptitude,orientation:quality===1?'通用':rules.orientations[orientation],primary,secondary});
+    for(let secondary=1;secondary<=9;secondary++)if(primary!==secondary&&caps.every((v,i)=>within(v,i+1===primary?ranges.primary:i+1===secondary?ranges.secondary:ranges.base)))witnesses.push({...aptitude,orientation:quality===1?'通用':rules.orientations[orientation],primary,secondary,source});
    }
   }
   return witnesses;
  }
- function randomCharacterSkillCapsInfo(m,{characterId}){
-  const reasons=[],verified=!!KNOWLEDGE.verification.randomCharacterSkillCaps,info={characterId,verified,eligible:false,reasons,skills:[],witnesses:[]};
+ function skillCapWitnessVerified(witnesses){return witnesses.some(w=>w.source==='recruitment'||w.source==='initial'&&KNOWLEDGE.verification.randomCharacterSkillCapsInitial);}
+ function skillCapsCharacterInfo(m,{characterId},advanced=false){
+  const reasons=[],verified=!!KNOWLEDGE.verification.randomCharacterSkillCaps&&(!advanced||!!KNOWLEDGE.verification.randomCharacterSkillCapsAdvanced),info={characterId,verified,eligible:false,reasons,skills:[],witnesses:[],advanced};
   try{
    if(!activeCharacter(m,characterId)||get(m,C(characterId,0,2))!==characterId)throw Error('找不到有效的已招募角色。');
    if(get(m,C(characterId,2,2))!==0)throw Error('有名角色載入／數值更新會依範本回填技藝上限；只支援範本 0。');
@@ -655,26 +657,37 @@
    info.talentLevels=[21,22,23].map(y=>get(m,C(characterId,y,12)));
    info.skills=SKILLS.map((name,i)=>({id:i+1,name,cap:get(m,C(characterId,22+i,2)),level:get(m,C(characterId,31+i,2)),experience:get(m,C(characterId,40+i,2))}));
    if(info.skills.some(s=>!Number.isSafeInteger(s.cap)||!Number.isSafeInteger(s.level)||s.level<1||s.cap<s.level||typeof s.experience!=='number'||!Number.isFinite(s.experience)||s.experience<0||s.experience>Number.MAX_SAFE_INTEGER))throw Error('現有技藝上限、等級或餘額型別／範圍不符。');
-   info.witnesses=skillCapCombinations(info.quality,info.raw,info.talents,info.talentLevels,info.skills.map(s=>s.cap));
-   if(!info.witnesses.length)throw Error('目前九上限與固定基礎資質／三槽天賦沒有原版共同生成見證，保持唯讀。');
+   if(advanced){
+    if(info.skills.some(s=>s.cap>100))throw Error('進階技藝上限只支援目前九項均在 1–100 的角色。');
+   }else{
+    info.witnesses=skillCapCombinations(info.quality,info.raw,info.talents,info.talentLevels,info.skills.map(s=>s.cap));
+    if(!info.witnesses.length)throw Error('目前九上限與固定基礎資質／三槽天賦沒有原版共同生成見證；可切換進階 1–100 模式。');
+    info.verified &&= skillCapWitnessVerified(info.witnesses);
+   }
    info.eligible=true;
   }catch(e){reasons.push(e.message);}
   return info;
  }
+ function randomCharacterSkillCapsInfo(m,options){return skillCapsCharacterInfo(m,options);}
+ function randomCharacterSkillCapsAdvancedInfo(m,options){return skillCapsCharacterInfo(m,options,true);}
  const skillCapPreviews=new WeakMap();
  function skillCapPreviewState(m,characterId){
   // Small dependency signature also detects direct changes to public parsed input, not only named transactions.
   const row=Number.isSafeInteger(characterId)&&characterId>0&&characterId<m.original.size[0]?m.original.data[characterId]:null;
-  return JSON.stringify([KNOWLEDGE.randomCharacterSkillCaps,row?.map(v=>[v[2],v[12],v[16]]),[...m.changes],m.revision]);
+  return JSON.stringify([KNOWLEDGE.randomCharacterSkillCaps,KNOWLEDGE.verification,row?.map(v=>[v[2],v[12],v[16]]),[...m.changes],m.revision]);
  }
- function previewCharacterSkillCaps(m,options){
-  const {characterId,caps}=options,info=randomCharacterSkillCapsInfo(m,{characterId}),reasons=[...info.reasons];
+ function previewSkillCaps(m,options,advanced=false){
+  const {characterId,caps}=options,info=skillCapsCharacterInfo(m,{characterId},advanced),reasons=[...info.reasons];
   if(Object.keys(options).some(k=>!['characterId','caps'].includes(k)))reasons.push('技藝上限只接受角色編號與完整九項數值。');
   if(!Array.isArray(caps)||caps.length!==9||Array.from(caps).some(v=>!Number.isSafeInteger(v)))reasons.push('請輸入完整九項上限安全整數。');
+  if(advanced&&Array.isArray(caps)&&Array.from(caps).some(v=>v<1||v>100))reasons.push('進階技藝上限須為 1–100 的整數。');
   let rows=[],changes=[],witnesses=[];
   if(info.eligible&&!reasons.length){
-   witnesses=skillCapCombinations(info.quality,info.raw,info.talents,info.talentLevels,caps);
-   if(!witnesses.length)reasons.push('目標九上限與固定基礎資質／天賦沒有共同生成見證。');
+   if(!advanced){
+    witnesses=skillCapCombinations(info.quality,info.raw,info.talents,info.talentLevels,caps);
+    if(!witnesses.length)reasons.push('目標九上限與固定基礎資質／天賦沒有共同生成見證。');
+    info.verified &&= skillCapWitnessVerified(witnesses);
+   }
    rows=info.skills.map((s,i)=>{
     if(caps[i]<s.level)reasons.push(`${s.name}上限不得低於目前等級 ${s.level}。`);
     if(caps[i]<s.cap&&caps[i]===s.level&&s.experience>0)reasons.push(`${s.name}下調至目前等級時仍有餘額 ${s.experience}；不自動清零，已阻擋。`);
@@ -683,15 +696,17 @@
    changes=rows.filter(r=>r.before.cap!==r.after.cap).map(r=>({id:r.id,name:r.name,before:r.before.cap,after:r.after.cap}));
   }
   const result={...info,reasons,rows,changes,witnesses,unchanged:rows.length===9&&!changes.length,canApply:info.verified&&!reasons.length&&!!changes.length,restoreScope:'此角色全部九項技藝上限、等級與經驗餘額會一起還原'};
-  skillCapPreviews.set(result,{model:m,request:JSON.stringify(options),snapshot:batchSnapshot(m),state:skillCapPreviewState(m,characterId)});
+  skillCapPreviews.set(result,{model:m,advanced,request:JSON.stringify(options),snapshot:batchSnapshot(m),state:skillCapPreviewState(m,characterId)});
   return result;
  }
- function setCharacterSkillCaps(m,options,{preview}={}){
+ function previewCharacterSkillCaps(m,options){return previewSkillCaps(m,options);}
+ function previewCharacterSkillCapsAdvanced(m,options){return previewSkillCaps(m,options,true);}
+ function applySkillCaps(m,options,{preview}={},advanced=false){
   const prior=preview&&skillCapPreviews.get(preview);
-  if(!prior||prior.model!==m||prior.request!==JSON.stringify(options))throw Error('技藝上限預覽不相符，請重新預覽。');
+  if(!prior||prior.model!==m||prior.advanced!==advanced||prior.request!==JSON.stringify(options))throw Error('技藝上限預覽不相符，請重新預覽。');
   assertBatchCurrent(m,prior.snapshot);
   if(prior.state!==skillCapPreviewState(m,options.characterId))throw Error('技藝上限輸入、模型或規則已改變，請重新預覽。');
-  const checked=previewCharacterSkillCaps(m,options);
+  const checked=previewSkillCaps(m,options,advanced);
   if(checked.reasons.length)throw Error(checked.reasons.join('；'));
   if(!checked.verified)throw Error('一般隨機角色技藝上限尚未完成獨立隔離驗證。');
   if(!checked.unchanged){
@@ -701,6 +716,8 @@
   skillCapPreviews.delete(preview);
   return checked;
  }
+ function setCharacterSkillCaps(m,options,context){return applySkillCaps(m,options,context);}
+ function setCharacterSkillCapsAdvanced(m,options,context){return applySkillCaps(m,options,context,true);}
  // Skill cap rules end.
  // Talent level rules. Ids, empty slots and quality stay as recruited; only pooled levels change.
  function talentEffect(attributeId,coefficient,level){
@@ -1654,5 +1671,5 @@
   if(patches.length!==m.changes.size)throw Error('部分修改座標未能定位，已停止匯出。');
   const parts=[];let previous=0;for(const p of patches){parts.push(m.text.slice(previous,p.start),p.value);previous=p.end;}parts.push(m.text.slice(previous));return parts.join('');
  }
- globalThis.SaveCore={sixthAffixInfo,previewEquipmentSixthAffix,setEquipmentSixthAffix,listPlacedRelics,placedRelicAttributesInfo,previewPlacedRelicAttributes,setPlacedRelicAttributes,buildingLevelsInfo,previewBuildingLevel,setBuildingLevel,basicTechnologiesInfo,previewBasicTechnology,setBasicTechnology,ascendedInnerPillLevelInfo,previewAscendedInnerPillLevel,setAscendedInnerPillLevel,innerPillLevelInfo,previewInnerPillLevel,setInnerPillLevel,ascensionQualityInfo,previewAscensionQuality,setAscensionQuality,cityLayersInfo,previewCityLayer,setCityLayer,wallEnhancementInfo,previewWallEnhancementLevel,setWallEnhancementLevel,relicAttributesInfo,previewRelicAttributes,setRelicAttributes,listRelics,setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,previewSetEquipmentQualityCandidate,applySetEquipmentQualityCandidate,setEquipmentQualityCandidateEffects,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,recruitTechnologyInfo,setRecruitTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,affixAdvancedInfo,previewEquipmentAffixCoefficientAdvanced,setEquipmentAffixCoefficientAdvanced,setPillAptitudeBonus,pillAdvancedInfo,setPillAptitudeBonusAdvanced,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
+ globalThis.SaveCore={randomCharacterSkillCapsAdvancedInfo,previewCharacterSkillCapsAdvanced,setCharacterSkillCapsAdvanced,sixthAffixInfo,previewEquipmentSixthAffix,setEquipmentSixthAffix,listPlacedRelics,placedRelicAttributesInfo,previewPlacedRelicAttributes,setPlacedRelicAttributes,buildingLevelsInfo,previewBuildingLevel,setBuildingLevel,basicTechnologiesInfo,previewBasicTechnology,setBasicTechnology,ascendedInnerPillLevelInfo,previewAscendedInnerPillLevel,setAscendedInnerPillLevel,innerPillLevelInfo,previewInnerPillLevel,setInnerPillLevel,ascensionQualityInfo,previewAscensionQuality,setAscensionQuality,cityLayersInfo,previewCityLayer,setCityLayer,wallEnhancementInfo,previewWallEnhancementLevel,setWallEnhancementLevel,relicAttributesInfo,previewRelicAttributes,setRelicAttributes,listRelics,setEquipmentLevelInfo,treasureLevelInfo,setEquipmentQualityCandidateInfo,previewSetEquipmentQualityCandidate,applySetEquipmentQualityCandidate,setEquipmentQualityCandidateEffects,randomCharacterTalentsInfo,previewCharacterTalents,setCharacterTalents,talentEffect,randomCharacterSkillCapsInfo,previewCharacterSkillCaps,setCharacterSkillCaps,skillCapAptitudeWitness,skillCapCombinations,recruitmentCombination,randomCharacterGrowthInfo,previewCharacterBaseAptitudes,setCharacterBaseAptitudes,BASICS,MATERIALS,KNOWLEDGE,SKILLS,key,exists,cell,parse,get,set,setField,resolveField,addExperience,growthInfo,experienceNeed,editingInfo,setEquipmentLevel,setProfessionTrainingCap,setAdvancedTechnologyLevel,recruitTechnologyInfo,setRecruitTechnologyLevel,affixInfo,pillInfo,setEquipmentAffixCoefficient,affixAdvancedInfo,previewEquipmentAffixCoefficientAdvanced,setEquipmentAffixCoefficientAdvanced,setPillAptitudeBonus,pillAdvancedInfo,setPillAptitudeBonusAdvanced,equipmentAffixReplacementInfo,previewEquipmentAffixReplacement,setEquipmentAffix,equipmentQualityInfo,previewEquipmentQualityChange,setEquipmentQuality,listEntities,catalogName,transaction,undo,restore,restoreAll,labelFor,diff,serialize,previewBatch,applyBatch};
 })();

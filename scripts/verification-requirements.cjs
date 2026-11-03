@@ -10,7 +10,7 @@ const sections = {
     checks: ['load','save','restart','originalHashes','nativeEffects','talentFormulas','aptitudeCap','numericUpdate','nativeTransfer','nativePrison','nativeRebirth','nativeDismiss','stageRoundtrips']
   },
   randomCharacterSkillCaps: {
-    groups: ['randomCharacterSkillCaps', 'randomCharacterSkillCapsAscended'], perGroup: true,
+    groups: ['randomCharacterSkillCaps','randomCharacterSkillCapsAscended','randomCharacterSkillCapsInitial','randomCharacterSkillCapsAdvanced'], perGroup: true,
     checks: ['load','save','restart','originalHashes','nativeEffects','nativeRecruitment','numericUpdate','nativeSkillExperience','capRemainderTiming','batchCompatibility','nativeTransfer','nativePrison','nativeRebirth','nativeDismiss','stageRoundtrips']
   },
   randomCharacterGrowth: {

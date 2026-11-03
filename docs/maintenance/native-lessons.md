@@ -6,6 +6,10 @@
 
 ## 冒煙工具
 
+- **重讀遊戲真正寫出的檔案**：`verify-game --save` 使用手動存檔槽 1，`--assert` 核對隔離副本的 `save/ea1save.dat`。`savedir/ea1save.dat` 是輸入雲存快取，可能仍保留升級前等級；收尾用與 `--assert` 相同的手動存檔路徑交給修改器重讀（2026-11-03）。
+
+- **同一欄位可能有多種原版生成入口**：技藝上限的一般招募與開局初始角色公式不同。只有主招募函式的共同見證會誤擋原版角色；2026-11-03 補查初始生成、初始化複製與初始招募呼叫，初始 Q1 的一般／主要／次要區間是 1–30／36–44／26–34。見證應標來源，不能用角色編號猜招募歷史。新來源與進階 1–100 另以初始規則合成代表、未結丹／已結丹角色完成冒煙。`verify-skill-caps-modes.cjs` 重用原生經驗 oracle；99→100 當次 E9、下次已封頂 E0 各自存檔與新 PID 讀回，勿把修改器封頂即清零當成原生時序。
+
 冒煙可沿用 `verify-game.cjs --scenario`（`setPillAptitudeBonus`、`setEquipmentLevel` 等具名操作）加 `verify-native-lifecycle.cjs`（`ascend`、`followup`、`pills`、`pillOverLimit`、`backpackOverLimit`、`relics`、`relicTakeOff`、`relicStandPrepare`、`placedRelicAura`、`wall`、`city`、`ascensionQuality`、`innerPillPrepare`、`innerPillLevel`、`ascendedInnerPillLevel`、`relicCrafting`、`recruitTechnology`、`affixPrepare`、`affixOverLimit`、`outfitSwap` 等動作，以 `main()` 的清單為準；`pills` 可用 `pillCharacter` 指定角色；擺放類動作要在存檔重啟後另跑一次取下，才算驗過兩輪 IO；`穿戴装备` 後要等一拍再讀角色指標，同一次 evaluate 內讀到的是空列）；固定基準存檔先複製到 repo 外的新資料夾，步驟依 `.local/game-sources.json` 的 `nativeSmoke` 紀錄（雲存檔載入 → 存檔 → assert → stop → restart → 存檔載入 → assert）。
 
 - **只驗 Mac 啟動器、還沒改版時**：複製目前 catalog，只把 15 個來源指紋換成新版（`c3runtime.js` 用原始指紋）存到 repo 外當 `--catalog`，加 `--package` 指 Steam 安裝目錄。這只證明能存讀，不代表修改器支援新版（V1.0.13.0 Mac 補驗）。

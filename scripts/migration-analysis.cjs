@@ -23,7 +23,7 @@ const dependencies = {
   equipmentQuality: {effects:equipment, lifecycle:equipLife, tables:['wp','sx','tf','yx','tz']},
   randomCharacterGrowth: {effects:['新刷新招募数据','属性计算','角色资质计算','角色资质上限'], lifecycle:[...characterLife,'服用普通丹药','获得职业经验'], tables:['js','tf','wp','sx','zy','yx','tz']},
   randomCharacterTalents: {effects:['新刷新招募数据','新刷初始角色数据','属性计算','角色资质计算','角色资质上限'], lifecycle:[...characterLife,'服用普通丹药','招募随机角色','招募随机角色2'], tables:['js','tf','wp','sx','zy','yx','tz']},
-  randomCharacterSkillCaps: {effects:['新刷新招募数据','数值更新','获得技艺经验','技艺升级经验'], lifecycle:[...characterLife,'招募随机角色2','获得职业经验'], tables:['js','tf','wp','sx','zy','yx','tz']}
+  randomCharacterSkillCaps: {effects:['新刷初始角色数据','刷新全部初始角色','初始化角色','招募初始角色','新刷新招募数据','数值更新','获得技艺经验','技艺升级经验'], lifecycle:[...characterLife,'招募随机角色2','获得职业经验'], tables:['js','tf','wp','sx','zy','yx','tz']}
 };
 const sharedIo = ['存档','存档备份','读取进度'];
 // SaveCore methods each family's native evidence depends on: verify-game's shared editSave steps, the scenario operations,
@@ -41,7 +41,7 @@ const coreRoots = Object.fromEntries(Object.entries({
   equipmentQuality:['setEquipmentQuality','previewEquipmentQualityChange'],
   randomCharacterGrowth:['setCharacterBaseAptitudes','randomCharacterGrowthInfo'],
   randomCharacterTalents:['setCharacterTalents','previewCharacterTalents','randomCharacterTalentsInfo','randomCharacterGrowthInfo','talentEffect'],
-  randomCharacterSkillCaps:['setCharacterSkillCaps','previewCharacterSkillCaps','randomCharacterSkillCapsInfo','skillCapCombinations','previewBatch','applyBatch']
+  randomCharacterSkillCaps:['randomCharacterSkillCapsAdvancedInfo','previewCharacterSkillCapsAdvanced','setCharacterSkillCapsAdvanced','setCharacterSkillCaps','previewCharacterSkillCaps','randomCharacterSkillCapsInfo','skillCapCombinations','previewBatch','applyBatch']
 }).map(([family,roots])=>[family,[...sharedCoreRoots,...roots]]));
 // Existing editable save regions. Additional writers are dependencies even when no declared entry point calls them.
 const regions = {

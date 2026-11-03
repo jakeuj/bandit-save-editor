@@ -21832,7 +21832,31 @@
       748584357810010,
       176292127127652
     ],
-    "sourceDigest": "e7b959cc5858a45dcbaaa007d6b7ea1b2325e41c0eaf9262ac7924521776a2a1"
+    "sourceDigest": "e7b959cc5858a45dcbaaa007d6b7ea1b2325e41c0eaf9262ac7924521776a2a1",
+    "initial": {
+      "quality": 1,
+      "ranges": {
+        "base": [
+          1,
+          30
+        ],
+        "primary": [
+          36,
+          44
+        ],
+        "secondary": [
+          26,
+          34
+        ]
+      },
+      "sourceSids": [
+        822838674776648,
+        820431404775607,
+        213875126173692,
+        480540019440160
+      ],
+      "sourceDigest": "7dcf48a222a36e93ab615dd9246a78bb47acd1457647b0bba7b9cf891a365a19"
+    }
   },
   "randomCharacterTalents": {
     "version": 1,
@@ -87741,6 +87765,8 @@
     "professionTrainingCap": true,
     "professionTrainingCapAdvanced": true,
     "advancedTechnologyLevel": true,
-    "advancedTechnologyLevelAdvanced": true
+    "advancedTechnologyLevelAdvanced": true,
+    "randomCharacterSkillCapsInitial": true,
+    "randomCharacterSkillCapsAdvanced": true
   }
 }
