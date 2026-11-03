@@ -12,6 +12,16 @@ Manifest 的 `start_url` 與 `scope` 使用 `./`，省略 `id`，由瀏覽器以
 
 本機驗收以 HTTP localhost 提供整個目錄，另以 `/bandit-save-editor/` 子路徑確認資產及識別。測試獨立 profile，使用合成存檔，暫存下載、截圖及 profile 放 repo 外。完成後移除測試安裝的 App。
 
+### 2026-11-04 技藝上限進階模式離線驗證
+
+使用 v2.43 正式建置，`tests/browser/skill-caps-advanced-offline.spec.cjs` 新增 1280px／390px 的單檔與 PWA 共四案：
+
+- 單檔：把唯一的 `index.html` 複製到沒有資產檔的暫存子目錄，首次開啟前已斷網；PWA 入口隱藏。
+- PWA：快取完整且有 controller 後斷網；根目錄與 `index.html` 的每次導覽回應均須 `fromServiceWorker()`，避免只驗到已開啟頁面或 HTTP 快取。
+- 全程離線驗草稿保留、兩項逐欄原因與 ARIA、101 拒絕、快捷填 100 使預覽失效、重新預覽後套用、實際下載及重新開頁讀回；再驗合法降低至 L27／E0 與第二次下載重讀。每份匯出都以獨立 renderer 比對完整 bytes，只變目標上限；PWA 快取精確等於七個公開資產。
+
+官方入口選跑新四案及既有一般模式 file／PWA 三案，7 案全過。此次只新增驗證與文件，使用合成 221×60×24 存檔及隔離 headless Chromium；Safari、原生安裝、真實手機與正式站實際下載的 HTML 不在本次範圍。詳見[技藝上限離線摘要](../research/random-character-skill-caps.md#進階模式離線驗證2026-11-04)。
+
 ### 2026-10-21 PWA 實測紀錄
 
 2026-10-21：macOS 的 Chrome **155.0.8059.85**，以獨立 profile、Playwright／CDP 及本機子路徑伺服器實測：

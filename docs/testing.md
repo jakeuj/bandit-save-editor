@@ -43,6 +43,8 @@ v2.42 的介面回歸由 `skill-caps-ui.test.cjs` 與 `skill-caps-modes.spec.cjs
 
 降低上限的逐項提示另覆蓋一般／進階多項同時阻擋、目標／目前等級／實際餘額、輸入與模式變動清除診斷、改動公開原因仍不能套用。桌面／390px 的 `skill-caps-modes.spec.cjs` 驗欄旁文字及 ARIA、修正後合法降至目前等級（零餘額）、精確下載與重讀；只有共同生成問題時不得標成單一欄位錯誤。診斷規則見[技藝上限維護](maintenance/skill-caps.md#降低上限逐項提示2026-11-04v243)。
 
+進階模式專用離線案例在 `tests/browser/skill-caps-advanced-offline.spec.cjs`：真正正式建置、單檔 `file:`／PWA ×1280px／390px，斷網下驗草稿、逐項原因與清除、101 拒絕、填入 100／重新預覽／套用、精確下載、新頁重讀及合法降低後再匯出重讀。PWA 的根目錄／`index.html` 必須由 Service Worker 回應，快取精確限既定七項公開資產；單檔子目錄只有 HTML，不附資產。只補離線驗證時可用官方入口選跑 `npm run test:browser -- tests/browser/skill-caps-advanced-offline.spec.cjs tests/browser/skill-caps.spec.cjs --grep 'file:|PWA:'`，不重跑未改動的 Node 核心或原生遊戲；[結果與界線](research/random-character-skill-caps.md#進階模式離線驗證2026-11-04)。
+
 原生代表冒煙用 `scripts/verify-skill-caps-modes.cjs --state EXTERNAL_STATE --scenario EXTERNAL_SCENARIO`：核對初始規則合成代表、未結丹／已結丹角色設 100、數值更新、99→100 留餘額與下次封頂清零，各階段原版存檔並換新 PID 讀回。執行前依輕量流程取得當次啟動授權；原始輸入與結果留 repo 外，實測範圍見[技藝上限實作摘要](research/random-character-skill-caps.md#實作摘要2026-11-03v241-初始角色與進階-1100)。
 
 天賦等級另有 `tests/talent-levels-ui.test.cjs` 與 `tests/browser/talent-levels.spec.cjs`（`talentLevelsFixture`）：HTTP 1280／390px 驗排除原因、Q6 無可調整值、資質天賦的 A／C 預覽、輸入變更使預覽失效、與基礎資質同群組還原／復原、實際下載與重載；直接 file 與 PWA 斷網兩入口驗預覽與套用下載。閘門關閉時同樣只驗預覽與停用。
