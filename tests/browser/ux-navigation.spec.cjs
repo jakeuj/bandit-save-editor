@@ -86,6 +86,8 @@ for (const width of [390, 1280]) {
     await noOverflow(page);
     if (process.env.BANDIT_BROWSER_VISUAL) await page.screenshot({path: path.join(process.env.BANDIT_BROWSER_ARTIFACTS, `ux-character-${width}.png`), fullPage: true});
     await page.locator('#fileInput').setInputFiles(output);
+    await expect(page.locator('#fileName')).toHaveText(path.basename(output));
+    await expect(page.locator('#workspace')).not.toHaveAttribute('aria-busy', 'true');
     await navigate(page, 'characters');
     await expect(page.locator('[data-character-section][open]')).toHaveCount(0);
     await page.locator('#characterSelect').selectOption('1');

@@ -4,6 +4,10 @@
 
 > 下列 core 摘要、選跑重證與實測數字是 2026-10-24 輕量流程前的歷史紀錄；現行驗證與建置閘門見[輕量開發流程](lightweight.md)。
 
+## 介面改善（2026-11-04，v2.42）
+
+同一角色切換一般／進階模式時，保留九項輸入草稿（含空白及尚未通過驗證的值），清除舊預覽並停用套用；切換角色或載入另一份存檔仍回到一般模式並讀取該角色目前值。進階模式新增「全部填入 100」，僅填入草稿並使預覽失效，須重新預覽、確認後才套用；角色不合格時按鈕停用。使用既有具名預覽與套用入口，寫入資格、旗標及 27 欄還原不變。實測見[實作摘要](../research/random-character-skill-caps.md#介面改善2026-11-04v242)。
+
 ## 初始角色與進階 1–100（2026-11-03，v2.41）
 
 一般模式現在列舉「一般招募／初始角色」兩種來源；初始規則限 Q1，須有 `randomCharacterSkillCapsInitial` 旗標才可寫入。進階模式另用 `randomCharacterSkillCapsAdvancedInfo`／`previewCharacterSkillCapsAdvanced`／`setCharacterSkillCapsAdvanced`，須有 `randomCharacterSkillCapsAdvanced` 與原技藝上限旗標；已結丹者另依原結丹旗標與紀錄檢查。兩個新旗標在產生器預設關閉；2026-11-03 已通過 Windows 隔離原生冒煙，現行 catalog 已開放，以 v2.41 發布。

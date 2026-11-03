@@ -19,10 +19,18 @@ async function preview(page,values){for(let i=0;i<9;i++)await page.locator('#ski
 for(const width of [1280,390])opened(`skill caps modes ${width}px: initial source, advanced preview, exact download and reload`,async({page,site})=>{
  await page.setViewportSize({width,height:844});const f=fixture();await page.goto(site.url);await loadRaw(page,site,f.raw);await selectCharacter(page,1);
  await expect(page.locator('#skillCapsAdvanced')).not.toBeChecked();await expect(page.locator('#skillCapsStatus')).toContainText('初始角色');
+ await expect(page.locator('#skillCapsFill100Btn')).toBeHidden();
  await preview(page,[16,...initial.slice(1)]);await expect(page.locator('#skillCapsPreview')).toContainText('初始角色');await expect(page.locator('#skillCapsApplyBtn')).toBeEnabled();
- await page.locator('#skillCapsAdvanced').check();await expect(page.locator('#skillCapsApplyBtn')).toBeDisabled();
+ await page.locator('#skillCapsAdvanced').check();await expect(page.locator('#skillCap1')).toHaveValue('16');await expect(page.locator('#skillCapsApplyBtn')).toBeDisabled();
+ await expect(page.locator('#skillCapsPreview tbody tr')).toHaveCount(0);
+ await page.locator('#skillCap1').fill('90');await page.locator('#skillCap9').fill('');
+ await page.locator('#skillCapsAdvanced').uncheck();await expect(page.locator('#skillCap1')).toHaveValue('90');await expect(page.locator('#skillCap9')).toHaveValue('');await expect(page.locator('#skillCapsFill100Btn')).toBeHidden();
+ await page.locator('#skillCapsAdvanced').check();await expect(page.locator('#skillCap1')).toHaveValue('90');await expect(page.locator('#skillCap9')).toHaveValue('');
  await preview(page,Array(9).fill(101));await expect(page.locator('#skillCapsApplyBtn')).toBeDisabled();await expect(page.locator('#skillCapsPreview')).toContainText('1–100');
- await preview(page,Array(9).fill(100));await expect(page.locator('#skillCapsPreview tbody tr')).toHaveCount(9);await expect(page.locator('#skillCapsPreview')).toContainText('九項獨立設定');
+ await preview(page,Array(9).fill(99));await expect(page.locator('#skillCapsApplyBtn')).toBeEnabled();
+ await page.locator('#skillCapsFill100Btn').click();for(let i=1;i<=9;i++)await expect(page.locator('#skillCap'+i)).toHaveValue('100');
+ await expect(page.locator('#skillCapsApplyBtn')).toBeDisabled();await expect(page.locator('#skillCapsPreview tbody tr')).toHaveCount(0);await expect(page.locator('#pendingCount')).toHaveText('0');
+ await page.locator('#skillCapsPreviewBtn').click();await expect(page.locator('#skillCapsPreview tbody tr')).toHaveCount(9);await expect(page.locator('#skillCapsPreview')).toContainText('九項獨立設定');
  await page.locator('#skillCapsApplyBtn').click();await expect(page.locator('#pendingCount')).toHaveText('9');await expect(page.locator('#skillCapsAdvanced')).toBeChecked();await noOverflow(page);
  const output=await download(page,site,f.expected(initial.map((_,i)=>[1,22+i,2,100])));
  await page.locator('#fileInput').setInputFiles(output);await expect(page.locator('#fileName')).toHaveText(path.basename(output));await expect(page.locator('#workspace')).not.toHaveAttribute('aria-busy','true');await selectCharacter(page,1);
@@ -33,5 +41,5 @@ for(const width of [1280,390])opened(`skill caps modes ${width}px: initial sourc
 closed('skill caps new modes: closed gates permit preview and prevent writes',async({page,site})=>{
  const f=fixture();await page.goto(site.url);await loadRaw(page,site,f.raw);await selectCharacter(page,1);
  await preview(page,[16,...initial.slice(1)]);await expect(page.locator('#skillCapsPreview tbody tr')).toHaveCount(9);await expect(page.locator('#skillCapsApplyBtn')).toBeDisabled();
- await page.locator('#skillCapsAdvanced').check();await preview(page,Array(9).fill(100));await expect(page.locator('#skillCapsApplyBtn')).toBeDisabled();await expect(page.locator('#skillCapsStatus')).toContainText('可預覽，套用停用');await expect(page.locator('#pendingCount')).toHaveText('0');
+ await page.locator('#skillCapsAdvanced').check();await page.locator('#skillCapsFill100Btn').click();await page.locator('#skillCapsPreviewBtn').click();await expect(page.locator('#skillCapsApplyBtn')).toBeDisabled();await expect(page.locator('#skillCapsStatus')).toContainText('可預覽，套用停用');await expect(page.locator('#pendingCount')).toHaveText('0');
 });

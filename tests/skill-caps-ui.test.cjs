@@ -144,3 +144,41 @@ test('initial-source and advanced UI keep independent gates and invalidate previ
  assert.equal(closed.$('skillCapsApplyBtn').disabled,true);assert.match(closed.$('skillCapsStatus').textContent,/可預覽，套用停用/);
  closed.$('skillCapsApplyBtn').onclick();assert.equal(closed.model.changes.size,0);
 });
+
+test('mode switches retain all input drafts but discard previews; another character or file starts fresh',async()=>{
+ const h=await setup({gate:true,advancedGate:true}),values=[29,...caps.slice(1)];
+ const toggle=checked=>{h.$('skillCapsAdvanced').checked=checked;h.$('skillCapsAdvanced').onchange();};
+ const inputs=()=>caps.map((_,i)=>h.$('skillCap'+(i+1)).value);
+ h.preview(values);assert.equal(h.$('skillCapsApplyBtn').disabled,false);
+ toggle(true);assert.deepEqual(inputs(),values.map(String));assert.equal(h.$('skillCapsApplyBtn').disabled,true);
+ assert.match(h.$('skillCapsPreview').textContent,/重新預覽/);assert.equal(h.$('skillCapsPreview').innerHTML,'');
+ h.$('skillCapsApplyBtn').onclick();assert.equal(h.model.changes.size,0);
+ const draft=['90','','7.5','28','1','4','10','37','1'];
+ draft.forEach((value,i)=>{h.$('skillCap'+(i+1)).value=value;h.$('skillCap'+(i+1)).oninput();});
+ toggle(false);assert.deepEqual(inputs(),draft);toggle(true);assert.deepEqual(inputs(),draft);
+ assert.equal(h.C.serialize(h.model),h.raw);assert.equal(h.model.history.length,0);
+ h.select(2);assert.equal(h.$('skillCapsAdvanced').checked,false);assert.deepEqual(inputs(),caps.map(String));
+ h.select(1);assert.deepEqual(inputs(),caps.map(String));
+ toggle(true);h.$('skillCap1').value='90';h.$('skillCap1').oninput();
+ await h.load(h.raw,'replacement.dat');h.select(1);assert.equal(h.$('skillCapsAdvanced').checked,false);assert.deepEqual(inputs(),caps.map(String));
+});
+
+test('fill-all-100 is an advanced draft action and still requires fresh preview, eligibility and open gates',async()=>{
+ const h=await setup({gate:true,advancedGate:true}),target=Array(9).fill(100);
+ assert.equal(h.$('skillCapsFill100Btn').hidden,true);h.$('skillCapsFill100Btn').onclick();assert.equal(h.$('skillCap1').value,'28');
+ h.$('skillCapsAdvanced').checked=true;h.$('skillCapsAdvanced').onchange();assert.equal(h.$('skillCapsFill100Btn').hidden,false);
+ h.preview([29,...caps.slice(1)]);assert.equal(h.$('skillCapsApplyBtn').disabled,false);
+ h.$('skillCapsFill100Btn').onclick();assert.deepEqual(caps.map((_,i)=>h.$('skillCap'+(i+1)).value),target.map(String));
+ assert.equal(h.$('skillCapsApplyBtn').disabled,true);assert.match(h.$('skillCapsPreview').textContent,/重新預覽/);
+ assert.equal(h.C.serialize(h.model),h.raw);assert.equal(h.model.history.length,0);
+ h.$('skillCapsApplyBtn').onclick();assert.equal(h.model.changes.size,0);
+ h.$('skillCapsPreviewBtn').onclick();assert.equal(h.$('skillCapsApplyBtn').disabled,false);h.$('skillCapsApplyBtn').onclick();
+ assert.equal(h.C.serialize(h.model),h.expected(target.map((v,i)=>[1,22+i,2,v])));
+ h.$('undoBtn').onclick();assert.equal(h.C.serialize(h.model),h.raw);
+ const closed=await setup({gate:true});closed.$('skillCapsAdvanced').checked=true;closed.$('skillCapsAdvanced').onchange();
+ closed.$('skillCapsFill100Btn').onclick();closed.$('skillCapsPreviewBtn').onclick();assert.equal(closed.$('skillCapsApplyBtn').disabled,true);
+ closed.$('skillCapsApplyBtn').onclick();assert.equal(closed.C.serialize(closed.model),closed.raw);
+ const named=await setup({gate:true,advancedGate:true,mutate:data=>data[1][2][2]=1});
+ named.$('skillCapsAdvanced').checked=true;named.$('skillCapsAdvanced').onchange();assert.equal(named.$('skillCapsFill100Btn').disabled,true);
+ named.$('skillCapsFill100Btn').onclick();assert.equal(named.$('skillCap1').value,'28');assert.equal(named.model.changes.size,0);
+});
