@@ -35,7 +35,11 @@ Linux CI另加`--with-deps`安裝系統函式庫。Playwright版本由package與
 
 新增功能時擴充對應層的代表案例，完整數值矩陣留Node。Headless桌面／手機viewport只證明該Chromium引擎的結果；Safari、真實手機、PWA原生安裝視窗及個人瀏覽器擴充影響各自按需驗證。CSS視覺品質可先檢視自動截圖，不必開啟使用者瀏覽器。
 
-九項技藝上限另有 `tests/skill-caps-ui.test.cjs` 與 `tests/browser/skill-caps.spec.cjs`。UI事件用測試VM中的單一候選旗標覆蓋成功及關閉分支；它不是原生開放證明。Headless讀真正建置與catalog：關閉時只驗預覽／停用；相符獨立proof開放後才驗實際套用、交錯經驗、27欄還原／復原、下載及重載。兩種結果須分開記錄，不能把關閉分支通過宣稱發布完成。新增合法fixture保留舊全50上限fixture的原用途；HTTP兩寬度、直接file、PWA離線與兩頁waiting交接各自有案例。
+九項技藝上限的資格／交易與 UI 測試包括 `tests/random-character-skill-caps.test.cjs`、`tests/skill-caps-modes.test.cjs`、`tests/skill-caps-ascended.test.cjs` 及 `tests/skill-caps-ui.test.cjs`。v2.41 的初始角色與進階 1–100 各有旗標，測試涵蓋目前／目標見證、獨立值域、跨模式預覽、等級／餘額、失敗回滾、精確 token、交錯經驗與 27 欄還原；合成測試開旗標只存在自己的 VM，不作原生證明。
+
+瀏覽器案例見 `tests/browser/skill-caps.spec.cjs`、`skill-caps-ascended.spec.cjs` 與 `skill-caps-modes.spec.cjs`。新模式在公開旗標開啟後使用真正建置測桌面／390px 的套用、下載與重讀，開放前用暫存候選建置測成功分支；關閉分支同樣只用暫存副本。舊案例保留 HTTP、file、PWA 離線與更新交接。候選建置成功、正式閘門開放與原生存讀三種證據分開記錄，不能把停用分支通過宣稱發布完成。
+
+原生代表冒煙用 `scripts/verify-skill-caps-modes.cjs --state EXTERNAL_STATE --scenario EXTERNAL_SCENARIO`：核對初始規則合成代表、未結丹／已結丹角色設 100、數值更新、99→100 留餘額與下次封頂清零，各階段原版存檔並換新 PID 讀回。執行前依輕量流程取得當次啟動授權；原始輸入與結果留 repo 外，實測範圍見[技藝上限實作摘要](research/random-character-skill-caps.md#實作摘要2026-11-03v241-初始角色與進階-1100)。
 
 天賦等級另有 `tests/talent-levels-ui.test.cjs` 與 `tests/browser/talent-levels.spec.cjs`（`talentLevelsFixture`）：HTTP 1280／390px 驗排除原因、Q6 無可調整值、資質天賦的 A／C 預覽、輸入變更使預覽失效、與基礎資質同群組還原／復原、實際下載與重載；直接 file 與 PWA 斷網兩入口驗預覽與套用下載。閘門關閉時同樣只驗預覽與停用。
 

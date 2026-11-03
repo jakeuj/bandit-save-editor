@@ -20,7 +20,7 @@
 | 普通裝備、詞條與丹藥維護 | [equipment](maintenance/equipment.md) |
 | 批次操作維護 | [batch](maintenance/batch.md) |
 | 一般隨機角色基礎資質維護 | [growth](maintenance/growth.md) |
-| 九項技藝上限維護 | [skill-caps](maintenance/skill-caps.md) |
+| 九項技藝上限（一般招募／初始角色、進階 1–100） | [skill-caps](maintenance/skill-caps.md) |
 | 天賦等級維護 | [talents](maintenance/talents.md) |
 
 Mac 啟動與存檔位置讀 [launcher 說明](../launcher/README.md)；規劃下一版讀[目前進度與候選](research/next-version-plan.md)。新增寫入功能依輕量流程：合成測試加一次隔離遊戲冒煙通過才開旗標。

@@ -16,7 +16,7 @@
 | 普通裝備品質升降、y23 語意 | v2.5 | `*EquipmentQuality{Upgrade,Downgrade}` | [品質研究](../../../../docs/research/equipment-quality.md)、[裝備維護](../../../../docs/maintenance/equipment.md) | `sdd/equipment-quality/` |
 | 批次經驗、升滿、科技同值 | v2.6 | 沿用既有閘門 | [批次維護](../../../../docs/maintenance/batch.md) | `sdd/batch-editing/` |
 | 範本 0 基礎資質 | v2.7 | `randomCharacterBaseAptitudes` | [隨機角色成長](../../../../docs/research/random-character-growth.md)、[growth](../../../../docs/maintenance/growth.md) | `sdd/random-character-growth/` |
-| 範本 0 九項技藝上限 | v2.8 | `randomCharacterSkillCaps` | [技藝上限](../../../../docs/research/random-character-skill-caps.md)、[skill-caps](../../../../docs/maintenance/skill-caps.md) | `sdd/random-character-skill-caps{,-b}/` |
+| 範本 0 九項技藝上限（一般招募） | v2.8 | `randomCharacterSkillCaps` | [技藝上限](../../../../docs/research/random-character-skill-caps.md)、[skill-caps](../../../../docs/maintenance/skill-caps.md) | `sdd/random-character-skill-caps{,-b}/` |
 | z9 套裝唯讀鞏固 | v2.8.1 | — | — | `sdd/v2.8.1-consolidation/` |
 | 範本 0 天賦等級 | v2.9 | `randomCharacterTalents` | [天賦](../../../../docs/research/random-character-talents.md)、[talents](../../../../docs/maintenance/talents.md) | `sdd/random-character-talents/` |
 | 套裝等級、積分、合成後搬移 | v2.10 | `backpackSetEquipmentLevel`、`setEquipmentLevel`、`*CrossPool` | [套裝等級](../../../../docs/research/set-equipment-level.md) | `sdd/archive/2026-10-23-set-equipment-level/` |
@@ -41,12 +41,17 @@
 | 詞條係數超限 | v2.30 | `equipmentAffixCoefficientAdvanced` | [batch2 實作摘要](../../../../docs/research/advanced-editing-batch2.md#實作摘要2026-10-25v230-詞條係數超限) | — |
 | 第六槽（品質 7 不開放） | v2.31 | `equipmentSixthAffix` | [batch2 實作摘要](../../../../docs/research/advanced-editing-batch2.md#實作摘要2026-10-25v231-第六槽品質-7-判定不開放) | — |
 | 武庫裝備編輯（z22 比照背包） | v2.35 | `armoryEquipment` | [裝備操作實作摘要](../../../../docs/research/equipment-workflow.md#實作摘要2026-10-27v235-武庫裝備編輯) | — |
+| 備用套裝裝備編輯 | v2.39 | `backupSetEquipment` | [裝備流程實作摘要](../../../../docs/research/equipment-workflow.md#實作摘要2026-11-02v239-備用套裝裝備編輯) | — |
+| 備用套裝內丹等級與資質 | v2.40 | `backupSetInnerPillLevel`、`backupSetAptitude` | [裝備流程實作摘要](../../../../docs/research/equipment-workflow.md#實作摘要2026-11-02v240-備用套裝內丹與資質) | — |
+| 初始角色技藝上限（一般模式） | v2.41 | `randomCharacterSkillCapsInitial` | [技藝上限實作摘要](../../../../docs/research/random-character-skill-caps.md#實作摘要2026-11-03v241-初始角色與進階-1100)、[skill-caps](../../../../docs/maintenance/skill-caps.md) | — |
+| 技藝上限進階 1–100 | v2.41 | `randomCharacterSkillCapsAdvanced`（已結丹另需原結丹旗標） | [技藝上限實作摘要](../../../../docs/research/random-character-skill-caps.md#實作摘要2026-11-03v241-初始角色與進階-1100)、[skill-caps](../../../../docs/maintenance/skill-caps.md) | — |
 
 靈物用於套裝合成與內丹精煉的原生驗證（只驗證、無新旗標）見 [靈物 原生驗證摘要](../../../../docs/research/relic-attributes.md#原生驗證摘要2026-10-25修改後靈物用於套裝合成與內丹精煉)。有名角色技藝上限、天賦回填與自然職業 30 級限制屬 [runtime 補丁提案](../../../../sdd/runtime-patch/proposal.md)，與網站修改器分開；有名角色資質已可用 v2.27 丹藥超限提高。只改全局職業上限會讓係數每級成長變小，見[職業上限研究](../../../../docs/research/job-level-cap.md)。
 
 ## 跨功能易錯點
 
 - 範本 0 一般隨機角色的資質、技藝上限與天賦不受載入回填；有名角色有回填檢查，範圍不同。
+- 技藝上限唯讀原因先依模式判讀：一般模式列舉一般招募與初始角色來源，進階 1–100 使用獨立資格入口；沒有共同見證本身不表示存檔損壞。具名入口、旗標與拒絕條件集中在[技藝上限維護](../../../../docs/maintenance/skill-caps.md)。
 - 裝備 y0 是初始背包列號，原生搬移後可不等於目前列號、也可重複，不得據此拒絕；靈物以 y1 範本判定。
 - v2.8 及以前 z9 套裝等級可寫是未證明缺口，v2.8.1 已補排除；舊存檔不追溯，該件等級不能由修改器還原。
 - 新功能走[獨立具名入口](../../../../docs/maintenance/core.md#新功能的-core-開發規範)，驗證依[輕量開發流程](../../../../docs/maintenance/lightweight.md)。
