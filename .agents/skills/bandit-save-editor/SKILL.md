@@ -39,7 +39,8 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 | --- | --- |
 | 架構與跨檔關係 | 若有 `graphify-out/graph.json` 先查圖譜並核對目前來源；建立、更新與完整性限制見 `docs/research/repository-graph.md` |
 | 存檔讀寫、名稱、經驗、知識重建 | [存檔參考](references/save-format.md)、`src/core.js`、`docs/research/save-knowledge.md`、`docs/maintenance/core.md` |
-| 技藝上限、共同生成見證、進階 1–100、模式切換或全部填入 100 | [技藝上限維護](../../../docs/maintenance/skill-caps.md)：介面操作先讀「介面改善」，生成／交易讀「初始角色與進階 1–100」及其實作摘要；先區分草稿、私有預覽與模型寫入，以及一般模式的來源見證與進階模式資格 |
+| 技藝上限：共同生成見證、進階 1–100、寫入與還原 | [技藝上限維護](../../../docs/maintenance/skill-caps.md)「初始角色與進階 1–100」及其實作摘要；區分一般模式的來源見證與進階模式資格，以及私有預覽與模型寫入 |
+| 技藝上限：草稿／全部填入 100、逐項原因、離線驗證 | 依任務讀[技藝上限維護](../../../docs/maintenance/skill-caps.md)的「介面改善」、「降低上限逐項提示」或「進階模式離線驗證」；離線選跑與證據界線見[測試指引](../../../docs/testing.md#證據分工) |
 | 裝備、丹藥、資質、天賦、批次或職業圖鑑 | [功能導覽](references/feature-guide.md) 的對應條目，接著讀該功能研究（舊功能另有 `sdd/` 歷史紀錄；新功能不建 SDD） |
 | 遊戲改版、來源快取、原生驗證 | `docs/maintenance/game-update.md`（「遊戲版更」走該頁自動流程與 `scripts/game-update.cjs`）、`docs/maintenance/migration.md`、[操作補充](references/operations.md) 的版本更新入口；冒煙工具與原生陷阱見 `docs/maintenance/native-lessons.md` |
 | 開發測試與驗收 | `docs/testing.md`；新增功能依 `docs/maintenance/lightweight.md`，隱藏原生測試先讀 `docs/maintenance/migration.md`「本機開發快取」並核對 `.local/game-sources.json` 的 `preferredDevelopmentSourceId` |

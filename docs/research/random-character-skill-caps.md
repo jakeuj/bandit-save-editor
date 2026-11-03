@@ -2,7 +2,7 @@
 
 ## 進階模式離線驗證（2026-11-04）
 
-在 v2.43（`7eeacf2`）正式建置上補驗既有進階模式；只新增 `tests/browser/skill-caps-advanced-offline.spec.cjs` 與文件，不改 core、UI、旗標、值域或寫入範圍。本次測試與文件依使用者 2026-11-04 指示提交推送；未啟動遊戲、未追蹤部署或同步 Wiki。AGENTS.md 核對後無需調整。
+在 v2.43（`7eeacf2`）正式建置上補驗既有進階模式；只新增 `tests/browser/skill-caps-advanced-offline.spec.cjs` 與文件，不改 core、UI、旗標、值域或寫入範圍。測試與文件依使用者 2026-11-04 指示以 [e61515d](https://github.com/jakeuj/bandit-save-editor/commit/e61515da851d43488a7a67c154a756a73ec2eb86) 提交推送；未啟動遊戲、未追蹤部署或同步 Wiki。AGENTS.md 核對後無需調整。
 
 新增四案：單檔 `file:` 與 PWA 各 1280px／390px。單檔只複製 `index.html` 到沒有其他資產的暫存子目錄，在首次導覽前斷網；PWA 先確認快取完整且有 controller，再斷網，每次根目錄／`index.html` 導覽都斷言回應來自 Service Worker。兩者的套用、下載及重讀全程維持斷網，結束後恢復測試 context 的網路狀態。
 

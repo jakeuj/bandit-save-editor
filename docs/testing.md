@@ -63,7 +63,7 @@ v2.42 的介面回歸由 `skill-caps-ui.test.cjs` 與 `skill-caps-modes.spec.cjs
 
 ## 發布與紀錄
 
-發布檢查依[提交與發布](maintenance/release.md#提交與發布)按變更範圍執行：純文件推送後即結束，影響網站產物或發布設定才追蹤相符 SHA 的部署；明確要求確認線上版本才 GET 首頁，多頁 HTTP bytes／metadata 僅在使用者要求或故障需要時核對。需要正式DOM證據時使用獨立headless context，使用者既有快取或安裝問題才升級computer use；PWA更新交接的例行回歸由上述暫存建置測試負責。記錄實際環境與通過層級，保留歷史未測範圍，不將單次自動測試擴張成所有瀏覽器已驗收。
+發布檢查依[提交與發布](maintenance/release.md#提交與發布)執行，任何推送成功即結束；部署追蹤與正式站驗收按同一指引的使用者要求或線上異常條件進行。需要正式 DOM 證據時使用獨立 headless context，使用者既有快取或安裝問題才升級 computer use；PWA 更新交接的例行回歸由上述暫存建置測試負責。記錄實際環境與通過層級，保留歷史未測範圍，不將單次自動測試擴張成所有瀏覽器已驗收。
 
 測試分層的建立紀錄見[程式化測試SDD](../sdd/programmatic-testing/tasks.md)（歷史）；當時 v2.8 的 138 Node／12 headless 數字只代表該版，目前數量以各版[更新紀錄](releases.md)為準。
 

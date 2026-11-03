@@ -46,6 +46,8 @@
 | 初始角色技藝上限（一般模式） | v2.41 | `randomCharacterSkillCapsInitial` | [技藝上限實作摘要](../../../../docs/research/random-character-skill-caps.md#實作摘要2026-11-03v241-初始角色與進階-1100)、[skill-caps](../../../../docs/maintenance/skill-caps.md) | — |
 | 技藝上限進階 1–100 | v2.41 | `randomCharacterSkillCapsAdvanced`（已結丹另需原結丹旗標） | [技藝上限實作摘要](../../../../docs/research/random-character-skill-caps.md#實作摘要2026-11-03v241-初始角色與進階-1100)、[skill-caps](../../../../docs/maintenance/skill-caps.md) | — |
 | 技藝上限模式切換保留草稿、全部填入 100 | v2.42 | 沿用既有技藝上限旗標 | [介面維護](../../../../docs/maintenance/skill-caps.md#介面改善2026-11-04v242)、[實作摘要](../../../../docs/research/random-character-skill-caps.md#介面改善2026-11-04v242)；事件回歸見[測試指引](../../../../docs/testing.md) | — |
+| 技藝上限逐項原因提示 | v2.43 | 沿用既有技藝上限旗標 | [診斷維護](../../../../docs/maintenance/skill-caps.md#降低上限逐項提示2026-11-04v243)、[實作摘要](../../../../docs/research/random-character-skill-caps.md#降低上限逐項提示2026-11-04v243)；核心提供各列原因，UI 呈現並隨草稿失效清除 | — |
+| 技藝上限進階模式離線補驗 | v2.43 建置 | 沿用既有技藝上限旗標 | [離線維護](../../../../docs/maintenance/skill-caps.md#進階模式離線驗證2026-11-04)、[實測摘要](../../../../docs/research/random-character-skill-caps.md#進階模式離線驗證2026-11-04)；單檔／PWA 的桌面與 390px，選跑入口見[測試指引](../../../../docs/testing.md#證據分工) | — |
 
 靈物用於套裝合成與內丹精煉的原生驗證（只驗證、無新旗標）見 [靈物 原生驗證摘要](../../../../docs/research/relic-attributes.md#原生驗證摘要2026-10-25修改後靈物用於套裝合成與內丹精煉)。有名角色技藝上限、天賦回填與自然職業 30 級限制屬 [runtime 補丁提案](../../../../sdd/runtime-patch/proposal.md)，與網站修改器分開；有名角色資質已可用 v2.27 丹藥超限提高。只改全局職業上限會讓係數每級成長變小，見[職業上限研究](../../../../docs/research/job-level-cap.md)。
 
