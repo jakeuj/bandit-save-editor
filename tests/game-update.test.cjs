@@ -7,7 +7,7 @@ const vm = require('node:vm');
 const { spawnSync } = require('node:child_process');
 
 const repo = path.resolve(__dirname, '..');
-const { insertBefore, normalize, announcements } = require('../scripts/game-update.cjs');
+const { insertBefore, normalize, announcements, libraryPaths } = require('../scripts/game-update.cjs');
 const { reviewedVersions } = require('../scripts/extract-game.cjs');
 
 function copy(t, file) {
@@ -30,7 +30,7 @@ test('apply appends one reviewed version to the extract-game map', t => {
 test('apply appends one reviewed runtime to the Mac launcher whitelist', t => {
   const file = copy(t, 'launcher/prepare-macos.py');
   insertBefore(file, '\n}\nSTEAM_COMMON', `    "${'c'.repeat(64)}": "V9.9.9.9",`);
-  const r = spawnSync('python3', ['-c', 'import ast,sys;t=ast.parse(open(sys.argv[1]).read());d=[n.value for n in t.body if isinstance(n,ast.Assign) and n.targets[0].id=="SCRIPT_SHA256"][0];print(ast.literal_eval(d)[sys.argv[2]])', file, 'c'.repeat(64)], { encoding: 'utf8' });
+  const r = spawnSync('python3', ['-c', 'import ast,sys;t=ast.parse(open(sys.argv[1],encoding="utf-8").read());d=[n.value for n in t.body if isinstance(n,ast.Assign) and n.targets[0].id=="SCRIPT_SHA256"][0];print(ast.literal_eval(d)[sys.argv[2]])', file, 'c'.repeat(64)], { encoding: 'utf8' });
   assert.equal(r.status, 0, r.stderr);
   assert.equal(r.stdout.trim(), 'V9.9.9.9');
 });
@@ -43,4 +43,9 @@ test('object renumbering is not an event change', () => {
 test('announcements list every version newer than the current knowledge', () => {
   const gg = { data: [[['欢迎']], [['']], [['V1.0.17.0'], ['优化'], ['']], [['V1.0.16.0'], ['修复']], [['V1.0.15.0'], ['旧']]] };
   assert.deepEqual(announcements(gg, 'V1.0.15.0'), [{ version: 'V1.0.17.0', notes: ['优化'] }, { version: 'V1.0.16.0', notes: ['修复'] }]);
+});
+
+test('every Steam library in libraryfolders.vdf is searched', () => {
+  const vdf = '"libraryfolders"\n{\n\t"0"\n\t{\n\t\t"path"\t\t"C:\\Program Files (x86)\\Steam"\n\t}\n\t"3"\n\t{\n\t\t"path"\t\t"F:\\SteamLibrary"\n\t\t"apps"\n\t\t{\n\t\t\t"4267800"\t\t"469496551"\n\t\t}\n\t}\n}\n';
+  assert.deepEqual(libraryPaths(vdf), ['C:\Program Files (x86)\Steam', 'F:\SteamLibrary']);
 });

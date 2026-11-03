@@ -17,13 +17,24 @@ const artifactsRoot=path.resolve(opt('--artifacts',path.join(os.homedir(),'bandi
 // Every reviewed version so far patched the same path sites: appFolder, nwjsAppFolder, savedir\ ×4, backup\ ×4.
 const MAC_PATCH_COUNTS=[1,1,4,4];
 
-function steamCommon(){
- const mac=path.join(os.homedir(),'Library/Application Support/CrossOver/Bottles/NGO-Steam-0/drive_c/Program Files (x86)/Steam/steamapps/common');
- return process.platform==='win32'?'C:\\Program Files (x86)\\Steam\\steamapps\\common':mac;
+// libraryfolders.vdf lists every Steam library ("path" keys, backslashes escaped); the game may sit on any of them.
+function libraryPaths(vdf){return [...vdf.matchAll(/"path"\s+"((?:[^"\\]|\\.)*)"/g)].map(m=>m[1].replace(/\\(.)/g,'$1'));}
+function steamLibraries(){
+ const roots=process.platform==='win32'
+  ?[spawnSync('reg',['query','HKCU\\Software\\Valve\\Steam','/v','SteamPath'],{encoding:'utf8'}).stdout?.match(/SteamPath\s+REG_SZ\s+(.+)/)?.[1].trim(),'C:\\Program Files (x86)\\Steam']
+  :[path.join(os.homedir(),'Library/Application Support/CrossOver/Bottles/NGO-Steam-0/drive_c/Program Files (x86)/Steam')];
+ const out=[];
+ for(const r of roots.filter(Boolean)){
+  const vdf=path.join(r,'steamapps/libraryfolders.vdf');
+  out.push(r,...(fs.existsSync(vdf)?libraryPaths(fs.readFileSync(vdf,'utf8')):[]));
+ }
+ return [...new Set(out.map(p=>path.resolve(p)))];
 }
 function packageDir(){
  if(opt('--package'))return path.resolve(opt('--package'));
- const found=['塔防山贼模拟器','bandit'].map(n=>path.join(steamCommon(),n)).find(d=>fs.existsSync(path.join(d,'package.nw')));
+ const local=path.join(root,'.local/game-sources.json'),recorded=fs.existsSync(local)?readJson(local).installedGameDirectory:null;
+ const dirs=[...steamLibraries().flatMap(l=>['塔防山贼模拟器','bandit'].map(n=>path.join(l,'steamapps/common',n))),...(recorded?[recorded]:[])];
+ const found=dirs.find(d=>fs.existsSync(path.join(d,'package.nw')));
  if(!found)throw Error('找不到 Steam 遊戲目錄，請用 --package 指定');
  return found;
 }
@@ -238,11 +249,12 @@ function print(r,dir){
 }
 
 // Text edits at fixed anchors: one new line in each reviewed map.
+// Windows checkouts (core.autocrlf) use CRLF; anchors are written with \n and follow the file's line ending.
 function insertBefore(file,anchor,line){
- const text=fs.readFileSync(file,'utf8'),i=text.indexOf(anchor);
+ const text=fs.readFileSync(file,'utf8'),eol=text.includes('\r\n')?'\r\n':'\n',i=text.indexOf(anchor.replace(/\n/g,eol));
  if(i<0)throw Error('找不到插入位置：'+file);
  const before=text.slice(0,i).replace(/\s*$/,''),sep=before.endsWith(',')||before.endsWith('{')?'':',';
- fs.writeFileSync(file,before+sep+'\n'+line+text.slice(before.length).replace(/^\s*(?=\n)/,''));
+ fs.writeFileSync(file,before+sep+eol+line+text.slice(before.length).replace(new RegExp('^\\s*(?='+eol+')'),''));
 }
 function apply(){
  const report=check();if(report.verdict==='current')return;
@@ -336,4 +348,4 @@ if(require.main===module){
  if(args.includes('--help')){console.log('node scripts/game-update.cjs [check|apply|smoke] [--package STEAM_GAME_DIR] [--artifacts OUTSIDE_REPO] [--previous OLD_SOURCE] [--save-file BASE.dat] [--source EXTRACTED --version V --build N] [smoke --scenario EDITS.json --name LABEL]');process.exit(0);}
  Promise.resolve(({check,apply,smoke})[command]()).catch(e=>{console.error(e.message);process.exit(1);});
 }
-module.exports={flatten,normalize,insertBefore,announcements};
+module.exports={flatten,normalize,insertBefore,announcements,libraryPaths};
