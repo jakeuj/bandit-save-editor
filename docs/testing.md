@@ -39,6 +39,8 @@ Linux CI另加`--with-deps`安裝系統函式庫。Playwright版本由package與
 
 瀏覽器案例見 `tests/browser/skill-caps.spec.cjs`、`skill-caps-ascended.spec.cjs` 與 `skill-caps-modes.spec.cjs`。新模式在公開旗標開啟後使用真正建置測桌面／390px 的套用、下載與重讀，開放前用暫存候選建置測成功分支；關閉分支同樣只用暫存副本。舊案例保留 HTTP、file、PWA 離線與更新交接。候選建置成功、正式閘門開放與原生存讀三種證據分開記錄，不能把停用分支通過宣稱發布完成。
 
+v2.42 的介面回歸由 `skill-caps-ui.test.cjs` 與 `skill-caps-modes.spec.cjs` 涵蓋：同角色切換保留九項原始輸入字串（含空白／小數草稿），換角色／檔案重設；「全部填入 100」只在進階模式且角色合格時可用，只改草稿並使舊預覽失效，重新預覽前不得建立交易，關閉旗標仍不能套用。桌面／390px 另核對套用、精確下載與重讀，規則與既有實測見[介面維護](maintenance/skill-caps.md#介面改善2026-11-04v242)。
+
 原生代表冒煙用 `scripts/verify-skill-caps-modes.cjs --state EXTERNAL_STATE --scenario EXTERNAL_SCENARIO`：核對初始規則合成代表、未結丹／已結丹角色設 100、數值更新、99→100 留餘額與下次封頂清零，各階段原版存檔並換新 PID 讀回。執行前依輕量流程取得當次啟動授權；原始輸入與結果留 repo 外，實測範圍見[技藝上限實作摘要](research/random-character-skill-caps.md#實作摘要2026-11-03v241-初始角色與進階-1100)。
 
 天賦等級另有 `tests/talent-levels-ui.test.cjs` 與 `tests/browser/talent-levels.spec.cjs`（`talentLevelsFixture`）：HTTP 1280／390px 驗排除原因、Q6 無可調整值、資質天賦的 A／C 預覽、輸入變更使預覽失效、與基礎資質同群組還原／復原、實際下載與重載；直接 file 與 PWA 斷網兩入口驗預覽與套用下載。閘門關閉時同樣只驗預覽與停用。
@@ -72,3 +74,4 @@ Linux CI另加`--with-deps`安裝系統函式庫。Playwright版本由package與
 - 空物品清單應在呼叫核心資格檢查前顯示空狀態；已有但不支援、未知範本或異常記錄仍須可見並呈現拒絕原因，不得為了隱藏錯誤而過濾。超限後果、首次選槽確認及動態阻擋原因保留在操作旁；公式與完整還原規則可收進詳細規則。
 - 固定底列的高度由 ResizeObserver 寫入 `--footer-space`，內容留白與 toast 共用此值，包含裝置安全區。未載入時隱藏底列；改底列文字或按鈕時要檢查 320px 的換行與遮擋。
 - `tests/browser/actions.cjs` 的 `navigate` 走實際桌面側欄或手機選單；`selectCharacter` 額外展開編輯區，供既有功能回歸使用。預設收合、焦點、草稿保留與換檔重設由 `ux-navigation.spec.cjs` 獨立驗證，不能以回歸 helper 取代。使用 `npm run test:browser -- --grep "UX " --visual` 可保留四種寬度及角色頁截圖。
+- 重讀下載檔後，等待 `#fileName` 為新檔名且 `#workspace` 不再 `aria-busy="true"`，再導覽或選角色。`setInputFiles` 完成不代表載入完成；v2.42 曾因載入完成重設頁籤，讓提前切到角色頁的案例逾時。

@@ -45,6 +45,7 @@
 | 備用套裝內丹等級與資質 | v2.40 | `backupSetInnerPillLevel`、`backupSetAptitude` | [裝備流程實作摘要](../../../../docs/research/equipment-workflow.md#實作摘要2026-11-02v240-備用套裝內丹與資質) | — |
 | 初始角色技藝上限（一般模式） | v2.41 | `randomCharacterSkillCapsInitial` | [技藝上限實作摘要](../../../../docs/research/random-character-skill-caps.md#實作摘要2026-11-03v241-初始角色與進階-1100)、[skill-caps](../../../../docs/maintenance/skill-caps.md) | — |
 | 技藝上限進階 1–100 | v2.41 | `randomCharacterSkillCapsAdvanced`（已結丹另需原結丹旗標） | [技藝上限實作摘要](../../../../docs/research/random-character-skill-caps.md#實作摘要2026-11-03v241-初始角色與進階-1100)、[skill-caps](../../../../docs/maintenance/skill-caps.md) | — |
+| 技藝上限模式切換保留草稿、全部填入 100 | v2.42 | 沿用既有技藝上限旗標 | [介面維護](../../../../docs/maintenance/skill-caps.md#介面改善2026-11-04v242)、[實作摘要](../../../../docs/research/random-character-skill-caps.md#介面改善2026-11-04v242)；事件回歸見[測試指引](../../../../docs/testing.md) | — |
 
 靈物用於套裝合成與內丹精煉的原生驗證（只驗證、無新旗標）見 [靈物 原生驗證摘要](../../../../docs/research/relic-attributes.md#原生驗證摘要2026-10-25修改後靈物用於套裝合成與內丹精煉)。有名角色技藝上限、天賦回填與自然職業 30 級限制屬 [runtime 補丁提案](../../../../sdd/runtime-patch/proposal.md)，與網站修改器分開；有名角色資質已可用 v2.27 丹藥超限提高。只改全局職業上限會讓係數每級成長變小，見[職業上限研究](../../../../docs/research/job-level-cap.md)。
 
