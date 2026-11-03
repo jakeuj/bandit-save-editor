@@ -689,9 +689,11 @@
     info.verified &&= skillCapWitnessVerified(witnesses);
    }
    rows=info.skills.map((s,i)=>{
-    if(caps[i]<s.level)reasons.push(`${s.name}上限不得低於目前等級 ${s.level}。`);
-    if(caps[i]<s.cap&&caps[i]===s.level&&s.experience>0)reasons.push(`${s.name}下調至目前等級時仍有餘額 ${s.experience}；不自動清零，已阻擋。`);
-    return {id:s.id,name:s.name,before:{cap:s.cap,level:s.level,experience:s.experience},after:{cap:caps[i],level:s.level,experience:s.experience}};
+    const rowReasons=[];
+    if(caps[i]<s.level)rowReasons.push(`${s.name}目標上限 ${caps[i]} 不得低於目前等級 ${s.level}；請提高上限。`);
+    if(caps[i]<s.cap&&caps[i]===s.level&&s.experience>0)rowReasons.push(`${s.name}目標上限 ${caps[i]} 等於目前等級 ${s.level}，下調時仍有經驗餘額 ${s.experience}；不自動清零，請設為 ${s.level+1} 以上。`);
+    reasons.push(...rowReasons);
+    return {id:s.id,name:s.name,before:{cap:s.cap,level:s.level,experience:s.experience},after:{cap:caps[i],level:s.level,experience:s.experience},reasons:rowReasons};
    });
    changes=rows.filter(r=>r.before.cap!==r.after.cap).map(r=>({id:r.id,name:r.name,before:r.before.cap,after:r.after.cap}));
   }

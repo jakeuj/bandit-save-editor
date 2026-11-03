@@ -65,6 +65,26 @@ test('advanced identity, state, level and remainder checks survive the relaxed g
  advanced(C,m,[11,...initial.slice(1)]);assert.equal(C.get(m,cell(31)),10);assert.equal(C.get(m,cell(40)),0.5);
 });
 
+test('both modes attach each lowering conflict to its skill without changing atomic apply checks',()=>{
+ for(const mode of ['', 'Advanced']){
+  const {C,a,reparse,rawWith}=setup({caps:recruited});
+  Object.assign(a[1][31],{2:27});a[1][40][2]=0.5;a[1][32][2]=19;a[1][41][2]=2.25;a[1][33][2]=8;
+  const m=reparse(),raw=C.serialize(m),target=[26,19,8,9,...recruited.slice(4)];
+  const preview=C['previewCharacterSkillCaps'+mode],apply=C['setCharacterSkillCaps'+mode],o=request(target),p=preview(m,o);
+  assert.equal(p.canApply,false);assert.equal(p.rows.length,9);assert.equal(p.reasons.length,2);
+  assert.match(p.rows[0].reasons[0],/目標上限 26 不得低於目前等級 27/);
+  assert.match(p.rows[1].reasons[0],/目標上限 19 等於目前等級 19.*餘額 2.25.*設為 20 以上/);
+  assert.ok(p.rows.slice(2).every(row=>row.reasons.length===0));
+  assert.equal(JSON.stringify(p.reasons),JSON.stringify(p.rows.flatMap(row=>row.reasons)));
+  p.reasons.length=0;for(const row of p.rows)row.reasons.length=0;p.canApply=true;
+  assert.throws(()=>apply(m,o,{preview:p}),/不得低於目前等級 27/);
+  assert.equal(C.serialize(m),raw);assert.equal(m.history.length,0);
+  const valid=request([28,20,8,9,...recruited.slice(4)]),ready=preview(m,valid);
+  assert.equal(ready.canApply,true,ready.reasons.join());assert.ok(ready.rows.every(row=>row.reasons.length===0));
+  apply(m,valid,{preview:ready});assert.equal(C.serialize(m),rawWith([[1,24,2,8],[1,25,2,9]]));
+ }
+});
+
 test('private previews reject cross-mode, model, input, flag and rule drift',()=>{
  const {C,m,reparse}=setup({caps:recruited}),o=request([29,...recruited.slice(1)]),p=C.previewCharacterSkillCapsAdvanced(m,o),normal=C.previewCharacterSkillCaps(m,o);
  assert.throws(()=>C.setCharacterSkillCaps(m,o,{preview:p}),/預覽/);

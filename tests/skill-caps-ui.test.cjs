@@ -98,6 +98,27 @@ test('candidate UI requires nine safe values and blocks joint, level and remaind
  assert.equal(h.C.serialize(h.model),h.expected([[1,22,2,29]]));assert.equal(h.C.get(h.model,{x:1,y:31,z:2}),27);assert.equal(h.C.get(h.model,{x:1,y:40,z:2}),0.5);
 });
 
+test('lowering diagnostics identify each input and clear on edits, mode changes and invalid previews',async()=>{
+ for(const advanced of [false,true]){
+  const h=await setup({gate:true,advancedGate:true,mutate:data=>{data[1][31][2]=27;data[1][40][2]=0.5;data[1][32][2]=19;data[1][41][2]=2.25;data[1][33][2]=8;}});
+  if(advanced){h.$('skillCapsAdvanced').checked=true;h.$('skillCapsAdvanced').onchange();}
+  const target=[26,19,8,9,...caps.slice(4)];h.preview(target);
+  assert.equal(h.$('skillCapsApplyBtn').disabled,true);assert.match(h.$('skillCapsPreview').innerHTML,/整筆未套用/);
+  assert.equal((h.$('skillCapsPreview').innerHTML.match(/<li>/g)||[]).length,2);
+  assert.equal(h.$('skillCapReason1').hidden,false);assert.match(h.$('skillCapReason1').textContent,/目標上限 26 不得低於目前等級 27/);
+  assert.equal(h.$('skillCapReason2').hidden,false);assert.match(h.$('skillCapReason2').textContent,/目前等級 19.*餘額 2.25.*設為 20 以上/);
+  for(let i=3;i<=9;i++)assert.equal(h.$('skillCapReason'+i).hidden,true);
+  assert.equal(h.C.serialize(h.model),h.raw);assert.equal(h.model.history.length,0);
+  h.$('skillCap1').value='28';h.$('skillCap1').oninput();
+  for(let i=1;i<=9;i++){assert.equal(h.$('skillCapReason'+i).hidden,true);assert.equal(h.$('skillCapReason'+i).textContent,'');}
+  if(!advanced){h.preview(Array(9).fill(28));assert.match(h.$('skillCapsPreview').innerHTML,/共同生成見證/);for(let i=1;i<=9;i++)assert.equal(h.$('skillCapReason'+i).hidden,true);}
+  h.preview(target);h.$('skillCapsAdvanced').checked=!advanced;h.$('skillCapsAdvanced').onchange();assert.equal(h.$('skillCapReason1').hidden,true);
+  h.preview(target);h.$('skillCap1').value='';h.$('skillCapsPreviewBtn').onclick();assert.equal(h.$('skillCapReason1').hidden,true);assert.match(h.$('skillCapsPreview').textContent,/不能空白/);
+  h.preview([28,20,8,9,...caps.slice(4)]);assert.equal(h.$('skillCapsApplyBtn').disabled,false);h.$('skillCapsApplyBtn').onclick();
+  assert.equal(h.C.serialize(h.model),h.expected([[1,24,2,8],[1,25,2,9]]));assert.equal(h.$('skillCapReason2').hidden,true);
+ }
+});
+
 test('candidate UI invalidates inputs, targets, model changes, restores and replacement files',async()=>{
  const h=await setup({gate:true});
  h.preview([29,...caps.slice(1)]);h.$('skillCap1').value='30';h.$('skillCap1').oninput();assert.equal(h.$('skillCapsApplyBtn').disabled,true);assert.match(h.$('skillCapsPreview').textContent,/重新預覽/);

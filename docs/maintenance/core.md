@@ -56,7 +56,7 @@ node scripts/build-editor.cjs
 | `setEquipmentLevel(model, {itemId, level, advanced})` | 只改有效一般裝備等級，檢查完整穿戴互指，排除寶物／內丹 |
 | `setProfessionTrainingCap(model, {professionId, cap, advanced})` | 阻擋操練中；下限為所有角色已取得的該職業最高等級；不解除自然成長30級 |
 | `setAdvancedTechnologyLevel(model, {technologyId, level, advanced})` | 限31–44；輸入存檔值（遊戲提示Lv加一）；阻擋研究中，檢查容量與計算範圍 |
-| `randomCharacterSkillCapsInfo`／`previewCharacterSkillCaps`／`setCharacterSkillCaps` | 一般模式列舉一般招募與初始角色見證；預覽請求 `{characterId,caps}`，套用另帶核心私有 `{preview}`，詳見[技藝上限維護](skill-caps.md) |
+| `randomCharacterSkillCapsInfo`／`previewCharacterSkillCaps`／`setCharacterSkillCaps` | 一般模式列舉一般招募與初始角色見證；預覽請求 `{characterId,caps}`，每列 `rows[].reasons` 回傳降低限制的診斷並彙入整體 `reasons`；套用另帶核心私有 `{preview}`，詳見[技藝上限維護](skill-caps.md) |
 | `randomCharacterSkillCapsAdvancedInfo`／`previewCharacterSkillCapsAdvanced`／`setCharacterSkillCapsAdvanced` | 進階 1–100 的獨立入口，請求與預覽契約同上；不要求共同生成見證，保留角色／結丹資格與等級／餘額限制，不經 `setField` 寫入 |
 | `transaction(model, fn, label)` | 同步批次交易；失敗還原全部變更，成功形成一筆復原紀錄 |
 | `restore(model, coord)`／`undo(model)` | 前者還原指定變更，經驗則還原同一項的累計關聯修改；後者回到前一筆交易 |

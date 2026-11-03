@@ -41,6 +41,8 @@ Linux CI另加`--with-deps`安裝系統函式庫。Playwright版本由package與
 
 v2.42 的介面回歸由 `skill-caps-ui.test.cjs` 與 `skill-caps-modes.spec.cjs` 涵蓋：同角色切換保留九項原始輸入字串（含空白／小數草稿），換角色／檔案重設；「全部填入 100」只在進階模式且角色合格時可用，只改草稿並使舊預覽失效，重新預覽前不得建立交易，關閉旗標仍不能套用。桌面／390px 另核對套用、精確下載與重讀，規則與既有實測見[介面維護](maintenance/skill-caps.md#介面改善2026-11-04v242)。
 
+降低上限的逐項提示另覆蓋一般／進階多項同時阻擋、目標／目前等級／實際餘額、輸入與模式變動清除診斷、改動公開原因仍不能套用。桌面／390px 的 `skill-caps-modes.spec.cjs` 驗欄旁文字及 ARIA、修正後合法降至目前等級（零餘額）、精確下載與重讀；只有共同生成問題時不得標成單一欄位錯誤。診斷規則見[技藝上限維護](maintenance/skill-caps.md#降低上限逐項提示2026-11-04v243)。
+
 原生代表冒煙用 `scripts/verify-skill-caps-modes.cjs --state EXTERNAL_STATE --scenario EXTERNAL_SCENARIO`：核對初始規則合成代表、未結丹／已結丹角色設 100、數值更新、99→100 留餘額與下次封頂清零，各階段原版存檔並換新 PID 讀回。執行前依輕量流程取得當次啟動授權；原始輸入與結果留 repo 外，實測範圍見[技藝上限實作摘要](research/random-character-skill-caps.md#實作摘要2026-11-03v241-初始角色與進階-1100)。
 
 天賦等級另有 `tests/talent-levels-ui.test.cjs` 與 `tests/browser/talent-levels.spec.cjs`（`talentLevelsFixture`）：HTTP 1280／390px 驗排除原因、Q6 無可調整值、資質天賦的 A／C 預覽、輸入變更使預覽失效、與基礎資質同群組還原／復原、實際下載與重載；直接 file 與 PWA 斷網兩入口驗預覽與套用下載。閘門關閉時同樣只驗預覽與停用。
