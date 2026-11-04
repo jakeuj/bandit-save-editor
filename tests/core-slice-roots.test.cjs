@@ -51,3 +51,12 @@ test('family oracle, lifecycle and scenario modules call only their own roots',(
  }
  for(const m of used(read('migration-scenarios.cjs')))assert.ok(union.has(m),'migration-scenarios: '+m);
 });
+
+test('shared native lifecycle action modules cannot acquire SaveCore dependencies',()=>{
+ const visit=dir=>{for(const entry of fs.readdirSync(dir,{withFileTypes:true})){
+  const file=path.join(dir,entry.name);
+  if(entry.isDirectory())visit(file);
+  else if(entry.name.endsWith('.cjs'))assert.deepEqual([...used(fs.readFileSync(file,'utf8'))],[],path.relative(scripts,file));
+ }};
+ visit(path.join(scripts,'native-lifecycle'));
+});

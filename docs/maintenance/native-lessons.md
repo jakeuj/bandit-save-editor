@@ -12,7 +12,7 @@
 
 - **同一欄位可能有多種原版生成入口**：技藝上限的一般招募與開局初始角色公式不同。只有主招募函式的共同見證會誤擋原版角色；2026-11-03 補查初始生成、初始化複製與初始招募呼叫，初始 Q1 的一般／主要／次要區間是 1–30／36–44／26–34。見證應標來源，不能用角色編號猜招募歷史。新來源與進階 1–100 另以初始規則合成代表、未結丹／已結丹角色完成冒煙。`verify-skill-caps-modes.cjs` 重用原生經驗 oracle；99→100 當次 E9、下次已封頂 E0 各自存檔與新 PID 讀回，勿把修改器封頂即清零當成原生時序。
 
-冒煙可沿用 `verify-game.cjs --scenario`（`setPillAptitudeBonus`、`setEquipmentLevel` 等具名操作）加 `verify-native-lifecycle.cjs`（`ascend`、`followup`、`pills`、`pillOverLimit`、`backpackOverLimit`、`relics`、`relicTakeOff`、`relicStandPrepare`、`placedRelicAura`、`wall`、`city`、`ascensionQuality`、`innerPillPrepare`、`innerPillLevel`、`ascendedInnerPillLevel`、`relicCrafting`、`recruitTechnology`、`affixPrepare`、`affixOverLimit`、`outfitSwap` 等動作，以 `main()` 的清單為準；`pills` 可用 `pillCharacter` 指定角色；擺放類動作要在存檔重啟後另跑一次取下，才算驗過兩輪 IO；`穿戴装备` 後要等一拍再讀角色指標，同一次 evaluate 內讀到的是空列）；固定基準存檔先複製到 repo 外的新資料夾，步驟依 `.local/game-sources.json` 的 `nativeSmoke` 紀錄（雲存檔載入 → 存檔 → assert → stop → restart → 存檔載入 → assert）。
+冒煙可沿用 `verify-game.cjs --scenario`（`setPillAptitudeBonus`、`setEquipmentLevel` 等具名操作）加 `verify-native-lifecycle.cjs`（`ascend`、`followup`、`pills`、`pillOverLimit`、`backpackOverLimit`、`relics`、`relicTakeOff`、`relicStandPrepare`、`placedRelicAura`、`wall`、`city`、`ascensionQuality`、`innerPillPrepare`、`innerPillLevel`、`ascendedInnerPillLevel`、`relicCrafting`、`recruitTechnology`、`affixPrepare`、`affixOverLimit`、`outfitSwap` 等動作，以 `scripts/native-lifecycle/runner.cjs` 的 `run()` 分派為準，程式維護見[工具介面](native-lifecycle.md)；`pills` 可用 `pillCharacter` 指定角色；擺放類動作要在存檔重啟後另跑一次取下，才算驗過兩輪 IO；`穿戴装备` 後要等一拍再讀角色指標，同一次 evaluate 內讀到的是空列）；固定基準存檔先複製到 repo 外的新資料夾，步驟依 `.local/game-sources.json` 的 `nativeSmoke` 紀錄（雲存檔載入 → 存檔 → assert → stop → restart → 存檔載入 → assert）。
 
 - **只驗 Mac 啟動器、還沒改版時**：複製目前 catalog，只把 15 個來源指紋換成新版（`c3runtime.js` 用原始指紋）存到 repo 外當 `--catalog`，加 `--package` 指 Steam 安裝目錄。這只證明能存讀，不代表修改器支援新版（V1.0.13.0 Mac 補驗）。
 - **武庫裡的修改後物品**：用 `armoryEdited`（`rows` 為 z22 列號，`worn` 指定從武庫穿上的列與角色）：取出到背包再存回、換裝模式從武庫穿上並卸回。換裝模式穿上時，角色原本那格的裝備會進武庫而不是背包，基準存檔的武庫列數會多一（v2.35）。
@@ -30,7 +30,7 @@
 - 半途失敗時，遊戲內狀態已經變了，不要在同一副本續跑，從 `--setup` 重來（v2.16）。
 - **`--stop` 之後馬上 `--restart` 可能失敗**：`taskkill /F` 回來時程序可能還沒退出，`--restart` 會報 `Stop the disposable process before restarting`。冒煙腳本裡要重試 restart（例如最多 10 次、每次間隔 1 秒）；半途失敗就清掉 stage，從 `--setup` 重跑。`--artifacts` 目錄要先建好（靈物合成與精煉）。
 - `verify-game.cjs` 要等版面進入 `主界面` 才凍結時間（SetTimeScale 0），載入到凍結之間可能已經跑過一次每秒事件。目前生命低於上限時，新 PID 讀回的引擎值會多一次回血，`--assert` 的引擎比對就不會過。這時改看遊戲寫出的存檔與修改器重讀；若要讓 `--assert` 能通過，就讓該欄位在存檔時已在穩定點（例如生命已滿），或者不把它放進 observe（v2.19）。
-- **凍結時間前地圖還沒生成完**：`verify-game.cjs` 一進 `主界面` 就把時間設成 0，`生成主地图建筑` 中途的 Wait 還沒跑完。剛載入時只有 3 個地圖建築、0 個建築核心，地塊實例變數（例如地塊靈氣）也還沒算。要讀地圖物件或地塊值、或要挑空地塊時，先呼叫 `verify-native-lifecycle.cjs` 的 `settleMap`（讓時間走 5 秒再凍結）（v2.26）。
+- **凍結時間前地圖還沒生成完**：`verify-game.cjs` 一進 `主界面` 就把時間設成 0，`生成主地图建筑` 中途的 Wait 還沒跑完。剛載入時只有 3 個地圖建築、0 個建築核心，地塊實例變數（例如地塊靈氣）也還沒算。要讀地圖物件或地塊值、或要挑空地塊時，先沿用 `scripts/native-lifecycle/relics.cjs` 的私有 `settleMap`（讓時間走 5 秒再凍結）（v2.26）。
 - **銅錢與材料數量不要放進 `state.cells`**：讀檔到凍結時間之間的每秒事件可能改動它們，只在動作裡比對扣除量（靈物合成與精煉）。
 - **刷新會改的計數不要斷言**：`新刷新招募数据` 抽到目標品質時會把 `[等階,43,0]` 保底計數歸零，`主动寻访` 加的 1 不一定留得住；只在同一次 evaluate 內比對銅錢扣除（v2.29）。
 - **布林全域變數是 0／1**：`SetBoolVar` 寫進去的是數字，`global('游戏暂停').GetValue()` 回 0，不是 false。用 `assert.equal(x,false)` 會誤判成「暫停中」，連跑兩輪冒煙都失敗；斷言一律看真假值。先在現場讀值（repo 外 `probe-pause.cjs`）才發現。`System.Every` 下的每秒事件只在 `游戏暂停` 為否時跑，原生動作要 `SetTimeScale(1)` 再 `pause()` 讓時間走（v2.29）。
@@ -95,7 +95,7 @@
 - **看不出差別的重設用標記**：L=599 時每秒都重設成 1，倒數值本身無法分辨「有沒有跑」。在只有重設分支會寫的欄位（`[11,1,0]`）先寫標記 7，跑時間後確認被清成 0；對照組（L=450）標記保持 7，結束時寫回原值（v2.29）。
 - **「從修改值繼續」的原生對照**：降級後直接呼叫原生 `升级装备`，比對等級 +1 與魂魄扣除量＝`升级装备魂魄`；升到上限的再呼叫一次，確認等級與魂魄都不動（v2.22）。
 - **接續升階的原生對照**：`建筑升阶` 之後立刻 `取消升阶`，核對旗標、工程量（`建造工程量(t, L+1)`）、材料扣除與退回；城牆是立即升階，改用「在科技上限被拒」加上 `城墙升级` 在放寬後的上限內成功（v2.25）。
-- **原生接續用既有選取工具**：要證明「原生流程接受修改後的狀態」，沿用 `verify-native-lifecycle.cjs` 的 `selectFacility` 選書院研究設施，呼叫 `科技研究` 再 `取消设施进程`，同時核對旗標、設施進程與銅錢退回；已掌握的科技呼叫一次確認不會被推到 2（v2.24）。
+- **原生接續用既有選取工具**：要證明「原生流程接受修改後的狀態」，沿用 `scripts/native-lifecycle/runtime.cjs` 的 `selectFacility` 選書院研究設施，呼叫 `科技研究` 再 `取消设施进程`，同時核對旗標、設施進程與銅錢退回；已掌握的科技呼叫一次確認不會被推到 2（v2.24）。
 - **直接呼叫原生函式會跳過選取介面**：`套装合成`、`内丹精炼` 只檢查序號、類別與費用；材料種類、部位、靈物範本（`合成灵物编号`）與配方解鎖都只在 `刷新物品选择`／`刷新合成页面` 檢查。冒煙腳本要自己斷言這些條件，否則可能用介面選不到的組合跑出「通過」（靈物合成與精煉）。
 
 ## 修改器設計

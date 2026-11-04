@@ -15,8 +15,16 @@ function selectNames(plan) {
     return s.effects||s.lifecycle;
   }).map(([name])=>name);
 }
-function inputIdentity({catalog,copies,runtime,saveText,plan}) {
-  const scripts=fs.readdirSync(path.join(root,'scripts')).filter(n=>n.endsWith('.cjs')).sort().map(n=>[n,A.sha(fs.readFileSync(path.join(root,'scripts',n)))]);
+function inputIdentity({catalog,copies,runtime,saveText,plan,dir=root}) {
+  const scriptRoot=path.join(dir,'scripts'),files=[];
+  // Resume must bind action modules too, including future nested helpers.
+  const collect=folder=>{for(const entry of fs.readdirSync(folder,{withFileTypes:true})){
+    const file=path.join(folder,entry.name);
+    if(entry.isDirectory())collect(file);
+    else if(entry.name.endsWith('.cjs'))files.push(path.relative(scriptRoot,file).split(path.sep).join('/'));
+  }};
+  collect(scriptRoot);
+  const scripts=files.sort().map(n=>[n,A.sha(fs.readFileSync(path.join(scriptRoot,n)))]);
   const runtimeDir=path.dirname(path.resolve(runtime)),runtimeFiles=fs.readdirSync(runtimeDir,{withFileTypes:true}).filter(d=>d.isFile()&&(/\.(dll|pak|bin)$/i.test(d.name)||['icudtl.dat',path.basename(runtime)].includes(d.name))).map(d=>d.name);
   if(fs.existsSync(path.join(runtimeDir,'locales')))runtimeFiles.push(...fs.readdirSync(path.join(runtimeDir,'locales')).map(n=>'locales/'+n));
   const runtimeHashes=runtimeFiles.sort().map(n=>[n,A.sha(fs.readFileSync(path.join(runtimeDir,n)))]);
@@ -25,7 +33,7 @@ function inputIdentity({catalog,copies,runtime,saveText,plan}) {
     const walk=dir=>{for(const name of fs.readdirSync(dir).sort()){const file=path.join(dir,name),stat=fs.lstatSync(file);if(stat.isDirectory())walk(file);else runtimeHashes.push([path.relative(app,file),stat.isSymbolicLink()?fs.readlinkSync(file):A.sha(fs.readFileSync(file))]);}};
     walk(app);
   }
-  return A.sha({catalog,plan,scripts,runtime:runtimeHashes,save:A.sha(saveText),core:A.sha(readEditorSource('core', {root})),coreIdentityPolicy:['scripts/vendor/acorn.cjs','knowledge/core-ast-baselines.json'].map(n=>[n,fs.existsSync(path.join(root,n))?A.sha(fs.readFileSync(path.join(root,n))):null]),copies:copies.map(c=>({name:c.name,scenario:c.scenario,batch:c.batchRequests,lifecycle:c.lifecycle,formulas:c.formulas}))});
+  return A.sha({catalog,plan,scripts,runtime:runtimeHashes,save:A.sha(saveText),core:A.sha(readEditorSource('core', {root:dir})),coreIdentityPolicy:['scripts/vendor/acorn.cjs','knowledge/core-ast-baselines.json'].map(n=>[n,fs.existsSync(path.join(dir,n))?A.sha(fs.readFileSync(path.join(dir,n))):null]),copies:copies.map(c=>({name:c.name,scenario:c.scenario,batch:c.batchRequests,lifecycle:c.lifecycle,formulas:c.formulas}))});
 }
 function writeSelective({dir=root,catalog,previous,base,current,plan,results,steamBuild,expectedState,exec=(args)=>spawnSync(process.execPath,['scripts/build-editor.cjs',...args],{cwd:dir,encoding:'utf8'})}) {
   if(A.same(base.fingerprints,current.fingerprints)&&Core.same(base,current)&&A.same(base.roles,current.roles)&&A.same(base.dataHashes,current.dataHashes))return {action:'compared',consistent:results.completed};

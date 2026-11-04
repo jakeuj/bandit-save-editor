@@ -32,6 +32,8 @@ Linux CI另加`--with-deps`安裝系統函式庫。Playwright版本由package與
 
 `tests/character-aptitude-source.test.cjs` 只載入資質／結丹工廠，以小型合成模型與明示 host 替身驗證兩個私有唯讀操作：建立時不讀值、不綁定模型、動態旗標／知識、結丹與穿戴／備用套裝拒絕條件，成功及失敗都不能修改模型。它不代替公開 info／preview／set、精確 token、預覽失效、交易回滾與還原的既有測試；正式建置及瀏覽器仍使用完整組裝來源。`editor-contracts.test.cjs` 另檢查此工廠沒有隱含核心相依，host／回傳契約可由導覽入口找到。介面及重構比對方式見[私有介面](maintenance/core.md#資質與結丹的私有介面)。
 
+原生工具拆分的合成案例在 `tests/native-lifecycle.test.cjs`，涵蓋 host 隔離、分派順序與別名、結丹／服丹互斥、失敗停止、外部副本路徑、catalog 路徑及遞迴續跑指紋。既有 `version-migration`／`pill-ascended` 的動作斷言測試維持；`core-slice-roots` 的共用工具檢查延伸至新子目錄。這些測試只用合成 adapter，不啟動遊戲；維護入口見[原生生命週期工具](maintenance/native-lifecycle.md)。
+
 ## 證據分工
 
 開發中修改 core 時跑該功能的 Node 測試；改動牽涉存檔讀寫行為時，再補該功能的隔離遊戲冒煙（[輕量開發流程](maintenance/lightweight.md#改-core-與遊戲改版)）。`node scripts/core-slice-report.cjs` 只當參考，不決定要不要重證。
