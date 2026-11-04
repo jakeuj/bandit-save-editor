@@ -16,6 +16,17 @@ function setup({caps=initial,initialGate=true,advancedGate=true}={}){
 const request=caps=>({characterId:1,caps});
 const advanced=(C,m,caps)=>C.setCharacterSkillCapsAdvanced(m,request(caps),{preview:C.previewCharacterSkillCapsAdvanced(m,request(caps))});
 
+test('paired requests preserve serialized identity, and successful no-op consumes the supplied preview',()=>{
+ for(const mode of ['', 'Advanced']){
+  const {C,m}=setup({caps:recruited}),o=request([...recruited]),p=C['previewCharacterSkillCaps'+mode](m,o),apply=C['setCharacterSkillCaps'+mode],raw=C.serialize(m);
+  assert.equal(p.unchanged,true);assert.equal(p.canApply,false);
+  assert.throws(()=>apply(m,{caps:o.caps,characterId:o.characterId},{preview:p}),/預覽不相符/);
+  const result=apply(m,o,{preview:p});
+  assert.equal(result.unchanged,true);assert.equal(m.history.length,0);assert.equal(C.serialize(m),raw);
+  assert.throws(()=>apply(m,o,{preview:p}),/預覽不相符/);
+ }
+});
+
 test('initial vector has its unique native source witness and an independent closed gate',()=>{
  const {C,m}=setup({initialGate:false}),info=C.randomCharacterSkillCapsInfo(m,{characterId:1});
  assert.equal(info.eligible,true);assert.equal(info.verified,false);

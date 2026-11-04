@@ -2,6 +2,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const acorn = require('./vendor/acorn.cjs');
+const {indexJsdoc} = require('./editor-jsdoc.cjs');
 
 function walk(node, visit, parent = null, key = null) {
   if (!node || typeof node !== 'object') return;
@@ -44,8 +45,9 @@ function locator(details, root) {
 // Resolve lexical bindings before collecting references, including hoisted functions,
 // destructuring, loop/catch scopes and local names shadowing the shared closure.
 function analyzeEntry(entry, details, root) {
-  const ast = acorn.parse(details.source, {ecmaVersion: 2024, sourceType: 'script'});
+  const comments = [], ast = acorn.parse(details.source, {ecmaVersion: 2024, sourceType: 'script', onComment: comments});
   const locate = locator(details, root), nodeScopes = new WeakMap(), bound = new WeakSet(), records = new WeakMap();
+  const jsdoc = indexJsdoc(entry, details.source, comments, locate);
   const scope = (parent, kind) => ({parent, kind, names: new Map()});
   const program = scope(null, 'function'), diagnostics = [], limitations = [];
   const report = (list, code, node, message) => list.push({code, ...locate(node.start), message});
@@ -104,6 +106,8 @@ function analyzeEntry(entry, details, root) {
     names.add(binding.name);
     const start = locate(binding.node.start), end = locate(Math.max(binding.node.start, binding.node.end - 1));
     const definition = {id: entry + ':' + binding.name, entry, name: binding.name, kind: binding.kind, ...start, endLine: end.file === start.file ? end.line : start.line, start: binding.node.start, end: binding.node.end, publicExports: []};
+    const contract = jsdoc.forDefinition(binding.node.start);
+    if (contract) definition.contract = contract;
     binding.definition = definition; definitions.push(definition);
   }
   walk(ast, node => {
@@ -165,7 +169,7 @@ function analyzeEntry(entry, details, root) {
     if (entry === 'core' && node.type === 'AssignmentExpression' && node.operator === '=' && ((node.left.type === 'MemberExpression' && memberName(node.left) === 'SaveCore' && globalObject(node.left.object)) || (node.left.type === 'Identifier' && node.left.name === 'SaveCore' && !resolveNode(node.left)))) exportAssignments.push(node);
     if (node.type === 'VariableDeclarator' && node.id.type !== 'Identifier' && coreObject(node.init)) report(limitations, 'CORE_DESTRUCTURING', node, 'SaveCore 解構別名需人工核對');
   });
-  return {entry, ast, definitions, references, members, exportAssignments, diagnostics, limitations, locate, resolveNode, ownerAt};
+  return {entry, ast, definitions, types: jsdoc.types, references, members, exportAssignments, diagnostics, limitations, locate, resolveNode, ownerAt};
 }
 
 module.exports = {analyzeEntry, walk, memberName, locator};

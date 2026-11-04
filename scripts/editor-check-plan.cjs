@@ -133,7 +133,7 @@ function changedReport({root = path.resolve(__dirname, '..'), base, staged = fal
   const files = [...new Set([...tracked, ...untracked])].sort();
   if (staged && initialTree !== git(root, ['write-tree']).trim()) throw Error('Index 已改變，請重新執行查詢');
   const build = viewRoot => {
-    const result = {query: {changed: true, staged, base: staged ? 'HEAD' : base || 'HEAD'}, files, definitions: [], dependencies: [], dependents: [], publicExports: [], families: [], groups: [], suggestedChecks: [], limitations: [], diagnostics: [], guides: ['docs/testing.md', 'docs/maintenance/lightweight.md']};
+    const result = {query: {changed: true, staged, base: staged ? 'HEAD' : base || 'HEAD'}, files, definitions: [], dependencies: [], dependents: [], publicExports: [], contractTypes: [], families: [], groups: [], suggestedChecks: [], limitations: [], diagnostics: [], guides: ['docs/testing.md', 'docs/maintenance/lightweight.md']};
     if (!files.length || files.every(documents)) { result.suggestedChecks = suggestChecks(null, {files}); return result; }
     const reasons = [], ids = new Set(); let index, incomplete = false;
     try { index = buildInspection({root: viewRoot}); }
@@ -143,7 +143,7 @@ function changedReport({root = path.resolve(__dirname, '..'), base, staged = fal
       if (index?.sources.includes(file)) {
         const query = queryInspection(index, {file});
         query.definitions.forEach(d => ids.add(d.id));
-        for (const name of ['definitions', 'dependencies', 'dependents', 'publicExports', 'families', 'groups']) result[name].push(...query[name]);
+        for (const name of ['definitions', 'dependencies', 'dependents', 'publicExports', 'contractTypes', 'families', 'groups']) result[name].push(...query[name]);
       } else if (product(file)) { incomplete = true; reasons.push('未能定位組裝來源：' + file); }
       if (/\.(js|cjs)$/.test(file) && !deleted.has(file) && !untracked.includes(file)) {
         try {
@@ -153,7 +153,7 @@ function changedReport({root = path.resolve(__dirname, '..'), base, staged = fal
         } catch (error) { incomplete = true; reasons.push(file + ' 的前後宣告無法完整比對：' + error.message.split('\n')[0]); }
       }
     }
-    for (const name of ['definitions', 'dependencies', 'dependents', 'publicExports', 'families', 'groups']) result[name] = [...new Map(result[name].map(row => [JSON.stringify(row), row])).values()];
+    for (const name of ['definitions', 'dependencies', 'dependents', 'publicExports', 'contractTypes', 'families', 'groups']) result[name] = [...new Map(result[name].map(row => [JSON.stringify(row), row])).values()];
     result.diagnostics = index?.diagnostics || [];
     result.limitations = [...(index?.limitations || []), ...reasons.map(message => ({code: 'INCOMPLETE_CHANGE_COVERAGE', message}))];
     result.suggestedChecks = suggestChecks(index, {ids: [...ids], files, incomplete, reasons});

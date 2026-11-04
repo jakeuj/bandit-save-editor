@@ -228,6 +228,43 @@
 <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 <script id="save-core">
 /* Local save editing core. All unchanged source bytes are preserved. */
+/** @typedef {number|string|boolean|null} SaveScalar 原始 JSON 儲存格值；大型整數仍以原始文字為匯出依據。 */
+/**
+ * @typedef {Object} SaveCoord 零起算座標；各軸皆為非負整數。
+ * @property {number} x
+ * @property {number} y
+ * @property {number} z
+ */
+/**
+ * @typedef {Object} SaveArray 解析後僅供讀取的遊戲資料，不可用 JSON.stringify 重建匯出。
+ * @property {true} c2array
+ * @property {number[]} size 三個正整數，依序為 x、y、z 尺寸。
+ * @property {SaveScalar[][][]} data
+ */
+/**
+ * @typedef {Object} SaveChange 一個待替換 token；使用具名寫入介面管理，不直接修改紀錄。
+ * @property {number} x
+ * @property {number} y
+ * @property {number} z
+ * @property {SaveScalar} original
+ * @property {SaveScalar} value
+ * @property {string} label
+ * @property {string|null} operation 同筆操作的關聯標記。
+ * @property {string|null} group 累計還原群組，優先於 operation。
+ */
+/**
+ * @typedef {Object} SaveModel parse 產生的同一實例；呼叫端以公開操作修改，保留原始資料及私有狀態身分。
+ * @property {string} name
+ * @property {string} text 原始文字，保留 BOM、空白、指數與大型整數 literal。
+ * @property {SaveArray} original 僅供讀值；不直接改 data。
+ * @property {Map<string,SaveChange>} changes 以 x,y,z 字串為鍵；呼叫端僅供觀察。
+ * @property {Map<string,SaveChange>[]} history 最多 100 筆快照；私有還原狀態不可用 JSON 複製。
+ * @property {number} [revision] 核心維護的預覽失效版本戳。
+ * @property {number} [operationCounter] 核心維護的操作編號。
+ * @property {string|null} [currentOperation] 核心維護的目前操作標記。
+ * @property {string|null} [currentGroup] 核心維護的目前累計群組。
+ * @property {boolean} [inTransaction] 核心維護的巢狀交易狀態。
+ */
 /**
  * @typedef {Object} FieldDescriptor
  * @property {string} id Zero-based x,y,z coordinate key.
@@ -260,6 +297,13 @@
  const key=c=>`${c.x},${c.y},${c.z}`;
  const exists=(o,c)=>[c.x,c.y,c.z].every((n,i)=>Number.isInteger(n)&&n>=0&&n<o.size[i]);
  const cell=(o,c)=>o.data[c.x][c.y][c.z];
+ /**
+  * 解析遊戲存檔並保留原始文字；欄位資格仍由各操作檢查。
+  * @param {string} text 含 BOM 亦可；大小及三維資料結構須符合支援範圍。
+  * @param {string} [name='save.dat']
+  * @returns {SaveModel} 新模型；changes/history 初始為空。
+  * @throws {Error} JSON、尺寸或遊戲識別不符合要求。
+  */
  function parse(text,name='save.dat'){
   if(typeof text!=='string'||text.length>50*1024*1024)throw Error('檔案過大或無法讀取，請選取遊戲 .dat 存檔。');
   let data;try{data=JSON.parse(text.replace(/^\uFEFF/,''));}catch{throw Error('這不是有效的 JSON 存檔，檔案可能損毀或格式不同。');}
@@ -826,6 +870,88 @@
  }
  // Skill cap rules begin. Independently bound by the skill-cap proof.
 
+ /**
+  * @typedef {Object} SkillCapAptitudeWitness 基礎資質的生成見證，不授予寫入權限。
+  * @property {number} total
+  * @property {number} orientation 0–3 的來源方向編號。
+  */
+ /**
+  * @typedef {Object} SkillCapWitness 固定資質／天賦下，一般招募或初始角色的共同生成見證。
+  * @property {number} total
+  * @property {string} orientation 原版方向名稱，品質 1 為「通用」。
+  * @property {number} primary 主技藝 ID，1–9。
+  * @property {number} secondary 次技藝 ID，與 primary 不同。
+  * @property {'recruitment'|'initial'} source 來源見證不等同該來源的驗證旗標已開放。
+  */
+ /**
+  * @typedef {Object} SkillCapsObservedSkill 現有資料快照；eligible=false 時保留異常原值供診斷。
+  * @property {number} id 1–9。
+  * @property {string} name
+  * @property {SaveScalar} cap
+  * @property {SaveScalar} level
+  * @property {SaveScalar} experience
+  */
+ /**
+  * @typedef {Object} SkillCapValues 一列預覽值；cap 仍須依 reasons 判斷合法性。
+  * @property {number} cap
+  * @property {number} level
+  * @property {number} experience 可含小數，不會因調整上限而清零。
+  */
+ /**
+  * @typedef {Object} SkillCapPreviewRow
+  * @property {number} id 1–9。
+  * @property {string} name
+  * @property {SkillCapValues} before
+  * @property {SkillCapValues} after level/experience 與 before 相同。
+  * @property {string[]} reasons 此項降低限制，亦彙入整體 reasons。
+  */
+ /**
+  * @typedef {Object} SkillCapChange 顯示用差異，不是可直接執行的寫入指令。
+  * @property {number} id
+  * @property {string} name
+  * @property {number} before
+  * @property {number} after
+  */
+ /**
+  * @typedef {Object} SkillCapsInfo 現有角色資格；eligible 與 verified 分開判斷。
+  * @property {number} characterId
+  * @property {boolean} advanced 方法選擇的模式，不由 request 欄位切換。
+  * @property {boolean} eligible 現有資料合格；不代表旗標開放或任意目標均可套用。
+  * @property {boolean} verified 目前模式及適用來源的旗標狀態。
+  * @property {string[]} reasons 現有角色／資料不合格的原因。
+  * @property {SkillCapsObservedSkill[]} skills eligible=true 時為九項已核對數值，否則可能缺漏或帶異常值。
+  * @property {SkillCapWitness[]} witnesses 一般模式的現有見證；進階模式為空。
+  * @property {SaveScalar} [quality] 原始品質值，eligible=true 時已核對為 1–6。
+  * @property {SaveScalar[]} [raw] 固定基礎資質，可能因提早拒絕而缺少。
+  * @property {SaveScalar[]} [talents] 固定天賦 ID。
+  * @property {SaveScalar[]} [talentLevels] 固定天賦等級。
+  * @property {number} [ascensions] 已核對的結丹次數。
+  */
+ /**
+  * @typedef {Object} SkillCapsRequest 預覽與套用重用同一份請求，只有以下兩個欄位。
+  * @property {number} characterId 有效且已招募的角色 ID。
+  * @property {number[]} caps 完整九項安全整數，依伐木、採礦、種植、鍛造、工藝、煉丹、建造、研究、操練排序。
+  */
+ /**
+  * @typedef {Object} SkillCapsPreviewDetails 供 UI 顯示；權限另由核心私有 WeakMap 驗證。
+  * @property {SkillCapPreviewRow[]} rows 可能為空；目標格式／現有資格通過前不產生九列。
+  * @property {SkillCapChange[]} changes 只列 cap 有差異的項目。
+  * @property {boolean} unchanged 已產生九列且 cap 全部同值；不是一般的成功旗標。
+  * @property {boolean} canApply 已驗證、無 reasons 且有差異，供 UI 決定套用按鈕。
+  * @property {string} restoreScope 累計還原範圍說明。
+  */
+ /** @typedef {SkillCapsInfo & SkillCapsPreviewDetails} SkillCapsPreview 核心產生的原始物件；複製或 JSON 重建會失去授權身分。 */
+ /**
+  * @typedef {Object} SkillCapsApplyContext
+  * @property {SkillCapsPreview} preview 配對同模型、同模式、同請求且未過期的原始預覽物件。
+  */
+ /**
+  * 唯讀尋找固定基礎資質的生成見證；不讀模型，也不表示可寫。
+  * @param {number} quality 原版品質 1–6。
+  * @param {number[]} raw 完整三項未結丹基礎資質。
+  * @param {number} orientation 0–3；品質 1 限通用方向。
+  * @returns {SkillCapAptitudeWitness|null} 無合法見證或輸入不符時為 null。
+  */
  function skillCapAptitudeWitness(quality,raw,orientation){
   const rules=KNOWLEDGE.randomCharacterSkillCaps;
   if(!rules||!Number.isInteger(quality)||quality<1||quality>rules.totals.length||!Array.isArray(raw)||raw.length!==3||!Number.isInteger(orientation)||orientation<0||orientation>3||quality===1&&orientation!==3||Array.from(raw).some(v=>!Number.isSafeInteger(v)||v<1||v>300))return null;
@@ -854,6 +980,15 @@
   }
   return null;
  }
+ /**
+  * 唯讀列舉資質、三槽天賦及九上限的共同生成見證；來源合法性與旗標各自判斷。
+  * @param {number} quality
+  * @param {number[]} raw 完整三項未結丹基礎資質。
+  * @param {number[]} talents 三個不同天賦 ID。
+  * @param {number[]} talentLevels 三個固定天賦等級。
+  * @param {number[]} caps 完整九項技藝上限。
+  * @returns {SkillCapWitness[]} 無見證或輸入不符時為空陣列。
+  */
  function skillCapCombinations(quality,raw,talents,talentLevels,caps){
   const rules=KNOWLEDGE.randomCharacterSkillCaps;
   if(!rules||!Number.isInteger(quality)||quality<1||quality>6||!Array.isArray(caps)||caps.length!==9||Array.from(caps).some(v=>!Number.isSafeInteger(v))||!Array.isArray(talents)||talents.length!==3||new Set(talents).size!==3||!Array.isArray(talentLevels)||talentLevels.length!==3)return [];
@@ -900,7 +1035,19 @@
   }catch(e){reasons.push(e.message);}
   return info;
  }
+ /**
+  * 一般模式的唯讀資格：要求固定資質／天賦與九上限有共同生成見證。
+  * @param {SaveModel} m
+  * @param {{characterId:number}} options
+  * @returns {SkillCapsInfo} 不合格原因回傳 reasons；旗標關閉仍可查資格。
+  */
  function randomCharacterSkillCapsInfo(m,options){return skillCapsCharacterInfo(m,options);}
+ /**
+  * 進階 1–100 的唯讀資格；保留角色／結丹檢查，不要求共同生成見證。
+  * @param {SaveModel} m
+  * @param {{characterId:number}} options
+  * @returns {SkillCapsInfo} 不合格原因回傳 reasons，不能只用 verified 判斷資格。
+  */
  function randomCharacterSkillCapsAdvancedInfo(m,options){return skillCapsCharacterInfo(m,options,true);}
  const skillCapPreviews=new WeakMap();
  function skillCapPreviewState(m,characterId){
@@ -933,7 +1080,19 @@
   skillCapPreviews.set(result,{model:m,advanced,request:JSON.stringify(options),snapshot:batchSnapshot(m),state:skillCapPreviewState(m,characterId)});
   return result;
  }
+ /**
+  * 一般模式預覽，檢查現有／目標共同見證與逐項降低限制，不改模型或歷史。
+  * @param {SaveModel} m
+  * @param {SkillCapsRequest} options 保留此請求供套用；額外欄位列入拒絕原因。
+  * @returns {SkillCapsPreview} 檢查 reasons/verified/canApply；保留原始物件，不以 changes 寫入。
+  */
  function previewCharacterSkillCaps(m,options){return previewSkillCaps(m,options);}
+ /**
+  * 進階預覽，九上限各限 1–100；不要求共同生成見證，仍不能低於等級或抹除封頂餘額。
+  * @param {SaveModel} m
+  * @param {SkillCapsRequest} options 模式由本方法選擇，不帶 advanced 欄位。
+  * @returns {SkillCapsPreview} 唯讀預覽；模型／請求／模式改變後重新取得。
+  */
  function previewCharacterSkillCapsAdvanced(m,options){return previewSkillCaps(m,options,true);}
  function applySkillCaps(m,options,{preview}={},advanced=false){
   const prior=preview&&skillCapPreviews.get(preview);
@@ -950,7 +1109,24 @@
   skillCapPreviews.delete(preview);
   return checked;
  }
+ /**
+  * 一般模式重新驗證並原子套用九上限，成功後消耗傳入預覽，包含合法同值操作。
+  * 首次有效改動啟用該角色 27 欄 cap/L/E 累計還原；同值不新增歷史。
+  * @param {SaveModel} m 必須是預覽時的同一模型。
+  * @param {SkillCapsRequest} options 重用預覽請求；目前以 JSON 序列化比對，包含鍵順序。
+  * @param {SkillCapsApplyContext} context 只接受核心原始、同模式且未過期的 preview。
+  * @returns {SkillCapsPreview} 重新檢查的顯示結果；下一次編輯另取預覽。
+  * @throws {Error} 預覽身分／快照不符、目標非法或旗標關閉；失敗不新增差異或歷史。
+  */
  function setCharacterSkillCaps(m,options,context){return applySkillCaps(m,options,context);}
+ /**
+  * 進階 1–100 重新驗證並原子套用；交易、預覽消耗與累計還原同一般模式。
+  * @param {SaveModel} m
+  * @param {SkillCapsRequest} options 重用原始請求；等級與經驗餘額保持不變。
+  * @param {SkillCapsApplyContext} context 一般模式或複製的預覽無效。
+  * @returns {SkillCapsPreview} 合法同值亦可成功，但 canApply=false、沒有新增歷史。
+  * @throws {Error} 身分／模式／快照、資格、值域或驗證旗標不符。
+  */
  function setCharacterSkillCapsAdvanced(m,options,context){return applySkillCaps(m,options,context,true);}
  // Skill cap rules end.
  // Talent level rules. Ids, empty slots and quality stay as recruited; only pooled levels change.
@@ -1751,6 +1927,18 @@
   const modes=new Set(skillModes(m));modes.add(characterId);skillGrowthModes.set(m,modes);
   for(const [k,v]of m.changes)if(v.x===characterId&&v.z===2&&v.y>=22&&v.y<=48)m.changes.set(k,{...v,group:`skill-growth:${characterId}`});
  }
+ /**
+  * 同步執行一筆可復原交易，原樣回傳 callback 的結果。
+  * 最外層有變更才新增一筆歷史；巢狀交易合併到外層，同值操作不新增歷史。
+  * callback 拋錯時還原 changes/history、版本戳、操作編號與私有技藝群組模式。
+  * 回滾涵蓋核心管理的交易狀態，不包含直接改 original/text 或其他外部副作用。
+  * @template T
+  * @param {SaveModel} m
+  * @param {function():T} fn 應為同步 callback，透過公開寫入操作改模型；不等待 Promise 或回滾非同步後續。
+  * @param {string} [label] 外層操作標記；不取代既有累計群組。
+  * @returns {T} fn 的原始回傳值。
+  * @throws {*} fn 同步拋出的原始例外，回滾後重新拋出。
+  */
  function transaction(m,fn,label){
   // Private batch staging already checkpoints each fixed target and discards the whole model on failure.
   if(batchStages.has(m))return fn();
@@ -1767,17 +1955,35 @@
   if(changed&&!nested){historyStates.set(before,{modes,counter});m.history.push(before);if(m.history.length>100)m.history.shift();m.revision=(m.revision||0)+1;}
   return result;
  }
+ /**
+  * 回到上一筆最外層交易，包含技藝累計群組模式；不新增歷史。
+  * @param {SaveModel} m
+  * @returns {void} 沒有歷史時不動作；有還原時使舊預覽失效。
+  */
  function undo(m){
   if(!m.history.length)return;
   const before=m.history.pop(),state=historyStates.get(before);
   m.changes=before;skillGrowthModes.set(m,new Set(state?.modes||[]));m.operationCounter=state?.counter;m.revision=(m.revision||0)+1;
  }
+ /**
+  * 還原指定座標的累計變更，仍是一筆可 undo 的交易。
+  * 依序還原整個 group、整個 operation，或單一座標；不是回到上一次操作。
+  * 技藝群組涵蓋該角色九項 cap/L/E（27 欄）及其私有模式，保留其他角色的修改。
+  * @param {SaveModel} m
+  * @param {SaveCoord} c 以一個待還原的變更座標選取群組；沒有變更時不動作。
+  * @returns {void}
+  */
  function restore(m,c){transaction(m,()=>{
   const change=m.changes.get(key(c)),group=change?.group,op=change?.operation;
   if(group){for(const [k,v]of m.changes)if(v.group===group)m.changes.delete(k);if(group.startsWith('skill-growth:')){const modes=new Set(skillModes(m));modes.delete(change.x);skillGrowthModes.set(m,modes);}}
   else if(op){for(const [k,v]of m.changes)if(v.operation===op)m.changes.delete(k);}
   else m.changes.delete(key(c));
  });}
+ /**
+  * 清除全部差異及私有技藝群組模式，形成一筆可 undo 的交易；不以直接 clear changes 取代。
+  * @param {SaveModel} m
+  * @returns {void} 差異及私有模式均未改變時不新增歷史。
+  */
  function restoreAll(m){transaction(m,()=>{m.changes.clear();skillGrowthModes.set(m,new Set());});}
 
  const experienceNeed={
@@ -1904,6 +2110,12 @@
   const f=resolveField({original:o,changes:new Map()},c);return [f.entity,f.label].filter(Boolean).join('・');
  }
  function diff(a,b){if(a.size.some((n,i)=>n!==b.size[i]))throw Error('兩份存檔的陣列尺寸不同，請比較相同遊戲版本的存檔。');const out=[];for(let x=0;x<a.size[0];x++)for(let y=0;y<a.size[1];y++)for(let z=0;z<a.size[2];z++){const before=a.data[x][y][z],after=b.data[x][y][z];if(!Object.is(before,after))out.push({x,y,z,before,after,label:labelFor(a,{x,y,z})});}return out;}
+ /**
+  * 只替換 changes 指定的原始 token；其餘字元逐字保留，不以 original 重建 JSON。
+  * @param {SaveModel} m
+  * @returns {string} 沒有變更時直接回傳 m.text；此操作不清除變更或復原歷史。
+  * @throws {Error} 修改值與原 token 型別不同，或有座標未能定位。
+  */
  function serialize(m){
   if(!m.changes.size)return m.text;
   const token=/"(?:[^"\\]|\\.)*"|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|true|false|null|[{}\[\],:]/g;

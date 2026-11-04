@@ -91,6 +91,18 @@
   const modes=new Set(skillModes(m));modes.add(characterId);skillGrowthModes.set(m,modes);
   for(const [k,v]of m.changes)if(v.x===characterId&&v.z===2&&v.y>=22&&v.y<=48)m.changes.set(k,{...v,group:`skill-growth:${characterId}`});
  }
+ /**
+  * 同步執行一筆可復原交易，原樣回傳 callback 的結果。
+  * 最外層有變更才新增一筆歷史；巢狀交易合併到外層，同值操作不新增歷史。
+  * callback 拋錯時還原 changes/history、版本戳、操作編號與私有技藝群組模式。
+  * 回滾涵蓋核心管理的交易狀態，不包含直接改 original/text 或其他外部副作用。
+  * @template T
+  * @param {SaveModel} m
+  * @param {function():T} fn 應為同步 callback，透過公開寫入操作改模型；不等待 Promise 或回滾非同步後續。
+  * @param {string} [label] 外層操作標記；不取代既有累計群組。
+  * @returns {T} fn 的原始回傳值。
+  * @throws {*} fn 同步拋出的原始例外，回滾後重新拋出。
+  */
  function transaction(m,fn,label){
   // Private batch staging already checkpoints each fixed target and discards the whole model on failure.
   if(batchStages.has(m))return fn();
@@ -107,15 +119,33 @@
   if(changed&&!nested){historyStates.set(before,{modes,counter});m.history.push(before);if(m.history.length>100)m.history.shift();m.revision=(m.revision||0)+1;}
   return result;
  }
+ /**
+  * 回到上一筆最外層交易，包含技藝累計群組模式；不新增歷史。
+  * @param {SaveModel} m
+  * @returns {void} 沒有歷史時不動作；有還原時使舊預覽失效。
+  */
  function undo(m){
   if(!m.history.length)return;
   const before=m.history.pop(),state=historyStates.get(before);
   m.changes=before;skillGrowthModes.set(m,new Set(state?.modes||[]));m.operationCounter=state?.counter;m.revision=(m.revision||0)+1;
  }
+ /**
+  * 還原指定座標的累計變更，仍是一筆可 undo 的交易。
+  * 依序還原整個 group、整個 operation，或單一座標；不是回到上一次操作。
+  * 技藝群組涵蓋該角色九項 cap/L/E（27 欄）及其私有模式，保留其他角色的修改。
+  * @param {SaveModel} m
+  * @param {SaveCoord} c 以一個待還原的變更座標選取群組；沒有變更時不動作。
+  * @returns {void}
+  */
  function restore(m,c){transaction(m,()=>{
   const change=m.changes.get(key(c)),group=change?.group,op=change?.operation;
   if(group){for(const [k,v]of m.changes)if(v.group===group)m.changes.delete(k);if(group.startsWith('skill-growth:')){const modes=new Set(skillModes(m));modes.delete(change.x);skillGrowthModes.set(m,modes);}}
   else if(op){for(const [k,v]of m.changes)if(v.operation===op)m.changes.delete(k);}
   else m.changes.delete(key(c));
  });}
+ /**
+  * 清除全部差異及私有技藝群組模式，形成一筆可 undo 的交易；不以直接 clear changes 取代。
+  * @param {SaveModel} m
+  * @returns {void} 差異及私有模式均未改變時不新增歷史。
+  */
  function restoreAll(m){transaction(m,()=>{m.changes.clear();skillGrowthModes.set(m,new Set());});}

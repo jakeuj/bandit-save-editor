@@ -1,3 +1,85 @@
+ /**
+  * @typedef {Object} SkillCapAptitudeWitness 基礎資質的生成見證，不授予寫入權限。
+  * @property {number} total
+  * @property {number} orientation 0–3 的來源方向編號。
+  */
+ /**
+  * @typedef {Object} SkillCapWitness 固定資質／天賦下，一般招募或初始角色的共同生成見證。
+  * @property {number} total
+  * @property {string} orientation 原版方向名稱，品質 1 為「通用」。
+  * @property {number} primary 主技藝 ID，1–9。
+  * @property {number} secondary 次技藝 ID，與 primary 不同。
+  * @property {'recruitment'|'initial'} source 來源見證不等同該來源的驗證旗標已開放。
+  */
+ /**
+  * @typedef {Object} SkillCapsObservedSkill 現有資料快照；eligible=false 時保留異常原值供診斷。
+  * @property {number} id 1–9。
+  * @property {string} name
+  * @property {SaveScalar} cap
+  * @property {SaveScalar} level
+  * @property {SaveScalar} experience
+  */
+ /**
+  * @typedef {Object} SkillCapValues 一列預覽值；cap 仍須依 reasons 判斷合法性。
+  * @property {number} cap
+  * @property {number} level
+  * @property {number} experience 可含小數，不會因調整上限而清零。
+  */
+ /**
+  * @typedef {Object} SkillCapPreviewRow
+  * @property {number} id 1–9。
+  * @property {string} name
+  * @property {SkillCapValues} before
+  * @property {SkillCapValues} after level/experience 與 before 相同。
+  * @property {string[]} reasons 此項降低限制，亦彙入整體 reasons。
+  */
+ /**
+  * @typedef {Object} SkillCapChange 顯示用差異，不是可直接執行的寫入指令。
+  * @property {number} id
+  * @property {string} name
+  * @property {number} before
+  * @property {number} after
+  */
+ /**
+  * @typedef {Object} SkillCapsInfo 現有角色資格；eligible 與 verified 分開判斷。
+  * @property {number} characterId
+  * @property {boolean} advanced 方法選擇的模式，不由 request 欄位切換。
+  * @property {boolean} eligible 現有資料合格；不代表旗標開放或任意目標均可套用。
+  * @property {boolean} verified 目前模式及適用來源的旗標狀態。
+  * @property {string[]} reasons 現有角色／資料不合格的原因。
+  * @property {SkillCapsObservedSkill[]} skills eligible=true 時為九項已核對數值，否則可能缺漏或帶異常值。
+  * @property {SkillCapWitness[]} witnesses 一般模式的現有見證；進階模式為空。
+  * @property {SaveScalar} [quality] 原始品質值，eligible=true 時已核對為 1–6。
+  * @property {SaveScalar[]} [raw] 固定基礎資質，可能因提早拒絕而缺少。
+  * @property {SaveScalar[]} [talents] 固定天賦 ID。
+  * @property {SaveScalar[]} [talentLevels] 固定天賦等級。
+  * @property {number} [ascensions] 已核對的結丹次數。
+  */
+ /**
+  * @typedef {Object} SkillCapsRequest 預覽與套用重用同一份請求，只有以下兩個欄位。
+  * @property {number} characterId 有效且已招募的角色 ID。
+  * @property {number[]} caps 完整九項安全整數，依伐木、採礦、種植、鍛造、工藝、煉丹、建造、研究、操練排序。
+  */
+ /**
+  * @typedef {Object} SkillCapsPreviewDetails 供 UI 顯示；權限另由核心私有 WeakMap 驗證。
+  * @property {SkillCapPreviewRow[]} rows 可能為空；目標格式／現有資格通過前不產生九列。
+  * @property {SkillCapChange[]} changes 只列 cap 有差異的項目。
+  * @property {boolean} unchanged 已產生九列且 cap 全部同值；不是一般的成功旗標。
+  * @property {boolean} canApply 已驗證、無 reasons 且有差異，供 UI 決定套用按鈕。
+  * @property {string} restoreScope 累計還原範圍說明。
+  */
+ /** @typedef {SkillCapsInfo & SkillCapsPreviewDetails} SkillCapsPreview 核心產生的原始物件；複製或 JSON 重建會失去授權身分。 */
+ /**
+  * @typedef {Object} SkillCapsApplyContext
+  * @property {SkillCapsPreview} preview 配對同模型、同模式、同請求且未過期的原始預覽物件。
+  */
+ /**
+  * 唯讀尋找固定基礎資質的生成見證；不讀模型，也不表示可寫。
+  * @param {number} quality 原版品質 1–6。
+  * @param {number[]} raw 完整三項未結丹基礎資質。
+  * @param {number} orientation 0–3；品質 1 限通用方向。
+  * @returns {SkillCapAptitudeWitness|null} 無合法見證或輸入不符時為 null。
+  */
  function skillCapAptitudeWitness(quality,raw,orientation){
   const rules=KNOWLEDGE.randomCharacterSkillCaps;
   if(!rules||!Number.isInteger(quality)||quality<1||quality>rules.totals.length||!Array.isArray(raw)||raw.length!==3||!Number.isInteger(orientation)||orientation<0||orientation>3||quality===1&&orientation!==3||Array.from(raw).some(v=>!Number.isSafeInteger(v)||v<1||v>300))return null;
@@ -26,6 +108,15 @@
   }
   return null;
  }
+ /**
+  * 唯讀列舉資質、三槽天賦及九上限的共同生成見證；來源合法性與旗標各自判斷。
+  * @param {number} quality
+  * @param {number[]} raw 完整三項未結丹基礎資質。
+  * @param {number[]} talents 三個不同天賦 ID。
+  * @param {number[]} talentLevels 三個固定天賦等級。
+  * @param {number[]} caps 完整九項技藝上限。
+  * @returns {SkillCapWitness[]} 無見證或輸入不符時為空陣列。
+  */
  function skillCapCombinations(quality,raw,talents,talentLevels,caps){
   const rules=KNOWLEDGE.randomCharacterSkillCaps;
   if(!rules||!Number.isInteger(quality)||quality<1||quality>6||!Array.isArray(caps)||caps.length!==9||Array.from(caps).some(v=>!Number.isSafeInteger(v))||!Array.isArray(talents)||talents.length!==3||new Set(talents).size!==3||!Array.isArray(talentLevels)||talentLevels.length!==3)return [];
@@ -72,7 +163,19 @@
   }catch(e){reasons.push(e.message);}
   return info;
  }
+ /**
+  * 一般模式的唯讀資格：要求固定資質／天賦與九上限有共同生成見證。
+  * @param {SaveModel} m
+  * @param {{characterId:number}} options
+  * @returns {SkillCapsInfo} 不合格原因回傳 reasons；旗標關閉仍可查資格。
+  */
  function randomCharacterSkillCapsInfo(m,options){return skillCapsCharacterInfo(m,options);}
+ /**
+  * 進階 1–100 的唯讀資格；保留角色／結丹檢查，不要求共同生成見證。
+  * @param {SaveModel} m
+  * @param {{characterId:number}} options
+  * @returns {SkillCapsInfo} 不合格原因回傳 reasons，不能只用 verified 判斷資格。
+  */
  function randomCharacterSkillCapsAdvancedInfo(m,options){return skillCapsCharacterInfo(m,options,true);}
  const skillCapPreviews=new WeakMap();
  function skillCapPreviewState(m,characterId){
@@ -105,7 +208,19 @@
   skillCapPreviews.set(result,{model:m,advanced,request:JSON.stringify(options),snapshot:batchSnapshot(m),state:skillCapPreviewState(m,characterId)});
   return result;
  }
+ /**
+  * 一般模式預覽，檢查現有／目標共同見證與逐項降低限制，不改模型或歷史。
+  * @param {SaveModel} m
+  * @param {SkillCapsRequest} options 保留此請求供套用；額外欄位列入拒絕原因。
+  * @returns {SkillCapsPreview} 檢查 reasons/verified/canApply；保留原始物件，不以 changes 寫入。
+  */
  function previewCharacterSkillCaps(m,options){return previewSkillCaps(m,options);}
+ /**
+  * 進階預覽，九上限各限 1–100；不要求共同生成見證，仍不能低於等級或抹除封頂餘額。
+  * @param {SaveModel} m
+  * @param {SkillCapsRequest} options 模式由本方法選擇，不帶 advanced 欄位。
+  * @returns {SkillCapsPreview} 唯讀預覽；模型／請求／模式改變後重新取得。
+  */
  function previewCharacterSkillCapsAdvanced(m,options){return previewSkillCaps(m,options,true);}
  function applySkillCaps(m,options,{preview}={},advanced=false){
   const prior=preview&&skillCapPreviews.get(preview);
@@ -122,7 +237,24 @@
   skillCapPreviews.delete(preview);
   return checked;
  }
+ /**
+  * 一般模式重新驗證並原子套用九上限，成功後消耗傳入預覽，包含合法同值操作。
+  * 首次有效改動啟用該角色 27 欄 cap/L/E 累計還原；同值不新增歷史。
+  * @param {SaveModel} m 必須是預覽時的同一模型。
+  * @param {SkillCapsRequest} options 重用預覽請求；目前以 JSON 序列化比對，包含鍵順序。
+  * @param {SkillCapsApplyContext} context 只接受核心原始、同模式且未過期的 preview。
+  * @returns {SkillCapsPreview} 重新檢查的顯示結果；下一次編輯另取預覽。
+  * @throws {Error} 預覽身分／快照不符、目標非法或旗標關閉；失敗不新增差異或歷史。
+  */
  function setCharacterSkillCaps(m,options,context){return applySkillCaps(m,options,context);}
+ /**
+  * 進階 1–100 重新驗證並原子套用；交易、預覽消耗與累計還原同一般模式。
+  * @param {SaveModel} m
+  * @param {SkillCapsRequest} options 重用原始請求；等級與經驗餘額保持不變。
+  * @param {SkillCapsApplyContext} context 一般模式或複製的預覽無效。
+  * @returns {SkillCapsPreview} 合法同值亦可成功，但 canApply=false、沒有新增歷史。
+  * @throws {Error} 身分／模式／快照、資格、值域或驗證旗標不符。
+  */
  function setCharacterSkillCapsAdvanced(m,options,context){return applySkillCaps(m,options,context,true);}
  // Skill cap rules end.
  // Talent level rules. Ids, empty slots and quality stay as recruited; only pooled levels change.

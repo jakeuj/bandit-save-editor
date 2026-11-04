@@ -13,6 +13,13 @@
  const key=c=>`${c.x},${c.y},${c.z}`;
  const exists=(o,c)=>[c.x,c.y,c.z].every((n,i)=>Number.isInteger(n)&&n>=0&&n<o.size[i]);
  const cell=(o,c)=>o.data[c.x][c.y][c.z];
+ /**
+  * 解析遊戲存檔並保留原始文字；欄位資格仍由各操作檢查。
+  * @param {string} text 含 BOM 亦可；大小及三維資料結構須符合支援範圍。
+  * @param {string} [name='save.dat']
+  * @returns {SaveModel} 新模型；changes/history 初始為空。
+  * @throws {Error} JSON、尺寸或遊戲識別不符合要求。
+  */
  function parse(text,name='save.dat'){
   if(typeof text!=='string'||text.length>50*1024*1024)throw Error('檔案過大或無法讀取，請選取遊戲 .dat 存檔。');
   let data;try{data=JSON.parse(text.replace(/^\uFEFF/,''));}catch{throw Error('這不是有效的 JSON 存檔，檔案可能損毀或格式不同。');}

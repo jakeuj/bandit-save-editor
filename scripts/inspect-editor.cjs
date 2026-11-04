@@ -6,6 +6,7 @@ const {suggestChecks, changedReport, testCandidates} = require('./editor-check-p
 
 const help = `即時編輯器導覽（讀目前來源，不執行測試或遊戲）
   npm run inspect:editor -- --symbol setCharacterSkillCaps
+  npm run inspect:editor -- --symbol SkillCapsRequest
   npm run --silent inspect:editor -- --family randomCharacterSkillCaps --json
   npm run inspect:editor -- --group randomCharacterSkillCapsAdvanced
   npm run inspect:editor -- --file src/core/skill-caps-talents.js
@@ -41,6 +42,12 @@ function formatReport(report) {
   lines.push('定義：' + report.definitions.length);
   for (const row of report.definitions.slice(0, 25)) lines.push('  ' + row.id + ' → ' + at(row));
   if (report.definitions.length > 25) lines.push('  其餘定義可用 --json 查看');
+  if (report.definitions.length === 1 && report.definitions[0].contract) lines.push('介面契約：\n' + report.definitions[0].contract.text);
+  if (report.contractTypes?.length) {
+    lines.push('契約型別：' + report.contractTypes.length);
+    for (const type of report.contractTypes) lines.push('  ' + type.name + ' → ' + at(type));
+    if (!report.definitions.length && report.contractTypes.length === 1) lines.push(report.contractTypes[0].text);
+  }
   lines.push('直接相依／被引用位置：' + report.dependencies.length + '／' + report.dependents.length);
   for (const row of report.dependencies.slice(0, 12)) lines.push('  ' + (row.from || '(初始化)') + ' → ' + row.to + ' @ ' + at(row));
   lines.push('Family：' + (report.families.map(f => f.name).join('、') || '未定位'), '旗標：' + (report.groups.map(g => g.name + (g.enabled ? '（開）' : '（關）')).join('、') || '未定位'));
@@ -67,8 +74,8 @@ function run(argv, {root = path.resolve(__dirname, '..'), stdout = console.log, 
       else {
         const query = Object.fromEntries(['symbol', 'family', 'group', 'file'].filter(name => options[name] !== undefined).map(name => [name, options[name]]));
         report = queryInspection(index, query);
-        report.testCandidates = testCandidates(index, new Set(report.publicExports), report.limitations);
-        report.suggestedChecks = suggestChecks(index, {ids: report.definitions.map(d => d.id), files: [...new Set(report.definitions.map(d => d.file))]});
+        report.testCandidates = report.definitions.length ? testCandidates(index, new Set(report.publicExports), report.limitations) : [];
+        report.suggestedChecks = report.definitions.length ? suggestChecks(index, {ids: report.definitions.map(d => d.id), files: [...new Set(report.definitions.map(d => d.file))]}) : [];
       }
     }
     if (options.verify) report.status = report.diagnostics.length ? 'failed' : 'passed-static-checks';

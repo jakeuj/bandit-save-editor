@@ -8,6 +8,12 @@
   const f=resolveField({original:o,changes:new Map()},c);return [f.entity,f.label].filter(Boolean).join('・');
  }
  function diff(a,b){if(a.size.some((n,i)=>n!==b.size[i]))throw Error('兩份存檔的陣列尺寸不同，請比較相同遊戲版本的存檔。');const out=[];for(let x=0;x<a.size[0];x++)for(let y=0;y<a.size[1];y++)for(let z=0;z<a.size[2];z++){const before=a.data[x][y][z],after=b.data[x][y][z];if(!Object.is(before,after))out.push({x,y,z,before,after,label:labelFor(a,{x,y,z})});}return out;}
+ /**
+  * 只替換 changes 指定的原始 token；其餘字元逐字保留，不以 original 重建 JSON。
+  * @param {SaveModel} m
+  * @returns {string} 沒有變更時直接回傳 m.text；此操作不清除變更或復原歷史。
+  * @throws {Error} 修改值與原 token 型別不同，或有座標未能定位。
+  */
  function serialize(m){
   if(!m.changes.size)return m.text;
   const token=/"(?:[^"\\]|\\.)*"|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|true|false|null|[{}\[\],:]/g;

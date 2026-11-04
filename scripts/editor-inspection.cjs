@@ -2,6 +2,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const {analyzeEntry, walk, locator} = require('./editor-scope.cjs');
+const {referencedTypes} = require('./editor-jsdoc.cjs');
 
 const projectRoot = path.resolve(__dirname, '..');
 const unique = rows => [...new Map(rows.map(row => [JSON.stringify(row), row])).values()];
@@ -133,11 +134,12 @@ function buildInspection({root = projectRoot, reader, metadata} = {}) {
     if (!owners.length || !sections.length) diagnostics.push({code: 'UNMAPPED_GROUP', file: 'knowledge/catalog.json', line: 1, column: 1, message: '旗標缺少 family／需求 section：' + name});
     groups.push({name, enabled, families: owners, sections});
   }
-  return {root, definitions, references: unique(references), publicExports: Object.fromEntries(exports), families, groups, diagnostics: sortLocations(unique(diagnostics)), limitations: sortLocations(unique(limitations)), dependencies, familyReach, sources: [...sources].sort(), sharedCoreRoots: metadata.sharedCoreRoots || []};
+  return {root, definitions, types: analyses.flatMap(a => a.types), references: unique(references), publicExports: Object.fromEntries(exports), families, groups, diagnostics: sortLocations(unique(diagnostics)), limitations: sortLocations(unique(limitations)), dependencies, familyReach, sources: [...sources].sort(), sharedCoreRoots: metadata.sharedCoreRoots || []};
 }
 
 function queryInspection(index, query) {
   const {symbol, family, group, file} = query;
+  const selectedTypes = symbol ? index.types.filter(type => type.name === symbol) : file ? index.types.filter(type => type.file === file.replaceAll('\\', '/').replace(/^\.\//, '')) : [];
   let selected;
   if (symbol) selected = index.definitions.filter(d => d.name === symbol || d.publicExports.includes(symbol));
   if (family || group) {
@@ -152,7 +154,7 @@ function queryInspection(index, query) {
     if (!index.sources.includes(relative)) throw Error('檔案不在目前組裝來源：' + file);
     selected = index.definitions.filter(d => d.file === relative);
   }
-  if (!selected || (!selected.length && !file)) throw Error('查無符號、family 或旗標：' + (symbol || family || group));
+  if (!selected || (!selected.length && !file && !selectedTypes.length)) throw Error('查無符號、family、旗標或契約型別：' + (symbol || family || group));
   const ids = new Set(selected.map(d => d.id));
   const outgoing = index.references.filter(r => ids.has(r.from) || (file && r.file === file.replaceAll('\\', '/').replace(/^\.\//, '')));
   const coreTargets = new Set(selected.filter(d => d.entry === 'core').map(d => d.id));
@@ -166,7 +168,7 @@ function queryInspection(index, query) {
   const incoming = index.references.filter(r => ids.has(r.to) && !ids.has(r.from));
   return {
     query, definitions: selected.map(({start, end, ...definition}) => definition), dependencies: outgoing, dependents: incoming,
-    publicExports: selected.flatMap(d => d.publicExports), families: selectedFamilies,
+    publicExports: selected.flatMap(d => d.publicExports), contractTypes: referencedTypes(index.types, selected.map(d => d.contract).filter(Boolean), selectedTypes), families: selectedFamilies,
     groups: index.groups.filter(g => selectedFamilies.some(f => g.families.includes(f.name))),
     suggestedChecks: [], limitations: [...index.limitations], diagnostics: [...index.diagnostics],
     guides: ['.agents/skills/bandit-save-editor/references/feature-guide.md', 'docs/testing.md', 'docs/maintenance/core.md#來源組裝與責任分檔']

@@ -28,6 +28,8 @@ Linux CI另加`--with-deps`安裝系統函式庫。Playwright版本由package與
 
 用 `npm run inspect:editor -- --changed` 或 `--changed --staged` 可列驗證建議及原因；工具不執行這些命令，靜態候選不保證完整覆蓋。用 JSON 時加 `npm run --silent`。位置、作用域、暫存快照與保守回退由 `tests/editor-source.test.cjs`、`tests/editor-inspection.test.cjs`、`tests/editor-check-plan.test.cjs` 驗證；詳細操作見[AI 程式導覽與架構檢查](maintenance/core.md#ai-程式導覽與架構檢查)。
 
+`tests/editor-contracts.test.cjs` 驗證相鄰 JSDoc、巢狀／循環型別引用、型別查詢與試行介面契約的可定位性；技藝上限的同值消耗及請求身分由 `skill-caps-modes.test.cjs` 驗證。註記不取代既有行為測試；其執行語法不變時核對 AST／切片，內嵌產物更新後仍驗證離線與 PWA。
+
 ## 證據分工
 
 開發中修改 core 時跑該功能的 Node 測試；改動牽涉存檔讀寫行為時，再補該功能的隔離遊戲冒煙（[輕量開發流程](maintenance/lightweight.md#改-core-與遊戲改版)）。`node scripts/core-slice-report.cjs` 只當參考，不決定要不要重證。

@@ -70,6 +70,25 @@ npm run verify:architecture
 
 `graphify-out/` 是可重建的本機導覽產物，已由 Git 忽略，也不在 Pages 發布白名單內。遊戲公式與寫入驗證仍以研究筆記、catalog 及 verification 為依據；圖譜的連線、社群或摘要不會開放可寫群組。
 
+## 公開介面契約
+
+P2 先涵蓋技藝上限六入口、兩個生成見證工具，以及 parse／serialize／transaction／undo／restore／restoreAll，共 14 個公開方法。JSDoc 與具名型別維護在實作旁，不另建手寫介面清單；這是文件與導覽資訊，沒有新增型別檢查器或執行期寫入權限。
+
+```sh
+npm run inspect:editor -- --symbol setCharacterSkillCaps
+npm run --silent inspect:editor -- --symbol SkillCapsRequest --json
+npm run --silent inspect:editor -- --symbol transaction --json
+```
+
+定義的 `contract` 提供 JSDoc 內容與原檔位置，`contractTypes` 展開用到的具名型別；也能直接以型別名稱查詢。這些型別不是新的 JavaScript 匯出。未註記的方法保持原介面，動態與間接引用限制照常保留。
+
+- `SaveModel` 的原始文字是匯出依據；original、changes 與 history 僅供呼叫端觀察，修改透過核心操作，不以 JSON 複製模型或重建存檔。
+- 技藝上限的 eligible、verified、canApply 與 unchanged 各有不同意義。不合格 info 可保留異常原值供診斷；預覽列與變更僅供顯示，不能作為自行寫入指令。
+- 預覽及套用重用同一 request 與原始 preview。目前請求以 JSON 序列化比對，包含鍵順序；同值預覽 canApply=false 仍可合法套用，成功後消耗傳入 preview，不新增歷史。跨模型／模式、複製、過期或違規預覽仍拒絕。
+- transaction 同步執行 callback 並原樣回傳結果；巢狀操作合併到外層。回滾只涵蓋核心管理的狀態，不等待 Promise，也不還原直接改原始資料或外部副作用。restore 是累計群組還原，undo 是回到前一筆交易。
+
+新增介面契約時先核對實作與既有測試，保持輸入限制、失效及拒絕條件一致；純註記變更以 AST／family 切片比對確認沒有改執行邏輯，再同步 HTML／PWA 產物。
+
 ## 職業圖鑑維護
 
 `scripts/extract-game.cjs` 從 `zy.json` 產生職業的 `tier`（第 3 欄）、`family`（第 4 欄）及 `prerequisites`（第 10–12 欄的非零 ID）。`src/profession-ui.js` 由前置關係組合六階路線，職業名稱不另建翻譯副本。工作方向由社群附圖整理，另存 `knowledge/profession-guide.json`；空陣列表示原圖虛線且未標工作，缺少項目表示第六階未涵蓋，兩者均不表示遊戲禁止工作。轉職等級與解鎖條件的事件證據見研究筆記。
