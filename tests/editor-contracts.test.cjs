@@ -69,3 +69,13 @@ test('type-only CLI is readable JSON and does not invent a runtime test recommen
   assert.equal(result.contractTypes.length, 1);
   assert.match(result.contractTypes[0].text, /完整九項安全整數/);
 });
+
+test('private aptitude module exposes its source and host contracts through the same inspection entry', () => {
+  const result = queryInspection(buildInspection(), {symbol: 'createCharacterAptitudeSource'});
+  assert.equal(result.definitions[0].file, 'src/core/character-aptitude-source.js');
+  assert.deepEqual(result.definitions[0].publicExports, []);
+  assert.deepEqual(result.dependencies, []);
+  for (const name of ['CharacterAptitudeServices', 'CharacterAptitudeReader', 'CharacterAptitudeContext', 'CharacterAscensionRecord', 'SaveModel']) {
+    assert.ok(result.contractTypes.some(type => type.name === name), name);
+  }
+});

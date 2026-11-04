@@ -29,7 +29,7 @@ node scripts/build-editor.cjs
 
 ## 來源組裝與責任分檔
 
-`scripts/editor-source.cjs` 是來源組裝的唯一入口；片段清單與順序以其中的 `fragments` 為準。各片段共用原入口的封閉作用域，仍按原宣告順序執行。這一輪是責任分檔，尚未改成獨立執行的模組；預覽 WeakMap、交易、復原及欄位權限維持單一實作，不在不同片段複製。
+`scripts/editor-source.cjs` 是來源組裝的唯一入口；片段清單與順序以其中的 `fragments` 為準。多數片段仍共用原入口的封閉作用域；2026-11-05 起，資質／結丹的唯讀來源先以私有工廠封裝，見下節。單檔交付與共用組裝方式維持，預覽 WeakMap、交易、復原及欄位權限維持單一實作，不在不同片段複製。
 
 `readEditorSourceDetails(entry, {root})` 回傳同一份 `source` 及連續的 `segments`；每段以 `file`、`sourceStart`、`outputStart`、`length` 對應原檔與組裝後位置。偏移採 JavaScript UTF-16 索引，導覽顯示原檔 1 起算行／欄；索引在注入 catalog 前建立。原有 `readEditorSource` 的字串輸出保持不變。
 
@@ -40,6 +40,26 @@ node scripts/build-editor.cjs
 - 凍結版本測試覆蓋的完整單檔核心仍照原文讀取，不混入目前片段。切片與摘要工具收到的是組裝後、尚未注入 catalog 的完整核心；`core-slice-report.cjs --source` 的外部覆寫檔也應提供完整程式。
 
 2026-11-04 的漸進拆分以 v2.44 為基準：先逐字核對機械搬移結果，再調整主 UI 排版，核對組裝後核心／UI 的 AST、所有 family 切片與 101 個公開匯出均維持原樣。沒有改遊戲公式、寫入旗標或歷史證明；原生生命週期工具的動作拆分留待後續處理。
+
+## 資質與結丹的私有介面
+
+`src/core/character-aptitude-source.js` 的 `createCharacterAptitudeSource(services)` 封裝結丹紀錄、資質來源與裝備資質影響檢查，只提供兩個唯讀操作。`src/core/aptitudes.js` 注入核心既有能力，保留 `ascensionRecord`／`characterAptitudeSource` 薄轉接供原呼叫端使用；101 個 SaveCore 公開名稱維持不變。
+
+| 私有操作 | 契約 |
+| --- | --- |
+| `record(model, characterId)` | 驗證 z16 指向的結丹輪次及 z17 內丹，回傳 count／multiplier／records；無結丹時倍率為 1.5。不自行判定角色資格，呼叫端先完成該功能的角色檢查 |
+| `source(model, characterId, aptitude, baseRaw?, ascended=false)` | 呼叫端提供 1–3 的資質編號；核對角色／範本／天賦及穿戴／備用套裝。baseRaw 省略時讀目前來源；ascended 決定是否驗結丹與裝備的資質影響，回傳 base／template／ascension |
+
+工廠建立時不讀模型，也不持有模型或快取資格。host 的讀值、catalog、備用套裝、一般裝備、旗標與係數能力全部由 `CharacterAptitudeServices` 明示，傳入同一份原有參照；旗標用函式及知識物件即時讀取。`CharacterAptitudeReader`、`CharacterAptitudeContext`、`CharacterAscensionRecord` 與 host 契約均在實作旁，可透過下列入口查到：
+
+```sh
+npm run inspect:editor -- --symbol createCharacterAptitudeSource
+npm run inspect:editor -- --symbol CharacterAptitudeServices
+```
+
+此介面不接收寫入能力，回傳物件供內部觀察，沒有預覽或寫入授權語意；呼叫端不修改回傳的範本參照。公開 info／preview／set、私有預覽身分、交易與還原仍走原實作。共用的丹藥增量讀值 helper 收到 `aptitudes.js`，讓 `pills-ascension.js` 單向依賴資質來源，消除原本兩檔循環。
+
+本次封裝會改變整體 core AST 與四個相關 family 的切片摘要；用重構前的 repo 外暫存來源核對三個搬移函式 AST、101 個公開名稱及 96 個公開函式文字不變，並確認全部 family 仍可切片。保留歷史證明，不新增永久核心快照。介面隔離與整體回歸的分工見[測試指引](../testing.md#證據分工)。
 
 ## AI 程式導覽與架構檢查
 

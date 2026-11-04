@@ -64,6 +64,7 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 - 新功能依[core 開發規範](../../../docs/maintenance/core.md#新功能的-core-開發規範)走獨立入口、不改共用樞紐，方便維護。
 - 接功能先用即時導覽定位，再讀功能規則；改公開介面、相依或旗標登記時用 `npm run verify:architecture` 檢查。靜態限制與測試候選仍須判讀，見[AI 程式導覽與架構檢查](../../../docs/maintenance/core.md#ai-程式導覽與架構檢查)。
 - 技藝上限與模型／交易的 JSDoc 契約可隨符號查詢，具名型別用 `--symbol SkillCapsRequest` 等入口；新增契約先對照實作，不把註記當寫入權限，見[公開介面契約](../../../docs/maintenance/core.md#公開介面契約)。
+- 資質／結丹來源已封裝為唯讀工廠，host 與回傳契約可查 `createCharacterAptitudeSource`／`CharacterAptitudeServices`；組合位置、薄轉接及測試邊界見[私有介面](../../../docs/maintenance/core.md#資質與結丹的私有介面)。
 - 讀寫、型別與成長交易改 `src/core/`；一般操作流程改 `src/ui/`；角色、裝備及欄位圖鑑改 `src/ui/knowledge/`。入口樣板保留原作用域與協調邏輯；來源組裝、測試載入及新增片段依[來源組裝與責任分檔](../../../docs/maintenance/core.md#來源組裝與責任分檔)。
 - `knowledge/catalog.json` 由 `scripts/extract-game.cjs` 產生；繁體名稱對照與寫入實測分別維護於 `knowledge/traditional-names.json`、`knowledge/verification.json`。
 - HTML 結構、樣式與 SEO 改 `index.html`。其中的 `save-core`／`save-ui` 由 `node scripts/build-editor.cjs` 同步，修改程式來源後一併提交產生的 HTML；直接修改內嵌程式會被覆蓋。

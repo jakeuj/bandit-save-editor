@@ -30,6 +30,8 @@ Linux CI另加`--with-deps`安裝系統函式庫。Playwright版本由package與
 
 `tests/editor-contracts.test.cjs` 驗證相鄰 JSDoc、巢狀／循環型別引用、型別查詢與試行介面契約的可定位性；技藝上限的同值消耗及請求身分由 `skill-caps-modes.test.cjs` 驗證。註記不取代既有行為測試；其執行語法不變時核對 AST／切片，內嵌產物更新後仍驗證離線與 PWA。
 
+`tests/character-aptitude-source.test.cjs` 只載入資質／結丹工廠，以小型合成模型與明示 host 替身驗證兩個私有唯讀操作：建立時不讀值、不綁定模型、動態旗標／知識、結丹與穿戴／備用套裝拒絕條件，成功及失敗都不能修改模型。它不代替公開 info／preview／set、精確 token、預覽失效、交易回滾與還原的既有測試；正式建置及瀏覽器仍使用完整組裝來源。`editor-contracts.test.cjs` 另檢查此工廠沒有隱含核心相依，host／回傳契約可由導覽入口找到。介面及重構比對方式見[私有介面](maintenance/core.md#資質與結丹的私有介面)。
+
 ## 證據分工
 
 開發中修改 core 時跑該功能的 Node 測試；改動牽涉存檔讀寫行為時，再補該功能的隔離遊戲冒煙（[輕量開發流程](maintenance/lightweight.md#改-core-與遊戲改版)）。`node scripts/core-slice-report.cjs` 只當參考，不決定要不要重證。

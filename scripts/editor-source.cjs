@@ -13,6 +13,7 @@ const fragments = {
     ['CORE_EQUIPMENT_LEVELS', 'src/core/equipment-levels.js'],
     ['CORE_EQUIPMENT_AFFIXES', 'src/core/equipment-affixes.js'],
     ['CORE_SKILL_CAPS_TALENTS', 'src/core/skill-caps-talents.js'],
+    ['CORE_CHARACTER_APTITUDE_SOURCE', 'src/core/character-aptitude-source.js'],
     ['CORE_APTITUDES', 'src/core/aptitudes.js'],
     ['CORE_PILLS_ASCENSION', 'src/core/pills-ascension.js'],
     ['CORE_RELICS', 'src/core/relics.js'],

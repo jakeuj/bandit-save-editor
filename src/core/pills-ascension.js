@@ -1,7 +1,3 @@
- const decimalPills=()=>!!KNOWLEDGE.verification.pillAptitudeBonusDecimal;
- const pillBonusReadable=bonus=>decimalPills()?typeof bonus==='number'&&Number.isFinite(bonus)&&bonus>=0:Number.isSafeInteger(bonus)&&bonus>=0;
- const pillGrid=bonus=>Number.isSafeInteger(bonus)?bonus:Math.round(bonus*10)/10;
- function assertPillBonusReadable(bonus){if(!pillBonusReadable(bonus))throw Error(decimalPills()?'丹藥增量須為非負有限數值。':'丹藥增量須為非負整數；既有小數增量保持唯讀。');}
  function pillInfo(m,characterId,aptitude,pillId){
   if(!Number.isInteger(aptitude)||aptitude<1||aptitude>3)throw Error('無效的資質類型。');
   const ascended=ascendedPills(),{base,ascension}=characterAptitudeSource(m,characterId,aptitude,undefined,ascended);
