@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+const {readEditorSource, embedKnowledge} = require('./editor-source.cjs');
 // B6: cross-pool supplement for the two existing set-level groups (z7 backpackSetEquipmentLevel, z9 setEquipmentLevel).
 // The A9 manifest lists 8 `level-regression` cases per plane. Every case starts from a native-derived row (level-B native acquisition +
 // native same-slot refine until a P套-only id sits in the selected slot) and is checked offline against the oracles, then in the isolated game:
@@ -24,7 +25,7 @@ const filler=Object.fromEntries(['baselineHash','runtimeHash','sourceManifestHas
 // ---- isolated cores ---------------------------------------------------------------------------------------------------------
 // Formal = shipped source and knowledge (cross-pool groups closed). Candidate = the same source with the quality gates and both cross-pool
 // level groups open in a knowledge copy, so the selected slot may hold a P套 id. Shipped knowledge with an open cross-pool group is refused.
-function loadCore(source,knowledge){const ctx={};vm.runInNewContext(source.replace('/*__KNOWLEDGE__*/null',JSON.stringify(knowledge)),ctx);return ctx.SaveCore;}
+function loadCore(source,knowledge){const ctx={};vm.runInNewContext(embedKnowledge(source, knowledge),ctx);return ctx.SaveCore;}
 function cores(k,source){
  assert.ok(Q.crossPoolGroups.every(g=>k.verification[g]===false),'出貨知識的跨池等級群組必須關閉');
  const candidate=structuredClone(k);for(const g of [...Q.groups,...Q.crossPoolGroups])candidate.verification[g]=true;
@@ -270,7 +271,7 @@ async function twoRounds({env,save,spec,start,out,catalogPath,saveInfo,port,k}){
 
 // ---- main -------------------------------------------------------------------------------------------------------------------------
 async function run({out,only,log=console.log}){
- const root=path.resolve(__dirname,'..'),env=gameEnv(root),catalogPath=path.join(root,'knowledge/catalog.json'),k=JSON.parse(fs.readFileSync(catalogPath,'utf8')),source=fs.readFileSync(path.join(root,'src/core.js'),'utf8');
+ const root=path.resolve(__dirname,'..'),env=gameEnv(root),catalogPath=path.join(root,'knowledge/catalog.json'),k=JSON.parse(fs.readFileSync(catalogPath,'utf8')),source=readEditorSource('core', {root});
  if(!path.relative(root,out).startsWith('..'))throw Error('Artifacts must stay outside the repo');fs.mkdirSync(out,{recursive:true});
  const lock=path.join(out,'.game.lock');if(fs.existsSync(lock)){const pid=Number(fs.readFileSync(lock,'utf8'));let alive=false;try{process.kill(pid,0);alive=true;}catch{}if(alive)throw Error('另一個 B6 原生執行仍在進行（PID '+pid+'）');}
  fs.writeFileSync(lock,String(process.pid));
@@ -409,7 +410,7 @@ if(require.main===module){
  if(!opt('--output')){console.error('套裝等級跨池補證需要 --output（repo 外的 artifacts 目錄）；未提供，不產生任何驗證結果');process.exitCode=1;return;}
  const out=path.resolve(opt('--output'));
  run({out,only:opt('--only')?.split(','),log:m=>{console.log(m);fs.appendFileSync(path.join(out,'b6.log'),m+'\n');}}).then(r=>{
-  const root=path.resolve(__dirname,'..'),k=JSON.parse(fs.readFileSync(path.join(root,'knowledge/catalog.json'),'utf8')),source=fs.readFileSync(path.join(root,'src/core.js'),'utf8');
+  const root=path.resolve(__dirname,'..'),k=JSON.parse(fs.readFileSync(path.join(root,'knowledge/catalog.json'),'utf8')),source=readEditorSource('core', {root});
   const a10=a10Rows(M.createManifest(k,source,filler),r.result.cases),file=path.join(out,'a10-results.json');
   fs.writeFileSync(file,JSON.stringify({schemaVersion:1,task:'set-equipment-quality-B6',mergesProof:false,manifestHash:r.manifestHash,binding:r.result.binding,guarded:r.guarded,guardedAfter:r.after,resultsHash:r.resultsHash,starts:Object.fromEntries(Object.entries(r.result.starts).map(([key,v])=>[key,{...v,record:hash(v.record)}])),complete:a10.complete,missing:a10.missing,cases:a10.rows},null,1)+'\n');
   console.log(JSON.stringify({file,sha256:sha(file),complete:a10.complete,rows:a10.rows.length,missing:a10.missing}));process.stdout.write('',()=>process.exit(a10.complete?0:1));

@@ -1,11 +1,12 @@
 'use strict';
+const {readEditorSource} = require('../scripts/editor-source.cjs');
 // B8 merge contract on synthetic results: the pinned B7 equivalence for B4's old-core evidence, the two-stage UI record owed to
 // B9, the cross-pool first proofs and the undelivered snapshot build. Nothing here reads the native artifacts or runs the game.
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),os=require('node:os'),path=require('node:path'),{spawnSync}=require('node:child_process');
 const P=require('../scripts/set-equipment-quality-proof.cjs'),CP=require('../scripts/set-equipment-level-cross-pool-proof.cjs'),E=require('../scripts/set-equipment-quality-equivalence.cjs');
 const D=require('../scripts/set-equipment-quality-data.cjs'),MP=require('../scripts/migration-proof.cjs'),R=require('../scripts/verification-requirements.cjs');
 const root=path.join(__dirname,'..'),k=JSON.parse(fs.readFileSync(path.join(root,'knowledge/catalog.json'),'utf8')),proof=JSON.parse(fs.readFileSync(path.join(root,'knowledge/verification.json'),'utf8'));
-const source=fs.readFileSync(path.join(root,'src/core.js'),'utf8'),data=fs.readFileSync(path.join(root,'scripts/set-equipment-quality-data.cjs'),'utf8').replace(/\r\n/g,'\n');
+const source=readEditorSource('core', {root}),data=fs.readFileSync(path.join(root,'scripts/set-equipment-quality-data.cjs'),'utf8').replace(/\r\n/g,'\n');
 const {hash}=D,hex=c=>c.repeat(64),clone=o=>structuredClone(o);
 const codeHash=f=>hash(fs.readFileSync(path.join(root,'scripts',f),'utf8').replace(/\r\n/g,'\n'));
 const ui=Object.fromEntries(P.uiKeys.map(x=>[x,true])),io={rounds:2,newPidReadback:true,shiftedColumns:50,tailColumns:10};

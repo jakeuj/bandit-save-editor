@@ -1,7 +1,8 @@
+const {readEditorSource, embedKnowledge} = require('../scripts/editor-source.cjs');
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 function setup(){
  const k=JSON.parse(fs.readFileSync('knowledge/catalog.json'));for(const group of Object.keys(k.verification))k.verification[group]=true;
- const ctx={};vm.runInNewContext(fs.readFileSync('src/core.js','utf8').replace('/*__KNOWLEDGE__*/null',JSON.stringify(k)),ctx);const C=ctx.SaveCore;
+ const ctx={};vm.runInNewContext(embedKnowledge(readEditorSource('core'), k),ctx);const C=ctx.SaveCore;
  const data=Array.from({length:221},()=>Array.from({length:60},()=>Array(22).fill(0)));data[0][0][1]='szmnqea';data[1][0][2]=1;data[1][1][2]='甲';
  for(const z of [7,9]){const put=(y,v)=>data[1][y][z]=v;put(0,100);put(1,16);put(2,1);put(3,1);put(5,3);put(6,3);put(8,155);put(9,12);put(10,13);put(15,30);put(16,40);put(24,1);put(28,1);}
  const text='\ufeff'+JSON.stringify({c2array:true,size:[221,60,22],data}).replace('{','{\r\n"large":987654321098765432109876543210,');return {C,m:C.parse(text),text};

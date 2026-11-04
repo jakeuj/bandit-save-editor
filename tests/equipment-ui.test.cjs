@@ -1,3 +1,4 @@
+const {readEditorSource, embedKnowledge} = require('../scripts/editor-source.cjs');
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // Execute the actual widget event handlers against a small DOM adapter, not duplicated UI logic.
 function setup(initialGate=true){
@@ -8,11 +9,11 @@ function setup(initialGate=true){
  }};}
  const $=id=>{if(!elements.has(id))elements.set(id,make());return elements.get(id);};const k=JSON.parse(fs.readFileSync('knowledge/catalog.json'));for(const group in k.verification)k.verification[group]=true;k.verification.equipmentAffixInitialSelection=initialGate;
  ctx={document:{addEventListener:(n,fn)=>(listeners[n]??=[]).push(fn),querySelector:s=>elements.get('edit-'+s.match(/="(.*?)"/)?.[1])},$: $,knowledgePages:{inventory:0,settlement:0,atlas:0,catalog:0},K:k,fmt:String,htmlValue:String,esc:s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;'),toast(){},showTab(){}};
- vm.runInNewContext(fs.readFileSync('src/core.js','utf8').replace('/*__KNOWLEDGE__*/null',JSON.stringify(k)),ctx);ctx.C=ctx.SaveCore;
+ vm.runInNewContext(embedKnowledge(readEditorSource('core'), k),ctx);ctx.C=ctx.SaveCore;
  const data=Array.from({length:221},()=>Array.from({length:60},()=>Array(22).fill(0)));data[0][0][1]='szmnqea';data[1][0][2]=1;data[1][1][2]='甲';
  for(const z of [7,9])for(const [y,v]of [[0,99],[1,16],[2,1],[3,1],[5,2],[6,3],[8,125],[9,12],[15,20],[24,1]])data[1][y][z]=v;
  ctx.model=ctx.C.parse(JSON.stringify({c2array:true,size:[221,60,22],data}));ctx.perform=fn=>{fn();ctx.widgets.renderInventory();};
- vm.runInNewContext(fs.readFileSync('src/knowledge-ui.js','utf8')+';globalThis.widgets={renderInventory,renderEditing,renderAffixes};',ctx);
+ vm.runInNewContext(readEditorSource('knowledge-ui')+';globalThis.widgets={renderInventory,renderEditing,renderAffixes};',ctx);
  ctx.widgets.renderInventory();return {ctx,$,C:ctx.C,m:ctx.model,listeners};
 }
 test('first-selection checkbox enables one atomic lock and is cleared after apply',()=>{

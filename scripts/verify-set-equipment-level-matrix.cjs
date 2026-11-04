@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+const {readEditorSource} = require('./editor-source.cjs');
 // A-stage static/synthetic runner only. No launch, native proof writer, or gate mutation.
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict'),crypto=require('node:crypto'),S=require('./set-equipment-level-scenarios.cjs');
 function checkInputs(inputs,k){
@@ -20,7 +21,7 @@ function run(argv=process.argv.slice(2)){
  const opt=(key,fallback)=>{const i=argv.indexOf(key);return i<0?fallback:argv[i+1];};
  if(argv.includes('--help')){console.log('verify-set-equipment-level-matrix.cjs --inputs EXTERNAL-baseline.json --output EXISTING_EXTERNAL_DIR [--catalog FILE] [--plan | --synthetic] [--shard-index 0 --shard-total 100] [--kinds level,effect,cost,reject]\nA-stage only. Synthetic output is never a native first proof.');return;}
  const {external}=require('./migration-source.cjs'),out=external(opt('--output')),inputs=JSON.parse(fs.readFileSync(opt('--inputs'),'utf8'));
- const source=fs.readFileSync(path.join(__dirname,'../src/core.js'),'utf8'),k=JSON.parse(fs.readFileSync(opt('--catalog',path.join(__dirname,'../knowledge/catalog.json')),'utf8'));
+ const source=readEditorSource('core'),k=JSON.parse(fs.readFileSync(opt('--catalog',path.join(__dirname,'../knowledge/catalog.json')),'utf8'));
  assert.notEqual(argv.includes('--plan'),argv.includes('--synthetic'),'請明確指定 --plan 或 --synthetic');
  const runtime=checkInputs(inputs,k);
  const binding={baselineHash:inputs.baselineHash,runtimeHash:runtime.runtimeHash,sourceManifestHash:runtime.sourceManifestHash,runtimeManifestHash:runtime.runtimeManifestHash},manifest=S.createManifest(k,source,binding),file=path.join(out,'set-level-manifest.json');

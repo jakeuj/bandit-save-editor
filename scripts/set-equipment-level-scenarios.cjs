@@ -1,4 +1,5 @@
 'use strict';
+const {embedKnowledge} = require('./editor-source.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const {hash}=require('./set-equipment-level-data.cjs'),O=require('./set-equipment-level-oracle.cjs');
 const states=['backpack','stored','equipped'];
@@ -44,7 +45,7 @@ function nativePlan(c){return {plane:c.state==='backpack'?7:9,upgradePlane:9,dir
 function locateMoved(rows,original){const matches=rows.flatMap((row,i)=>row.slice(0,50).every((v,y)=>v===original[y])?[i]:[]);assert.equal(matches.length,1,'搬移目的列缺失或不唯一');return matches[0];}
 function createSyntheticRunner(k,core){
  const candidate=structuredClone(k);candidate.verification.backpackSetEquipmentLevel=candidate.verification.setEquipmentLevel=true;
- const ctx={};vm.runInNewContext(core.replace('/*__KNOWLEDGE__*/null',JSON.stringify(candidate)),ctx);const C=ctx.SaveCore;
+ const ctx={};vm.runInNewContext(embedKnowledge(core, candidate),ctx);const C=ctx.SaveCore;
  return c=>{
   if(c.kind==='cost'){
    const level=c.mode==='at-cap'?O.cap(c.quality):1,cost=O.money(c.tier,level),copper=c.mode==='insufficient'?cost-1:c.mode==='exact'||c.mode==='partial-max'?cost:1e12;

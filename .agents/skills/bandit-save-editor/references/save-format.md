@@ -1,6 +1,6 @@
 # 存檔知識、成長與寫入驗證
 
-處理存檔讀寫、資源、名稱、成長或知識擴充時使用。從 repo 讀 `README.md`、`src/core.js`、`docs/research/save-knowledge.md`；API 讀 `docs/maintenance/core.md`，新增寫入與改版的驗證讀 `docs/maintenance/lightweight.md`；測試選擇讀 `docs/testing.md`。公式、座標表、事件 SID 及詳細實測只在這些 repo 文件維護。
+處理存檔讀寫、資源、名稱、成長或知識擴充時使用。從 repo 讀 `README.md`、`src/core/`、`docs/research/save-knowledge.md`；API 讀 `docs/maintenance/core.md`，新增寫入與改版的驗證讀 `docs/maintenance/lightweight.md`；測試選擇讀 `docs/testing.md`。公式、座標表、事件 SID 及詳細實測只在這些 repo 文件維護。
 
 ## 識別與權限
 

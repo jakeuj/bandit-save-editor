@@ -1,9 +1,10 @@
+const {readEditorSource, embedKnowledge} = require('../scripts/editor-source.cjs');
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // City wall enhancement level [19,1,0]: 0 to (int(z1 #0 y5)+1)×60; lowering it caps the current HP z1 #0 y11 at the
 // bonus-free maximum, raising it leaves HP alone like 城墙升级.
 function setup(gates={},{level=60,building=0,life=318218,wall=21}={}){
  const k=JSON.parse(fs.readFileSync('knowledge/catalog.json'));for(const group of Object.keys(k.verification))k.verification[group]=true;Object.assign(k.verification,gates);
- const ctx={setTimeout};vm.runInNewContext(fs.readFileSync('src/core.js','utf8').replace('/*__KNOWLEDGE__*/null',JSON.stringify(k)),ctx);const C=ctx.SaveCore;
+ const ctx={setTimeout};vm.runInNewContext(embedKnowledge(readEditorSource('core'), k),ctx);const C=ctx.SaveCore;
  const data=Array.from({length:221},()=>Array.from({length:60},()=>Array(22).fill(0)));
  // 载入城墙初始数据 lays out z1 row 0; the save marker later overwrites y0.
  [ 'szmnqea',wall,20005,20001,0,building,0,0,0,0,0,life].forEach((v,y)=>data[0][y][1]=v);data[19][1][0]=level;data[1][2][0]=915117675;

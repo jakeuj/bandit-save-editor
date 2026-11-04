@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+const {readEditorSource} = require('./editor-source.cjs');
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict'),{spawnSync}=require('node:child_process');
 const {evaluate,waitMain}=require('./verify-game.cjs'),{rpc}=require('./verify-set-equipment-level-native.cjs'),D=require('./set-equipment-level-data.cjs');
 function storedConversion(request){
@@ -60,4 +61,4 @@ async function runSuite({k,source,inputs,out,sourceEntry}){
  }return result;
 }
 module.exports={storedConversion,nativeCycle,validateCycle,validateStored,cases,command,checkpoint,runSuite};
-if(require.main===module){const args=process.argv.slice(2),opt=n=>args[args.indexOf(n)+1],cfg=JSON.parse(fs.readFileSync(opt('--config'))),k=JSON.parse(fs.readFileSync(path.join(__dirname,'../knowledge/catalog.json'))),source=fs.readFileSync(path.join(__dirname,'../src/core.js'),'utf8');runSuite({k,source,inputs:cfg,out:cfg.out,sourceEntry:cfg.sourceEntry}).then(()=>process.stdout.write('',()=>process.exit(0))).catch(e=>{console.error(e.stack);process.stderr.write('',()=>process.exit(1));});}
+if(require.main===module){const args=process.argv.slice(2),opt=n=>args[args.indexOf(n)+1],cfg=JSON.parse(fs.readFileSync(opt('--config'))),k=JSON.parse(fs.readFileSync(path.join(__dirname,'../knowledge/catalog.json'))),source=readEditorSource('core');runSuite({k,source,inputs:cfg,out:cfg.out,sourceEntry:cfg.sourceEntry}).then(()=>process.stdout.write('',()=>process.exit(0))).catch(e=>{console.error(e.stack);process.stderr.write('',()=>process.exit(1));});}

@@ -1,9 +1,10 @@
+const {readEditorSource, embedKnowledge} = require('../scripts/editor-source.cjs');
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),os=require('node:os'),path=require('node:path'),vm=require('node:vm');
 // City layers [c,11,0]: 0–149 for visited cities; [8,1,0] is rewritten as round(Σ cities int(y11)+[y44=1]) and lowering
 // clamps a higher idle layer y21, mirroring 获得声望 and 生成战斗地图.
 function setup(gates={},cities={1:{layer:74,visited:1,idle:74}},{total}={}){
  const k=JSON.parse(fs.readFileSync('knowledge/catalog.json'));for(const group of Object.keys(k.verification))k.verification[group]=true;Object.assign(k.verification,gates);
- const ctx={setTimeout};vm.runInNewContext(fs.readFileSync('src/core.js','utf8').replace('/*__KNOWLEDGE__*/null',JSON.stringify(k)),ctx);const C=ctx.SaveCore;
+ const ctx={setTimeout};vm.runInNewContext(embedKnowledge(readEditorSource('core'), k),ctx);const C=ctx.SaveCore;
  const data=Array.from({length:221},()=>Array.from({length:60},()=>Array(22).fill(0)));data[0][0][1]='szmnqea';data[1][2][0]=915117675;
  let sum=0;for(const [x,c] of Object.entries(cities)){data[x][11][0]=c.layer;data[x][44][0]=c.visited;data[x][21][0]=c.idle??0;data[x][38][0]=c.occupied??0;sum+=c.layer+c.visited;}
  // Wild maps keep their own layers; the total ignores them.

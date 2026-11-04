@@ -95,7 +95,7 @@ node scripts/build-editor.cjs
 node scripts/build-editor.cjs --check
 ```
 
-程式來源位於 `src/`，知識資料位於 `knowledge/`；建置會同步 HTML 內嵌程式與 `sw.js` 快取版本。不要直接修改產生的內嵌程式。
+程式來源位於 `src/`，知識資料位於 `knowledge/`；核心與操作介面已按責任分檔，由共用工具組裝，編輯入口見[來源組裝與責任分檔](docs/maintenance/core.md#來源組裝與責任分檔)。建置會同步 HTML 內嵌程式與 `sw.js` 快取版本。不要直接修改產生的內嵌程式。
 
 依變更選跑[測試指引](docs/testing.md)中的相關測試；需要 headless 瀏覽器測試時，再執行 `npx playwright install --only-shell chromium`。完整驗收入口為 `npm run verify:release`，按需執行。
 

@@ -7,9 +7,11 @@ const build=dir=>spawnSync(process.execPath,['scripts/build-editor.cjs'],{cwd:di
 const edit=(dir,file,fn)=>{const p=path.join(dir,file);fs.writeFileSync(p,JSON.stringify(fn(JSON.parse(fs.readFileSync(p,'utf8')))));};
 test('core edits keep every open group buildable',()=>{
  const dir=copy();try{
-  const core=path.join(dir,'src/core.js'),s=fs.readFileSync(core,'utf8'),i=s.indexOf('function applySetEquipmentQualityCandidate');
+  const core=path.join(dir,'src/core/equipment-levels.js'),s=fs.readFileSync(core,'utf8'),i=s.indexOf('function applySetEquipmentQualityCandidate');
+  assert.ok(i>=0,'the temporary copy must contain the current equipment implementation');
   fs.writeFileSync(core,s.slice(0,i)+'function unrelatedHelper(){return 1;}\n'+s.slice(i));
   const r=build(dir);assert.equal(r.status,0,r.stderr);
+  assert.match(fs.readFileSync(path.join(dir,'index.html'),'utf8'),/function unrelatedHelper/);
  }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
 test('an open flag without a record, another game version or changed data fingerprints is refused',()=>{

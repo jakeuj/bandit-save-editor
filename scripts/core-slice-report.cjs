@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+const {readEditorSource} = require('./editor-source.cjs');
 // Static, seconds-fast: which families' core slices differ between the proven snapshot and a core source, and how many
 // representative copies a selective migration would therefore run. Never starts a game or writes a proof.
 const fs=require('node:fs'),path=require('node:path');
@@ -22,7 +23,7 @@ if(require.main===module){
  const args=process.argv.slice(2),value=k=>args.includes(k)?args[args.indexOf(k)+1]:undefined,root=path.resolve(__dirname,'..');
  const read=p=>JSON.parse(fs.readFileSync(path.join(root,p),'utf8')),proof=read('knowledge/verification.json');
  if(proof.schemaVersion!==2)throw Error('需要複合證明（schemaVersion 2）');
- const r=report(fs.readFileSync(value('--source')||path.join(root,'src/core.js'),'utf8'),proof.migration.snapshot,read('knowledge/catalog.json'));
+ const r=report((value('--source') ? fs.readFileSync(value('--source'),'utf8') : readEditorSource('core', {root})),proof.migration.snapshot,read('knowledge/catalog.json'));
  console.log(r.unchanged?'core 切片未變：既有群組沿用，不需選跑':`需重證 family：${r.changed.join('、')}（約 ${r.copies} 份代表副本）`);
  if(r.mode!=='slices')console.log('退回整份 core 比對：'+r.reason);
  // Surface the parallel-copies trigger whenever the agent checks re-proof cost.

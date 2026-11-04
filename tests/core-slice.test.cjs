@@ -1,9 +1,10 @@
 'use strict';
+const {readEditorSource} = require('../scripts/editor-source.cjs');
 // Per-family core slices: what changes a family's binding, what falls back to the whole core, and how the
 // selective plan and the composite proof gate use them.
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const Core=require('../scripts/core-source-proof.cjs'),A=require('../scripts/migration-analysis.cjs'),P=require('../scripts/migration-proof.cjs'),Report=require('../scripts/core-slice-report.cjs');
-const root=path.join(__dirname,'..'),core=fs.readFileSync(path.join(root,'src/core.js'),'utf8'),proof=JSON.parse(fs.readFileSync(path.join(root,'knowledge/verification.json'),'utf8')),catalog=JSON.parse(fs.readFileSync(path.join(root,'knowledge/catalog.json'),'utf8'));
+const root=path.join(__dirname,'..'),core=readEditorSource('core', {root}),proof=JSON.parse(fs.readFileSync(path.join(root,'knowledge/verification.json'),'utf8')),catalog=JSON.parse(fs.readFileSync(path.join(root,'knowledge/catalog.json'),'utf8'));
 const tiny=`(() => {
  'use strict';
  const T=[1];

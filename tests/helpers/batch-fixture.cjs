@@ -1,10 +1,11 @@
 'use strict';
+const {readEditorSource, embedKnowledge} = require('../../scripts/editor-source.cjs');
 const fs=require('node:fs'),vm=require('node:vm');
 const {performance}=require('node:perf_hooks');
 const {renderSave}=require('./save-fixture.cjs');
 function setup(nx=450,count=2){
  const k=JSON.parse(fs.readFileSync('knowledge/catalog.json','utf8')),ctx={setTimeout,performance};
- vm.runInNewContext(fs.readFileSync('src/core.js','utf8').replace('/*__KNOWLEDGE__*/null',JSON.stringify(k)),ctx);
+ vm.runInNewContext(embedKnowledge(readEditorSource('core'), k),ctx);
  const C=ctx.SaveCore,a=Array.from({length:nx},()=>Array.from({length:60},()=>Array(22).fill(0)));
  a[0][0][1]='szmnqea';a[1][1][0]='測試山寨';
  for(let x=1;x<=count;x++){

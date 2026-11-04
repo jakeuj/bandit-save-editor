@@ -1,7 +1,8 @@
 'use strict';
+const {readEditorSource} = require('../scripts/editor-source.cjs');
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const P=require('../scripts/set-equipment-quality-proof.cjs'),D=require('../scripts/set-equipment-quality-data.cjs'),M=require('../scripts/set-equipment-quality-scenarios.cjs'),R=require('../scripts/verification-requirements.cjs'),S=require('../scripts/verification-suite.cjs'),A=require('../scripts/migration-analysis.cjs'),Core=require('../scripts/core-source-proof.cjs');
-const k=JSON.parse(fs.readFileSync(path.join(__dirname,'../knowledge/catalog.json'),'utf8')),proof=JSON.parse(fs.readFileSync(path.join(__dirname,'../knowledge/verification.json'),'utf8')),source=fs.readFileSync(path.join(__dirname,'../src/core.js'),'utf8');
+const k=JSON.parse(fs.readFileSync(path.join(__dirname,'../knowledge/catalog.json'),'utf8')),proof=JSON.parse(fs.readFileSync(path.join(__dirname,'../knowledge/verification.json'),'utf8')),source=readEditorSource('core');
 const hex=c=>c.repeat(64),{hash}=D;
 const codeHash=f=>hash(fs.readFileSync(path.join(__dirname,'../scripts',f),'utf8').replace(/\r\n/g,'\n'));
 const clone=o=>structuredClone(o);

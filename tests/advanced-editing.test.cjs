@@ -1,10 +1,11 @@
+const {readEditorSource, embedKnowledge} = require('../scripts/editor-source.cjs');
 const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 function setup(nx=221){
  const knowledge=JSON.parse(fs.readFileSync(path.join(__dirname,'../knowledge/catalog.json'),'utf8'));
  for(const group of Object.keys(knowledge.verification))knowledge.verification[group]=!/^(backpackTreasureLevel|treasureLevel)$/.test(group);// 寶物兩庫尚無首次證明，維持關閉
- const ctx={};vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../src/core.js'),'utf8').replace('/*__KNOWLEDGE__*/null',JSON.stringify(knowledge)),ctx);
+ const ctx={};vm.runInNewContext(embedKnowledge(readEditorSource('core'), knowledge),ctx);
  const C=ctx.SaveCore,data=Array.from({length:nx},()=>Array.from({length:60},()=>Array(22).fill(0)));
  const put=(x,y,z,v)=>data[x][y][z]=v;
  put(0,0,1,'szmnqea');put(1,0,2,1);put(1,1,2,'測試甲');put(1,1,4,5);

@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+const {readEditorSource, embedKnowledge} = require('./editor-source.cjs');
 // Treasure-level first-proof matrix runner (task 9). Hidden, muted, isolated game copy; results live outside the repo.
 // Phases are resumable shards: `baselines` natively acquires every template × Q1–Q6, `levels` replays the level matrix.
 const fs=require('node:fs'),path=require('node:path');
@@ -46,7 +47,7 @@ function manifestFor(cfg,k){const inputs=checkInputs(cfg);return {inputs,manifes
 // The final core with both treasure flags opened in a throwaway context; the repository catalog stays closed.
 function candidateCore(k,core){
  const candidate=structuredClone(k);candidate.verification.backpackTreasureLevel=candidate.verification.treasureLevel=true;
- const ctx={};vm.runInNewContext(core.replace('/*__KNOWLEDGE__*/null',JSON.stringify(candidate)),ctx);return ctx.SaveCore;
+ const ctx={};vm.runInNewContext(embedKnowledge(core, candidate),ctx);return ctx.SaveCore;
 }
 const planeOf=state=>state==='backpack'?7:9;
 function coreEdit(C,before,c){
@@ -166,8 +167,8 @@ async function main(argv){
   stateFile=command(['--setup','--source',cfg.source,'--runtime',cfg.runtime,'--save-file',cfg.baseline,'--artifacts',out,'--port',String(opt('--port')||19490)]).match(/STATE (.+)/)[1].trim();
   command(['--state',stateFile,'--load']);const state=read(stateFile);await waitMain(state);
   if(phase==='baselines')console.log(JSON.stringify(await baselines({state,k,out,limit})));
-  else if(phase==='levels'){const total=Number(opt('--shard-total')||1),index=Number(opt('--shard-index')||0);console.log(JSON.stringify(await levels({state,k,cfg,out,shard:{index,total},core:fs.readFileSync(path.join(root,'src/core.js'),'utf8')})));}
-  else if(['costs','decompose','rejects'].includes(phase)){const core=fs.readFileSync(path.join(root,'src/core.js'),'utf8');console.log(JSON.stringify(await({costs:costsPhase,decompose:decomposePhase,rejects:rejectsPhase})[phase]({state,k,cfg,out,core})));}
+  else if(phase==='levels'){const total=Number(opt('--shard-total')||1),index=Number(opt('--shard-index')||0);console.log(JSON.stringify(await levels({state,k,cfg,out,shard:{index,total},core:readEditorSource('core', {root})})));}
+  else if(['costs','decompose','rejects'].includes(phase)){const core=readEditorSource('core', {root});console.log(JSON.stringify(await({costs:costsPhase,decompose:decomposePhase,rejects:rejectsPhase})[phase]({state,k,cfg,out,core})));}
   else throw Error('未知階段 '+phase);
  }finally{if(stateFile)try{command(['--state',stateFile,'--stop']);}catch(e){console.error('stop failed: '+e.message);}}
 }

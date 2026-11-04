@@ -1,4 +1,5 @@
 'use strict';
+const {embedKnowledge} = require('./editor-source.cjs');
 const assert=require('node:assert/strict'),{createHash}=require('node:crypto'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const sha=value=>createHash('sha256').update(typeof value==='string'?value:JSON.stringify(value)).digest('hex');
 const group='randomCharacterTalents',hashPattern=/^[0-9a-f]{64}$/,same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
@@ -13,7 +14,7 @@ function formulaHash(source){
 const dataHash=k=>sha({rules:k.randomCharacterTalents,talents:k.batch2Data.talents});
 const binding=(k,source)=>({gameVersion:k.gameVersion,fingerprints:{...k.fingerprints,...k.batch2Fingerprints},dataHash:dataHash(k),formulaHash:formulaHash(source)});
 const near=(a,b)=>Number.isFinite(a)&&Math.abs(a-b)<1e-8;
-function core(k,source){const ctx={setTimeout};vm.runInNewContext(source.replace('/*__KNOWLEDGE__*/null',JSON.stringify(k)),ctx);return ctx.SaveCore;}
+function core(k,source){const ctx={setTimeout};vm.runInNewContext(embedKnowledge(source, k),ctx);return ctx.SaveCore;}
 // Reads the JSON evidence a passing copy keeps beside its state file.
 function readEvidence(stateFile){
  const dir=path.dirname(stateFile),read=name=>fs.existsSync(path.join(dir,name))?JSON.parse(fs.readFileSync(path.join(dir,name),'utf8')):undefined,s=JSON.parse(fs.readFileSync(stateFile,'utf8'));

@@ -1,11 +1,12 @@
 'use strict';
+const {readEditorSource, embedKnowledge} = require('../scripts/editor-source.cjs');
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 const {saveFixture,renderSave}=require('./helpers/save-fixture.cjs');
-const source=fs.readFileSync(require.resolve('../src/core.js'),'utf8');
+const source=readEditorSource('core');
 function fixture({plane=9,owner=0,quality=3,enabled=true}={}){
  const k=structuredClone(require('../knowledge/catalog.json')),groups=['backpackSetEquipmentLevel','setEquipmentLevel'];
  for(const group of groups)k.verification[group]=enabled;
- const ctx={};vm.runInNewContext(source.replace('/*__KNOWLEDGE__*/null',JSON.stringify(k)),ctx);const C=ctx.SaveCore;
+ const ctx={};vm.runInNewContext(embedKnowledge(source, k),ctx);const C=ctx.SaveCore;
  const {data}=saveFixture({characters:2}),id=20,t=k.setEquipmentLevel.items[28],origin=2,row=Array(60).fill(0);
  Object.assign(row,{0:5,1:28,2:1,3:t.tier,5:quality,6:3,7:owner,8:95+30*(quality-1),23:3,24:1,26:1.7,27:origin});
  for(let slot=1;slot<quality;slot++){row[8+slot]=k.setEquipmentLevel.origins[origin].affixIds[slot-1];row[14+slot]=40+10*(quality-1);}

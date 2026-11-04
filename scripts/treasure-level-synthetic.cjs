@@ -1,4 +1,5 @@
 'use strict';
+const {embedKnowledge} = require('./editor-source.cjs');
 // Synthetic checks of the candidate core against the independent oracle. Never counted as native evidence.
 const assert=require('node:assert/strict'),vm=require('node:vm');
 const O=require('./treasure-level-oracle.cjs');
@@ -8,7 +9,7 @@ function treasureRecord(k,templateId,{quality=1,level=1,owner=0}={}){
 }
 function createSyntheticRunner(k,core){
  const candidate=structuredClone(k);candidate.verification.backpackTreasureLevel=candidate.verification.treasureLevel=true;
- const ctx={};vm.runInNewContext(core.replace('/*__KNOWLEDGE__*/null',JSON.stringify(candidate)),ctx);const C=ctx.SaveCore;
+ const ctx={};vm.runInNewContext(embedKnowledge(core, candidate),ctx);const C=ctx.SaveCore;
  const firstOf=tier=>+Object.keys(k.treasureLevel.items).find(i=>k.treasureLevel.items[i].tier===tier);
  return c=>{
   if(c.kind==='cost'){

@@ -1,3 +1,4 @@
+const {readEditorSource, embedKnowledge} = require('../scripts/editor-source.cjs');
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // Basic technologies [t,4,0] (kj 1–30; #29 武庫 since V1.0.13.0, #30 備用裝備 since V1.0.17.0) are 0/1 unlocks. Raising writes 1, clears the research points y12 as 采集核心碰撞
 // does, and unlocks the missing prerequisite chain (kj column 7); techs under research are refused and lowering is not offered.
@@ -5,7 +6,7 @@ const {test}=require('node:test'),assert=require('node:assert/strict'),fs=requir
 const lockedIds=[13,14,15,17,18,24,25,26,27,29,30];
 function setup(gates={},edit=()=>{}){
  const k=JSON.parse(fs.readFileSync('knowledge/catalog.json'));for(const group of Object.keys(k.verification))k.verification[group]=true;Object.assign(k.verification,gates);
- const ctx={setTimeout};vm.runInNewContext(fs.readFileSync('src/core.js','utf8').replace('/*__KNOWLEDGE__*/null',JSON.stringify(k)),ctx);const C=ctx.SaveCore;
+ const ctx={setTimeout};vm.runInNewContext(embedKnowledge(readEditorSource('core'), k),ctx);const C=ctx.SaveCore;
  const data=Array.from({length:221},()=>Array.from({length:60},()=>Array(22).fill(0)));data[0][0][1]='szmnqea';
  for(let t=1;t<=30;t++)data[t][4][0]=lockedIds.includes(t)?0:1;
  data[15][12][0]=1234.5;data[31][4][0]=1;

@@ -1,4 +1,5 @@
 'use strict';
+const {readEditorSource} = require('../scripts/editor-source.cjs');
 // Every SaveCore method a family's native evidence depends on must be one of that family's slice roots.
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const A=require('../scripts/migration-analysis.cjs'),S=require('../scripts/verification-suite.cjs'),Core=require('../scripts/core-source-proof.cjs');
@@ -11,7 +12,7 @@ const extra={setEquipmentLevel:['set-level-migration-scenarios.cjs'],treasureLev
 test('every migration family declares roots, and the current core slices with them',()=>{
  assert.deepEqual(Object.keys(A.coreRoots).sort(),Object.keys(S.families).sort());
  for(const roots of Object.values(A.coreRoots))for(const shared of A.sharedCoreRoots)assert.ok(roots.includes(shared));
- const table=Core.slices(fs.readFileSync(path.join(__dirname,'../src/core.js'),'utf8'),A.coreRoots);
+ const table=Core.slices(readEditorSource('core'),A.coreRoots);
  assert.ok(table,'src/core.js 必須可切片；否則所有群組退回整份 core 綁定');
  assert.deepEqual(Object.keys(table.hashes).sort(),Object.keys(A.coreRoots).sort());
  // Slicing tolerates roots a legacy core lacks, so a typo would go unnoticed: every declared root must exist in the current core.

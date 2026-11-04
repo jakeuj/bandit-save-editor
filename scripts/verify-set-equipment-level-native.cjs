@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+const {readEditorSource, embedKnowledge} = require('./editor-source.cjs');
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict'),vm=require('node:vm');
 const {evaluate,waitMain}=require('./verify-game.cjs'),{nativeDriver}=require('./set-equipment-level-native.cjs'),D=require('./set-equipment-level-data.cjs'),S=require('./set-equipment-level-scenarios.cjs'),O=require('./set-equipment-level-oracle.cjs');
 const read=p=>JSON.parse(fs.readFileSync(p,'utf8')),write=(p,v)=>{fs.writeFileSync(p+'.tmp',JSON.stringify(v)+'\n');fs.renameSync(p+'.tmp',p);};
@@ -30,7 +31,7 @@ function validateEffect(v,c,k,records){
  for(const [id,value]of v.values)almost(value,(e.singles[id]||0)+(e.sets[id]||0),'native full set '+id);
  assert.equal(v.values.length,new Set([...Object.keys(k.setEquipmentLevel.attributes),...Object.values(k.setEquipmentLevel.sets).flatMap(t=>t.effects.map(e=>String(e.attributeId)))]).size);return true;
 }
-function candidateCore(k,source){const candidate=structuredClone(k);for(const g of D.groups)candidate.verification[g]=true;const ctx={};vm.runInNewContext(source.replace('/*__KNOWLEDGE__*/null',JSON.stringify(candidate)),ctx);const C=ctx.SaveCore,data=Array.from({length:221},()=>Array.from({length:60},()=>Array(22).fill(0)));data[0][0][1]='szmnqea';data[1][0][2]=1;data[1][1][2]='驗證角色';const m=C.parse(JSON.stringify({c2array:true,size:[221,60,22],data}));return {C,m};}
+function candidateCore(k,source){const candidate=structuredClone(k);for(const g of D.groups)candidate.verification[g]=true;const ctx={};vm.runInNewContext(embedKnowledge(source, candidate),ctx);const C=ctx.SaveCore,data=Array.from({length:221},()=>Array.from({length:60},()=>Array(22).fill(0)));data[0][0][1]='szmnqea';data[1][0][2]=1;data[1][1][2]='驗證角色';const m=C.parse(JSON.stringify({c2array:true,size:[221,60,22],data}));return {C,m};}
 function coreEdit(ctx,before,c,k){const {C,m}=ctx,z=c.state==='backpack'?7:9;for(const p of [7,9])for(let y=0;y<60;y++)m.original.data[1][y][p]=0;for(let s=1;s<=6;s++)m.original.data[1][15+s][2]=0;const row=before.slice();row[7]=c.state==='equipped'?1:0;row.forEach((v,y)=>m.original.data[1][y][z]=v);if(row[7])m.original.data[1][15+k.setEquipmentLevel.items[c.templateId].slot][2]=1;m.changes.clear();m.history=[];C.setEquipmentLevel(m,{itemId:1,plane:z,level:c.to});assert.equal(m.changes.size,1);const after=row.map((_,y)=>C.get(m,{x:1,y,z}));O.assertLevelOnly(row,after,c.to);return after;}
 async function run({state,k,source,out,phase,inputs}){
  require('./migration-source.cjs').external(out);await waitMain(state);
@@ -59,5 +60,5 @@ async function run({state,k,source,out,phase,inputs}){
  }
  write(reportFile,report);return {phase,cases:report.results.length};
 }
-if(require.main===module){const argv=process.argv.slice(2),opt=n=>argv.includes(n)?argv[argv.indexOf(n)+1]:undefined;const state=read(opt('--state')),k=read(opt('--catalog')||path.join(__dirname,'../knowledge/catalog.json')),source=fs.readFileSync(path.join(__dirname,'../src/core.js'),'utf8'),inputs=read(opt('--inputs'));run({state,k,source,out:opt('--output'),phase:opt('--phase'),inputs}).then(v=>{console.log(JSON.stringify(v));process.stdout.write('',()=>process.exit(0));}).catch(e=>{console.error(e.stack);process.stderr.write('',()=>process.exit(1));});}
+if(require.main===module){const argv=process.argv.slice(2),opt=n=>argv.includes(n)?argv[argv.indexOf(n)+1]:undefined;const state=read(opt('--state')),k=read(opt('--catalog')||path.join(__dirname,'../knowledge/catalog.json')),source=readEditorSource('core'),inputs=read(opt('--inputs'));run({state,k,source,out:opt('--output'),phase:opt('--phase'),inputs}).then(v=>{console.log(JSON.stringify(v));process.stdout.write('',()=>process.exit(0));}).catch(e=>{console.error(e.stack);process.stderr.write('',()=>process.exit(1));});}
 module.exports={rpc,generationCases,validateGeneration,validateLevel,validateEffect,candidateCore,coreEdit,run};

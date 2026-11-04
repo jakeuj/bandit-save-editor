@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+const {readEditorSource} = require('./editor-source.cjs');
 // Treasure lifecycle IO shard: native equip / unequip / replace slot 6, original-format save and new-PID reload.
 // Disposable hidden copies only. Calibration-grade until the final matrix runs against the final core.
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
@@ -119,7 +120,7 @@ async function runCase({k,cfg,out,c,baselines,index,replace}){
 async function main(argv){
  const opt=n=>argv.includes(n)?argv[argv.indexOf(n)+1]:undefined,cfg=JSON.parse(fs.readFileSync(opt('--config'))),k=JSON.parse(fs.readFileSync(path.join(root,'knowledge/catalog.json'))),out=require('./migration-source.cjs').external(cfg.out+'/lifecycle');
  const only=(opt('--only')==='all'?cases(k).map(c=>c.id):opt('--only')?opt('--only').split(','):SMOKE),list=cases(k).filter(c=>only.includes(c.id));assert.equal(list.length,only.length,'未知案例');
- const baselines=await ensureBaselines({k,cfg,out,list}),file=path.join(out,'treasure-lifecycle.json'),core=fs.readFileSync(path.join(root,'src/core.js'),'utf8'),binding={coreHash:D.hash(core),dataHash:D.hash(k.treasureLevel),fingerprints:{...k.fingerprints,...k.batch2Fingerprints},runnerHash:D.hash(fs.readFileSync(__filename,'utf8').split(String.fromCharCode(13)).join('')),driverHash:D.hash(require('./treasure-level-native.cjs').nativeDriver.toString())},
+ const baselines=await ensureBaselines({k,cfg,out,list}),file=path.join(out,'treasure-lifecycle.json'),core=readEditorSource('core', {root}),binding={coreHash:D.hash(core),dataHash:D.hash(k.treasureLevel),fingerprints:{...k.fingerprints,...k.batch2Fingerprints},runnerHash:D.hash(fs.readFileSync(__filename,'utf8').split(String.fromCharCode(13)).join('')),driverHash:D.hash(require('./treasure-level-native.cjs').nativeDriver.toString())},
   result=fs.existsSync(file)?JSON.parse(fs.readFileSync(file)):{mode:'native',binding,copies:[]};
  assert.deepEqual(result.binding,binding,'生命週期結果的核心／規則／runner 綁定與目前不符，須刪除重建');
  for(const [index,c] of list.entries()){

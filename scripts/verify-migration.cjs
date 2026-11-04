@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+const {readEditorSource} = require('./editor-source.cjs');
 // Re-verifies every write group on disposable game copies: generates representative scenarios, replays the existing
 // isolated CLI steps for each copy, and records which required checks were proven. Outputs stay outside the repo.
 const fs = require('node:fs');
@@ -154,7 +155,7 @@ async function runMigration({catalog, proof, copies, runDir, setupArgs, exec = d
   // One formula matrix per family/source binding, shared by its independent save scenarios.
   const formulas=new Set();
   for(const copy of copies)if(S.families[copy.family].formulas&&copy.formulas!==false){copy.formulas=!formulas.has(copy.family);formulas.add(copy.family);}
-  const skillCapsBinding = copies.some(c => c.family === Caps.group) ? Caps.binding(catalog, fs.readFileSync(path.join(root, 'src/core.js'), 'utf8')) : undefined;
+  const skillCapsBinding = copies.some(c => c.family === Caps.group) ? Caps.binding(catalog, readEditorSource('core', {root})) : undefined;
   for (const copy of copies) if (copy.scenario) {
     copy.scenarioFile = path.join(runDir, copy.name + '.json');
     fs.writeFileSync(copy.scenarioFile, JSON.stringify(copy.scenario));
@@ -246,8 +247,8 @@ function writeBack({dir = root, catalog, proof, results, steamBuild, exec = (scr
   if(allGroups.some(g=>needsInitial(g)&&catalog.verification[g]))return {action:'skipped',reason:'缺少首次完整矩陣證明；代表遷移不可首次開放'};
   if (!results.completed || groups.some(group => !results.checks[group])) return {action: 'skipped', reason: '流水線未完成或未涵蓋全部群組'};
   const failing = groups.filter(group => R.requiredChecks(group).some(check => results.checks[group]?.[check] !== true && check !== R.uiChecks[group]));
-  if(groups.includes(Talents.group))try{Talents.validateResults(catalog,fs.readFileSync(path.join(dir,'src/core.js'),'utf8'),results,{initial:false});}catch(error){if(!failing.includes(Talents.group))failing.push(Talents.group);}
-  if(groups.includes(Caps.group))try{Caps.validateResults(catalog,fs.readFileSync(path.join(dir,'src/core.js'),'utf8'),results,{initial:false});}catch(error){if(!failing.includes(Caps.group))failing.push(Caps.group);}
+  if(groups.includes(Talents.group))try{Talents.validateResults(catalog,readEditorSource('core', {root: dir}),results,{initial:false});}catch(error){if(!failing.includes(Talents.group))failing.push(Talents.group);}
+  if(groups.includes(Caps.group))try{Caps.validateResults(catalog,readEditorSource('core', {root: dir}),results,{initial:false});}catch(error){if(!failing.includes(Caps.group))failing.push(Caps.group);}
   const comparison = allGroups.map(group => ({group, existing: Object.values(recordedChecks(proof, group)).every(Boolean) && catalog.verification[group] === true, migrated: !needsInitial(group) && !failing.includes(group) && !S.families[S.familyOf(group)]?.pendingReason && R.requiredChecks(group).every(check=>results.checks[group]?.[check]===true), ...(S.families[S.familyOf(group)]?.pendingReason?{pending:S.families[S.familyOf(group)].pendingReason}:needsInitial(group)?{pending:'首次完整矩陣須以獨立證明合併'}:{})}));
   if (sameFingerprints(proof.fingerprints, catalog.fingerprints) && sameFingerprints(proof.batch2?.fingerprints, catalog.batch2Fingerprints))
     return {action: 'compared', consistent: failing.length === 0 && comparison.every(c => c.existing === c.migrated), failing, comparison};
@@ -255,7 +256,7 @@ function writeBack({dir = root, catalog, proof, results, steamBuild, exec = (scr
   const files = ['knowledge/catalog.json', 'knowledge/verification.json', 'index.html', 'sw.js'].map(file => path.join(dir, file)), backup = files.map(file => fs.readFileSync(file));
   let next;
   try {
-    next = buildProof({catalog, results, coreSource: fs.readFileSync(path.join(dir, 'src/core.js'), 'utf8'), steamBuild, previous: proof});
+    next = buildProof({catalog, results, coreSource: readEditorSource('core', {root: dir}), steamBuild, previous: proof});
     const gated = {...catalog, verification: {...next.groups}};
     fs.writeFileSync(files[0], JSON.stringify(gated, null, 2) + '\n');
     fs.writeFileSync(files[1], JSON.stringify(next, null, 2) + '\n');

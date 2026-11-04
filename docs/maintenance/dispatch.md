@@ -39,7 +39,7 @@
 
 | 模型 | 適用 | 不交給它 |
 | --- | --- | --- |
-| **Opus 5.5** | 改 `src/core.js` 的資格、交易、回滾；碰到或需要避開共用樞紐的設計；原生結果判讀與規格修正；跨模組設計與新研究 | 純機械性的文件同步（浪費） |
+| **Opus 5.5** | 改 `src/core/` 的資格、交易、回滾；碰到或需要避開共用樞紐的設計；原生結果判讀與規格修正；跨模組設計與新研究 | 純機械性的文件同步（浪費） |
 | **Sonnet 5.5** | 有既有範本可照做的程式：規則資料模組、測試、沿用既有樣式的介面；照已寫好的情境檔跑冒煙並處理一般失敗 | 新的 core 交易設計、原生反證判讀 |
 | **Haiku 5.5** | 純文件同步、連結修正；照固定指令跑檢查並整理結果；平行分支的整合推送（無衝突或只有紀錄行衝突） | 任何 `src/` 或 `scripts/` 的邏輯修改 |
 
@@ -54,10 +54,10 @@
 
 ## 依賴與並行
 
-- **必須依序**：後一段讀前一段的產出（資料 → 資格 → 預覽 → 交易）；同一份程式檔（`src/core.js`、`knowledge/catalog.json`、`knowledge/verification.json`、`index.html`／`sw.js`）只能一段一段改。
+- **必須依序**：後一段讀前一段的產出（資料 → 資格 → 預覽 → 交易）；同一份程式檔（例如 `src/core/` 內同一片段、`src/core.js`、`knowledge/catalog.json`、`knowledge/verification.json`、`index.html`／`sw.js`）只能一段一段改。
 - **原生遊戲一次一段**：同時只能有一個 session 啟動隔離遊戲。
 - **可並行**：只新增或修改互不重疊的檔案，且不需要對方的產出。
-- **子 session 的位置**：同一時間只有一個子 session 寫主 checkout（`use_worktree: false`），通常是改 `src/core.js` 或建置檔的那一段；其餘並行段落各開自己的 worktree（`use_worktree: true`），結束時 rebase 到 main 後直接推送 main。推送前 `git pull --rebase`，紀錄行衝突時兩邊都保留。
+- **子 session 的位置**：同一時間只有一個子 session 寫主 checkout（`use_worktree: false`），通常是改核心片段或共用組裝檔的那一段；其餘並行段落各開自己的 worktree（`use_worktree: true`），結束時 rebase 到 main 後直接推送 main。推送前 `git pull --rebase`，紀錄行衝突時兩邊都保留。
 - **進度入口由主 session 更新**：子 session 不改 `docs/research/next-version-plan.md`；主 session 在核對完一批結果後統一改「下一步」並提交推送。
 - **建置**：只有改到 `src/` 或 catalog 的段落才重建 `index.html`／`sw.js`；並行段落不改這兩個檔。
 

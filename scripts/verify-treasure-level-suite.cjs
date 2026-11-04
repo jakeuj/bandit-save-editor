@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+const {readEditorSource} = require('./editor-source.cjs');
 // First-opening of the two treasure-level groups. Re-validates every raw native result, merges each group's own initial
 // record into the composite proof, opens only those flags and rebuilds. Any failure restores all touched files byte for byte.
 const fs=require('node:fs'),path=require('node:path'),{spawnSync}=require('node:child_process');
@@ -19,7 +20,7 @@ function mergeAll({catalog,proof,validated,core}){
  return next;
 }
 function record({dir=root,cfg,matrixDir,lifecycleDir,exec=(args)=>spawnSync(process.execPath,[path.join(dir,'scripts/build-editor.cjs'),...args],{cwd:dir,encoding:'utf8'})}){
- const abs=f=>path.join(dir,f),backup=files.map(f=>fs.readFileSync(abs(f))),core=fs.readFileSync(abs('src/core.js'),'utf8');
+ const abs=f=>path.join(dir,f),backup=files.map(f=>fs.readFileSync(abs(f))),core=readEditorSource('core', {root: dir});
  const catalogText=backup[0].toString('utf8'),catalog=JSON.parse(catalogText),proof=JSON.parse(backup[1].toString('utf8'));
  if(proof.schemaVersion!==2)throw Error('寶物首次證明只合併到複合證明；請先完成既有群組的遷移寫回');
  if(D.groups.some(g=>catalog.verification[g]!==false))throw Error('寶物群組已不是關閉狀態');

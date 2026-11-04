@@ -1,4 +1,5 @@
 'use strict';
+const {readEditorSource, embedKnowledge} = require('../scripts/editor-source.cjs');
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // V1.0.17.0 backup set (z23): 角色换装 swaps the z9 rows in z2 y16–21 with z23 y1–6, so a stored row keeps owner=character
 // while no z2 slot points at it. Row 1 is an ordinary Q2 item, row 2 a treasure, row 3 an inner pill, all owned by character 1.
@@ -8,7 +9,7 @@ function setup({layers=24,stored=true,open=false,innerPill=false,aptitude=false}
  const K=JSON.parse(fs.readFileSync('knowledge/catalog.json'));
  for(const g of ['equipmentAffixCoefficient','pillAptitudeBonus','treasureLevel'])K.verification[g]=true;
  K.verification.pillAptitudeBonusDecimal=false;K.verification.backupSetEquipment=open;K.verification.backupSetInnerPillLevel=innerPill;K.verification.backupSetAptitude=aptitude;
- const ctx={setTimeout};vm.runInNewContext(fs.readFileSync('src/core.js','utf8').replace('/*__KNOWLEDGE__*/null',JSON.stringify(K)),ctx);const C=ctx.SaveCore;
+ const ctx={setTimeout};vm.runInNewContext(embedKnowledge(readEditorSource('core'), K),ctx);const C=ctx.SaveCore;
  const data=Array.from({length:221},()=>Array.from({length:60},()=>Array(layers).fill(0)));data[0][0][1]='szmnqea';
  data[1][0][2]=1;data[1][1][2]='測試甲';data[1][2][2]=1;
  const template=K.batch2Data.characters[1];for(let i=0;i<3;i++){data[1][10+i][2]=template.base[i];data[1][1+i][12]=template.talents[i];data[1][21+i][12]=template.talentLevels[i];}

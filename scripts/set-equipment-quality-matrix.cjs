@@ -1,4 +1,5 @@
 'use strict';
+const {embedKnowledge} = require('./editor-source.cjs');
 // B4: first-matrix scenarios, validators and native driver for set-equipment quality.
 // Every executable A9 case (except lifecycle / level-regression, which have their own runners) becomes one scenario:
 //   start rows (native-derived) -> candidate transaction in the isolated knowledge copy -> compared with the A7/A8 oracles offline ->
@@ -30,7 +31,7 @@ const effectAttributesOf=k=>[...new Set([...attributesOf(k),...Object.values(k.s
 // Quality gates open only inside this VM copy of the knowledge; the shipped catalog stays untouched.
 function candidateCore(k,source){
  const candidate=structuredClone(k);for(const g of D.groups)candidate.verification[g]=true;
- const ctx={};vm.runInNewContext(source.replace('/*__KNOWLEDGE__*/null',JSON.stringify(candidate)),ctx);return ctx.SaveCore;
+ const ctx={};vm.runInNewContext(embedKnowledge(source, candidate),ctx);return ctx.SaveCore;
 }
 function sandbox(C){
  const data=Array.from({length:221},()=>Array.from({length:60},()=>Array(22).fill(0)));data[0][0][1]='szmnqea';data[1][0][2]=1;data[1][1][2]='驗證角色';

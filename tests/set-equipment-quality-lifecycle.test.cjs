@@ -1,9 +1,10 @@
 'use strict';
+const {readEditorSource, embedKnowledge} = require('../scripts/editor-source.cjs');
 // Synthetic tests for the B2 lifecycle runner: planning, bytes, a mock engine behind the real driver, validators and coverage.
 // No game, no real save: the engine is a small in-memory stand-in with the move semantics observed in B2 (y0–49 only).
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const R=require('../scripts/verify-set-equipment-quality-migration-lifecycle.cjs'),O=require('../scripts/set-equipment-quality-oracle.cjs'),M=require('../scripts/set-equipment-quality-scenarios.cjs'),Q=require('../scripts/set-equipment-quality-data.cjs');
-const S=require('./helpers/set-quality-shipped.cjs'),k=require('../knowledge/catalog.json'),source=fs.readFileSync(path.join(__dirname,'../src/core.js'),'utf8');
+const S=require('./helpers/set-quality-shipped.cjs'),k=require('../knowledge/catalog.json'),source=readEditorSource('core');
 const filler=Object.fromEntries(['baselineHash','runtimeHash','sourceManifestHash','runtimeManifestHash'].map(n=>[n,'0'.repeat(64)]));
 const census=O.reachabilityCensus(k.setEquipmentQuality,k.setEquipmentLevel);
 // A valid native-shaped baseline record for a template at quality q (slots from P原, flag 0, materials at 3 points).
@@ -34,7 +35,7 @@ test('start bytes come from the candidate transaction and agree with both indepe
   assert.notEqual(b.startText,b.editedText);
  }
  // A closed copy of the knowledge refuses; the shipped catalog opens a group only with its merged first proof.
- const ctx={};require('node:vm').runInNewContext(source.replace('/*__KNOWLEDGE__*/null',JSON.stringify(S.closed(k))),ctx);const closed=ctx.SaveCore;
+ const ctx={};require('node:vm').runInNewContext(embedKnowledge(source, S.closed(k)),ctx);const closed=ctx.SaveCore;
  assert.throws(()=>R.buildStart(closed,k,saveText(),R.planCopies(k,results)[0]),/尚未完成/);S.assertShipped(k);
 });
 

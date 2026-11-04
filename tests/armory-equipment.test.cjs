@@ -1,4 +1,5 @@
 'use strict';
+const {readEditorSource, embedKnowledge} = require('../scripts/editor-source.cjs');
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // Armory (z22, V1.0.13.0): rows are verbatim z7 copies, so every backpack editor applies to them behind armoryEquipment.
 // Row 1 is an ordinary Q6 柴斧 (slots 1–5, slot 1 washed), row 20 a Q3 set piece, row 21 a Q3 treasure, row 22 a Q3 inner pill;
@@ -14,7 +15,7 @@ function render(data,patches=[]){
 function setup({armory=true,layers=23}={}){
  const K=JSON.parse(fs.readFileSync('knowledge/catalog.json'));
  for(const g of backpackGroups)K.verification[g]=true;K.verification.armoryEquipment=armory;
- const ctx={setTimeout,performance};vm.runInNewContext(fs.readFileSync('src/core.js','utf8').replace('/*__KNOWLEDGE__*/null',JSON.stringify(K)),ctx);const C=ctx.SaveCore;
+ const ctx={setTimeout,performance};vm.runInNewContext(embedKnowledge(readEditorSource('core'), K),ctx);const C=ctx.SaveCore;
  const data=Array.from({length:221},()=>Array.from({length:60},()=>Array(layers).fill(0)));data[0][0][1]='szmnqea';
  const supported=K.batch2Data.items[1].affixIds.filter(a=>K.affixReplacement.attributes[a]&&K.affixReplacementLimits.attributeIds.includes(a)),used=supported.slice(0,5),free=supported[5];
  const set=K.setEquipmentLevel.items[28],treasure=Number(Object.keys(K.treasureLevel.items).find(i=>K.treasureLevel.items[i].tier===1)),pill=K.catalogs.items.find(i=>i.kind==='内丹');

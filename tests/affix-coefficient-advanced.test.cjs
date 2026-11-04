@@ -1,10 +1,11 @@
 'use strict';
+const {readEditorSource, embedKnowledge} = require('../scripts/editor-source.cjs');
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // Ordinary Q2 柴斧 (tier 1, 10–80) in z9 worn by character 1 and a copy in the z7 backpack; slot 1 is the selected wash slot.
 function setup({advanced=true,patch=()=>{}}={}){
  const K=JSON.parse(fs.readFileSync('knowledge/catalog.json'));
  Object.assign(K.verification,{equipmentAffixCoefficient:true,backpackEquipmentAffixCoefficient:true,equipmentAffixReplacement:true,backpackEquipmentAffixReplacement:true,equipmentQualityUpgrade:true,equipmentQualityDowngrade:true,equipmentLevel:true,backpackEquipmentLevel:true,pillAptitudeBonus:true,pillAptitudeBonusDecimal:false,pillAptitudeBonusAscended:false,equipmentAffixCoefficientAdvanced:advanced});
- const ctx={};vm.runInNewContext(fs.readFileSync('src/core.js','utf8').replace('/*__KNOWLEDGE__*/null',JSON.stringify(K)),ctx);const C=ctx.SaveCore;
+ const ctx={};vm.runInNewContext(embedKnowledge(readEditorSource('core'), K),ctx);const C=ctx.SaveCore;
  const data=Array.from({length:221},()=>Array.from({length:60},()=>Array(22).fill(0)));data[0][0][1]='szmnqea';data[1][0][2]=1;data[1][1][2]='測試甲';data[1][2][2]=1;
  const template=K.batch2Data.characters[1];for(let i=0;i<3;i++){data[1][10+i][2]=template.base[i];data[1][1+i][12]=template.talents[i];data[1][21+i][12]=template.talentLevels[i];}
  const affix=K.batch2Data.items[1].affixIds[0];

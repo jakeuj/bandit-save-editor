@@ -19,7 +19,7 @@
 5. **發布文字**：修改器版號加一（`index.html` 側欄版號與日期、更新紀錄對話框加一則），`docs/releases.md` 加一節（變動來源、報告列出的資料變動與公告要點、冒煙雜湊），`README.md` 知識基準句與[進度入口](../research/next-version-plan.md)「剛完成」換新版；Mac 範圍字樣（`launcher/README.md`、技能的 Mac 參考與操作補充）延到新版本。改到 `src/` 或 `index.html` 後跑 `node scripts/build-editor.cjs`。
 6. **提交推送**：[待提交快照檢查](release.md#待提交快照檢查)、提交、推送，推送成功即結束，回覆一段結論（判定、變動摘要、冒煙結果、提交連結）。
 
-下列情況改走下方手動步驟，**不提交、不推送**，先回報 `report.json` 的 ✖ 項目、公告要點與建議做法，等使用者決定：判定為特別、例行／資料變動的冒煙失敗、要改 `src/core.js` 或寫入規則、要新增驗證工具動作，或測試失敗不是因為資料值。已審核摘要只差物件編號時（候選 catalog 產生失敗的常見原因），依第 2 步正規化比對確認後登錄新摘要，再重跑 `check`。
+下列情況改走下方手動步驟，**不提交、不推送**，先回報 `report.json` 的 ✖ 項目、公告要點與建議做法，等使用者決定：判定為特別、例行／資料變動的冒煙失敗、要改核心來源（`src/core.js` 或 `src/core/`）或寫入規則、要新增驗證工具動作，或測試失敗不是因為資料值。已審核摘要只差物件編號時（候選 catalog 產生失敗的常見原因），依第 2 步正規化比對確認後登錄新摘要，再重跑 `check`。
 
 使用者同意處理特別版更後：逐項看 ✖（`report.json` 有完整清單；攤平後的事件可用 `game-update.cjs` 匯出的 `flatten`／`normalize` 印出），需要時改 core、登錄摘要、補測試，再跑 `node scripts/game-update.cjs apply --reviewed`（仍需候選 catalog 產生成功），之後照第 3–6 步做完並推送；每個 ✖ 的結論寫進 `gameUpdate.staticReview`。
 

@@ -1,10 +1,11 @@
 'use strict';
+const {readEditorSource} = require('../scripts/editor-source.cjs');
 // Synthetic tests for the B4 matrix runner: scenario building against the oracles, validators that must catch tampering, the stored-result
 // contract, checkpoint binding, and the native driver wired to a small in-memory stand-in for the game. No real save, no game process.
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const X=require('../scripts/set-equipment-quality-matrix.cjs'),R=require('../scripts/verify-set-equipment-quality.cjs'),M=require('../scripts/set-equipment-quality-scenarios.cjs'),
  O=require('../scripts/set-equipment-quality-oracle.cjs'),L=require('../scripts/set-equipment-level-oracle.cjs'),Q=require('../scripts/set-equipment-quality-data.cjs');
-const k=require('../knowledge/catalog.json'),source=fs.readFileSync(path.join(__dirname,'../src/core.js'),'utf8');
+const k=require('../knowledge/catalog.json'),source=readEditorSource('core');
 const filler=Object.fromEntries(['baselineHash','runtimeHash','sourceManifestHash','runtimeManifestHash'].map(n=>[n,'0'.repeat(64)]));
 const manifest=M.createManifest(k,source,filler);
 const C=X.candidateCore(k,source),m=X.sandbox(C);

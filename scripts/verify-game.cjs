@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+const {readEditorSource, embedKnowledge} = require('./editor-source.cjs');
 // Local, opt-in integration harness. Artifacts and copied player data stay outside the repository.
 const fs=require('node:fs'),path=require('node:path'),os=require('node:os'),vm=require('node:vm'),crypto=require('node:crypto');
 const {spawn,execFileSync}=require('node:child_process');
@@ -40,7 +41,7 @@ function ownedProcess(state){
 const defaultCells=[[1,1,0],[1,1,2],[1,3,2],[1,4,2],[1,1,4],[1,1,5],[1,31,2],[1,40,2],[2,2,0],[1,56,2]];
 // The page's editor core with every candidate gate open, only inside this VM.
 function loadCore(catalog){
- const core=fs.readFileSync(path.join(root,'src/core.js'),'utf8').replace('/*__KNOWLEDGE__*/null',JSON.stringify(catalog)),ctx={setTimeout};vm.runInNewContext(core,ctx);const C=ctx.SaveCore;
+ const core=embedKnowledge(readEditorSource('core', {root}), catalog),ctx={setTimeout};vm.runInNewContext(core,ctx);const C=ctx.SaveCore;
  for(const k of Object.keys(C.KNOWLEDGE.verification))C.KNOWLEDGE.verification[k]=true;
  return C;
 }

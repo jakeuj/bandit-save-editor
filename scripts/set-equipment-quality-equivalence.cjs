@@ -4,6 +4,7 @@
 // nothing else: the old core, data script and A10 manifest are rebuilt from the current files by reversing the reviewed B7
 // patches, so any other difference (or a tampered record) no longer reproduces the pinned old digests and is refused.
 const fs=require('node:fs'),path=require('node:path'),{execFileSync}=require('node:child_process');
+const {readEditorSource} = require('./editor-source.cjs');
 const D=require('./set-equipment-quality-data.cjs'),M=require('./set-equipment-quality-scenarios.cjs'),Core=require('./core-source-proof.cjs');
 const {hash}=D,root=path.resolve(__dirname,'..'),lf=s=>s.replace(/\r\n/g,'\n'),text=s=>hash(lf(s));
 const filler=Object.fromEntries(['baselineHash','runtimeHash','sourceManifestHash','runtimeManifestHash'].map(k=>[k,'0'.repeat(64)]));
@@ -41,7 +42,7 @@ function reverse(current,patch){
  if(at<0||current.indexOf(block,at+1)>=0)return null;
  return current.slice(0,at)+patch.old.join('\n')+current.slice(at+block.length);
 }
-const read=file=>lf(fs.readFileSync(path.join(root,file),'utf8'));
+const read=file=>lf(file==='src/core.js'?readEditorSource('core',{root}):fs.readFileSync(path.join(root,file),'utf8'));
 // The A10 manifest of the old tree: identical payload except the two binding digests the B7 change touched.
 function oldManifestHash(k,source,inputs=filler,from=B4.from){
  const {manifestHash,...payload}=M.createManifest(k,source,inputs);

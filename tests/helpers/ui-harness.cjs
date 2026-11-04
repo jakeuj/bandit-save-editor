@@ -1,4 +1,5 @@
 'use strict';
+const {readEditorSource, embedKnowledge} = require('../../scripts/editor-source.cjs');
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
@@ -26,13 +27,14 @@ function setup() {
     localStorage: {getItem: () => null},
     setTimeout(fn, ms) { if (ms === 30) queueMicrotask(fn); else timers.push({fn, ms}); return timers.length; },
     clearTimeout() {}, confirm(message) { prompts.push(message); return answer; },
-    document: {getElementById: $, querySelectorAll: () => [], addEventListener: (n, f) => events[n] = f, createElement: element},
+    document: {getElementById: $, querySelectorAll: () => [], addEventListener: (n, f) => {
+      const previous = events[n];
+      events[n] = event => { previous?.(event); f(event); };
+    }, createElement: element},
     window: {addEventListener: (n, f) => windowEvents[n] = f}
   };
-  vm.runInNewContext(fs.readFileSync(path.join(root, 'src/core.js'), 'utf8')
-    .replace('/*__KNOWLEDGE__*/null', fs.readFileSync(path.join(root, 'knowledge/catalog.json'), 'utf8')), context);
-  vm.runInNewContext(fs.readFileSync(path.join(root, 'src/ui.js'), 'utf8')
-    .replace('/*__KNOWLEDGE_UI__*/', 'const editingState={};function renderKnowledgeTab(){}'), context);
+  vm.runInNewContext(embedKnowledge(readEditorSource('core', {root}), JSON.parse(fs.readFileSync(path.join(root, 'knowledge/catalog.json'), 'utf8'))), context);
+  vm.runInNewContext(readEditorSource('ui', {root}), context);
   const fixture = saveFixture();
   const file = (name, bytes = Buffer.from(fixture.raw)) => ({name, size: bytes.length, arrayBuffer: async () => bytes});
   const load = (name, bytes) => $('fileInput').onchange({target: {files: [file(name, bytes)]}});
@@ -40,7 +42,7 @@ function setup() {
   const unload = () => { let prevented = false; windowEvents.beforeunload({preventDefault() { prevented = true; }}); return prevented; };
   return {$, load, file, edit, unload, fixture, prompts, downloads, revoked,
     confirm: value => { answer = value; },
-    restore: () => events.click({target: {closest: () => ({dataset: {restore: '1,2,0'}})}}),
+    restore: () => events.click({target: {closest: selector => selector === 'button' ? {dataset: {restore: '1,2,0'}} : null}}),
     expireDownloads: () => timers.filter(t => t.ms === 10000).forEach(t => t.fn())};
 }
 

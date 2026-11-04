@@ -1,4 +1,5 @@
 'use strict';
+const {readEditorSource, embedKnowledge} = require('../scripts/editor-source.cjs');
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 const {saveFixture,renderSave}=require('./helpers/save-fixture.cjs');
 const O=require('../scripts/set-equipment-quality-effects-oracle.cjs');
@@ -6,7 +7,7 @@ const catalog=require('../knowledge/catalog.json'),templateId=28,originId=2,S=re
 const L=catalog.setEquipmentLevel,t=L.items[templateId],P原=L.origins[originId].affixIds,P套=catalog.setEquipmentQuality.pools[templateId].affixIds;
 const setOnly=P套.filter(a=>!P原.includes(a));
 const UP={7:'backpackSetEquipmentQualityUpgrade',9:'setEquipmentQualityUpgrade'},DOWN={7:'backpackSetEquipmentQualityDowngrade',9:'setEquipmentQualityDowngrade'};
-const coreSource=fs.readFileSync(require.resolve('../src/core.js'),'utf8'),uiSource=fs.readFileSync(require.resolve('../src/knowledge-ui.js'),'utf8');
+const coreSource=readEditorSource('core'),uiSource=readEditorSource('knowledge-ui');
 // Same adapter as equipment-ui.test.cjs: runs the real widget handlers against a minimal DOM.
 function record({plane,quality=3,level=3,flags={}}){
  const r=Array(60).fill(0);Object.assign(r,{0:5,1:templateId,2:1,3:t.tier,5:quality,6:level,7:0,8:95+30*(quality-1),23:3,24:1,26:1.7,27:originId});
@@ -23,7 +24,7 @@ function setup({open=[],quality=3,level=3,flags={},plane=9}={}){
  // The card is tested from a copy with every set-quality group closed; `open` opens groups in that copy only.
  const k=S.closed(catalog);for(const g of ['backpackSetEquipmentLevel','setEquipmentLevel'])k.verification[g]=true;for(const g of open)k.verification[g]=true;
  const ctx={document:{addEventListener:(n,fn)=>(listeners[n]??=[]).push(fn),querySelector:s=>elements.get('edit-'+s.match(/="(.*?)"/)?.[1])},$,knowledgePages:{inventory:0,settlement:0,atlas:0,catalog:0},K:k,fmt:String,htmlValue:String,esc:s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;'),toast:(message,error)=>toasts.push({message,error}),showTab(){}};
- vm.runInNewContext(coreSource.replace('/*__KNOWLEDGE__*/null',JSON.stringify(k)),ctx);ctx.C=ctx.SaveCore;
+ vm.runInNewContext(embedKnowledge(coreSource, k),ctx);ctx.C=ctx.SaveCore;
  const {data}=saveFixture({characters:2}),row=record({plane,quality,level,flags});
  row.forEach((v,y)=>data[20][y][plane]=v);
  // An ordinary equipment row keeps the existing quality card populated, so we can see the two cards stay independent.

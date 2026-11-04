@@ -1,92 +1,303 @@
 (() => {
- 'use strict';const C=SaveCore,$=id=>document.getElementById(id),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),fmt=v=>typeof v==='number'?v.toLocaleString('zh-TW'):v===null?'null':String(v);
- const htmlValue=value=>esc(fmt(value));
- let model=null,tab='resources',compare=null,diffs=[],diffPage=0,reviewPage=0,custom=[],looked=null,toastTimer,loading=false,revision=0,exportedRevision=-1;const pageSize=100;const K=C.KNOWLEDGE;const knowledgePages={settlement:0,inventory:0,atlas:0,catalog:0};let atlasEntityId=null;
- try{const saved=JSON.parse(localStorage.getItem('bandit-save-fields-v1')||'[]');custom=validateFields(saved);}catch{}
- function validateFields(a){if(!Array.isArray(a)||a.length>100)throw Error('欄位設定最多可包含 100 個欄位。');const seen=new Set();return a.map(f=>{if(!f||typeof f.name!=='string'||!f.name.trim()||f.name.length>60||![f.x,f.y,f.z].every(n=>Number.isSafeInteger(n)&&n>=0))throw Error('欄位設定格式錯誤。');if(seen.has(C.key(f)))throw Error('欄位設定包含重複座標。');seen.add(C.key(f));return {name:f.name.trim(),x:f.x,y:f.y,z:f.z};});}
- function toast(message,error=false){$('toast').textContent=message;$('toast').classList.toggle('error',error);$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,error?6500:3500);}
- function persist(){try{localStorage.setItem('bandit-save-fields-v1',JSON.stringify(custom));}catch{toast('此瀏覽器無法記住設定，請匯出欄位設定檔保留。');}}
- function displayLabel(c){return custom.find(f=>C.key(f)===C.key(c))?.name||C.labelFor(model.original,c);}
- function num(input){if(input.value.trim()==='')throw Error('數量不能空白。');const n=Number(input.value);if(!Number.isSafeInteger(n))throw Error('請輸入安全範圍內的整數。');return n;}
- function perform(fn){if(!model||loading)return false;try{C.transaction(model,fn);revision++;render();return true;}catch(e){toast(e.message,true);render();return false;}}
- function pick(id){$(id).value='';$(id).click();}
- function download(text,name,type='application/octet-stream'){const blob=new Blob([text],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);}
- function outputName(name,kind){return name.replace(/\.(dat|json)$/i,'')+kind+'.dat';}
- async function busy(fn){loading=true;$('workspace').setAttribute('aria-busy','true');$('openBtn').disabled=true;renderFooter();await new Promise(r=>setTimeout(r,30));try{await fn();}catch(e){toast(e.message,true);}finally{loading=false;$('workspace').setAttribute('aria-busy','false');$('openBtn').disabled=false;renderFooter();}}
- const readSave=async file=>new TextDecoder('utf-8',{fatal:true,ignoreBOM:true}).decode(await file.arrayBuffer());
- async function load(file){if(!file||loading)return;if(file.size>50*1024*1024){toast('檔案超過 50 MB，無法載入。',true);return;}if(model?.changes.size&&revision!==exportedRevision&&!confirm('目前有尚未匯出的變更。確定要開啟其他存檔並捨棄這些變更？'))return;await busy(async()=>{const next=C.parse(await readSave(file),file.name);model=next;document.querySelectorAll('[data-character-section]').forEach(section=>section.open=false);for(const state of Object.values(editingState)){state.id=null;state.advanced=false;state.preserveValue=false;}compare=null;diffs=[];diffPage=0;looked=null;reviewPage=0;revision++;if(typeof resetBatch==='function')resetBatch();$('fileName').textContent=file.name;$('fileInfo').textContent=`${fmt(file.size)} bytes · 山寨：${String(next.original.data[1][1][0])} · 所有修改另存副本`;$('shapeTag').textContent=next.original.size.join(' × ');$('filebar').hidden=false;$('dropZone').hidden=true;$('workspace').hidden=false;$('backupBtn').disabled=false;$('backupBtn').hidden=false;$('compareName').textContent='加入另一份存檔';$('diffResults').hidden=true;showTab('resources');render();toast('存檔已載入。');});}
- function showTab(name){tab=name;syncNavigation(name);document.querySelectorAll('[data-tab]').forEach(b=>{b.classList.toggle('active',b.dataset.tab===name);if(b.dataset.tab===name)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});document.querySelectorAll('[data-panel]').forEach(p=>p.hidden=p.id!=='tab-'+name);const publicKnowledge=['atlas','professions'].includes(name);$('workspace').hidden=!model&&!publicKnowledge;$('dropZone').hidden=!!model||publicKnowledge;if(!model&&publicKnowledge)renderKnowledgeTab(name);if(model){renderKnowledgeTab(name);if(name==='batch')renderBatch();if(name==='materials')renderMaterials();if(name==='compare')renderDiff();if(name==='advanced'){renderCustomList();if(looked)lookup();}}}
- function resourceCard(f){const available=C.exists(model.original,f)&&typeof C.cell(model.original,f)==='number',value=available?C.get(model,f):null,descriptor=available?C.resolveField(model,f):null,writable=available&&(!descriptor.known||descriptor.editable),changed=model.changes.has(C.key(f));return `<article class="resource-card ${changed?'changed':''}"><div class="resource-title"><span>${esc(f.name)}</span><span class="tag">${changed?'已修改':f.description?'資源':'自訂'}</span></div><p class="resource-desc">${esc(f.description||`座標 [${f.x}, ${f.y}, ${f.z}]`)}</p><input class="value-input" type="number" step="1" ${f.description?'min="0"':''} max="9007199254740991" data-field="${C.key(f)}" value="${available?value:''}" aria-label="${esc(f.name)}數量" ${writable?'':'disabled'}><div class="card-foot"><span>${available?'原始 '+fmt(C.cell(model.original,f)):'此存檔無對應數值欄位'}</span>${changed?`<button data-restore="${C.key(f)}">還原</button>`:'<span>可直接輸入</span>'}</div></article>`;}
- function renderResources(){if(!model)return;$('resourceCards').innerHTML=C.BASICS.map(resourceCard).join('');const extra=custom.filter(f=>!C.BASICS.some(b=>C.key(b)===C.key(f)));$('customSection').hidden=!extra.length;$('customCards').innerHTML=extra.map(resourceCard).join('');}
- function visibleMaterials(){const q=$('materialSearch').value.trim().toLowerCase(),type=$('materialType').value,held=$('heldOnly').checked;return C.MATERIALS.filter(m=>C.exists(model.original,m)&&(!q||`${m.name} ${m.type} ${m.id}`.toLowerCase().includes(q))&&(!type||m.type===type)&&(!held||C.get(model,m)>0));}
- function renderMaterials(){if(!model)return;const list=visibleMaterials();$('materialCount').textContent=`目前篩選 ${list.length} 筆`;$('batchBtn').disabled=!list.length;$('materialRows').innerHTML=list.length?list.map(m=>{const changed=model.changes.has(C.key(m));return `<tr class="${changed?'changed':''}"><td class="mono muted">#${m.id}</td><td class="name">${changed?'<i class="change-dot"></i>':''}${esc(m.name)}</td><td>${esc(m.type)}<span class="sub">第 ${m.tier} 階</span></td><td><input type="number" step="1" min="0" max="9007199254740991" value="${esc(C.get(model,m))}" data-field="${C.key(m)}" aria-label="${esc(m.name)} #${m.id} 數量"></td><td class="mono muted">${htmlValue(C.cell(model.original,m))}</td><td>${changed?`<button class="small ghost" data-restore="${C.key(m)}">還原</button>`:''}</td></tr>`;}).join(''):'<tr><td colspan="6" class="empty">沒有符合的材料。可以取消「只顯示持有」查看所有項目。</td></tr>';}
- function renderFooter(){const n=model?.changes.size||0,exported=n&&revision===exportedRevision;$('pendingCount').textContent=n;$('editorFooter').hidden=!model;$('pendingLabel').textContent=exported?'已匯出':'待匯出';$('footerHint').textContent=loading?'正在處理存檔…':!model?'載入存檔後即可開始修改':exported?'項數為欄位數 · 目前修改已匯出':n?'項數為欄位數 · 匯出另存副本':'項數為欄位數 · 尚未修改';$('downloadBtn').disabled=!model||!n||loading;$('reviewBtn').disabled=!n||loading;$('undoBtn').disabled=!model?.history.length||loading;}
- function render(){if(tab==='batch'&&typeof renderBatch==='function')renderBatch();renderResources();renderKnowledgeTab(tab);if(tab==='materials')renderMaterials();if(tab==='advanced'){renderCustomList();if(looked)lookup();}renderFooter();if($('reviewDialog').open)renderReview();}
- function coordsFromKey(k){const [x,y,z]=k.split(',').map(Number);return {x,y,z};}
- document.addEventListener('change',e=>{const input=e.target;if(!input.dataset.field||!model)return;const c=coordsFromKey(input.dataset.field);try{const value=num(input);perform(()=>C.set(model,c,value,displayLabel(c)));}catch(err){toast(err.message,true);input.value=C.get(model,c);}});
- document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.restore&&model){const c=coordsFromKey(b.dataset.restore);perform(()=>C.restore(model,c));}if(b.dataset.close)$(b.dataset.close).close();if(b.dataset.tab)showTab(b.dataset.tab);if(b.dataset.mobileTab){$('navigationDialog').close('navigate');showTab(b.dataset.mobileTab);}if(b.hasAttribute?.('data-all-positions')){$('inventoryPlane').value='';renderKnowledgeTab('inventory');}if(b.dataset.diff!==undefined){const d=diffs[Number(b.dataset.diff)];if(!d)return;showTab('advanced');$('coordX').value=d.x;$('coordY').value=d.y;$('coordZ').value=d.z;lookup();}if(b.dataset.remove!==undefined){custom=custom.filter(f=>C.key(f)!==b.dataset.remove);persist();render();}});
- $('openBtn').onclick=$('emptyOpenBtn').onclick=()=>pick('fileInput');$('fileInput').onchange=e=>load(e.target.files[0]);
- for(const type of ['dragenter','dragover'])$('dropZone').addEventListener(type,e=>{e.preventDefault();$('dropZone').classList.add('dragging');});$('dropZone').ondragleave=()=>$('dropZone').classList.remove('dragging');$('dropZone').ondrop=e=>{e.preventDefault();$('dropZone').classList.remove('dragging');load(e.dataTransfer.files[0]);};
- $('backupBtn').onclick=()=>{if(model)download(model.text,outputName(model.name,'.original-backup'));};
- $('materialSearch').oninput=renderMaterials;$('materialType').onchange=renderMaterials;$('heldOnly').onchange=renderMaterials;
- $('materialType').innerHTML+=[...new Set(C.MATERIALS.map(m=>m.type))].map(t=>`<option value="${esc(t)}">${esc(t)}</option>`).join('');
- $('batchBtn').onclick=()=>{try{const n=num($('batchValue'));if(n<0)throw Error('材料數量不能小於 0。');const list=visibleMaterials();if(perform(()=>{for(const m of list)C.set(model,m,n,`${m.name}（材料 #${m.id}）`);}))toast(`已調整 ${list.length} 筆材料，可從「檢視變更」確認。`);}catch(e){toast(e.message,true);}};
- $('undoBtn').onclick=()=>{if(model&&!loading){C.undo(model);revision++;render();toast('已復原上一步。');}};
- function renderReview(){const list=[...model.changes.values()],size=50;reviewPage=Math.max(0,Math.min(reviewPage,Math.ceil(list.length/size)-1));const start=reviewPage*size;
-  $('reviewRows').innerHTML=list.length?list.slice(start,start+size).map(c=>`<tr><td>${esc(c.label)}${c.operation?`<span class="operation-note">${esc(c.operation)}</span>`:''}${c.group?.startsWith('skill-growth:')?'<span class="sub">還原會一起撤回此角色九項上限、等級與餘額的累計修改（27 欄）。</span>':''}${c.group?.startsWith('aptitude:')?'<span class="sub">還原會一起撤回此角色三槽天賦等級、三項基礎資質與丹藥增量（12 欄），以及結丹品質。</span>':''}${c.group?.startsWith('relic:')?'<span class="sub">還原會一起撤回此靈物的五行與平均靈氣。</span>':''}${c.group?.startsWith('wall:')?'<span class="sub">還原會一起撤回城牆強化等級、城牆建築等級與一起下修的目前生命。</span>':''}${c.group?.startsWith('city:')?'<span class="sub">還原會一起撤回所有城市層數、一起下修的掛機層數與山寨總聲望。</span>':''}${c.group?.startsWith('building:')?'<span class="sub">還原會一起撤回此建築等級，以及依新等級才放得下的進階科技或操練上限。</span>':''}${c.group==='technology:basic'?'<span class="sub">還原會一起撤回所有基礎科技解鎖（含一起解鎖的前置科技）與歸零的研究點數。</span>':''}<span class="sub mono">[${c.x}, ${c.y}, ${c.z}]</span></td><td class="mono muted">${htmlValue(c.original)}</td><td class="mono positive">${htmlValue(c.value)}</td><td><button class="small ghost" data-restore="${C.key(c)}">還原</button></td></tr>`).join(''):'<tr><td colspan="4" class="empty">所有修改已還原。</td></tr>';
-  $('reviewPageInfo').textContent=`第 ${reviewPage+1} / ${Math.max(1,Math.ceil(list.length/size))} 頁 · ${list.length} 個欄位`;$('reviewPrev').disabled=reviewPage===0;$('reviewNext').disabled=start+size>=list.length;$('reviewDownloadBtn').disabled=!list.length||loading;
- }
- $('reviewPrev').onclick=()=>{reviewPage--;renderReview();};$('reviewNext').onclick=()=>{reviewPage++;renderReview();};
- $('reviewBtn').onclick=()=>{reviewPage=0;renderReview();$('reviewDialog').showModal();};$('resetBtn').onclick=()=>{if(loading)return;perform(()=>C.restoreAll(model));$('reviewDialog').close();toast('所有修改已還原。');};
- async function save(){if(!model?.changes.size||loading)return;await busy(async()=>{const text=C.serialize(model);download(text,outputName(model.name,'.modified'));exportedRevision=revision;toast(`已匯出 ${model.changes.size} 個變更。請結束遊戲後將副本改回原檔名。`);});}
- $('downloadBtn').onclick=$('reviewDownloadBtn').onclick=save;
- $('mobileHelpBtn').onclick=$('helpBtn').onclick=()=>$('helpDialog').showModal();
- $('mobileChangelogBtn').onclick=()=>$('changelogDialog').showModal();
- $('changelogBtn').onclick=$('versionBtn').onclick=()=>$('changelogDialog').showModal();
- $('compareBtn').onclick=()=>pick('compareInput');$('compareInput').onchange=async e=>{const file=e.target.files[0];if(!file||!model)return;if(file.size>50*1024*1024){toast('比對檔案超過 50 MB。',true);return;}await busy(async()=>{const next=C.parse(await readSave(file),file.name),result=C.diff(model.original,next.original);compare=next;diffs=result;diffPage=0;$('compareName').textContent=file.name;$('diffLeftName').textContent=model.name;$('diffRightName').textContent=file.name;$('diffResults').hidden=false;renderDiff();toast(`比對完成，共 ${diffs.length} 個欄位不同。`);});};
- function renderDiff(){if(!compare)return;$('diffCount').textContent=fmt(diffs.length);const start=diffPage*pageSize,list=diffs.slice(start,start+pageSize);$('diffRows').innerHTML=list.length?list.map((d,i)=>{const numeric=typeof d.before==='number'&&typeof d.after==='number',delta=numeric?d.after-d.before:null;return `<tr><td>${esc(d.label)}<span class="entity-context">${esc(C.KNOWLEDGE.planes[d.z]?.name||'未知層')}</span><span class="sub mono">[${d.x}, ${d.y}, ${d.z}]</span></td><td class="rowvalue">${esc(fmt(d.before))}</td><td class="rowvalue">${esc(fmt(d.after))}</td><td class="mono ${delta>0?'positive':delta<0?'negative':''}">${numeric?(delta>0?'+':'')+fmt(delta):'—'}</td><td>${typeof d.before==='number'?`<button class="small" data-diff="${start+i}">編輯此欄位</button>`:'文字欄位'}</td></tr>`;}).join(''):'<tr><td colspan="5" class="empty">兩份存檔的資料欄位完全相同。</td></tr>';$('diffPageInfo').textContent=diffs.length?`顯示 ${start+1}–${Math.min(start+pageSize,diffs.length)} / ${fmt(diffs.length)} 筆`:'0 筆差異';$('diffPrev').disabled=diffPage===0;$('diffNext').disabled=start+pageSize>=diffs.length;}
- $('diffPrev').onclick=()=>{diffPage--;renderDiff();};$('diffNext').onclick=()=>{diffPage++;renderDiff();};
- const csvCell=v=>{let s=String(v??'');if(/^[=+\-@]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"';};
- $('diffCsvBtn').onclick=()=>{const rows=[['欄位','X','Y','Z',model.name,compare.name,'差額'],...diffs.map(d=>[d.label,d.x,d.y,d.z,d.before,d.after,typeof d.before==='number'&&typeof d.after==='number'?d.after-d.before:''])];download('\uFEFF'+rows.map(r=>r.map(csvCell).join(',')).join('\r\n'),'存檔差異.csv','text/csv;charset=utf-8');};
- function readCoords(){const c={x:num($('coordX')),y:num($('coordY')),z:num($('coordZ'))};if(!C.exists(model.original,c))throw Error(`座標超出範圍。此檔案尺寸為 ${model.original.size.join(' × ')}。`);return c;}
- function lookup(){try{const c=readCoords();looked=c;const value=C.get(model,c),numeric=typeof value==='number',field=C.resolveField(model,c),writable=field.editable||(!field.known&&numeric);$('coordValue').type=field.type==='string'?'text':'number';$('coordValue').step=field.type==='decimal'?'any':'1';$('coordPath').textContent=`data[${c.x}][${c.y}][${c.z}]`;$('coordInfo').textContent=`${displayLabel(c)} · 原始值：${fmt(C.cell(model.original,c))} · 目前值：${fmt(value)}`;$('coordValue').disabled=!writable;$('coordApplyBtn').disabled=!writable;$('pinBtn').disabled=!numeric;$('coordValue').value=writable?value:'';$('coordInfo').textContent+=` · ${field.status}${writable?'':`（唯讀：${field.reason}）`}`;}catch(e){looked=null;$('coordInfo').textContent=e.message;$('coordValue').disabled=$('coordApplyBtn').disabled=$('pinBtn').disabled=true;toast(e.message,true);}}
- $('lookupBtn').onclick=lookup;for(const id of ['coordX','coordY','coordZ'])$(id).oninput=()=>{looked=null;$('coordApplyBtn').disabled=$('pinBtn').disabled=true;$('coordValue').disabled=true;$('coordInfo').textContent='座標已變更，請重新讀取欄位。';};
- $('coordApplyBtn').onclick=()=>{if(!looked)return;try{const c={...looked},f=C.resolveField(model,c),n=f.type==='string'?$('coordValue').value:f.type==='decimal'?Number($('coordValue').value):num($('coordValue'));perform(()=>f.known?C.setField(model,c,n,displayLabel(c)):C.set(model,c,n,displayLabel(c)));}catch(e){toast(e.message,true);}};
- $('pinBtn').onclick=()=>{if(!looked)return;const c={...looked},name=$('customName').value.trim()||`自訂欄位 [${c.x}, ${c.y}, ${c.z}]`;try{const next=custom.filter(f=>C.key(f)!==C.key(c));next.push({name,...c});custom=validateFields(next);persist();render();toast('已加入常用資源。');}catch(e){toast(e.message,true);}};
- function renderCustomList(){$('customList').innerHTML=custom.length?custom.map(f=>`<div class="custom-item"><div>${esc(f.name)}<div class="muted mono">[${f.x}, ${f.y}, ${f.z}]</div></div><button class="small ghost" data-remove="${C.key(f)}">移除</button></div>`).join(''):'<p class="muted" style="font-size:13px">尚未加入自訂欄位。</p>';}
- $('exportConfigBtn').onclick=()=>download(JSON.stringify({version:1,game:'szmnqea',fields:custom},null,2),'山寨帳房欄位設定.json','application/json');$('importConfigBtn').onclick=()=>pick('configInput');$('configInput').onchange=async e=>{const file=e.target.files[0];if(!file)return;try{if(file.size>256000)throw Error('設定檔過大。');const config=JSON.parse(await file.text());if(config.version!==1||config.game!=='szmnqea')throw Error('這不是支援的欄位設定檔。');const imported=validateFields(config.fields),merged=new Map(custom.map(f=>[C.key(f),f]));for(const f of imported)merged.set(C.key(f),f);custom=validateFields([...merged.values()]);persist();render();toast(`已匯入 ${imported.length} 個欄位設定。`);}catch(e){toast(e.message,true);}};
- window.addEventListener('beforeunload',e=>{if(model?.changes.size&&revision!==exportedRevision){e.preventDefault();e.returnValue='';}});
+  'use strict';
+  const C=SaveCore,$=id=>document.getElementById(id),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),fmt=v=>typeof v==='number'?v.toLocaleString('zh-TW'):v===null?'null':String(v);
+  const htmlValue=value=>esc(fmt(value));
+  let model=null,tab='resources',compare=null,diffs=[],diffPage=0,reviewPage=0,custom=[],looked=null,toastTimer,loading=false,revision=0,exportedRevision=-1;
+  const pageSize=100;
+  const K=C.KNOWLEDGE;
+  const knowledgePages={settlement:0,inventory:0,atlas:0,catalog:0};
+  let atlasEntityId=null;
+  try{
+    const saved=JSON.parse(localStorage.getItem('bandit-save-fields-v1')||'[]');
+    custom=validateFields(saved);
+  }catch{
+  }
+  function validateFields(a){
+    if(!Array.isArray(a)||a.length>100)
+      throw Error('欄位設定最多可包含 100 個欄位。');
+    const seen=new Set();
+    return a.map(f=>{
+      if(!f||typeof f.name!=='string'||!f.name.trim()||f.name.length>60||![f.x,f.y,f.z].every(n=>Number.isSafeInteger(n)&&n>=0))
+        throw Error('欄位設定格式錯誤。');
+      if(seen.has(C.key(f)))
+        throw Error('欄位設定包含重複座標。');
+      seen.add(C.key(f));
+      return {name:f.name.trim(),x:f.x,y:f.y,z:f.z};
+    });
+  }
+  function toast(message,error=false){
+    $('toast').textContent=message;
+    $('toast').classList.toggle('error',error);
+    $('toast').hidden=false;
+    clearTimeout(toastTimer);
+    toastTimer=setTimeout(()=>$('toast').hidden=true,error?6500:3500);
+  }
+  function persist(){
+    try{
+      localStorage.setItem('bandit-save-fields-v1',JSON.stringify(custom));
+    }catch{
+      toast('此瀏覽器無法記住設定，請匯出欄位設定檔保留。');
+    }
+  }
+  function displayLabel(c){
+    return custom.find(f=>C.key(f)===C.key(c))?.name||C.labelFor(model.original,c);
+  }
+  function num(input){
+    if(input.value.trim()==='')
+      throw Error('數量不能空白。');
+    const n=Number(input.value);
+    if(!Number.isSafeInteger(n))
+      throw Error('請輸入安全範圍內的整數。');
+    return n;
+  }
+  function perform(fn){
+    if(!model||loading)
+      return false;
+    try{
+      C.transaction(model,fn);
+      revision++;
+      render();
+      return true;
+    }catch(e){
+      toast(e.message,true);
+      render();
+      return false;
+    }
+  }
+/*__UI_FILE_OPERATIONS__*/
 
- // Navigation and folding only change presentation; save transactions stay in their existing handlers.
- function syncNavigation(name){
-  const labels={resources:'常用資源',materials:'材料倉庫',characters:'角色養成',professions:'職業圖鑑',settlement:'山寨與科技',inventory:'物品與裝備',atlas:'欄位圖鑑',batch:'批次操作',compare:'存檔比對',advanced:'自訂欄位'};
-  $('mobileCurrent').textContent=labels[name];
-  document.querySelectorAll('[data-mobile-tab]').forEach(b=>{if(b.dataset.mobileTab===name)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
- }
- function focusPanel(){
-  const panel=$('workspace').hidden?$('dropZone'):$('tab-'+tab),heading=panel.querySelector('h2');
-  if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});heading.scrollIntoView({block:'start'});}
- }
- $('navigationBtn').onclick=()=>{$('navigationDialog').returnValue='';$('navigationDialog').showModal();};
- $('navigationDialog').addEventListener('close',()=>{if($('navigationDialog').returnValue==='navigate')focusPanel();else $('navigationBtn').focus({preventScroll:true});});
- document.querySelectorAll('[data-character-jump]').forEach(link=>link.addEventListener('click',e=>{
-  e.preventDefault();const target=$(link.dataset.characterJump);
-  if(target.tagName==='DETAILS')target.open=true;
-  const heading=target.querySelector('summary,h3');if(heading.tagName!=='SUMMARY')heading.tabIndex=-1;heading.focus({preventScroll:true});target.scrollIntoView({block:'start'});
- }));
+  function showTab(name){
+    tab=name;
+    syncNavigation(name);
+    document.querySelectorAll('[data-tab]').forEach(b=>{
+      b.classList.toggle('active',b.dataset.tab===name);
+      if(b.dataset.tab===name)
+        b.setAttribute('aria-current','page');else
+        b.removeAttribute('aria-current');
+    });
+    document.querySelectorAll('[data-panel]').forEach(p=>p.hidden=p.id!=='tab-'+name);
+    const publicKnowledge=['atlas','professions'].includes(name);
+    $('workspace').hidden=!model&&!publicKnowledge;
+    $('dropZone').hidden=!!model||publicKnowledge;
+    if(!model&&publicKnowledge)
+      renderKnowledgeTab(name);
+    if(model){
+      renderKnowledgeTab(name);
+      if(name==='batch')
+        renderBatch();
+      if(name==='materials')
+        renderMaterials();
+      if(name==='compare')
+        renderDiff();
+      if(name==='advanced'){
+        renderCustomList();
+        if(looked)
+          lookup();
+      }
+    }
+  }
+/*__UI_RESOURCES__*/
+
+  function renderFooter(){
+    const n=model?.changes.size||0,exported=n&&revision===exportedRevision;
+    $('pendingCount').textContent=n;
+    $('editorFooter').hidden=!model;
+    $('pendingLabel').textContent=exported?'已匯出':'待匯出';
+    $('footerHint').textContent=loading?'正在處理存檔…':!model?'載入存檔後即可開始修改':exported?'項數為欄位數 · 目前修改已匯出':n?'項數為欄位數 · 匯出另存副本':'項數為欄位數 · 尚未修改';
+    $('downloadBtn').disabled=!model||!n||loading;
+    $('reviewBtn').disabled=!n||loading;
+    $('undoBtn').disabled=!model?.history.length||loading;
+  }
+  function render(){
+    if(tab==='batch'&&typeof renderBatch==='function')
+      renderBatch();
+    renderResources();
+    renderKnowledgeTab(tab);
+    if(tab==='materials')
+      renderMaterials();
+    if(tab==='advanced'){
+      renderCustomList();
+      if(looked)
+        lookup();
+    }
+    renderFooter();
+    if($('reviewDialog').open)
+      renderReview();
+  }
+  function coordsFromKey(k){
+    const [x,y,z]=k.split(',').map(Number);
+    return {x,y,z};
+  }
+  document.addEventListener('change',e=>{
+    const input=e.target;
+    if(!input.dataset.field||!model)
+      return;
+    const c=coordsFromKey(input.dataset.field);
+    try{
+      const value=num(input);
+      perform(()=>C.set(model,c,value,displayLabel(c)));
+    }catch(err){
+      toast(err.message,true);
+      input.value=C.get(model,c);
+    }
+  });
+  document.addEventListener('click',e=>{
+    const b=e.target.closest('button');
+    if(!b)
+      return;
+    if(b.dataset.restore&&model){
+      const c=coordsFromKey(b.dataset.restore);
+      perform(()=>C.restore(model,c));
+    }
+    if(b.dataset.close)
+      $(b.dataset.close).close();
+    if(b.dataset.tab)
+      showTab(b.dataset.tab);
+    if(b.dataset.mobileTab){
+      $('navigationDialog').close('navigate');
+      showTab(b.dataset.mobileTab);
+    }
+    if(b.hasAttribute?.('data-all-positions')){
+      $('inventoryPlane').value='';
+      renderKnowledgeTab('inventory');
+    }
+    if(b.dataset.diff!==undefined){
+      const d=diffs[Number(b.dataset.diff)];
+      if(!d)
+        return;
+      showTab('advanced');
+      $('coordX').value=d.x;
+      $('coordY').value=d.y;
+      $('coordZ').value=d.z;
+      lookup();
+    }
+    if(b.dataset.remove!==undefined){
+      custom=custom.filter(f=>C.key(f)!==b.dataset.remove);
+      persist();
+      render();
+    }
+  });
+  $('openBtn').onclick=$('emptyOpenBtn').onclick=()=>pick('fileInput');
+  $('fileInput').onchange=e=>load(e.target.files[0]);
+  for(const type of ['dragenter','dragover'])
+    $('dropZone').addEventListener(type,e=>{
+      e.preventDefault();
+      $('dropZone').classList.add('dragging');
+    });
+  $('dropZone').ondragleave=()=>$('dropZone').classList.remove('dragging');
+  $('dropZone').ondrop=e=>{
+    e.preventDefault();
+    $('dropZone').classList.remove('dragging');
+    load(e.dataTransfer.files[0]);
+  };
+  $('backupBtn').onclick=()=>{
+    if(model)
+      download(model.text,outputName(model.name,'.original-backup'));
+  };
+  $('materialSearch').oninput=renderMaterials;
+  $('materialType').onchange=renderMaterials;
+  $('heldOnly').onchange=renderMaterials;
+  $('materialType').innerHTML+=[...new Set(C.MATERIALS.map(m=>m.type))].map(t=>`<option value="${esc(t)}">${esc(t)}</option>`).join('');
+  $('batchBtn').onclick=()=>{
+    try{
+      const n=num($('batchValue'));
+      if(n<0)
+        throw Error('材料數量不能小於 0。');
+      const list=visibleMaterials();
+      if(perform(()=>{
+        for(const m of list)
+          C.set(model,m,n,`${m.name}（材料 #${m.id}）`);
+      }))
+        toast(`已調整 ${list.length} 筆材料，可從「檢視變更」確認。`);
+    }catch(e){
+      toast(e.message,true);
+    }
+  };
+  $('undoBtn').onclick=()=>{
+    if(model&&!loading){
+      C.undo(model);
+      revision++;
+      render();
+      toast('已復原上一步。');
+    }
+  };
+/*__UI_REVIEW_EXPORT__*/
+
+/*__UI_COMPARE__*/
+
+/*__UI_CUSTOM_FIELDS__*/
+
+  function syncNavigation(name){
+    const labels={resources:'常用資源',materials:'材料倉庫',characters:'角色養成',professions:'職業圖鑑',settlement:'山寨與科技',inventory:'物品與裝備',atlas:'欄位圖鑑',batch:'批次操作',compare:'存檔比對',advanced:'自訂欄位'};
+    $('mobileCurrent').textContent=labels[name];
+    document.querySelectorAll('[data-mobile-tab]').forEach(b=>{
+      if(b.dataset.mobileTab===name)
+        b.setAttribute('aria-current','page');else
+        b.removeAttribute('aria-current');
+    });
+  }
+  function focusPanel(){
+    const panel=$('workspace').hidden?$('dropZone'):$('tab-'+tab),heading=panel.querySelector('h2');
+    if(heading){
+      heading.tabIndex=-1;
+      heading.focus({preventScroll:true});
+      heading.scrollIntoView({block:'start'});
+    }
+  }
+  $('navigationBtn').onclick=()=>{
+    $('navigationDialog').returnValue='';
+    $('navigationDialog').showModal();
+  };
+  $('navigationDialog').addEventListener('close',()=>{
+    if($('navigationDialog').returnValue==='navigate')
+      focusPanel();else
+      $('navigationBtn').focus({preventScroll:true});
+  });
+  document.querySelectorAll('[data-character-jump]').forEach(link=>link.addEventListener('click',e=>{
+    e.preventDefault();
+    const target=$(link.dataset.characterJump);
+    if(target.tagName==='DETAILS')
+      target.open=true;
+    const heading=target.querySelector('summary,h3');
+    if(heading.tagName!=='SUMMARY')
+      heading.tabIndex=-1;
+    heading.focus({preventScroll:true});
+    target.scrollIntoView({block:'start'});
+  }));
  // Measure the real bar, including wrapping and device safe areas, instead of assuming a fixed height.
- if(typeof ResizeObserver!=='undefined'){
-  const footer=$('editorFooter');new ResizeObserver(()=>{document.documentElement.style.setProperty('--footer-space',footer.hidden?'0px':footer.getBoundingClientRect().height+'px');}).observe(footer);
- }
+  if(typeof ResizeObserver!=='undefined'){
+    const footer=$('editorFooter');
+    new ResizeObserver(()=>{
+      document.documentElement.style.setProperty('--footer-space',footer.hidden?'0px':footer.getBoundingClientRect().height+'px');
+    }).observe(footer);
+  }
 
  /*__KNOWLEDGE_UI__*/
+
+
  /*__PROFESSION_UI__*/
+
+
  /*__BATCH_UI__*/
+
+
  /*__RELIC_UI__*/
+
+
  /*__WALL_UI__*/
+
+
  /*__CITY_UI__*/
+
+
  /*__TECH_UI__*/
+
+
  /*__BUILDING_UI__*/
+
+
  /*__ASCENSION_UI__*/
- showTab('resources');renderFooter();
+
+  showTab('resources');
+  renderFooter();
 })();

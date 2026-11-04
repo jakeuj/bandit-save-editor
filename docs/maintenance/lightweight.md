@@ -44,7 +44,7 @@
 2. `verification.json` 的 `gameVersion` 等於知識的 `gameVersion`。
 3. `verification.json` 的 `fingerprints` 等於知識的遊戲資料指紋。
 
-不再核對 core 摘要、證明內容、manifest 或工具雜湊，所以改 `src/core.js` 不會讓建置失敗。新功能冒煙通過後，在 `groups` 加上該群組、在 `verification.json` 的 `lightweight` 加一筆冒煙紀錄（日期、遊戲版本、代表案例、基準存檔與 repo 外結果檔的 SHA-256），並打開旗標。
+不再核對 core 摘要、證明內容、manifest 或工具雜湊，所以改核心來源不會讓建置失敗。新功能冒煙通過後，在 `groups` 加上該群組、在 `verification.json` 的 `lightweight` 加一筆冒煙紀錄（日期、遊戲版本、代表案例、基準存檔與 repo 外結果檔的 SHA-256），並打開旗標。
 
 `lightweight` 裡的群組不進舊的複合遷移證明（`scripts/migration-proof.cjs` 的 `composite`）：選跑、`problem` 與 `compose` 都略過它們，所以版本遷移寫回後這些旗標會關閉，要在新版重跑冒煙再開。沒有這筆紀錄的已開群組仍照舊要求複合證據。冒煙工具（`verify-game.cjs --scenario`、`verify-native-lifecycle.cjs` 的動作清單）與 `nativeSmoke` 步驟見[原生教訓的冒煙工具](native-lessons.md#冒煙工具)。遊戲改版時，對受影響的功能跑冒煙，再更新 `gameVersion` 與 `fingerprints`。測試見 `tests/build-gate.test.cjs`。
 
@@ -56,6 +56,6 @@
 
 新增旗標時，除了 `extract-game.cjs` 的預設值與 `catalog.json`，也要登記到 `scripts/verification-requirements.cjs` 與 `scripts/verification-suite.cjs` 對應 family 的 `groups`，否則 `version-migration` 測試會報「no family」。v2.28 起 `version-migration.test.cjs` 的 write-back 比對用凍結的 V1.0.11.2 catalog（`tests/fixtures/v1.0.11.2-release`），凍結後新增的旗標（v2.29 起，例如 `recruitTechnologyAdvanced`）不在裡面，不要加進 write-back 比對清單；family 登記檢查與代表情境覆蓋改讀目前的 `knowledge/catalog.json`（`liveGroups`）。凍結前的旗標維持原規則：開啟前列入、開啟後自動排除；family 設有 `initialProofRequired`（例如 randomCharacterTalents）時不要列入（v2.17 教訓）。
 
-`verify-game.cjs` 的操作白名單新增具名方法時，也要把它（與對應的 info／preview 入口）列進 `scripts/migration-analysis.cjs` 該 family 的 `coreRoots`，否則 `tests/core-slice-roots.test.cjs` 報「不屬於任何 family」。新的 UI 模組（例如 v2.15 的 `src/relic-ui.js`）要在 `build-editor.cjs` 加佔位替換、在 `tests/skill-caps-ui.test.cjs`／`tests/talent-levels-ui.test.cjs` 兩個完整 UI 測試台注入，並在 `knowledge-ui.js` 呼叫處加 `typeof` 防護（單獨載入 knowledge-ui 的測試沒有該函式）。
+`verify-game.cjs` 的操作白名單新增具名方法時，也要把它（與對應的 info／preview 入口）列進 `scripts/migration-analysis.cjs` 該 family 的 `coreRoots`，否則 `tests/core-slice-roots.test.cjs` 報「不屬於任何 family」。新增 UI 片段只在 `scripts/editor-source.cjs` 登記，正式建置與完整 UI 測試共用同一組裝入口，不再各自維護替換清單；局部圖鑑 VM 的外部功能仍保留 `typeof` 防護，見[來源組裝與責任分檔](core.md#來源組裝與責任分檔)。
 
 改到 `editingInfo`、`setEditingValue` 這類共用樞紐時測試要怎麼調整，以及 `vm` realm、catalog 鍵順序等測試陷阱，見[原生教訓的測試陷阱](native-lessons.md#測試陷阱)。

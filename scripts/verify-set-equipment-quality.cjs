@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+const {readEditorSource} = require('./editor-source.cjs');
 // B4: first-matrix runner for set-equipment quality. Shards the fixed A9 manifest (base / effect / coefficient / level-cap / pool / reject
 // kinds; lifecycle cases have their own runner), resumes from a checkpoint bound to the exact inputs and tools, and writes per-case results
 // {id,caseHash,status,passed,nativeCompared,observation}. Results, supply and logs live outside the repo; this never opens a group flag.
@@ -110,7 +111,7 @@ async function run(argv=process.argv.slice(2)){
  if(!opt('--output')){console.error('套裝品質首次矩陣需要 --output（repo 外的 artifacts 目錄）；未提供，不產生任何驗證結果');process.exitCode=1;return;}
  const out=path.resolve(opt('--output'));if(!path.relative(root,out).startsWith('..'))throw Error('Artifacts must stay outside the repo');fs.mkdirSync(out,{recursive:true});
  const index=read(path.join(root,'.local/game-sources.json')),entry=index.entries.find(e=>e.id===index.preferredDevelopmentSourceId),catalogPath=path.join(root,'knowledge/catalog.json');
- const k=read(catalogPath),source=fs.readFileSync(path.join(root,'src/core.js'),'utf8'),B1=require('./set-equipment-quality-baseline.cjs');
+ const k=read(catalogPath),source=readEditorSource('core', {root}),B1=require('./set-equipment-quality-baseline.cjs');
  const sources=B1.verifySources(entry,k),levelFile=path.join(entry.artifactsRoot,'set-equipment-level-B','native-baselines.json'),level=read(levelFile);
  assert.deepEqual(level.binding.fingerprints,sources.fingerprints,'等級基準指紋不符');
  const fixedSave=path.join(entry.artifactsRoot,'native-cache-smoke-4IKtSE','baseline','savedir','ea3save.dat'),playerSave=path.join(index.installedGameDirectory,'savedir','ea3save.dat');

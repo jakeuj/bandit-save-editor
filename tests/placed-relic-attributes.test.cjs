@@ -1,8 +1,9 @@
+const {readEditorSource, embedKnowledge} = require('../scripts/editor-source.cjs');
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // Placed relics: z19 y5–9 and the y10 mean change together while the relic sits on a 置物台 linked both ways.
 function setup(gates={},row={},stand={}){
  const k=JSON.parse(fs.readFileSync('knowledge/catalog.json'));for(const group of Object.keys(k.verification))k.verification[group]=true;Object.assign(k.verification,gates);
- const ctx={setTimeout};vm.runInNewContext(fs.readFileSync('src/core.js','utf8').replace('/*__KNOWLEDGE__*/null',JSON.stringify(k)),ctx);const C=ctx.SaveCore;
+ const ctx={setTimeout};vm.runInNewContext(embedKnowledge(readEditorSource('core'), k),ctx);const C=ctx.SaveCore;
  const data=Array.from({length:221},()=>Array.from({length:60},()=>Array(22).fill(0)));data[0][0][1]='szmnqea';
  // 置物台 #5 at Lv 2 holds z19 row 2: 妖狐靈火 level 2, quality 1, a natural roll; y0 keeps the backpack row it came from.
  const building={0:5,1:67,2:10020,3:10004,5:2,9:2,...stand};for(const [y,v]of Object.entries(building))data[5][y][1]=v;

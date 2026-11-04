@@ -1,11 +1,12 @@
 'use strict';
+const {readEditorSource, embedKnowledge} = require('../scripts/editor-source.cjs');
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 const {saveFixture,renderSave}=require('./helpers/save-fixture.cjs');
-const source=fs.readFileSync(require.resolve('../src/core.js'),'utf8');
+const source=readEditorSource('core');
 function fixture({plane=9,owner=0,quality=3,tier=1,enabled=true,level=3}={}){
  const k=structuredClone(require('../knowledge/catalog.json'));
  for(const group of ['backpackTreasureLevel','treasureLevel'])k.verification[group]=enabled;
- const ctx={};vm.runInNewContext(source.replace('/*__KNOWLEDGE__*/null',JSON.stringify(k)),ctx);const C=ctx.SaveCore;
+ const ctx={};vm.runInNewContext(embedKnowledge(source, k),ctx);const C=ctx.SaveCore;
  const templateId=Object.keys(k.treasureLevel.items).map(Number).find(i=>k.treasureLevel.items[i].tier===tier);
  const {data}=saveFixture({characters:2}),id=20,row=Array(60).fill(0);
  Object.assign(row,{0:5,1:templateId,2:1,3:tier,5:quality,6:level,7:owner,8:100,22:0});

@@ -2,6 +2,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const {createHash} = require('node:crypto');
+const {readEditorSource, embedKnowledge} = require('./editor-source.cjs');
 const root = path.resolve(__dirname, '..');
 const htmlPath = path.join(root, 'index.html');
 let html = fs.readFileSync(htmlPath, 'utf8');
@@ -22,7 +23,8 @@ if(open.length){
   for(const group of open)if(proof.groups?.[group]!==true)throw Error('驗證紀錄未涵蓋寫入群組：'+group);
 }
 for (const [id, file] of [['save-core', 'core'], ['save-ui', 'ui'], ['save-pwa', 'pwa']]) {
-  const code = fs.readFileSync(path.join(root, `src/${file}.js`), 'utf8').replace('/*__KNOWLEDGE__*/null', JSON.stringify(knowledge).replace(/</g, '\\u003c')).replace('/*__KNOWLEDGE_UI__*/',()=>fs.readFileSync(path.join(root,'src/knowledge-ui.js'),'utf8')).replace('/*__PROFESSION_UI__*/',()=>fs.readFileSync(path.join(root,'src/profession-ui.js'),'utf8')).replace('/*__BATCH_UI__*/',()=>fs.readFileSync(path.join(root,'src/batch-ui.js'),'utf8')).replace('/*__RELIC_UI__*/',()=>fs.readFileSync(path.join(root,'src/relic-ui.js'),'utf8')).replace('/*__WALL_UI__*/',()=>fs.readFileSync(path.join(root,'src/wall-ui.js'),'utf8')).replace('/*__CITY_UI__*/',()=>fs.readFileSync(path.join(root,'src/city-ui.js'),'utf8')).replace('/*__TECH_UI__*/',()=>fs.readFileSync(path.join(root,'src/tech-ui.js'),'utf8')).replace('/*__BUILDING_UI__*/',()=>fs.readFileSync(path.join(root,'src/building-ui.js'),'utf8')).replace('/*__ASCENSION_UI__*/',()=>fs.readFileSync(path.join(root,'src/ascension-ui.js'),'utf8'));
+  const code = file === 'core' ? embedKnowledge(readEditorSource('core', {root}), knowledge)
+    : file === 'ui' ? readEditorSource('ui', {root}) : fs.readFileSync(path.join(root, 'src/pwa.js'), 'utf8');
   html = html.replace(new RegExp(`(<script id="${id}">)[\\s\\S]*?(</script>)`), (_, start, end) => `${start}\n${code.trim()}\n${end}`);
 }
 const sha256 = content => createHash('sha256').update(content).digest('hex');

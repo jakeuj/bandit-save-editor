@@ -1,4 +1,5 @@
 'use strict';
+const {readEditorSource, embedKnowledge} = require('../scripts/editor-source.cjs');
 // Runs the real knowledge-ui handlers against a small DOM adapter (same technique as equipment-ui.test.cjs).
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 const catalog=JSON.parse(fs.readFileSync('knowledge/catalog.json','utf8'));
@@ -21,13 +22,13 @@ function setup({open=false,mutate}={}){
  };
  const nodes=new Map(),$=id=>{if(!nodes.has(id)){const e=make();let html='';Object.defineProperty(e,'innerHTML',{get:()=>html,set:v=>{html=String(v);if(/Editor$/.test(id))register(html);}});nodes.set(id,e);}return nodes.get(id);};
  const ctx={document:{addEventListener:(n,fn)=>(listeners[n]??=[]).push(fn),querySelector:s=>{const m=/\[(data-[a-z-]+)(?:="([^"]*)")?\]/.exec(s);return store.get(m[2]!==undefined?m[1]+'='+m[2]:m[1]);}},$,knowledgePages:{inventory:0,settlement:0,atlas:0,catalog:0},K:k,fmt:String,htmlValue:String,esc:s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;'),num:input=>{if(input.value.trim()==='')throw Error('數量不能空白。');const n=Number(input.value);if(!Number.isSafeInteger(n))throw Error('請輸入安全範圍內的整數。');return n;},toasts:[],toast(message,bad){ctx.toasts.push([message,!!bad]);},showTab(){}};
- vm.runInNewContext(fs.readFileSync('src/core.js','utf8').replace('/*__KNOWLEDGE__*/null',JSON.stringify(k)),ctx);ctx.C=ctx.SaveCore;
+ vm.runInNewContext(embedKnowledge(readEditorSource('core'), k),ctx);ctx.C=ctx.SaveCore;
  const data=Array.from({length:221},()=>Array.from({length:60},()=>Array(22).fill(0)));data[0][0][1]='szmnqea';data[1][0][2]=1;data[1][1][2]='甲';
  const put=(x,z,tpl,tier,over={})=>{const r=Array(60).fill(0);Object.assign(r,{0:7,1:tpl,2:1,3:tier,5:3,6:5,8:100,22:0},over);r.forEach((v,y)=>data[x][y][z]=v);};
  put(1,7,treasureIds(1)[0],1);put(2,9,treasureIds(2)[0],2);put(3,9,treasureIds(3)[0],3,{7:1});data[1][21][2]=3;put(4,7,treasureIds(1)[1],1,{6:99});
  if(mutate)mutate(data,put);
  ctx.model=ctx.C.parse(JSON.stringify({c2array:true,size:[221,60,22],data}));ctx.perform=fn=>{fn();ctx.widgets.renderInventory();};
- vm.runInNewContext(fs.readFileSync('src/knowledge-ui.js','utf8')+';globalThis.widgets={renderInventory,renderEditing};',ctx);
+ vm.runInNewContext(readEditorSource('knowledge-ui')+';globalThis.widgets={renderInventory,renderEditing};',ctx);
  ctx.widgets.renderInventory();
  const select=id=>{store.get('data-edit-target=equipment').value=id;listeners.change.forEach(fn=>fn({target:{dataset:{editTarget:'equipment'},value:id}}));};
  const type=v=>{const input=store.get('data-edit-value=equipment');input.value=String(v);input.oninput?.();};

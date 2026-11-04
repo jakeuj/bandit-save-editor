@@ -4,7 +4,7 @@
 
 ## v2.6 批次操作維護
 
-`src/batch-ui.js`由`src/ui.js`的批次標記內嵌，新增來源時同步`build-editor.cjs`，勿直接改產物內嵌程式。`previewBatch(model, request, options)`／`applyBatch(model, request, options)`皆回傳Promise；request僅接受下列固定種類：
+`src/batch-ui.js`由`src/ui.js`的批次標記內嵌，新增來源時登記`scripts/editor-source.cjs`，勿直接改產物內嵌程式。`previewBatch(model, request, options)`／`applyBatch(model, request, options)`皆回傳Promise；request僅接受下列固定種類：
 
 | kind | 參數 |
 | --- | --- |

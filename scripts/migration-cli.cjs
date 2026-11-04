@@ -1,4 +1,5 @@
 'use strict';
+const {readEditorSource} = require('./editor-source.cjs');
 const fs=require('node:fs'),path=require('node:path'),{spawnSync}=require('node:child_process');
 const Core=require('./core-source-proof.cjs');
 const A=require('./migration-analysis.cjs'),P=require('./migration-proof.cjs'),Source=require('./migration-source.cjs');
@@ -24,7 +25,7 @@ function inputIdentity({catalog,copies,runtime,saveText,plan}) {
     const walk=dir=>{for(const name of fs.readdirSync(dir).sort()){const file=path.join(dir,name),stat=fs.lstatSync(file);if(stat.isDirectory())walk(file);else runtimeHashes.push([path.relative(app,file),stat.isSymbolicLink()?fs.readlinkSync(file):A.sha(fs.readFileSync(file))]);}};
     walk(app);
   }
-  return A.sha({catalog,plan,scripts,runtime:runtimeHashes,save:A.sha(saveText),core:A.sha(fs.readFileSync(path.join(root,'src/core.js'))),coreIdentityPolicy:['scripts/vendor/acorn.cjs','knowledge/core-ast-baselines.json'].map(n=>[n,fs.existsSync(path.join(root,n))?A.sha(fs.readFileSync(path.join(root,n))):null]),copies:copies.map(c=>({name:c.name,scenario:c.scenario,batch:c.batchRequests,lifecycle:c.lifecycle,formulas:c.formulas}))});
+  return A.sha({catalog,plan,scripts,runtime:runtimeHashes,save:A.sha(saveText),core:A.sha(readEditorSource('core', {root})),coreIdentityPolicy:['scripts/vendor/acorn.cjs','knowledge/core-ast-baselines.json'].map(n=>[n,fs.existsSync(path.join(root,n))?A.sha(fs.readFileSync(path.join(root,n))):null]),copies:copies.map(c=>({name:c.name,scenario:c.scenario,batch:c.batchRequests,lifecycle:c.lifecycle,formulas:c.formulas}))});
 }
 function writeSelective({dir=root,catalog,previous,base,current,plan,results,steamBuild,expectedState,exec=(args)=>spawnSync(process.execPath,['scripts/build-editor.cjs',...args],{cwd:dir,encoding:'utf8'})}) {
   if(A.same(base.fingerprints,current.fingerprints)&&Core.same(base,current)&&A.same(base.roles,current.roles)&&A.same(base.dataHashes,current.dataHashes))return {action:'compared',consistent:results.completed};
@@ -34,7 +35,7 @@ function writeSelective({dir=root,catalog,previous,base,current,plan,results,ste
   if(!A.same(derived,results.checks))return {action:'skipped',reason:'傳入 checks 與完成步驟／原生觀察不符'};
   let next;
   try{next=P.compose({catalog,previous,base,current,plan,results,steamBuild});}catch(e){return {action:'skipped',reason:e.message};}
-  const gated={...catalog,verification:{...next.groups}},issue=P.problem(gated,next,fs.readFileSync(path.join(dir,'src/core.js'),'utf8'));
+  const gated={...catalog,verification:{...next.groups}},issue=P.problem(gated,next,readEditorSource('core', {root: dir}));
   if(issue)return {action:'skipped',reason:issue};
   const names=['knowledge/catalog.json','knowledge/verification.json','knowledge/migration-baseline.json','index.html','sw.js'],files=names.map(n=>path.join(dir,n));
   if(expectedState&&Object.entries(expectedState).some(([name,hash])=>!fs.existsSync(path.join(dir,name))||A.sha(fs.readFileSync(path.join(dir,name)))!==hash))return {action:'skipped',reason:'驗證期間知識、證明或發布來源已改變，拒絕覆寫'};
@@ -54,7 +55,7 @@ async function main(M) {
   const only=opt('--copies')?.split(',');validateNames(only);
   if(opt('--previous-source')&&!args.includes('--plan'))throw Error('--previous-source is for replay planning only');
   const artifacts=Source.external(opt('--artifacts')),catalog=JSON.parse(fs.readFileSync(opt('--catalog')||path.join(root,'knowledge/catalog.json'),'utf8'));
-  const previous=JSON.parse(fs.readFileSync(path.join(root,'knowledge/verification.json'),'utf8')),core=fs.readFileSync(path.join(root,'src/core.js'),'utf8');
+  const previous=JSON.parse(fs.readFileSync(path.join(root,'knowledge/verification.json'),'utf8')),core=readEditorSource('core', {root});
   const expectedState=Object.fromEntries(['knowledge/catalog.json','knowledge/verification.json','knowledge/migration-baseline.json','knowledge/core-ast-baselines.json','index.html','sw.js'].filter(n=>fs.existsSync(path.join(root,n))).map(n=>[n,A.sha(fs.readFileSync(path.join(root,n)))]));
   const reportFile=path.join(artifacts,'migration-plan.json');
   let source=opt('--source')||Source.prepare(opt('--package'),artifacts).source,current;

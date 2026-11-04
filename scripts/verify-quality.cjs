@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 'use strict';
+const {readEditorSource, embedKnowledge} = require('./editor-source.cjs');
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const {evaluate,waitMain}=require('./verify-game.cjs'),args=process.argv.slice(2),opt=k=>args[args.indexOf(k)+1],state=JSON.parse(fs.readFileSync(opt('--state'))),scenario=JSON.parse(fs.readFileSync(opt('--scenario')));
 const root=path.resolve(__dirname,'..'),rel=path.relative(root,state.dir),child=path.relative(state.dir,state.game);
 if(!rel||(!path.isAbsolute(rel)&&rel!=='..'&&!rel.startsWith('..'+path.sep))||!child||path.isAbsolute(child)||child.startsWith('..'))throw Error('External disposable state required');
 const ids=Object.keys(JSON.parse(fs.readFileSync(path.join(root,'knowledge/catalog.json'))).equipmentQuality.attributes).map(Number);
 if(args.includes('--formulas')){
- const vm=require('node:vm'),k=JSON.parse(fs.readFileSync(path.join(root,'knowledge/catalog.json'))),ctx={};vm.runInNewContext(fs.readFileSync(path.join(root,'src/core.js'),'utf8').replace('/*__KNOWLEDGE__*/null',JSON.stringify(k)),ctx);const C=ctx.SaveCore;
+ const vm=require('node:vm'),k=JSON.parse(fs.readFileSync(path.join(root,'knowledge/catalog.json'))),ctx={};vm.runInNewContext(embedKnowledge(readEditorSource('core', {root}), k),ctx);const C=ctx.SaveCore;
  const data=Array.from({length:221},()=>Array.from({length:60},()=>Array(22).fill(0)));data[0][0][1]='szmnqea';const m=C.parse(JSON.stringify({c2array:true,size:[221,60,22],data}));scenario.items=[];
  for(const [template,t]of Object.entries(k.equipmentQuality.items))for(let q=1;q<=6;q++)for(const edge of [0,1])for(const level of [1,10+5*(q-1)]){
   const v=Array(60).fill(0);v[0]=1;v[1]=Number(template);v[2]=1;v[3]=t.tier;v[5]=q;v[6]=level;v[8]=80+30*(q-1)+(edge?30:0);for(let slot=1;slot<q;slot++){v[8+slot]=k.batch2Data.items[template].affixIds[slot-1];v[14+slot]=edge?60+10*q:10*(q-1);}v.forEach((value,y)=>m.original.data[1][y][7]=value);

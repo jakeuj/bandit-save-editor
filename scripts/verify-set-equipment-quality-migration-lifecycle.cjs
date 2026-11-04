@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+const {readEditorSource, embedKnowledge} = require('./editor-source.cjs');
 // B2: lifecycle runner for set-equipment quality. Each copy is one fixed start (state × direction): the quality edit is applied by the
 // candidate core to a fixed baseline save and written as bytes, then the isolated game runs two IO rounds with a new PID each:
 //   round 1  load the edited save → observe → native save → stop → new PID → load → read back equal
@@ -82,7 +83,7 @@ const emptyRows=(obj)=>{for(let x=1;x<obj.size[0];x++)for(const z of [7,9,18])fo
 // Start bytes: the fixed baseline save with exactly one item (and pointer when worn), then the real transaction through candidate SaveCore.
 function candidateCore(k,source){
  const candidate=structuredClone(k);for(const g of Q.groups)candidate.verification[g]=true;
- const ctx={};vm.runInNewContext(source.replace('/*__KNOWLEDGE__*/null',JSON.stringify(candidate)),ctx);return ctx.SaveCore;
+ const ctx={};vm.runInNewContext(embedKnowledge(source, candidate),ctx);return ctx.SaveCore;
 }
 function buildStart(C,k,saveText,copy){
  const obj=JSON.parse(saveText.replace(/^﻿/,''));emptyRows(obj);
@@ -258,7 +259,7 @@ async function runCopy({copy,k,source,entry,out,saveInfo,catalogPath,port,C,fixe
 
 async function run({out,perClass=1,only,all=false,verbose=console.log}){
  const root=path.resolve(__dirname,'..'),index=JSON.parse(fs.readFileSync(path.join(root,'.local/game-sources.json'),'utf8')),entry=index.entries.find(e=>e.id===index.preferredDevelopmentSourceId);
- const B1=require('./set-equipment-quality-baseline.cjs'),catalogPath=path.join(root,'knowledge/catalog.json'),k=JSON.parse(fs.readFileSync(catalogPath,'utf8')),source=fs.readFileSync(path.join(root,'src/core.js'),'utf8');
+ const B1=require('./set-equipment-quality-baseline.cjs'),catalogPath=path.join(root,'knowledge/catalog.json'),k=JSON.parse(fs.readFileSync(catalogPath,'utf8')),source=readEditorSource('core', {root});
  if(!path.relative(root,out).startsWith('..'))throw Error('Artifacts must stay outside the repo');fs.mkdirSync(out,{recursive:true});
  const b1=path.join(entry.artifactsRoot,'set-equipment-quality-B1'),levelFile=path.join(entry.artifactsRoot,'set-equipment-level-B','native-baselines.json');
  const fixedSave=path.join(entry.artifactsRoot,'native-cache-smoke-4IKtSE','baseline','savedir','ea3save.dat'),playerSave=path.join(index.installedGameDirectory,'savedir','ea3save.dat');

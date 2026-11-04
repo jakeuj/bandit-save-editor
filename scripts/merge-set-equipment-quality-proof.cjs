@@ -1,4 +1,5 @@
 'use strict';
+const {readEditorSource} = require('./editor-source.cjs');
 // B8: merge the four set-quality first proofs and the two cross-pool set-level first proofs from the raw native results kept
 // outside the repo. Coverage is recomputed from the raw shard/lifecycle/B6 files (not from any summary), every bound digest is
 // checked, B4's old-core evidence is carried only through the pinned B7 equivalence, and the browser acceptance is recorded as
@@ -140,7 +141,7 @@ function flip(text,group){const flag=`"${group}": false`;assert.equal(text.split
 
 function run(argv=process.argv.slice(2)){
  const opt=n=>argv.includes(n)?argv[argv.indexOf(n)+1]:undefined,write=argv.includes('--write');
- const k=read(path.join(root,'knowledge/catalog.json')),source=fs.readFileSync(path.join(root,'src/core.js'),'utf8');
+ const k=read(path.join(root,'knowledge/catalog.json')),source=readEditorSource('core', {root});
  const gitBad=E.gitProblem(root);assert.ok(!gitBad,gitBad);
  const index=read(path.join(root,'.local/game-sources.json')),entry=index.entries.find(e=>e.id===index.preferredDevelopmentSourceId);
  const artifacts=opt('--artifacts')||entry.artifactsRoot,b4=loadB4(path.join(artifacts,pinned.b4.dir),k,source),b6=loadB6(path.join(artifacts,pinned.b6.dir),k,source);

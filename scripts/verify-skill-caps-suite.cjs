@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+const {readEditorSource} = require('./editor-source.cjs');
 const fs=require('node:fs'),path=require('node:path'),{spawnSync}=require('node:child_process');
 const P=require('./random-character-skill-caps-proof.cjs');
 const root=path.resolve(__dirname,'..');
@@ -17,7 +18,7 @@ function mergeProof({catalog,proof,results,coreSource}){
 // A failed write, build or synchronization check restores all four files byte for byte.
 function recordProof({dir=root,catalog,proof,results,exec=(script,args)=>spawnSync(process.execPath,[path.join(dir,'scripts',script),...args],{cwd:dir,encoding:'utf8'})}){
  for(const [file,expected]of [['catalog.json',catalog],['verification.json',proof]])if(JSON.stringify(JSON.parse(fs.readFileSync(path.join(dir,'knowledge',file),'utf8')))!==JSON.stringify(expected))throw Error('驗證期間知識或既有證明已改變，拒絕覆寫：'+file);
- const merged=mergeProof({catalog,proof,results,coreSource:fs.readFileSync(path.join(dir,'src/core.js'),'utf8')});
+ const merged=mergeProof({catalog,proof,results,coreSource:readEditorSource('core', {root: dir})});
  const files=['knowledge/catalog.json','knowledge/verification.json','index.html','sw.js',...(proof.schemaVersion===2?['knowledge/migration-baseline.json']:[])].map(f=>path.join(dir,f)),backup=files.map(f=>fs.readFileSync(f));
  try{
   fs.writeFileSync(files[0],JSON.stringify(merged.catalog,null,2)+'\n');fs.writeFileSync(files[1],JSON.stringify(merged.proof,null,2)+'\n');
@@ -40,7 +41,7 @@ async function main(){
  const setupArgs=['--source',opt('--source'),'--runtime',opt('--runtime'),'--save-file',opt('--save-file'),'--artifacts',runDir,...(opt('--package')?['--package',opt('--package')]:[])];
  const {inspectGame,eventDigest}=require('./extract-game.cjs');
  const results=await require('./verify-migration.cjs').runMigration({catalog,proof,copies,runDir,setupArgs,keepCopies:args.includes('--keep-copies'),digest:(dir,sids)=>eventDigest(inspectGame(dir),sids)});
- mergeProof({catalog,proof,results,coreSource:fs.readFileSync(path.join(root,'src/core.js'),'utf8')});
+ mergeProof({catalog,proof,results,coreSource:readEditorSource('core', {root})});
  if(args.includes('--record')){recordProof({catalog,proof,results});console.log('RECORDED: full initial skill-cap proof; existing groups retained');}
  console.log('PASS: full initial skill-cap matrix and lifecycle; '+path.join(runDir,'results.json'));
 }

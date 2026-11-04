@@ -1,4 +1,5 @@
 'use strict';
+const {embedKnowledge} = require('../scripts/editor-source.cjs');
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 const P=require('../scripts/random-character-talents-proof.cjs'),{mergeProof}=require('../scripts/verify-talents-suite.cjs');
 const {rawTokens}=require('../scripts/verify-random-character-talents.cjs'),{buildTalentScenarios,triples}=require('../scripts/random-character-talents-scenarios.cjs');
@@ -6,7 +7,7 @@ const {rawTokens}=require('../scripts/verify-random-character-talents.cjs'),{bui
 const L=require('./helpers/legacy-release.cjs'),k=L.catalog(),proof=L.proof(),source=L.core;
 k.verification.randomCharacterTalents=false;delete proof.randomCharacterTalents;delete proof.groups.randomCharacterTalents;
 const proofText=JSON.stringify(proof,null,2)+String.fromCharCode(10);
-const ctx={setTimeout};vm.runInNewContext(source.replace('/*__KNOWLEDGE__*/null',JSON.stringify(k)),ctx);const C=ctx.SaveCore;
+const ctx={setTimeout};vm.runInNewContext(embedKnowledge(source, k),ctx);const C=ctx.SaveCore;
 const all={...k.fingerprints,...k.batch2Fingerprints};
 // Native-shaped evidence computed independently from the reviewed rules; only the merger decides the checks.
 function characters(rows){return rows.map(r=>{const sums={};r.ids.forEach((id,i)=>k.batch2Data.talents[id].attributes.forEach((a,s)=>{if(a)sums[a]=(sums[a]||0)+C.talentEffect(a,k.batch2Data.talents[id].coefficients[s],r.to[i]);}));return {id:r.id,cells:[...r.ids,...r.to],sums};});}

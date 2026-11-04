@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+const {readEditorSource, embedKnowledge} = require('./editor-source.cjs');
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const root=path.resolve(__dirname,'..');
 // Representative migration runs keep both endpoint transitions per direction; the full matrix covers all 15.
@@ -29,7 +30,7 @@ if(require.main===module){
  const args=process.argv.slice(2),out=args[args.indexOf('--output')+1];
  if(!args.includes('--output'))throw Error('Usage: node scripts/prepare-quality-cases.cjs --output EXISTING_EXTERNAL_DIR');
  const dir=fs.realpathSync(out),rel=path.relative(root,dir);if(!rel||(!path.isAbsolute(rel)&&rel!=='..'&&!rel.startsWith('..'+path.sep)))throw Error('External artifacts required');
- const k=JSON.parse(fs.readFileSync(path.join(root,'knowledge/catalog.json'))),ctx={};for(const g in k.verification)k.verification[g]=true;vm.runInNewContext(fs.readFileSync(path.join(root,'src/core.js'),'utf8').replace('/*__KNOWLEDGE__*/null',JSON.stringify(k)),ctx);const C=ctx.SaveCore;
+ const k=JSON.parse(fs.readFileSync(path.join(root,'knowledge/catalog.json'))),ctx={};for(const g in k.verification)k.verification[g]=true;vm.runInNewContext(embedKnowledge(readEditorSource('core', {root}), k),ctx);const C=ctx.SaveCore;
  for(const plane of [7,9])for(const direction of ['Upgrade','Downgrade']){
   const scenario=qualityScenario(C,k,plane,direction),file=path.join(dir,`quality-${plane}-${direction}.json`);fs.writeFileSync(file,JSON.stringify(scenario));console.log(path.basename(file)+': '+scenario.items.length+' cases');
  }

@@ -1,8 +1,9 @@
 'use strict';
+const {readEditorSource} = require('../scripts/editor-source.cjs');
 const {test}=require('node:test'),assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path'),{spawnSync}=require('node:child_process');
 const P=require('../scripts/random-character-talents-proof.cjs'),S=require('../scripts/verification-suite.cjs'),R=require('../scripts/verification-requirements.cjs');
-const k=require('../knowledge/catalog.json'),proof=require('../knowledge/verification.json'),core=fs.readFileSync('src/core.js','utf8');
+const k=require('../knowledge/catalog.json'),proof=require('../knowledge/verification.json'),core=readEditorSource('core');
 test('the talent group opens only with a matching first proof; native entries require a state',()=>{
  if(!k.verification.randomCharacterTalents)assert.match(P.problem(k,proof,core),/獨立首次驗證/);
  assert.equal(S.families.randomCharacterTalents.initialProofRequired,true);assert.doesNotThrow(()=>P.requireNativeRunner());

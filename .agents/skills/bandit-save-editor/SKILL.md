@@ -38,7 +38,7 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 | 任務 | 入口 |
 | --- | --- |
 | 架構與跨檔關係 | 若有 `graphify-out/graph.json` 先查圖譜並核對目前來源；建立、更新與完整性限制見 `docs/research/repository-graph.md` |
-| 存檔讀寫、名稱、經驗、知識重建 | [存檔參考](references/save-format.md)、`src/core.js`、`docs/research/save-knowledge.md`、`docs/maintenance/core.md` |
+| 存檔讀寫、名稱、經驗、知識重建 | [存檔參考](references/save-format.md)、`src/core/`、`docs/research/save-knowledge.md`、`docs/maintenance/core.md` |
 | 技藝上限：共同生成見證、進階 1–100、寫入與還原 | [技藝上限維護](../../../docs/maintenance/skill-caps.md)「初始角色與進階 1–100」及其實作摘要；區分一般模式的來源見證與進階模式資格，以及私有預覽與模型寫入 |
 | 技藝上限：草稿／全部填入 100、逐項原因、離線驗證 | 依任務讀[技藝上限維護](../../../docs/maintenance/skill-caps.md)的「介面改善」、「降低上限逐項提示」或「進階模式離線驗證」；離線選跑與證據界線見[測試指引](../../../docs/testing.md#證據分工) |
 | 裝備、丹藥、資質、天賦、批次或職業圖鑑 | [功能導覽](references/feature-guide.md) 的對應條目，接著讀該功能研究（舊功能另有 `sdd/` 歷史紀錄；新功能不建 SDD） |
@@ -61,7 +61,7 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 ## 編輯來源
 
 - 新功能依[core 開發規範](../../../docs/maintenance/core.md#新功能的-core-開發規範)走獨立入口、不改共用樞紐，方便維護。
-- 讀寫、型別與成長交易改 `src/core.js`；一般操作改 `src/ui.js`；角色、裝備及欄位圖鑑改 `src/knowledge-ui.js`。
+- 讀寫、型別與成長交易改 `src/core/`；一般操作流程改 `src/ui/`；角色、裝備及欄位圖鑑改 `src/ui/knowledge/`。入口樣板保留原作用域與協調邏輯；來源組裝、測試載入及新增片段依[來源組裝與責任分檔](../../../docs/maintenance/core.md#來源組裝與責任分檔)。
 - `knowledge/catalog.json` 由 `scripts/extract-game.cjs` 產生；繁體名稱對照與寫入實測分別維護於 `knowledge/traditional-names.json`、`knowledge/verification.json`。
 - HTML 結構、樣式與 SEO 改 `index.html`。其中的 `save-core`／`save-ui` 由 `node scripts/build-editor.cjs` 同步，修改程式來源後一併提交產生的 HTML；直接修改內嵌程式會被覆蓋。
 - 維持單檔 HTML 內嵌程式與知識、本機處理及 CSP 禁止連線；使用者操作不需要 Node.js 或外部遊戲資料表。

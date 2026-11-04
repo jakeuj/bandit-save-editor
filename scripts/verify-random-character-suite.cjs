@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+const {readEditorSource} = require('./editor-source.cjs');
 const fs=require('node:fs'),path=require('node:path'),{spawnSync}=require('node:child_process');
 const {runMigration}=require('./verify-migration.cjs'),{inspectGame,eventDigest}=require('./extract-game.cjs');
 const {buildGrowthScenarios}=require('./random-character-growth-scenarios.cjs'),P=require('./random-character-growth-proof.cjs');
@@ -23,7 +24,7 @@ async function main(){
  const setupArgs=['--source',opt('--source'),'--runtime',opt('--runtime'),'--save-file',opt('--save-file'),'--artifacts',runDir,...(args.includes('--package')?['--package',opt('--package')]:[])];
  const results=await runMigration({catalog:k,proof,copies,runDir,setupArgs,keepCopies:args.includes('--keep-copies'),digest:(dir,sids)=>eventDigest(inspectGame(dir),sids)});
  fs.writeFileSync(path.join(runDir,'results.json'),JSON.stringify(results,null,2));
- const merged=mergeProof({catalog:k,proof,results,coreSource:fs.readFileSync(path.join(root,'src/core.js'),'utf8')});
+ const merged=mergeProof({catalog:k,proof,results,coreSource:readEditorSource('core', {root})});
  if(args.includes('--record')){
   const files=['knowledge/catalog.json','knowledge/verification.json','index.html','sw.js',...(proof.schemaVersion===2?['knowledge/migration-baseline.json']:[])].map(f=>path.join(root,f)),backup=files.map(f=>fs.readFileSync(f));
   try{fs.writeFileSync(files[0],JSON.stringify(merged.catalog,null,2)+'\n');fs.writeFileSync(files[1],JSON.stringify(merged.proof,null,2)+'\n');if(merged.proof.schemaVersion===2)fs.writeFileSync(files[4],JSON.stringify(merged.proof.migration.snapshot,null,2)+'\n');for(const mode of [[],['--check']]){const r=spawnSync(process.execPath,[path.join(__dirname,'build-editor.cjs'),...mode],{encoding:'utf8'});if(r.status!==0)throw Error(r.stderr||r.stdout);}}

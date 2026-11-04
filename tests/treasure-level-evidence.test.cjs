@@ -1,8 +1,9 @@
 'use strict';
+const {readEditorSource} = require('../scripts/editor-source.cjs');
 // The first-proof validators must re-derive expectations and reject tampered raw observations.
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const M=require('../scripts/verify-treasure-level-matrix.cjs'),O=require('../scripts/treasure-level-oracle.cjs'),Syn=require('../scripts/treasure-level-synthetic.cjs'),L=require('../scripts/verify-treasure-level-lifecycle.cjs');
-const k=require('../knowledge/catalog.json'),core=fs.readFileSync(path.join(__dirname,'../src/core.js'),'utf8');
+const k=require('../knowledge/catalog.json'),core=readEditorSource('core');
 const tier3=+Object.keys(k.treasureLevel.items).find(i=>k.treasureLevel.items[i].tier===3);
 const baseline=new Map([[`${tier3}:4`,Syn.treasureRecord(k,tier3,{quality:4,level:1})]]);
 baseline.get(`${tier3}:4`)[9]=17;baseline.get(`${tier3}:4`)[15]=80;

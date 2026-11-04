@@ -1,7 +1,8 @@
 'use strict';
+const {readEditorSource} = require('../scripts/editor-source.cjs');
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const k=require('../knowledge/catalog.json'),S=require('../scripts/set-equipment-quality-scenarios.cjs'),{hash,groups}=require('../scripts/set-equipment-quality-data.cjs');
-const core=fs.readFileSync(require.resolve('../src/core.js'),'utf8'),inputs={baselineHash:'a'.repeat(64),runtimeHash:'b'.repeat(64),sourceManifestHash:'c'.repeat(64),runtimeManifestHash:'d'.repeat(64)};
+const core=readEditorSource('core'),inputs={baselineHash:'a'.repeat(64),runtimeHash:'b'.repeat(64),sourceManifestHash:'c'.repeat(64),runtimeManifestHash:'d'.repeat(64)};
 const manifest=S.createManifest(k,core,inputs),by=f=>manifest.cases.filter(f),executable=c=>c.classification!=='not-applicable';
 const [BU,BD,SU,SD]=groups;
 

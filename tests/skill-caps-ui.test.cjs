@@ -1,4 +1,6 @@
 'use strict';
+const {readEditorSource, embedKnowledge} = require('../scripts/editor-source.cjs');
+const {uiWithModel} = require('./helpers/ui-source.cjs');
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const {saveFixture,renderSave}=require('./helpers/save-fixture.cjs');
 const root=path.resolve(__dirname,'..'),caps=[28,20,10,10,10,10,10,10,10];
@@ -39,17 +41,8 @@ async function setup({gate=false,initialGate=false,advancedGate=false,mutate}={}
  knowledge.verification.randomCharacterSkillCaps=gate;
  knowledge.verification.randomCharacterSkillCapsInitial=initialGate;
  knowledge.verification.randomCharacterSkillCapsAdvanced=advancedGate;
- vm.runInNewContext(fs.readFileSync(path.join(root,'src/core.js'),'utf8').replace('/*__KNOWLEDGE__*/null',JSON.stringify(knowledge)),context);
- const source=fs.readFileSync(path.join(root,'src/ui.js'),'utf8')
-  .replace('/*__KNOWLEDGE_UI__*/',()=>fs.readFileSync(path.join(root,'src/knowledge-ui.js'),'utf8'))
-  .replace('/*__BATCH_UI__*/',()=>fs.readFileSync(path.join(root,'src/batch-ui.js'),'utf8'))
-  .replace('/*__RELIC_UI__*/',()=>fs.readFileSync(path.join(root,'src/relic-ui.js'),'utf8'))
-  .replace('/*__WALL_UI__*/',()=>fs.readFileSync(path.join(root,'src/wall-ui.js'),'utf8'))
-  .replace('/*__CITY_UI__*/',()=>fs.readFileSync(path.join(root,'src/city-ui.js'),'utf8'))
-  .replace('/*__TECH_UI__*/',()=>fs.readFileSync(path.join(root,'src/tech-ui.js'),'utf8'))
-  .replace('/*__BUILDING_UI__*/',()=>fs.readFileSync(path.join(root,'src/building-ui.js'),'utf8'))
-  .replace('/*__ASCENSION_UI__*/',()=>fs.readFileSync(path.join(root,'src/ascension-ui.js'),'utf8'))
-  .replace("showTab('resources');renderFooter();","globalThis.uiTest={get model(){return model;}};showTab('resources');renderFooter();");
+ vm.runInNewContext(embedKnowledge(readEditorSource('core', {root}), knowledge),context);
+ const source=uiWithModel({root});
  vm.runInNewContext(source,context);
  const fixture=saveFixture({characters:2}),data=fixture.data;
  for(let id=1;id<=2;id++){

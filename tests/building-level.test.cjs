@@ -1,10 +1,11 @@
+const {readEditorSource, embedKnowledge} = require('../scripts/editor-source.cjs');
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // Building levels z1 [x,5,1]: raise only, up to min(4, floor((advanced tech jz[t,34] + 1) / 60)). Rows under construction
 // (y4>0), upgrading (y10=1) or occupied (y7>0) are refused; 建造局 has no upgrade tech. The walls (row 0) share the
 // wall:enhancement group; a training cap or advanced tech that only fits under a raised 校場／書院 joins that building's group.
 function setup(gates={},edit=()=>{}){
  const k=JSON.parse(fs.readFileSync('knowledge/catalog.json'));for(const group of Object.keys(k.verification))k.verification[group]=true;Object.assign(k.verification,gates);
- const ctx={setTimeout};vm.runInNewContext(fs.readFileSync('src/core.js','utf8').replace('/*__KNOWLEDGE__*/null',JSON.stringify(k)),ctx);const C=ctx.SaveCore;
+ const ctx={setTimeout};vm.runInNewContext(embedKnowledge(readEditorSource('core'), k),ctx);const C=ctx.SaveCore;
  const data=Array.from({length:221},()=>Array.from({length:60},()=>Array(22).fill(0)));data[0][0][1]='szmnqea';
  // Walls (row 0): level 1, enhancement 60, HP 100. Rows 1–8: 聚義堂 1, 書院 1, 校場 0, 營房 under construction, 招募處
  // upgrading, 渡劫台 occupied by character 3, 建造局 0, 置物台 0 with a relic. (A level-0 校場 keeps the editor's earlier

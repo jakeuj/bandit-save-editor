@@ -23,6 +23,8 @@ Linux CI另加`--with-deps`安裝系統函式庫。Playwright版本由package與
 
 來源異動先執行`node scripts/build-editor.cjs`；驗證入口只檢查同步，不自動修改發布產物。日常可加Playwright篩選，例如`npm run test:browser -- --grep 'HTTP 390px'`。排版異動使用`npm run test:browser -- --visual --grep 'base aptitude'`產生兩種寬度的完整頁面截圖，再按需要檢視。
 
+目前來源已按責任分檔，VM 與原生工具透過共用組裝入口載入，見[來源組裝與責任分檔](maintenance/core.md#來源組裝與責任分檔)。暫存專案須複製完整 `src/` 與 `scripts/`；只複製入口樣板不足以重建。`tests/editor-source.test.cjs` 涵蓋副本來源、缺檔／標記錯誤、歷史單檔覆蓋及知識安全注入。UI 測試台要保留同一事件的所有監聽器，模擬的 `closest` 也須依 selector 回傳，才能承載正式組裝的全部 UI。
+
 ## 證據分工
 
 開發中修改 core 時跑該功能的 Node 測試；改動牽涉存檔讀寫行為時，再補該功能的隔離遊戲冒煙（[輕量開發流程](maintenance/lightweight.md#改-core-與遊戲改版)）。`node scripts/core-slice-report.cjs` 只當參考，不決定要不要重證。

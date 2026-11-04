@@ -1,7 +1,8 @@
 'use strict';
+const {readEditorSource} = require('../scripts/editor-source.cjs');
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs');
 const O=require('../scripts/treasure-level-oracle.cjs'),Syn=require('../scripts/treasure-level-synthetic.cjs'),S=require('../scripts/treasure-level-scenarios.cjs');
-const k=require('../knowledge/catalog.json'),core=fs.readFileSync(require.resolve('../src/core.js'),'utf8');
+const k=require('../knowledge/catalog.json'),core=readEditorSource('core');
 test('soul cost is per-level, rounded inside the expression and finite for every tier/level',()=>{
  assert.equal(O.souls(1,1),11);assert.equal(O.souls(1,2),14);
  for(let t=1;t<=6;t++)for(let l=1;l<=35;l++)assert.ok(Number.isSafeInteger(O.souls(t,l)));

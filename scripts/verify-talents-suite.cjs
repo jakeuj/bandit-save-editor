@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+const {readEditorSource} = require('./editor-source.cjs');
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict'),{spawnSync}=require('node:child_process');
 const P=require('./random-character-talents-proof.cjs');
 const root=path.resolve(__dirname,'..');
@@ -36,7 +37,7 @@ function mergeProof({catalog,proof,results,coreSource,proofText}){
 async function main(){
  const args=process.argv.slice(2),opt=k=>args[args.indexOf(k)+1],merge=args.includes('--merge-results');
  if(args.includes('--help')||!merge&&!['--source','--runtime','--save-file','--artifacts'].every(k=>args.includes(k)))throw Error('Usage: verify-talents-suite.cjs --source GAME --runtime NWJS --save-file BASE --artifacts OUTSIDE [--keep-copies] [--record]\n       verify-talents-suite.cjs --merge-results RUN_DIR --record');
- const k=JSON.parse(fs.readFileSync(path.join(root,'knowledge/catalog.json'),'utf8')),proofText=fs.readFileSync(path.join(root,'knowledge/verification.json'),'utf8'),proof=JSON.parse(proofText),coreSource=fs.readFileSync(path.join(root,'src/core.js'),'utf8');
+ const k=JSON.parse(fs.readFileSync(path.join(root,'knowledge/catalog.json'),'utf8')),proofText=fs.readFileSync(path.join(root,'knowledge/verification.json'),'utf8'),proof=JSON.parse(proofText),coreSource=readEditorSource('core', {root});
  let runDir,results;
  if(merge){runDir=fs.realpathSync(opt('--merge-results'));results=JSON.parse(fs.readFileSync(path.join(runDir,'results.json'),'utf8'));}
  else{
