@@ -2,6 +2,10 @@
 
 調查日期：2026-10-20（Asia/Taipei）。證據來自本機檔案檢查、第一方文件、CrossOver 重現、macOS ARM64 實際啟動，以及使用者提供的遊戲畫面。遊戲測試與路徑修正均使用隔離副本；未修改 Steam 原始遊戲與原始存檔。
 
+## V1.0.18.0 靜態核對（2026-11-04）
+
+Steam 正式公告 V1.0.18.2 對應遊戲內 V1.0.18.0、build 26421337。Windows 對新版 c3runtime 指紋 `ecea6489109bbc3feb96c17db2402429922e47ae255a9da97f259711666de72a` 核對 appFolder、nwjsAppFolder、savedir 與 backup 修正位置，命中數為 1/1/4/4，已登錄準備工具。本版僅有 Windows 隔離存讀／新 PID 冒煙，尚未做 Mac 實機啟動、存讀或重啟；先前 V1.0.17.0 的 Mac 成功不延伸到本版。見[修改器版更紀錄](../releases.md#v244-遊戲-v10180)。
+
 ## 結論
 
 **已成功沿用 Nevergrind「保留遊戲資料、換 macOS NW.js runtime」的方向，使用 NW.js SDK 0.82.0 osx-arm64 在 Apple M4 Max 原生開啟遊戲。** 已確認主選單、WebGL 2、Steam 模組載入；使用者畫面也證實雲存檔清單及支援者 DLC 辨識。本輪隔離測試另確認修改副本進入主畫面、本機寫檔及重啟讀回；真實雲端上傳、成就與長時間穩定性仍待驗證。詳見 [存檔知識驗證紀錄](save-knowledge.md)。

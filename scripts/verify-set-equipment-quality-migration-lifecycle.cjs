@@ -199,7 +199,7 @@ async function lifecycleDriver(request){
   const seed=(source)=>{const m=Array.from({length:10},(_,i)=>request.markerBase+steps.length*10+i);m.forEach((v,i)=>a.Set(source.id,50+i,source.plane,v));return m;};
   const step=(phase,id,plane,source,markers)=>steps.push({phase,id,plane,record:read(id,plane),source:read(source.id,source.plane),sourceAt:source,markers,refs:refs()});
   if(request.plane===9){
-   const m=seed({id:1,plane:9});if(initial[7])call('卸下装备',request.slot,1,1,false,false,7);else call('装备库取出',1,true,0,7);
+   const m=seed({id:1,plane:9});if(initial[7])call('卸下装备',request.slot,1,1,false,false,7);else call('装备库取出',1,true,0,7,0);
    await pause();bag=find(7,template);step('takeout',bag,7,{id:1,plane:9},m);
   }
   const from=bag,m1=seed({id:from,plane:7});call('穿戴装备',request.slot,bag,1,false,false,7);await pause();z9=a.At(1,15+request.slot,2);
@@ -209,7 +209,7 @@ async function lifecycleDriver(request){
  }
  if(request.op==='sort'){
   const snapshot=()=>{const rows=[];for(const plane of [7,9])for(let id=1;id<=12;id++)rows.push({id,plane,record:read(id,plane)});return rows;};
-  const before=snapshot();call('装备排序',request.index);await pause();return {before,after:snapshot(),refs:refs()};
+  const before=snapshot();call('装备排序',request.index,0);await pause();return {before,after:snapshot(),refs:refs()};
  }
  throw Error('Unknown lifecycle request '+request.op);
 }

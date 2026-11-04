@@ -9,7 +9,7 @@ const dependencies={
  Q5:{sids:[773239288013696,287806596379587,365081551176251,471274501781742,131416746119248],expressions:[5306,5307,5312,5308,5309,5310,5311,5313,5314,5315,5367,5369],topic:'per-piece main attribute and attack LxQ'},
  Q6:{sids:[797846367485481,944863480488013,240477057233049,934893556333374],expressions:[813,800,3036,3037,3038,15,3,4],topic:'set piece parts, score S and count N'},
  Q7:{sids:[661914404104909],expressions:[243,5329,5330,5332,5370,5371,5372,5373,5374,5375,5376,5377,5378],topic:'extra set bonus independent of y5'},
- Q8:{sids:[791657421740250,204416519787196,654692930556623,574511591831477],expressions:[2874,2875,59,12,15,3],topic:'storage move copies y0-49'},
+ Q8:{sids:[791657421740250,639417854082032,654692930556623,745461878410324],expressions:[2874,2875,59,12,15,3],topic:'storage move copies y0-49'},
  Q9:{sids:[924571110308816,685377673296405,257975754908346,501272375624196,314497106398393,731456201592556],expressions:[801,15,3,3610],topic:'equip/unequip owner pointers, synthesis refresh'},
  Q10:{sids:[491911663973794,118557701104625,780562691790658,876108178253015,196601779910507,775039415186059,819450314280438,338766607025535],expressions:[2833,356,2834,2835,2836,4852,1576,2902,4869,4870,4865],topic:'slot generation, refine page limits and refresh'}
 };
@@ -21,15 +21,16 @@ const reviewedDigests={
  Q5:'8bf7f8eb69b73d72a38ab555b4f6201adf4bca2e1ff9b2c615f7c4f624300cd9',
  Q6:'2b5c23a09bed9815cc76f542347911263bcaadf1eb3a3a6aa4be7d8c86bb44c9',
  Q7:'5f1719fe9bacb71e4949bf4e15ce8629c0336cade95625917579f4676a007ac4',
- Q8:'02a08ac78766217c08f69f6712299c2de9ea1b1a5c79eaa08c486fd94bfa7c6b',
- Q9:'872d9291071cb459fdc74bf17b1d5b5b6914d9a6db90de8513fe6e373d88fe40',
+ Q8:'0b8da6797b006ae0ff853ec6f61e4e31ee2d7bb66c46e4559a5997d2acdd31b6',
+ Q9:'3e5dfeef8a80b0ff887d8ea30660a5ce71d7c65a3da6b8ce4f15362230ccf980',
  Q10:'1cba060063a3fc8dfa681bec213a5798e5ab6eceff9103777feeda354a42ef16'
 };
 // V1.0.12.2 digests of the same reviewed events (Q8/Q9 SIDs were rebuilt in V1.0.13.0, so they have none). V1.0.13.0 differs
 // only by object/bound-reference renumbering and the 库序号 argument (7 or the new armory 22) of the equip/unequip/storage moves.
 // V1.0.13.0–V1.0.15.0 Q9/Q10 digests: V1.0.17.0 differs only by object and expression renumbering.
 const previousDigests={
- Q9:['cff27728febe1c540fe9d16c1e619279dc70ec7e632ddec1e4963892b23fc9e2'],
+ Q8:'02a08ac78766217c08f69f6712299c2de9ea1b1a5c79eaa08c486fd94bfa7c6b',
+ Q9:['cff27728febe1c540fe9d16c1e619279dc70ec7e632ddec1e4963892b23fc9e2','872d9291071cb459fdc74bf17b1d5b5b6914d9a6db90de8513fe6e373d88fe40'],
  Q2:'8e5e3e17aa815b0967bf9045f7a3f88d7e24ed4c270aa1cb6c282e0220607c57',
  Q3:'746f9a73dfd09c9891c433506951e153be8469bd59a2da75e6efa76277eceb12',
  Q4:'2d4529ff52d269bfaf8ab1f2795b7e0993399059fce5832e670fc4b2d381fa0e',
@@ -41,7 +42,7 @@ const hash=value=>crypto.createHash('sha256').update(JSON.stringify(value)).dige
 const sourceSids=[...new Set(Object.values(dependencies).flatMap(d=>d.sids))];
 const quality={min:1,max:6,mainBase:80,mainStep:30,subStep:10,subSpan:60,slotsMin:0,levelCapBase:10,levelCapStep:5,shift:{main:30,sub:10},precision:'hundredths-integer'};
 const poolKinds=['通用','战斗','生产'];
-function reviewedRules(digests,{wp},batch2,setLevel){
+function reviewedRules(digests,{wp},batch2,setLevel,reviewedDependencies=dependencies){
  for(const q of Object.keys(dependencies))if(!reviewedDigests[q]||digests[q]!==reviewedDigests[q]&&![previousDigests[q]].flat().includes(digests[q]))throw Error('套裝品質來源事件已改變，需重新核對：'+q);
  if(!setLevel?.items||!setLevel.origins||!batch2?.items)throw Error('缺少套裝等級或原裝備詞條來源');
  const pools={},counts={};
@@ -55,8 +56,8 @@ function reviewedRules(digests,{wp},batch2,setLevel){
   counts[t[23]]=(counts[t[23]]||0)+1;
  }
  if(Object.keys(pools).length!==216||counts['战斗']!==108||counts['生产']!==108)throw Error('套裝詞條池規模尚未核對');
- return {version:1,policy:'candidate-cross-pool',phase:'A-static-no-native-proof',sourceSids,sourceDigest:hash(digests),
-  dependencies:Object.fromEntries(Object.entries(dependencies).map(([q,d])=>[q,{...d,digest:digests[q]}])),
+ return {version:1,policy:'candidate-cross-pool',phase:'A-static-no-native-proof',sourceSids:[...new Set(Object.values(reviewedDependencies).flatMap(d=>d.sids))],sourceDigest:hash(digests),
+  dependencies:Object.fromEntries(Object.entries(reviewedDependencies).map(([q,d])=>[q,{...d,digest:digests[q]}])),
   quality,pools,
   // P原 = setEquipmentLevel.origins[y27].affixIds; P套 = pools[y1].affixIds. Unselected slot: P原 only; sole selected slot: P原 or P套.
   policies:{unselected:'origin',selectedSingle:'origin-or-set',upgradeTail:'origin-unique-flag-0',afterRefine:'native-set-pool'},
@@ -66,8 +67,11 @@ function extract(game,digestEvents,batch2,setLevel){
  if(!setLevel)return null;
  if(['6661d77209c0e98069219965908fd4d6b9ee3dca84763c158dcd5f0a863df665','32a36accc1b97e9bb3498eb3be76950e1e72b2e8f7a0cf9ce293b57aa5e0d820'].includes(game.fingerprints?.['data.json']))return null;
  const wp=JSON.parse(fs.readFileSync(path.join(game.root,'wp.json'),'utf8')).data.map(r=>r.map(c=>c[0]));
- const digests=Object.fromEntries(Object.entries(dependencies).map(([q,d])=>[q,digestEvents(game,d.sids)]));
- return reviewedRules(digests,{wp},batch2,setLevel);
+ // Keep historical extraction exact while requiring the complete rebuilt subtrees on V1.0.18.0 and later.
+ const legacy={639417854082032:204416519787196,745461878410324:574511591831477};
+ const selected=game.events.some(e=>e.sid===639417854082032)?dependencies:Object.fromEntries(Object.entries(dependencies).map(([q,d])=>[q,{...d,sids:d.sids.map(s=>legacy[s]||s)}]));
+ const digests=Object.fromEntries(Object.entries(selected).map(([q,d])=>[q,digestEvents(game,d.sids)]));
+ return reviewedRules(digests,{wp},batch2,setLevel,selected);
 }
 // Dual-pool classification for candidate tests; throws on any unreviewed source, tier or slot.
 function classify(rules,setLevel,setId,originId,affixId){

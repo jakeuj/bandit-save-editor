@@ -25,7 +25,7 @@ function setup({layers=24,stored=true,open=false,innerPill=false,aptitude=false}
 }
 
 test('the extractor names z23 and every z23 cell is read only, also through custom coordinates',()=>{
- assert.match(fs.readFileSync('scripts/extract-game.cjs','utf8'),/'武庫', '備用套裝'\]/);
+ assert.match(fs.readFileSync('scripts/extract-game.cjs','utf8'),/'武庫', '備用套裝'(?:,|\])/);
  const {C,m}=setup();
  for(const y of [0,1,6]){
   const f=C.resolveField(m,{x:1,y,z:23});assert.equal(f.known,true);assert.equal(f.editable,false);assert.equal(f.category,'備用套裝');

@@ -2,6 +2,8 @@
 
 [維護索引](../maintenance.md)；只讀本次任務相關章節。版本與日期標示的實測紀錄只證明當時範圍，現行開放狀態以 catalog／verification 為準（輕量群組見 `knowledge/verification.json` 的 `lightweight`）。
 
+V1.0.18.0 起材料 catalog 以來源 `kind` 區分普通／稀有／丹藥與符文；`SaveCore.MATERIALS` 只提供既有可編輯材料。`resolveField` 將符文數量（z0 y6）與職業精通／符文層 z24 全部列已知唯讀，避免自訂座標、舊 `set` 或匯入常用欄位繞過。資料與靜態審核見[本版紀錄](../releases.md#v244-遊戲-v10180)。
+
 ## 編輯入口
 
 | 內容 | 來源與維護方式 |

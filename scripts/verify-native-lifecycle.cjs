@@ -144,7 +144,7 @@ async function pillOverLimit(state, s) {
 // the backpack with finite equipment effects and unequipped. Moved rows must keep every field except the owner.
 async function backpackOverLimit(state, s) {
   const {stored, worn} = s.backpackOverLimit, find = `const find=(z,v)=>{for(let x=1;x<a.GetWidth();x++){let ok=true;for(let y=0;y<50;y++)if(y!==7&&a.At(x,y,z)!==v[y]){ok=false;break;}if(ok)return x;}throw Error('Moved record missing in z'+z);};`;
-  const store = await evaluate(state, `(()=>{${prefix}${find}r.SetTimeScale(0);const before=record(${stored.id},7);call('装备库存入',${stored.id},true,0,7);const id=find(9,before);return {before,id,moved:record(id,9),source:record(${stored.id},7)};})()`);
+  const store = await evaluate(state, `(()=>{${prefix}${find}r.SetTimeScale(0);const before=record(${stored.id},7);call('装备库存入',${stored.id},true,0,7,0);const id=find(9,before);return {before,id,moved:record(id,9),source:record(${stored.id},7)};})()`);
   await pause(500);
   const upgrade = await evaluate(state, `(()=>{${prefix}const id=${store.id},level=a.At(id,6,9),cap=call('装备等级上限',a.At(id,5,9));a.Set(1,2,0,1e12);a.Set(3,2,0,1e9);
     a.Set(id,6,9,cap-1);call('升级装备',id,0,0,true);const control={from:cap-1,to:a.At(id,6,9),copper:1e12-a.At(1,2,0)};a.Set(id,6,9,level);a.Set(1,2,0,1e12);a.Set(3,2,0,1e9);
@@ -155,7 +155,7 @@ async function backpackOverLimit(state, s) {
   assert.deepEqual(upgrade.single, upgrade.before, 'Native upgrade changed an over-limit row');
   assert.deepEqual(upgrade.maximum, upgrade.before, 'Native maximum upgrade changed an over-limit row');
   assert.deepEqual([upgrade.copper, upgrade.souls], [1e12, 1e9], 'Native upgrade charged an over-limit row');
-  const takeout = await evaluate(state, `(()=>{${prefix}${find}const before=record(${store.id},9);call('装备库取出',${store.id},true,0,7);const id=find(7,before);return {id,record:record(id,7)};})()`);
+  const takeout = await evaluate(state, `(()=>{${prefix}${find}const before=record(${store.id},9);call('装备库取出',${store.id},true,0,7,0);const id=find(7,before);return {id,record:record(id,7)};})()`);
   await pause(500);
   for (const [name, row] of [['store', store.moved], ['takeout', takeout.record]]) assert.deepEqual(row, store.before, name + ' changed the over-limit row');
   assert.ok(store.source.every(v => v === 0), 'Stored backpack row was not cleared');
@@ -399,7 +399,8 @@ async function relicCrafting(state, s) {
     assert.equal(after.rows.length, 1, 'Refine must add exactly one z7 row');
     const p = after.record;
     assert.deepEqual([p[0], p[1], p[2], p[3], p[5], p[6], p[7]], [after.rows[0], pill, 1, before.tier, q, 1, 0], 'Refined inner pill');
-    assert.ok(p[8] >= 80 + 30 * (q - 1) && p[8] <= 80 + 30 * q, 'Refined main coefficient ' + p[8]);
+    // V1.0.18.0 refinement requests the native maximum branch instead of rolling a coefficient range.
+    assert.equal(p[8], 80 + 30 * q, 'Refined main coefficient must be the quality maximum');
     assert.ok(after.rel.every(v => v === 0), 'Refine left the relic row');
     assert.deepEqual([before.count - after.count, before.copper - after.copper, ...after.globals], [before.need, before.cost, 0, 0], 'Refine materials, cost or selection');
     for (let y = 0; y < 50; y++) state.cells.push([after.rows[0], y, 7], [relic, y, 18]);

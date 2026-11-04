@@ -1,20 +1,22 @@
 'use strict';
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 // Reviewed static rules, not a native proof. Covers acquisition, upgrade, cap, equip/unequip, storage moves and decomposition.
-const sourceSids=[601593514747018,605413626718369,290240793057956,713681756866045,940995553206160,924571110308816,501272375624196,791657421740250,204416519787196,654692930556623,574511591831477,754298301929487,311899301569964,714979671293604,163385542232476,981828147671074,761577193118513,565108901731936,131416746119248,773239288013696];
+const sourceSids=[601593514747018,605413626718369,290240793057956,713681756866045,940995553206160,924571110308816,501272375624196,791657421740250,639417854082032,654692930556623,745461878410324,754298301929487,311899301569964,714979671293604,163385542232476,981828147671074,761577193118513,565108901731936,131416746119248,773239288013696];
+const legacyStorageSids={639417854082032:204416519787196,745461878410324:574511591831477};
 // V1.0.12.2 differs only by object/bound-reference renumbering and the new delayed-refresh argument (false) of 刷新物品／刷新灵物.
 // V1.0.13.0 rebuilt the storage-move inner events (new SIDs) with a 库序号 argument (7 or the new armory 22); z7↔z9 copies y0–49 as before.
 // V1.0.14.0 only lowered the 升级装备魂魄 growth from 1.05 to 1.04 (both the treasure and the inner-pill branch).
 // V1.0.17.0 differs only by object and expression renumbering.
-const reviewedDigest='1a33ab75054250b86dd66e1f26602e636aabaa5923e221bf586756dba86d7439';
+// V1.0.18.0 rebuilt storage scans; record width, level/cost rules and owner pointers are unchanged.
+const reviewedDigest='0ff9daf6264072649f55d1ab10ef73a6459df9521ad3f04ff68cd44bab89b98c';
 // Digests whose 升级装备魂魄 growth is 1.04 (V1.0.14.0 on); the older ones use 1.05.
-const growth104Digests=new Set(['5740a6289df43193f4e6656dbec0ee484b94bc69e0b133564ebd2d13e57c6f3e',reviewedDigest]);
+const growth104Digests=new Set(['5740a6289df43193f4e6656dbec0ee484b94bc69e0b133564ebd2d13e57c6f3e','1a33ab75054250b86dd66e1f26602e636aabaa5923e221bf586756dba86d7439',reviewedDigest]);
 const reviewedDigests=new Set(['d538a7f4e8ca258d1b5583797806d9f9f125b9898f5e5be78fff3b5fbf6fdcd2','4db0a11781c417bef5206ab4156a7e7f56be6d88d6a615e60d4644aa1c9cabfe','be73fe031f97c1dd637f4faa0b49d8730c2f648e2f805ec6e532b565d68b8b66',...growth104Digests]);
 const groups=['backpackTreasureLevel','treasureLevel'];
 const hash=value=>crypto.createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const tierCounts={1:21,2:25,3:29,4:31,5:31,6:33};
 const decompose={1:20,2:200,3:1000,4:10000,5:50000,6:500000};
-function reviewedRules(digest,{wp}){
+function reviewedRules(digest,{wp},sids=sourceSids){
  if(!reviewedDigests.has(digest))throw Error('寶物來源事件已改變，需重新核對');
  const items={},counts={};
  for(const t of wp.filter(r=>r[4]==='宝物'&&r[5]==='装备'&&r[6]===6)){
@@ -25,7 +27,7 @@ function reviewedRules(digest,{wp}){
   counts[t[3]]=(counts[t[3]]||0)+1;
  }
  if(JSON.stringify(counts)!==JSON.stringify(tierCounts))throw Error('寶物範本規模尚未核對');
- return {version:1,policy:'level-only',phase:'A-static-no-native-proof',sourceSids,sourceDigest:digest,items,
+ return {version:1,policy:'level-only',phase:'A-static-no-native-proof',sourceSids:sids,sourceDigest:digest,items,
   qualities:{min:1,max:6,capBase:10,capStep:5},
   // C(L,T)=round(10*g^((T-1)*30+4*L)-1): the -1 is applied inside round, outside the exponent; g=1.04 from V1.0.14.0, 1.05 before.
   cost:{currency:'souls',base:10,growth:growth104Digests.has(digest)?1.04:1.05,tierStep:30,levelStep:4,offset:-1,rounding:'round'},
@@ -36,7 +38,8 @@ function extract(game,digestEvents){
  // Historical builds are not supported; the editor keeps working without claiming treasure support.
  if(['6661d77209c0e98069219965908fd4d6b9ee3dca84763c158dcd5f0a863df665','32a36accc1b97e9bb3498eb3be76950e1e72b2e8f7a0cf9ce293b57aa5e0d820'].includes(game.fingerprints?.['data.json']))return null;
  const wp=JSON.parse(fs.readFileSync(path.join(game.root,'wp.json'),'utf8')).data.map(r=>r.map(c=>c[0]));
- return reviewedRules(digestEvents(game,sourceSids),{wp});
+ const sids=game.events.some(e=>e.sid===639417854082032)?sourceSids:sourceSids.map(s=>legacyStorageSids[s]||s);
+ return reviewedRules(digestEvents(game,sids),{wp},sids);
 }
 const canPreserve=(old,next)=>['fingerprints','batch2Fingerprints','treasureLevel'].every(k=>hash(old[k]??null)===hash(next[k]??null));
 function requireClosed(k){for(const group of groups)if(k.verification[group]!==undefined&&k.verification[group]!==false)throw Error('寶物等級沒有首次證明，群組必須關閉：'+group);}

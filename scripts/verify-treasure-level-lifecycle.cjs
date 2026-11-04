@@ -12,7 +12,7 @@ async function nativeCycle(request){
  const pause=()=>new Promise(resolve=>setTimeout(resolve,500)),record=(id,z)=>Array.from({length:60},(_,y)=>a.At(id,y,z)),refs=()=>Array.from({length:6},(_,s)=>a.At(1,16+s,2));
  const initial=record(1,request.plane),steps=[];let bag=1,z9=1;
  const find=z=>{for(let id=1;id<a.GetWidth();id++)if(a.At(id,0,z)>0&&a.At(id,1,z)===initial[1])return id;throw Error('Cycle destination absent '+z+' refs '+JSON.stringify(refs()));};
- if(request.plane===9){if(request.worn)call('卸下装备',request.slot,1,1,false,false,7);else call('装备库取出',1,true,0,7);await pause();bag=find(7);steps.push({phase:'takeout',id:bag,plane:7,record:record(bag,7),refs:refs(),source:record(1,9)});}
+ if(request.plane===9){if(request.worn)call('卸下装备',request.slot,1,1,false,false,7);else call('装备库取出',1,true,0,7,0);await pause();bag=find(7);steps.push({phase:'takeout',id:bag,plane:7,record:record(bag,7),refs:refs(),source:record(1,9)});}
  call('穿戴装备',request.slot,bag,1,false,false,7);await pause();z9=a.At(1,15+request.slot,2);steps.push({phase:'equip',id:z9,plane:9,record:record(z9,9),refs:refs(),source:record(bag,7)});
  if(!z9)throw Error('Native equip did not set role pointer '+JSON.stringify(steps));
  call('刷新单角色全属性',1,true,0);call('卸下装备',request.slot,z9,1,false,false,7);await pause();bag=find(7);steps.push({phase:'unequip',id:bag,plane:7,record:record(bag,7),refs:refs(),source:record(z9,9)});

@@ -24,7 +24,7 @@
   {name:'操練點',x:5,y:2,z:0,description:'用於操練的點數。'}
  ];
  const KNOWLEDGE=/*__KNOWLEDGE__*/null;
- const MATERIALS=KNOWLEDGE.catalogs.materials.map(m=>({...m,type:m.category}));
+ const MATERIALS=KNOWLEDGE.catalogs.materials.filter(m=>m.kind!=='符文').map(m=>({...m,type:m.category}));
  const traditionalMap=Object.fromEntries([...('桦樺枫楓刚剛涧澗矿礦铁鐵铜銅银銀药藥萤螢云雲纹紋络絡雾霧隐隱参參泪淚兰蘭灵靈莲蓮阶階兽獸练練气氣婴嬰炼煉虚虛体體')].reduce((a,c,i,s)=>{if(i%2===0)a.push([c,s[i+1]]);return a;},[]));
  const trad=s=>String(s).replace(/./gu,c=>traditionalMap[c]||c);
  for(const m of MATERIALS){m.name=trad(m.name);m.type=trad(m.type);m.x=m.id;m.y=6;m.z=0;}
@@ -1428,6 +1428,7 @@
   const named=(label,extra={})=>{f={...f,label,known:true,status:'程式證據',reason:'關聯資料／第一版唯讀',...extra};};
   const basic=BASICS.find(b=>key(b)===key(c));
   if(basic)named(basic.name,{type:'integer',min:0,editable:true,status:'既有功能',reason:''});
+  else if(z===0&&y===6&&catalogMaps.materials.get(x)?.kind==='符文')named(catalogName('materials',x),{entity:`符文 #${x}`,type:'integer',reason:'符文數量與鑲嵌狀態由遊戲管理，尚未開放修改，唯讀'});
   else if(z===0&&y===6&&catalogMaps.materials.has(x))named(catalogName('materials',x),{entity:`材料 #${x}`,type:'integer',min:0,editable:true,status:'既有功能',reason:''});
   else if(key(c)==='1,1,0')named('山寨名稱',{type:'string',maxLength:6,verification:'names',editable:!!KNOWLEDGE.verification.names,reason:'名稱群組尚待遊戲驗證'});
   else if(z===0&&y===1){const labels={0:'存檔識別',2:'山寨等級',4:'目前地圖',6:'商店刷新時間',7:'引導任務編號',8:'山寨總聲望',12:'存檔年份',13:'存檔天數',14:'存檔小時',15:'累計遊玩秒數',19:'城牆等級',22:'支援者禮包紀錄',37:'武庫換裝模式'};if(labels[x])named(labels[x]);}
@@ -1456,12 +1457,13 @@
   else if(z===16&&y>=1&&y<=16)named(y%2?`第 ${(y+1)/2} 次結丹品質`:`第 ${y/2} 次入體內丹列號`,{entity:activeCharacter(m,x)?get(m,C(x,1,2)):`角色 #${x}`,reason:'請使用角色養成的結丹品質具名操作；入體內丹係數一起結算'});
   else if(z===17)named(({1:'入體內丹範本',3:'入體內丹等階',5:'入體內丹品質',6:'入體內丹等級',7:'入體內丹歸屬角色',8:'入體內丹主屬性品質係數'})[y]||(y>=15&&y<=17?`${aptitudeNames[y-15]}上限係數`:`入體內丹欄位 ${y}`),{entity:catalogName('items',get(m,C(x,1,17))),reason:'入體後原生流程不再修改；結丹係數與等級請使用結丹品質面板的具名操作'});
   else if(z===BACKUP_SET)named(y===0?'目前套裝序號':y<=6?`備用套裝部位 ${y} 裝備列號`:`備用套裝欄位 ${y}`,{entity:activeCharacter(m,x)?get(m,C(x,1,2)):`角色 #${x}`,reason:'換裝由遊戲管理，裝備列號與穿戴歸屬需一起核實，唯讀'});
+  else if(z===24)named(y===0?'精通職業選擇':catalogMaps.professions.has(y)?`${catalogName('professions',y)}符文編號`:`職業精通與符文欄位 ${y}`,{entity:activeCharacter(m,x)?get(m,C(x,1,2)):`角色 #${x}`,reason:'職業精通與符文鑲嵌由遊戲管理，尚未開放修改，唯讀'});
   else if([1,6,10,11,13,16,17,18,19,20,21].includes(z))named(`${plane.name}・欄位 ${y}`,{entity:`資料 #${x}`});
   f.source=(evidenceIndex.get(`${z},${y}`)||evidenceIndex.get(`${z},*`)||[]).filter(e=>e.x==='*'||e.x===x).slice(0,4).map(e=>({function:e.function,sheet:e.sheet,sid:e.sid,actionSid:e.actionSid}));
   if(f.known&&f.editable&&f.verification)f={...f,status:'遊戲驗證',reason:''};
   if(f.known)f.description='已定位此資料的用途；關聯狀態與進程仍由遊戲管理。';
   if(basic)f.description=basic.description;
-  if(z===0&&y===6&&f.known)f.description='材料數量；直接增加不扣除取得成本。';
+  if(z===0&&y===6&&f.known)f.description=catalogMaps.materials.get(x)?.kind==='符文'?'符文庫存與鑲嵌狀態由遊戲管理，尚未開放修改，唯讀。':'材料數量；直接增加不扣除取得成本。';
   if(f.verification==='names')f.description='繁中介面名稱，1–6 個 UTF-16 字元，不含 ASCII 空格或控制字元。';
   if(z===2&&activeCharacter(m,x)){
    if([3,4,50].includes(y)){f.description='自然經驗逐級結算；上限為（重生階段向下取整 + 1）× 30。不扣共用池、不增加退款基數。';f.related=[C(x,3,2),C(x,4,2),C(x,50,2)];}

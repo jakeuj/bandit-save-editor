@@ -18,9 +18,9 @@ async function probeDriver(request){
  call('穿戴装备',6,X,1,false,false,7);await pause();snap('wear X');
  call('穿戴装备',6,Y,1,false,false,7);await pause();snap('wear Y over X (X displaced)');
  const staleX=find(7,request.x.template);const staleRecord=rec(staleX,7);
- call('装备库存入',staleX,true,0,7);await pause();snap('store stale X into z9');
+ call('装备库存入',staleX,true,0,7,0);await pause();snap('store stale X into z9');
  const storedX=find(9,request.x.template);const storedRecord=storedX?rec(storedX,9):null;
- if(storedX){call('装备库取出',storedX,true,0,7);await pause();snap('take stale X back out');}
+ if(storedX){call('装备库取出',storedX,true,0,7,0);await pause();snap('take stale X back out');}
  const bagX=find(7,request.x.template);
  call('穿戴装备',6,bagX,1,false,false,7);await pause();snap('re-wear stale X over Y');
  const sold=find(7,request.y.template);const before=a.At(3,2,0);

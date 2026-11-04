@@ -5,16 +5,16 @@ const path=require('node:path');
 const vm=require('node:vm');
 const source=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
 function core(){const ctx={};vm.runInNewContext(source.match(/<script id="save-core">([\s\S]*?)<\/script>/)[1],ctx);for(const k of Object.keys(ctx.SaveCore.KNOWLEDGE.verification))ctx.SaveCore.KNOWLEDGE.verification[k]=true;return ctx.SaveCore;}
-function fixture(nx=221){
- const data=Array.from({length:nx},()=>Array.from({length:60},()=>Array(22).fill(0)));
+function fixture(nx=221,nz=22){
+ const data=Array.from({length:nx},()=>Array.from({length:60},()=>Array(nz).fill(0)));
  const put=(x,y,z,v)=>data[x][y][z]=v;
  put(0,0,1,'szmnqea');put(1,1,0,'測試山寨');put(1,0,2,1);put(1,1,2,'測試甲');put(1,3,2,1);put(1,6,2,1);put(1,1,4,1);put(1,5,0,5);put(2,2,0,12345);put(1,56,2,789);
  for(let k=1;k<=9;k++){put(1,30+k,2,1);put(1,21+k,2,50);}
- return '\ufeff'+JSON.stringify({c2array:true,size:[nx,60,22],data}).replace('{','{"unrelated":987654321098765432109876543210,\n');
+ return '\ufeff'+JSON.stringify({c2array:true,size:[nx,60,nz],data}).replace('{','{"unrelated":987654321098765432109876543210,\n');
 }
-test('catalog includes 24 planes, 750 functions, 877 write sites and localized names',()=>{
+test('catalog includes 25 planes, 756 functions, 881 write sites and localized names',()=>{
  const C=core(),K=C.KNOWLEDGE;
- assert.equal(K.planes.length,24);assert.equal(K.planes[22].name,'武庫');assert.equal(K.planes[23].name,'備用套裝');assert.equal(K.functions.length,750);assert.equal(K.evidence.length,877);
+ assert.equal(K.planes.length,25);assert.equal(K.planes[22].name,'武庫');assert.equal(K.planes[23].name,'備用套裝');assert.equal(K.planes[24].name,'職業精通與符文');assert.equal(K.functions.length,756);assert.equal(K.evidence.length,881);
  assert.equal(K.catalogs.attributes.find(v=>v.id===23).name,'對金系增傷');assert.equal(K.treasureLevel.cost.growth,1.04);
  assert.equal(K.catalogs.attributes.find(v=>v.id===72).name,'最終增產');
  const versionLabels=[...source.matchAll(/<span data-knowledge-version>(.*?)<\/span>/g)];
@@ -22,6 +22,21 @@ test('catalog includes 24 planes, 750 functions, 877 write sites and localized n
  for(const [,label] of versionLabels)assert.equal(label,K.gameVersion);
  assert.equal(K.catalogs.professions.find(v=>v.id===2).name,'嘍囉');
  assert.equal(C.SKILLS.length,9);assert.equal(C.SKILLS[7],'研究');
+});
+test('unreleased mastery, rune inventories and reserved z24 cells stay readonly through both write paths',()=>{
+ const C=core(),runes=C.KNOWLEDGE.catalogs.materials.filter(r=>r.kind==='符文');
+ assert.equal(runes.length,310);assert.ok(runes.every(r=>!C.MATERIALS.some(m=>m.id===r.id)));
+ const raw=fixture(runes.at(-1).id+1,25),m=C.parse(raw);
+ const coordinates=[{x:runes[0].id,y:6,z:0},{x:runes.at(-1).id,y:6,z:0},...[0,1,47,59].map(y=>({x:1,y,z:24}))];
+ for(const c of coordinates){
+  const f=C.resolveField(m,c);assert.equal(f.known,true);assert.equal(f.editable,false);assert.match(f.reason,/唯讀/);
+  if(c.z===0)assert.match(f.description,/符文庫存.*唯讀/);
+  assert.throws(()=>C.set(m,c,1),/唯讀/);assert.throws(()=>C.setField(m,c,1),/唯讀/);
+ }
+ assert.throws(()=>C.transaction(m,()=>{C.set(m,{x:1,y:6,z:0},10);C.set(m,coordinates[0],1);}),/唯讀/);
+ assert.equal(C.serialize(m),raw);assert.equal(m.history.length,0);
+ C.transaction(m,()=>C.set(m,{x:1,y:6,z:0},10));assert.equal(C.get(m,{x:1,y:6,z:0}),10);C.undo(m);
+ C.setField(m,{x:1,y:1,z:0},'新寨');assert.equal(C.serialize(m),raw.replace('測試山寨','新寨'));
 });
 test('profession graph covers all six tiers without cycles, missing parents or disconnected branches',()=>{
  const K=core().KNOWLEDGE,rows=K.catalogs.professions,byId=new Map(rows.map(r=>[r.id,r]));
