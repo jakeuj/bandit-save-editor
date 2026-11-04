@@ -5,7 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
 const vm = require('node:vm');
-const {readEditorSource, embedKnowledge} = require('../scripts/editor-source.cjs');
+const {readEditorSource, readEditorSourceDetails, embedKnowledge} = require('../scripts/editor-source.cjs');
 
 function copy(t) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'bandit-source-test-'));
@@ -34,6 +34,23 @@ test('a missing nested source fails instead of silently omitting a feature', t =
   assert.throws(() => readEditorSource('ui', {root}), /ENOENT/);
 });
 
+test('source segments map the complete UTF-16 string back to nested original files', t => {
+  const root = copy(t), file = path.join(root, 'src/core.js');
+  fs.writeFileSync(file, '/* 中文😀\n第二行 */\n' + fs.readFileSync(file, 'utf8'));
+  for (const entry of ['core', 'ui', 'knowledge-ui']) {
+    const details = readEditorSourceDetails(entry, {root});
+    assert.equal(details.source, readEditorSource(entry, {root}));
+    let offset = 0;
+    for (const segment of details.segments) {
+      assert.equal(segment.outputStart, offset);
+      const original = fs.readFileSync(path.join(root, segment.file), 'utf8');
+      assert.equal(details.source.slice(offset, offset + segment.length), original.slice(segment.sourceStart, segment.sourceStart + segment.length));
+      offset += segment.length;
+    }
+    assert.equal(offset, details.source.length);
+  }
+});
+
 test('missing, duplicate, reordered and unregistered assembly markers fail', t => {
   const root = copy(t), file = path.join(root, 'src/core.js');
   const source = fs.readFileSync(file, 'utf8'), token = '/*__CORE_BATCH__*/';
@@ -57,6 +74,7 @@ test('a frozen standalone core stays byte-identical and ignores current fragment
   fs.writeFileSync(path.join(root, 'src/core.js'), legacy);
   fs.unlinkSync(path.join(root, 'src/core/shared.js'));
   assert.equal(readEditorSource('core', {root}), legacy);
+  assert.deepEqual(readEditorSourceDetails('core', {root}).segments, [{file: 'src/core.js', sourceStart: 0, outputStart: 0, length: legacy.length}]);
 });
 
 test('knowledge embedding preserves replacement metacharacters and cannot close its script', () => {

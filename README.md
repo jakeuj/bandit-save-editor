@@ -97,6 +97,8 @@ node scripts/build-editor.cjs --check
 
 程式來源位於 `src/`，知識資料位於 `knowledge/`；核心與操作介面已按責任分檔，由共用工具組裝，編輯入口見[來源組裝與責任分檔](docs/maintenance/core.md#來源組裝與責任分檔)。建置會同步 HTML 內嵌程式與 `sw.js` 快取版本。不要直接修改產生的內嵌程式。
 
+維護時可用 `npm run inspect:editor -- --symbol setCharacterSkillCaps` 查目前定義、相依與驗證入口，或用 `npm run verify:architecture` 檢查公開介面及登記關係；使用方式與靜態分析限制見[AI 程式導覽與架構檢查](docs/maintenance/core.md#ai-程式導覽與架構檢查)。
+
 依變更選跑[測試指引](docs/testing.md)中的相關測試；需要 headless 瀏覽器測試時，再執行 `npx playwright install --only-shell chromium`。完整驗收入口為 `npm run verify:release`，按需執行。
 
 PWA 需以 localhost HTTP 或 HTTPS 提供完整目錄；`file://` 只使用單檔編輯功能，不註冊 Service Worker。GitHub Pages 由 `.github/workflows/pages.yml` 發布，提交、部署及驗證流程見[發布指引](docs/maintenance/release.md)。

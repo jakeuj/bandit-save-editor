@@ -50,32 +50,51 @@ const fragments = {
   ]
 };
 
-function readEditorSource(entry, {root = projectRoot} = {}) {
+function readEditorSourceDetails(entry, {root = projectRoot} = {}) {
   if (!Object.hasOwn(entries, entry)) throw Error(`未知的編輯器來源入口：${entry}`);
   const file = entries[entry];
   function expand(relative) {
-    let source = fs.readFileSync(path.join(root, relative), 'utf8');
+    const original = fs.readFileSync(path.join(root, relative), 'utf8');
+    const whole = () => ({source: original, segments: original.length ? [{file: relative, sourceStart: 0, outputStart: 0, length: original.length}] : []});
     // Frozen-release overlays contain a complete standalone core, not the current fragments.
-    if (relative === 'src/core.js' && source.includes(knowledgeToken) && source.includes('globalThis.SaveCore=') && !source.includes('/*__CORE_')) return source;
+    if (relative === 'src/core.js' && original.includes(knowledgeToken) && original.includes('globalThis.SaveCore=') && !original.includes('/*__CORE_')) return whole();
     const parts = fragments[relative] || [];
     let previous = -1;
     for (const [name] of parts) {
       const token = `/*__${name}__*/`;
-      if (source.split(token).length !== 2) throw Error(`${relative} 的 ${name} 組裝標記必須恰好出現一次`);
-      const position = source.indexOf(token);
+      if (original.split(token).length !== 2) throw Error(`${relative} 的 ${name} 組裝標記必須恰好出現一次`);
+      const position = original.indexOf(token);
       if (position <= previous) throw Error(`${relative} 的 ${name} 組裝順序與清單不符`);
       previous = position;
     }
-    for (const [name, target] of parts) {
-      source = source.replace(`/*__${name}__*/`, () => expand(target));
+    if (!parts.length) return whole();
+    const chunks = [], segments = [];
+    let cursor = 0, outputStart = 0;
+    function own(end) {
+      if (end > cursor) {
+        chunks.push(original.slice(cursor, end));
+        segments.push({file: relative, sourceStart: cursor, outputStart, length: end - cursor});
+        outputStart += end - cursor;
+      }
     }
-    return source;
+    for (const [name, target] of parts) {
+      const token = `/*__${name}__*/`, position = original.indexOf(token), child = expand(target);
+      own(position);
+      chunks.push(child.source);
+      segments.push(...child.segments.map(segment => ({...segment, outputStart: segment.outputStart + outputStart})));
+      outputStart += child.source.length;
+      cursor = position + token.length;
+    }
+    own(original.length);
+    return {source: chunks.join(''), segments};
   }
-  const source = expand(file);
-  const remaining = source.match(/\/\*__(?!KNOWLEDGE__)[A-Z][A-Z0-9_]*__\*\//);
+  const result = expand(file);
+  const remaining = result.source.match(/\/\*__(?!KNOWLEDGE__)[A-Z][A-Z0-9_]*__\*\//);
   if (remaining) throw Error(`編輯器來源殘留組裝標記：${remaining[0]}`);
-  return source;
+  return result;
 }
+
+function readEditorSource(entry, options) { return readEditorSourceDetails(entry, options).source; }
 
 function embedKnowledge(source, knowledge) {
   if (source.split(knowledgeToken).length !== 2) throw Error('核心的知識注入標記必須恰好出現一次');
@@ -83,4 +102,4 @@ function embedKnowledge(source, knowledge) {
   return source.replace(knowledgeToken, () => JSON.stringify(knowledge).replace(/</g, '\\u003c'));
 }
 
-module.exports = {readEditorSource, embedKnowledge};
+module.exports = {readEditorSource, readEditorSourceDetails, embedKnowledge};

@@ -5,6 +5,8 @@
     "test": "node --test tests/*.test.cjs",
     "test:ui": "node --test tests/ui-export-state.test.cjs tests/equipment-ui.test.cjs tests/skill-caps-ui.test.cjs tests/changelog.test.cjs",
     "test:browser": "node scripts/test-browser.cjs",
+    "inspect:editor": "node scripts/inspect-editor.cjs",
+    "verify:architecture": "node scripts/inspect-editor.cjs --verify",
     "verify:knowledge": "node scripts/build-editor.cjs --check && node --test tests/extract-game.test.cjs tests/knowledge.test.cjs tests/migration-source.test.cjs tests/selective-migration.test.cjs",
     "verify:release": "node scripts/build-editor.cjs --check && npm test && npm run test:browser"
   },

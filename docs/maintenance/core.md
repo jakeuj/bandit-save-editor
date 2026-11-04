@@ -31,6 +31,8 @@ node scripts/build-editor.cjs
 
 `scripts/editor-source.cjs` 是來源組裝的唯一入口；片段清單與順序以其中的 `fragments` 為準。各片段共用原入口的封閉作用域，仍按原宣告順序執行。這一輪是責任分檔，尚未改成獨立執行的模組；預覽 WeakMap、交易、復原及欄位權限維持單一實作，不在不同片段複製。
 
+`readEditorSourceDetails(entry, {root})` 回傳同一份 `source` 及連續的 `segments`；每段以 `file`、`sourceStart`、`outputStart`、`length` 對應原檔與組裝後位置。偏移採 JavaScript UTF-16 索引，導覽顯示原檔 1 起算行／欄；索引在注入 catalog 前建立。原有 `readEditorSource` 的字串輸出保持不變。
+
 - 建置、目前版本的 VM 測試、原生工具與切片分析使用 `readEditorSource('core' | 'ui', {root})`，不直接讀取入口樣板。`root` 預設為工具所在專案，可指定暫存專案以完整讀取該副本的來源。
 - 核心回傳文字保留知識標記；執行或內嵌前使用 `embedKnowledge(source, catalog)` 統一注入。它保留名稱中的替換特殊字元並跳脫 `<`，避免資料結束 HTML script。
 - 僅測單一圖鑑編輯器的 VM 可使用 `readEditorSource('knowledge-ui', {root})`，自行明示 DOM／宿主替身；完整 UI 測試則載入正式 `ui` 入口。測試專用存取器由測試 helper 依 AST 插入，不依賴程式排版。
@@ -39,9 +41,32 @@ node scripts/build-editor.cjs
 
 2026-11-04 的漸進拆分以 v2.44 為基準：先逐字核對機械搬移結果，再調整主 UI 排版，核對組裝後核心／UI 的 AST、所有 family 切片與 101 個公開匯出均維持原樣。沒有改遊戲公式、寫入旗標或歷史證明；原生生命週期工具的動作拆分留待後續處理。
 
+## AI 程式導覽與架構檢查
+
+接功能先查目前來源，再讀查詢命中的功能規則與測試指引：
+
+```sh
+npm run inspect:editor -- --symbol setCharacterSkillCaps
+npm run --silent inspect:editor -- --group randomCharacterSkillCapsAdvanced --json
+npm run inspect:editor -- --family randomCharacterSkillCaps
+npm run inspect:editor -- --file src/core/skill-caps-talents.js
+npm run inspect:editor -- --changed --base HEAD
+npm run inspect:editor -- --changed --staged
+npm run verify:architecture
+```
+
+查詢擇一使用 symbol、family、group、file 或 changed；`--base` 與 `--staged` 互斥。`--help` 提供完整用法。機器讀取 JSON 時使用 `npm run --silent … -- --json`，避開 npm 自身的標題輸出。JSON 包含定義、直接相依、被引用位置、公開匯出、family／旗標／證明 section、測試候選、建議檢查及限制；各項不把 family 與證明 section 強制合併。
+
+`scripts/editor-scope.cjs` 辨認宣告、作用域及已知的公開介面別名；`editor-inspection.cjs` 串接來源位置與現有登記表；`editor-check-plan.cjs` 讀取 Git 變更並產生保守建議；`inspect-editor.cjs` 提供 CLI。工具解析產品程式文字，不執行它，也不自動跑測試、遊戲或發布；每次讀目前來源，不依賴持久索引或 Graphify 是否更新。
+
+- `verify:architecture` 對確定的匯出／公開方法錯誤、核心環境 I/O、未登記來源及缺失旗標／roots 對應以非零結束，附原檔位置。它只檢查 core／ui 組裝入口；PWA 來源改動走完整回退。
+- 循環、動態方法選取、別名逸出與無法解析的測試相依明示為限制；通過靜態規則不代表已找到所有行為或所有呼叫者。一般輸出精簡顯示，完整清單用 JSON 查看。
+- 測試候選由直接引用及測試 helper 的靜態引用取得，僅作定位線索。無法完整解析、刪除／更名宣告、新檔未登記或共用流程變更時，建議完整 Node；涉及產品來源時另列瀏覽器回歸。輸出建議不取代輕量流程與原生冒煙的既有條件。
+- 一般 `--changed` 包含已暫存、未暫存與未追蹤變更；`--staged` 以 index 的 Git blobs 及該快照的組裝／登記表分析，工作目錄的同名修改不會滲入。舊快照缺少位置介面或其他無法完整讀取的情況會明示限制並回退；工具不修改暫存內容。
+
 ## Repo 知識圖譜
 
-查詢架構、程式與研究文件的跨檔關係時，先用本機既有的 `graphify-out/graph.json` 找到入口，再依來源位置核對目前程式及文件。來源異動後依需要增量更新；新增或修改文件、圖片也需語意萃取。建圖方式、Windows 注意事項與完整性診斷集中於 [Repo 知識圖譜](../research/repository-graph.md)。
+程式符號與變更影響先用上節的即時導覽。需要程式與研究文件的跨文件語意關係時，再查本機既有的 `graphify-out/graph.json`，依來源位置核對目前內容。來源異動後依需要增量更新；新增或修改文件、圖片也需語意萃取。建圖方式、Windows 注意事項與完整性診斷集中於 [Repo 知識圖譜](../research/repository-graph.md)。
 
 `graphify-out/` 是可重建的本機導覽產物，已由 Git 忽略，也不在 Pages 發布白名單內。遊戲公式與寫入驗證仍以研究筆記、catalog 及 verification 為依據；圖譜的連線、社群或摘要不會開放可寫群組。
 

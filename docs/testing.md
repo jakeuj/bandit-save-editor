@@ -15,6 +15,7 @@ Linux CI另加`--with-deps`安裝系統函式庫。Playwright版本由package與
 
 | 入口 | 適用範圍 |
 | --- | --- |
+| `npm run verify:architecture` | 即時來源、公開介面與登記關係的靜態檢查；循環／動態引用等限制另列，不代替行為測試 |
 | `npm run test:ui` | 快速UI事件、實際Blob bytes、匯出revision及既有裝備介面／更新紀錄 |
 | `npm test` | 全部Node測試，含公式、資格、交易、精確token、完整尺寸與驗證閘門 |
 | `npm run test:browser` | 建置同步預檢＋全部獨立headless整合案例 |
@@ -24,6 +25,8 @@ Linux CI另加`--with-deps`安裝系統函式庫。Playwright版本由package與
 來源異動先執行`node scripts/build-editor.cjs`；驗證入口只檢查同步，不自動修改發布產物。日常可加Playwright篩選，例如`npm run test:browser -- --grep 'HTTP 390px'`。排版異動使用`npm run test:browser -- --visual --grep 'base aptitude'`產生兩種寬度的完整頁面截圖，再按需要檢視。
 
 目前來源已按責任分檔，VM 與原生工具透過共用組裝入口載入，見[來源組裝與責任分檔](maintenance/core.md#來源組裝與責任分檔)。暫存專案須複製完整 `src/` 與 `scripts/`；只複製入口樣板不足以重建。`tests/editor-source.test.cjs` 涵蓋副本來源、缺檔／標記錯誤、歷史單檔覆蓋及知識安全注入。UI 測試台要保留同一事件的所有監聽器，模擬的 `closest` 也須依 selector 回傳，才能承載正式組裝的全部 UI。
+
+用 `npm run inspect:editor -- --changed` 或 `--changed --staged` 可列驗證建議及原因；工具不執行這些命令，靜態候選不保證完整覆蓋。用 JSON 時加 `npm run --silent`。位置、作用域、暫存快照與保守回退由 `tests/editor-source.test.cjs`、`tests/editor-inspection.test.cjs`、`tests/editor-check-plan.test.cjs` 驗證；詳細操作見[AI 程式導覽與架構檢查](maintenance/core.md#ai-程式導覽與架構檢查)。
 
 ## 證據分工
 
