@@ -92,12 +92,13 @@ npm run verify:architecture
 
 ## 公開介面契約
 
-P2 先涵蓋技藝上限六入口、兩個生成見證工具，以及 parse／serialize／transaction／undo／restore／restoreAll，共 14 個公開方法。JSDoc 與具名型別維護在實作旁，不另建手寫介面清單；這是文件與導覽資訊，沒有新增型別檢查器或執行期寫入權限。
+P2 首輪涵蓋技藝上限六入口、兩個生成見證工具，以及 parse／serialize／transaction／undo／restore／restoreAll，共 14 個公開方法；2026-11-05 接續補齊[裝備介面契約](equipment.md#裝備介面契約)的 18 個方法與 24 個具名型別，涵蓋等級、詞條及普通品質。JSDoc 與具名型別維護在實作旁，不另建手寫介面清單；這是文件與導覽資訊，沒有新增型別檢查器或執行期寫入權限。
 
 ```sh
 npm run inspect:editor -- --symbol setCharacterSkillCaps
 npm run --silent inspect:editor -- --symbol SkillCapsRequest --json
 npm run --silent inspect:editor -- --symbol transaction --json
+npm run --silent inspect:editor -- --symbol EquipmentQualityRequest --json
 ```
 
 定義的 `contract` 提供 JSDoc 內容與原檔位置，`contractTypes` 展開用到的具名型別；也能直接以型別名稱查詢。這些型別不是新的 JavaScript 匯出。未註記的方法保持原介面，動態與間接引用限制照常保留。

@@ -1,3 +1,38 @@
+ /** @typedef {7|9|22} EquipmentPlane 背包／裝備庫／武庫；22 需存檔具備該層，寫入另需 armoryEquipment 旗標。 */
+ /**
+  * @typedef {Object} EquipmentRef 操作現有物品列；z9 備用套裝仍指定 plane=9，由核心檢查互指與旗標。
+  * @property {number} itemId 正安全整數列號；y0 是來源列，不必等於 itemId。
+  * @property {EquipmentPlane} [plane=9]
+  */
+ /**
+  * @typedef {Object} EditingInfo 成功讀取的操作前資訊；verified 與 advancedVerified 分別表示模式旗標。
+  * @property {'equipment'|'training'|'technology'} kind
+  * @property {number} id
+  * @property {number} plane
+  * @property {string} name
+  * @property {SaveCoord} coordinate
+  * @property {number} current 當次讀值；set 回傳仍保留操作前 current，以 value 表示寫入目標。
+  * @property {number} min
+  * @property {number} normalMax 等級／操練／科技的一般上限；衍生詞條資訊另有覆寫。
+  * @property {number} advancedMax
+  * @property {boolean} verified
+  * @property {boolean} advancedVerified
+  * @property {boolean} [isSet]
+  * @property {boolean} [isTreasure]
+  * @property {number} [itemId]
+  * @property {string} [group] 套裝／寶物的旗標名稱；一般 editingInfo 沒有這個欄位。
+  * @property {SaveScalar[]} [record] 套裝／寶物的 60 欄觀察值；不作直接寫入指令。
+  * @property {Object} [template]
+  * @property {string} [metadataStatus]
+  */
+ /** @typedef {EquipmentRef & {level:number,advanced?:boolean}} EquipmentLevelRequest 等級為安全整數；模式值必須是布林，還原以物品庫別及列號分組。 */
+ /**
+  * 讀取套裝等級資格與 metadata；不寫值，旗標關閉時仍可回傳 verified=false。
+  * @param {SaveModel} m
+  * @param {EquipmentRef} options
+  * @returns {EditingInfo} isSet=true，advancedMax=normalMax、advancedVerified=false。
+  * @throws {Error} 庫別、品質、metadata、詞條或穿戴／備用套裝互指不符。
+  */
  function setEquipmentLevelInfo(m,{itemId,plane=9}){
   const fail=reason=>{throw Error('套裝等級：'+reason);},rules=KNOWLEDGE.setEquipmentLevel;
   if(!rules||rules.version!==1||!equipmentPlane(m,plane)||!Number.isSafeInteger(itemId)||itemId<1||itemId>=m.original.size[0])fail('庫別、資料或編號不符。');
@@ -29,6 +64,13 @@
   return {kind:'equipment',isSet:true,id:itemId,itemId,plane,name:item.name,coordinate:C(itemId,6,plane),current:level,min:1,normalMax,advancedMax:normalMax,advancedVerified:false,verified:planeVerified(plane,group),group,record,template:t,metadataStatus:'preserved; independent-native-proof-required'};
  }
  // Treasure-level candidates (y6 only) are independent of ordinary and set equipment; gated by their own first proof.
+ /**
+  * 讀取寶物等級資格；保留原生換裝留下的有效角色 owner，仍檢查實際穿戴互指。
+  * @param {SaveModel} m
+  * @param {EquipmentRef} options
+  * @returns {EditingInfo} isTreasure=true，沒有超限模式；verified=false 仍可供觀察。
+  * @throws {Error} 範本、欄位型別、等級或穿戴／備用套裝互指不符。
+  */
  function treasureLevelInfo(m,{itemId,plane=9}){
   const fail=reason=>{throw Error('寶物等級：'+reason);},rules=KNOWLEDGE.treasureLevel;
   if(!rules||rules.version!==1||!equipmentPlane(m,plane)||!Number.isSafeInteger(itemId)||itemId<1||itemId>=m.original.size[0])fail('庫別、資料或編號不符。');
@@ -161,6 +203,15 @@
   });
   return {kind:'setEquipmentQualityCandidateEffects',candidate:true,itemId,plane,quality,effects,effectUnchanged:effects.every(v=>v.before===v.after),setBonusNote:'套裝積分、件數與額外套裝效果不隨品質改變。'};
  }
+ /**
+  * 共用唯讀入口；equipment 依種類轉入套裝／寶物資格，其餘沿用一般裝備檢查。
+  * @param {SaveModel} m
+  * @param {'equipment'|'training'|'technology'} kind
+  * @param {number} id 物品列、職業或進階科技 ID。
+  * @param {number} [plane=9] 裝備只接受 EquipmentPlane；操練／科技沿用原介面預設。
+  * @returns {EditingInfo} 成功不等於可寫，呼叫端仍須分別檢查一般／進階旗標及目標值。
+  * @throws {Error} 來源、類型、忙碌狀態或目前值不符；不回傳 reasons 形式的失敗資訊。
+  */
  function editingInfo(m,kind,id,plane=9){
   if(kind==='equipment'&&!equipmentPlane(m,plane))throw Error('裝備庫別只接受背包、裝備庫或這份存檔的武庫。');
   if(!Number.isSafeInteger(id)||id<1||id>=m.original.size[0])throw Error('無效的資料編號。');
@@ -234,6 +285,14 @@
   try{transaction(m,()=>put(m,info.coordinate,value,`${info.name}・${kind==='training'?'操練上限':'等級'}`),`${advanced?'進階・':''}${info.name}調整`);}finally{m.currentGroup=previous;}
   return {...info,value};
  }
+ /**
+  * 重讀資格後，只寫物品 y6 等級；不扣魂魄、不模擬原生升級或修改其他 metadata。
+  * @param {SaveModel} m
+  * @param {EquipmentLevelRequest} options 普通裝備可依獨立旗標超限，套裝／寶物維持原版範圍。
+  * @returns {EditingInfo & {value:number}} current 為操作前值，value 為目標；合法同值不新增歷史。
+  * @throws {Error} 模式／旗標／值域／公式不符，或本輪已改詞條後再設超限等級。
+  * 與同物品詞條及品質共用 editing:equipment:plane:itemId 的累計還原；undo 仍只退前一交易。
+  */
  const setEquipmentLevel=(m,{itemId,level,advanced=false,plane=9})=>setEditingValue(m,'equipment',itemId,level,advanced,plane);
  const setProfessionTrainingCap=(m,{professionId,cap,advanced=false})=>setEditingValue(m,'training',professionId,cap,advanced);
  const setAdvancedTechnologyLevel=(m,{technologyId,level,advanced=false})=>setEditingValue(m,'technology',technologyId,level,advanced);

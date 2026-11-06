@@ -2,6 +2,37 @@
 
 [維護索引](../maintenance.md)；只讀本次任務相關章節。版本與日期標示的實測紀錄只證明當時範圍，現行開放狀態以 catalog／verification 為準（輕量群組見 `knowledge/verification.json` 的 `lightweight`）。
 
+## 裝備介面契約
+
+2026-11-05 在 `src/core/equipment-levels.js`／`equipment-affixes.js` 的實作旁補上 18 個公開方法、24 個具名型別的 JSDoc。用[即時導覽](core.md#公開介面契約)查契約及原檔位置；下方各版章節保留公式、寫入範圍與歷史證據。
+
+| 操作群組 | 介面入口 |
+| --- | --- |
+| 等級及資格 | `editingInfo`、`setEquipmentLevel`、唯讀的 `setEquipmentLevelInfo`／`treasureLevelInfo` |
+| 原版詞條係數 | `affixInfo`／`setEquipmentAffixCoefficient` |
+| 超限係數 | `affixAdvancedInfo`／`previewEquipmentAffixCoefficientAdvanced`／`setEquipmentAffixCoefficientAdvanced` |
+| 精準洗練 | `equipmentAffixReplacementInfo`／`previewEquipmentAffixReplacement`／`setEquipmentAffix` |
+| 第六槽 | `sixthAffixInfo`／`previewEquipmentSixthAffix`／`setEquipmentSixthAffix` |
+| 普通品質 | `equipmentQualityInfo`／`previewEquipmentQualityChange`／`setEquipmentQuality` |
+
+```sh
+npm run inspect:editor -- --symbol setEquipmentQuality
+npm run --silent inspect:editor -- --symbol EquipmentQualityRequest --json
+npm run inspect:editor -- --symbol EquipmentSixthAffixInfo
+```
+
+維護時先核對這些容易混淆的介面差異：
+
+- `itemId` 是目前列號，y0 是原生搬移保留的來源列。plane 預設 9，接受 7／9／22；武庫需該層，寫入另需旗標。備用套裝仍指定 plane=9，由核心核對引用。`affixInfo`／`affixAdvancedInfo` 接位置參數，其餘上述詞條／品質入口接 options。
+- `EditingInfo.current` 是操作前值，set 的新目標在 value。`AffixCoefficientInfo.current`／coordinate 改指係數；一般入口 normalMax 仍是等級上限，進階入口才覆寫成係數一般上限。advancedVerified 仍來自等級資訊，詞條超限資格看 verified。
+- `EquipmentSixthAffixInfo.current` 是 y20 係數，繼承 coordinate 卻仍指等級 y6。這是既有回傳形狀；第六槽必須走自己的 preview／set，以 changes 的 y14／y20 寫入，保留 y33。
+- 這組 info／preview 的無效來源通常直接拋錯，不統一回傳 eligible／reasons／canApply。旗標關閉時仍可預覽；品質的 allowed 是結構限制，方向資格看 targets[].verified，繼承的 verified 是等級旗標。目前品質目標固定 verified=true，只表示該次同品計算。
+- 上述詞條／普通品質預覽沒有技藝上限的私有授權身分。set 每次讀目前模型重算，不採用呼叫端提供的 preview／changes／verified；同值仍經相應檢查，合法無變更不新增歷史。首次純鎖槽是實際變更，effectUnchanged 不能代替 unchanged。
+- 超限係數的效果計算失敗會回傳 effect=null／effectError，合格係數仍可寫入；這是現行契約，不把效果診斷當作新增寫入條件。品質及精準洗練的效果計算失敗則會拋錯。
+- 品質升級須完整指定每個新增尾槽；降級由 set 檢查明示的布林 confirmRemovedAffixes。詞條、品質及等級共用 `editing:equipment:plane:itemId` 累計還原；undo 只回前一交易，不替其他庫別還原。
+
+本輪只有註記與合成契約測試，核心 AST、全部 family 切片及公開介面保持原樣。型別供導覽，寫入仍以原有檢查、旗標及交易為準；沒有新增遊戲功能或重寫歷史證明。
+
 ## 第二批研究入口
 
 裝備品質、詞條與丹藥資質增量的來源、候選範圍、限制及隔離遊戲驗證矩陣集中於[第二批研究](../research/advanced-editing-batch2.md)，工作狀態見[提案與任務](../../sdd/advanced-editing-batch2/tasks.md)。v2.2 已開放通過獨立隔離實測的既有詞條係數及丹藥增量；v2.2 的品質、詞條 ID 與超限維持唯讀；v2.3 的詞條替換另依獨立證明開放，不沿用 v2.1 裝備等級的證明或進階值域。所用新資料表須先納入來源覆蓋，品質／詞條的整件裝備交易與復原也須另驗證。

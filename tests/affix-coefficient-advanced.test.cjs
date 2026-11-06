@@ -83,6 +83,18 @@ test('preview reports the linear item effect for the slot attribute',()=>{
  assert.equal(C.setEquipmentAffixCoefficientAdvanced(m,{itemId:1,slot:1,coefficient:20}).unchanged,true);assert.equal(m.history.length,0);
 });
 
+test('effect diagnostics stay separate from coefficient write eligibility and undo',()=>{
+ const {C,m,text,affix}=setup();
+ delete C.KNOWLEDGE.affixReplacement.attributes[affix];
+ const options={itemId:1,slot:1,coefficient:81},preview=C.previewEquipmentAffixCoefficientAdvanced(m,options);
+ assert.equal(preview.verified,true);assert.equal(preview.effect,null);assert.match(preview.effectError,/公式/);
+ assert.equal(C.serialize(m),text);
+ const applied=C.setEquipmentAffixCoefficientAdvanced(m,options);
+ assert.equal(coef(C,m),81);assert.equal(applied.current,20);assert.equal(applied.value,81);
+ assert.equal(applied.effect,null);assert.equal(applied.effectError,preview.effectError);
+ C.undo(m);assert.equal(C.serialize(m),text);
+});
+
 test('the shipped flag has a lightweight smoke record and stays out of the composite migration proof',()=>{
  const k=require('../knowledge/catalog.json'),proof=require('../knowledge/verification.json'),P=require('../scripts/migration-proof.cjs');
  assert.equal(k.verification.equipmentAffixCoefficientAdvanced,true);assert.equal(proof.groups.equipmentAffixCoefficientAdvanced,true);

@@ -79,3 +79,26 @@ test('private aptitude module exposes its source and host contracts through the 
     assert.ok(result.contractTypes.some(type => type.name === name), name);
   }
 });
+
+test('equipment contracts expose positional/options requests and distinct preview shapes', () => {
+  const index = buildInspection();
+  const methods = ['setEquipmentLevelInfo','treasureLevelInfo','editingInfo','setEquipmentLevel',
+    'affixInfo','setEquipmentAffixCoefficient','affixAdvancedInfo','previewEquipmentAffixCoefficientAdvanced','setEquipmentAffixCoefficientAdvanced',
+    'sixthAffixInfo','previewEquipmentSixthAffix','setEquipmentSixthAffix',
+    'equipmentAffixReplacementInfo','previewEquipmentAffixReplacement','setEquipmentAffix',
+    'equipmentQualityInfo','previewEquipmentQualityChange','setEquipmentQuality'];
+  for (const symbol of methods) {
+    const result = queryInspection(index, {symbol});
+    assert.ok(result.definitions[0].publicExports.includes(symbol), symbol);
+    assert.match(result.definitions[0].contract.text, /@param \{SaveModel\}/, symbol);
+    assert.match(result.definitions[0].contract.text, /@returns/, symbol);
+    assert.ok(result.contractTypes.some(type => type.name === 'EquipmentPlane'), symbol);
+  }
+  const result = queryInspection(index, {symbol: 'setEquipmentQuality'});
+  for (const name of ['EquipmentQualityRequest','EquipmentQualityPreview','EquipmentAddedAffix','EquipmentTokenChange']) {
+    assert.ok(result.contractTypes.some(type => type.name === name), name);
+  }
+  assert.match(queryInspection(index, {symbol: 'EquipmentSixthAffixInfo'}).contractTypes[0].text, /coordinate 仍指等級/);
+  assert.match(queryInspection(index, {symbol: 'AffixCoefficientPreview'}).contractTypes[0].text, /診斷不阻擋/);
+  assert.deepEqual(index.diagnostics, []);
+});

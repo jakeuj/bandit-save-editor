@@ -8,3 +8,17 @@ test('quality blocks removed selected slots, cap overflow, abnormal main rolls a
 test('quality rollback and cross-operation undo/restore are atomic and plane-specific',()=>{const s=setup(),o=options(s,4);assert.throws(()=>s.C.transaction(s.m,()=>{s.C.setEquipmentQuality(s.m,o);throw Error('fail after writes');}));assert.equal(s.C.serialize(s.m),s.text);assert.equal(s.m.history.length,0);s.C.setEquipmentQuality(s.m,o);s.C.setEquipmentLevel(s.m,{itemId:1,plane:7,level:20});s.C.undo(s.m);assert.equal(s.C.get(s.m,{x:1,y:6,z:7}),3);assert.equal(s.C.get(s.m,{x:1,y:5,z:7}),4);s.C.setEquipmentLevel(s.m,{itemId:1,plane:9,level:10});s.C.restore(s.m,{x:1,y:8,z:7});assert.equal(s.C.get(s.m,{x:1,y:5,z:7}),3);assert.equal(s.C.get(s.m,{x:1,y:6,z:9}),10);s.C.restore(s.m,{x:1,y:6,z:9});assert.equal(s.C.serialize(s.m),s.text);});
 test('quality gates are independent, invalid values rejected and same-value operation is no-op',()=>{for(const plane of [7,9])for(const target of [2,4]){const s=setup(3,plane),o=options(s,target),p=s.C.previewEquipmentQualityChange(s.m,o);s.C.KNOWLEDGE.verification[p.group]=false;assert.throws(()=>s.C.setEquipmentQuality(s.m,o),/獨立遊戲驗證/);assert.equal(s.m.changes.size,0);}const s=setup();s.C.setEquipmentQuality(s.m,options(s,3));assert.equal(s.m.history.length,0);for(const quality of [0,7,NaN,Infinity,2.5,'3'])assert.throws(()=>s.C.setEquipmentQuality(s.m,{itemId:1,quality}));for(const plane of [0,8,'7',null])assert.throws(()=>s.C.equipmentQualityInfo(s.m,{itemId:1,plane}));assert.throws(()=>s.C.setEquipmentQuality(s.m,{...options(s,4),advanced:true}));for(const y of [5,8,9,15,28])for(const method of ['set','setField'])assert.throws(()=>s.C[method](s.m,{x:1,y,z:7},1));});
 test('quality full preview uses native Q attack term, template factors and units',()=>{const s=setup(1),p=s.C.previewEquipmentQualityChange(s.m,options(s,2));const attack=p.effects.find(e=>e.attributeId===4);assert.ok(attack.after>attack.before);assert.equal(attack.unit,'');assert.equal(p.effects.find(e=>e.attributeId===12).unit,'%');assert.equal(p.mainCoefficient.after-p.mainCoefficient.before,30);});
+
+test('quality rechecks current flags and recomputes changes instead of trusting caller preview fields',()=>{
+ const s=setup(),o=options(s,2),p=s.C.previewEquipmentQualityChange(s.m,o);
+ p.verified=true;for(const change of p.changes)change.after=999;
+ const request={...o,preview:p,changes:p.changes,verified:true};
+ s.C.KNOWLEDGE.verification[p.group]=false;
+ assert.throws(()=>s.C.setEquipmentQuality(s.m,request),/獨立遊戲驗證/);
+ assert.equal(s.C.serialize(s.m),s.text);
+ s.C.KNOWLEDGE.verification[p.group]=true;
+ const applied=s.C.setEquipmentQuality(s.m,request);
+ assert.equal(s.C.get(s.m,{x:1,y:5,z:7}),2);assert.equal(s.C.get(s.m,{x:1,y:8,z:7}),125);
+ assert.ok(applied.changes.every(change=>change.after!==999));
+ s.C.undo(s.m);assert.equal(s.C.serialize(s.m),s.text);
+});

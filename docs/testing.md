@@ -30,6 +30,8 @@ Linux CI另加`--with-deps`安裝系統函式庫。Playwright版本由package與
 
 `tests/editor-contracts.test.cjs` 驗證相鄰 JSDoc、巢狀／循環型別引用、型別查詢與試行介面契約的可定位性；技藝上限的同值消耗及請求身分由 `skill-caps-modes.test.cjs` 驗證。註記不取代既有行為測試；其執行語法不變時核對 AST／切片，內嵌產物更新後仍驗證離線與 PWA。
 
+裝備契約另覆蓋 18 個方法及其請求／預覽型別的可定位性；`affix-coefficient-advanced.test.cjs` 驗證 effectError 與係數寫入資格分開，`equipment-quality.test.cjs` 驗證 set 重查當下旗標及重算差異，不信任呼叫端預覽欄位。這些都是既有行為的代表案例，與原有完整數值、庫別、交易及精確 token 測試一併維護；介面差異見[裝備契約](maintenance/equipment.md#裝備介面契約)。
+
 `tests/character-aptitude-source.test.cjs` 只載入資質／結丹工廠，以小型合成模型與明示 host 替身驗證兩個私有唯讀操作：建立時不讀值、不綁定模型、動態旗標／知識、結丹與穿戴／備用套裝拒絕條件，成功及失敗都不能修改模型。它不代替公開 info／preview／set、精確 token、預覽失效、交易回滾與還原的既有測試；正式建置及瀏覽器仍使用完整組裝來源。`editor-contracts.test.cjs` 另檢查此工廠沒有隱含核心相依，host／回傳契約可由導覽入口找到。介面及重構比對方式見[私有介面](maintenance/core.md#資質與結丹的私有介面)。
 
 原生工具拆分的合成案例在 `tests/native-lifecycle.test.cjs`，涵蓋 host 隔離、分派順序與別名、結丹／服丹互斥、失敗停止、外部副本路徑、catalog 路徑及遞迴續跑指紋。既有 `version-migration`／`pill-ascended` 的動作斷言測試維持；`core-slice-roots` 的共用工具檢查延伸至新子目錄。這些測試只用合成 adapter，不啟動遊戲；維護入口見[原生生命週期工具](maintenance/native-lifecycle.md)。
