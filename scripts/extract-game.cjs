@@ -124,7 +124,8 @@ const reviewedVersions = {
   'a8b816ace9fa128dba89c1e3dcea43d5ed5fcb54855e894d8b1182f1931aaa0b': { version: 'V1.0.14.0', expressionOffset: 77, runtimes: ['9ced70d01f1a1b82da6952b21130401a017f3a2953b579ece1a97aedbb9cb097'] },
   '659df857761b611f113d7609715e4e73bef0e86e74ce202ab5b09f93d37ffae2': { version: 'V1.0.15.0', expressionOffset: 77, runtimes: ['efff92f5ad93a0e014f7afb841da59c422f31d3420872154555f8f21975232d2'] },
   'e7b9e60ebcc9d8557bf00542827bc04f8182002966761b883cb0408fe994d9cd': { version: 'V1.0.17.0', expressionOffset: 184, runtimes: ['b011af449b80e0d3568a9ee2114d45ccf2c13edb14295abf467ef7556178170e'] },
-  'd15e6bc454c82252f3e9cede23053073572f917c088f4448dd8f7e65eb0f2ec1': { version: 'V1.0.18.0', expressionOffset: 235, runtimes: ['ecea6489109bbc3feb96c17db2402429922e47ae255a9da97f259711666de72a'] }
+  'd15e6bc454c82252f3e9cede23053073572f917c088f4448dd8f7e65eb0f2ec1': { version: 'V1.0.18.0', expressionOffset: 235, runtimes: ['ecea6489109bbc3feb96c17db2402429922e47ae255a9da97f259711666de72a'] },
+  '2855f4edf230e16477a43eefc4d74ab1fe5c12bb9d9abd37c28083b20c83d8af': { version: 'V1.0.19.0', expressionOffset: 282, runtimes: ['6a404251636c01dbc4099722c14ecf73256ccdff7e12b402252f7b616630c9fa'] }
 };
 
 function createCatalog(game, reviewed = reviewedVersions[game.fingerprints['data.json']]) {
@@ -185,8 +186,9 @@ function createCatalog(game, reviewed = reviewedVersions[game.fingerprints['data
   // Name conversion only; evidence identifiers and source paths remain unchanged.
   const glossaryFile = path.join(__dirname, '../knowledge/traditional-names.json');
   const glossary = fs.existsSync(glossaryFile) ? JSON.parse(fs.readFileSync(glossaryFile, 'utf8')) : {};
-  const words = [...new Set(Object.values(catalogs).flat().flatMap(r => [r.name, String(r.category || '')]))].filter(Boolean).sort();
-  if (process.platform === 'darwin') {
+  // Only names missing from the reviewed glossary are converted, so hand-checked entries (and other platforms' runs) stay put.
+  const words = [...new Set(Object.values(catalogs).flat().flatMap(r => [r.name, String(r.category || '')]))].filter(w => w && !(w in glossary)).sort();
+  if (process.platform === 'darwin' && words.length) {
     const result = spawnSync('/usr/bin/swift', [path.join(__dirname, 'to-traditional.swift')], { input: words.join('\n'), encoding: 'utf8', maxBuffer: 1024 * 1024 });
     if (result.status !== 0) throw Error('繁體名稱轉換失敗：' + result.stderr);
     const converted = result.stdout.trimEnd().split('\n');

@@ -212,6 +212,9 @@ function check(){
  const exprChanged=[];for(let i=0;i<Math.min(o.expressions.length,g.expressions.length);i++)if(body(o,i)!==body(g,i))exprChanged.push(i);
  report.expressions={used,delta,count:[o.expressions.length,g.expressions.length],changedIndices:exprChanged.length};
  const expressionOffset=(oldReviewed.expressionOffset||0)+(delta||0);
+ // The flag comparison shifts the current catalog, which may be newer than --previous (no source of the current version here).
+ const knowledgeReviewed=reviewedVersions[proof.eventFingerprint]||oldReviewed,knowledgeDelta=delta===null?null:expressionOffset-(knowledgeReviewed.expressionOffset||0);
+ report.expressions.knowledgeDelta=knowledgeDelta;
  // Mac launcher path patch sites.
  if(pkg&&g.fingerprints['scripts/c3runtime.js']!==o.fingerprints['scripts/c3runtime.js']){
   try{report.mac=macReview(pkg);const counts=Object.values(report.mac.path_replacements);
@@ -223,8 +226,8 @@ function check(){
  report.register={dataFingerprint:g.fingerprints['data.json'],entry,reused:!!reviewedVersions[g.fingerprints['data.json']]};
  try{
   const {catalog:candidate}=createCatalog(g,reviewedVersions[g.fingerprints['data.json']]||entry);
-  report.closedFlags=carryFlags(catalog,candidate,delta||0);
-  const before=comparable(catalog,candidate,delta||0);
+  report.closedFlags=carryFlags(catalog,candidate,knowledgeDelta||0);
+  const before=comparable(catalog,candidate,knowledgeDelta||0);
   for(const k of new Set([...Object.keys(before),...Object.keys(candidate)]))if(!['gameVersion','fingerprints','verification','counts','functions','evidence','planes'].includes(k)&&JSON.stringify(before[k])!==JSON.stringify(candidate[k]))report.catalogChanges.push(k);
   for(const k of report.catalogChanges){const d=jsonDiff(before[k],candidate[k],k,[]);report.tableChanges[k]={count:d.count||0,sample:[...d]};}
   fs.mkdirSync(path.join(dir,'candidate'),{recursive:true});writeJson(path.join(dir,'candidate/catalog.json'),candidate);
@@ -269,7 +272,7 @@ function apply(){
  delete require.cache[require.resolve('./extract-game.cjs')];
  const {inspectGame,createCatalog}=require('./extract-game.cjs'),g=inspectGame(report.source);
  const {glossary,catalog}=createCatalog(g);
- carryFlags(old,catalog,report.expressions.delta||0);
+ carryFlags(old,catalog,report.expressions.knowledgeDelta??report.expressions.delta??0);
  writeJson(knowledgeFile,catalog);writeJson(path.join(root,'knowledge/traditional-names.json'),glossary);
  const note=`${report.to} 靜態核對沿用（寫入點、已審核事件與引用公式未變${report.catalogChanges.length?'；資料變動：'+report.catalogChanges.join('、'):''}）`;
  for(const [name,record]of Object.entries(proof.lightweight||{}))if(catalog.verification[name]!==false){record.gameVersion=report.to;record.gameUpdate=note;}

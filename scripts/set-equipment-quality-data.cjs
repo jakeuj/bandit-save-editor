@@ -22,19 +22,20 @@ const reviewedDigests={
  Q6:'2b5c23a09bed9815cc76f542347911263bcaadf1eb3a3a6aa4be7d8c86bb44c9',
  Q7:'5f1719fe9bacb71e4949bf4e15ce8629c0336cade95625917579f4676a007ac4',
  Q8:'0b8da6797b006ae0ff853ec6f61e4e31ee2d7bb66c46e4559a5997d2acdd31b6',
- Q9:'3e5dfeef8a80b0ff887d8ea30660a5ce71d7c65a3da6b8ce4f15362230ccf980',
- Q10:'1cba060063a3fc8dfa681bec213a5798e5ab6eceff9103777feeda354a42ef16'
+ Q9:'85a325fc0558fc8c54f047fae205a76f3bd990ffd79e38d67fe1214b20ee7034',
+ Q10:'5d9c6ee6666d2e188731470829e2f6cc52f9ee73e7973b2e73542517fb7713ae'
 };
 // V1.0.12.2 digests of the same reviewed events (Q8/Q9 SIDs were rebuilt in V1.0.13.0, so they have none). V1.0.13.0 differs
 // only by object/bound-reference renumbering and the 库序号 argument (7 or the new armory 22) of the equip/unequip/storage moves.
 // V1.0.13.0–V1.0.15.0 Q9/Q10 digests: V1.0.17.0 differs only by object and expression renumbering.
+// V1.0.18.0 Q9 and V1.0.17.0–V1.0.18.0 Q10 digests: V1.0.19.0 differs only by object and expression renumbering.
 const previousDigests={
  Q8:'02a08ac78766217c08f69f6712299c2de9ea1b1a5c79eaa08c486fd94bfa7c6b',
- Q9:['cff27728febe1c540fe9d16c1e619279dc70ec7e632ddec1e4963892b23fc9e2','872d9291071cb459fdc74bf17b1d5b5b6914d9a6db90de8513fe6e373d88fe40'],
+ Q9:['cff27728febe1c540fe9d16c1e619279dc70ec7e632ddec1e4963892b23fc9e2','872d9291071cb459fdc74bf17b1d5b5b6914d9a6db90de8513fe6e373d88fe40','3e5dfeef8a80b0ff887d8ea30660a5ce71d7c65a3da6b8ce4f15362230ccf980'],
  Q2:'8e5e3e17aa815b0967bf9045f7a3f88d7e24ed4c270aa1cb6c282e0220607c57',
  Q3:'746f9a73dfd09c9891c433506951e153be8469bd59a2da75e6efa76277eceb12',
  Q4:'2d4529ff52d269bfaf8ab1f2795b7e0993399059fce5832e670fc4b2d381fa0e',
- Q10:['0dff003d8f73542180ec3777c4d1cf09ee09b83a5182a7f8d44032cd745ae1f6','0b4ec7c994ff1624b9a700bb5e3e3282c25a392c9224e43bd6890a4d16e8d4bb']
+ Q10:['0dff003d8f73542180ec3777c4d1cf09ee09b83a5182a7f8d44032cd745ae1f6','0b4ec7c994ff1624b9a700bb5e3e3282c25a392c9224e43bd6890a4d16e8d4bb','1cba060063a3fc8dfa681bec213a5798e5ab6eceff9103777feeda354a42ef16']
 };
 const groups=['backpackSetEquipmentQualityUpgrade','backpackSetEquipmentQualityDowngrade','setEquipmentQualityUpgrade','setEquipmentQualityDowngrade'];
 // Flag registration is deferred to A10; until then these keys must be absent or false. Ordinary-equipment quality flags are separate.

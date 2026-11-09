@@ -2,6 +2,15 @@
 
 調查日期：2026-10-20（Asia/Taipei）。證據來自本機檔案檢查、第一方文件、CrossOver 重現、macOS ARM64 實際啟動，以及使用者提供的遊戲畫面。遊戲測試與路徑修正均使用隔離副本；未修改 Steam 原始遊戲與原始存檔。
 
+## V1.0.19.0 Mac 驗證（2026-11-09）
+
+同一台 Apple M4 Max、CrossOver 正式分支 V1.0.19.0（Steam build 26474437）。`prepare-macos.py --review-script` 對新 `c3runtime.js` 的 4 種修正字串命中 1／1／4／4，由 `game-update.cjs apply --reviewed` 登錄進 `SCRIPT_SHA256`。`game-update.cjs smoke` 以隱藏隔離副本冒煙：V1.0.17.0 遊戲寫出的 24 層存檔雲存檔載入、原版存檔、新 PID 讀回，遊戲寫出 25 層存檔，修改器重讀逐字元往返；結束後沒有殘留程序。這是 25 層存檔第一次在 Mac 實際存讀（V1.0.18.0 在 Mac 只有靜態核對）。第一次嘗試時只開了 CrossOver 裡的 Windows Steam，`SteamAPI_Init` 找不到 Steam 而斷言失敗；開啟 Mac 版 Steam 後通過，與下方 Steam 列的觀察一致。
+
+```text
+V1.0.19.0 scripts/c3runtime.js  原始 6a404251636c01dbc4099722c14ecf73256ccdff7e12b402252f7b616630c9fa
+                                修正 db9d9c3636a95d1eb9b0a259b3ebba1f68ad298d68bced58f2ddc7386b4d649a
+```
+
 ## V1.0.18.0 靜態核對（2026-11-04）
 
 Steam 正式公告 V1.0.18.2 對應遊戲內 V1.0.18.0、build 26421337。Windows 對新版 c3runtime 指紋 `ecea6489109bbc3feb96c17db2402429922e47ae255a9da97f259711666de72a` 核對 appFolder、nwjsAppFolder、savedir 與 backup 修正位置，命中數為 1/1/4/4，已登錄準備工具。本版僅有 Windows 隔離存讀／新 PID 冒煙，尚未做 Mac 實機啟動、存讀或重啟；先前 V1.0.17.0 的 Mac 成功不延伸到本版。見[修改器版更紀錄](../releases.md#v244-遊戲-v10180)。

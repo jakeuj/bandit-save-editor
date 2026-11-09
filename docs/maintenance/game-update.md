@@ -64,4 +64,8 @@ Steam 正式分支只留最新版，換機器後舊版來源可能已拿不到�
 - 新版從 `开始界面` 載入較慢，`--probe` 剛載入時讀到的是開始畫面的值；以 `--assert` 的通過為準（v2.28）。
 - 背景指令的寫法陷阱見[原生教訓的 Shell 與寫檔](native-lessons.md#shell-與寫檔)。
 - **原生函式多了參數**：新版在 `穿戴装备` 等函式末尾加參數時，驗證工具的舊呼叫少傳會變 0，函式靜默不動作。改版時先用 `v[1][2]` 比兩版參數清單，再補工具的呼叫（V1.0.13.0 的庫序號，見[原生教訓](native-lessons.md#冒煙工具)）。
+- **先 fetch 再版更**：上一版可能在另一台機器處理並推送了。`check` 前先 `git fetch` 並確認 main 跟上 origin；2026-11-09 本機停在 V1.0.17.0，從 17 重做了一遍 V1.0.18.0 的核對，推送被拒才發現，最後改以遠端 V1.0.18.0 為基準重做。
+- **上一版在別台處理（沒有它的來源）**：`check --previous 更舊版來源`。函式、寫入點與資料表照常對目前 catalog 比；已審核事件拿較舊來源比，再扣掉上一版 `gameUpdate.staticReview` 已審核的部分。旗標比較用相對目前知識的位移（report 的 `expressions.knowledgeDelta`，`apply` 也用它），否則會依 `--previous` 的位移誤關裝備旗標（V1.0.19.0：98 對 47）。冒煙用 `smoke --save-file` 指本機最近一份遊戲寫出的存檔（V1.0.19.0 用 V1.0.17.0 寫出的 24 層存檔）。
+- **繁體對照**：Mac 的 `extract-game` 只轉換 `traditional-names.json` 缺少的名稱；在 Windows 補的對照（例如「彌漫」）不會被 Swift 轉換改掉（2026-11-09 前會）。
+- **Mac 冒煙要 Mac 版 Steam**：`smoke` 的斷言要求 Greenworks 初始化成功；只開 CrossOver 裡的 Windows Steam 時 log 會出現 `SteamAPI_IsSteamRunning() did not locate a running instance of Steam`，在「存檔核對」失敗。請使用者開 `/Applications/Steam.app`；使用者正在 CrossOver 玩遊戲時不要自己啟動同帳號的 Mac Steam（V1.0.19.0）。
 - **存檔層數會變**：新版可能在主場景開始時 `SetSize` 擴層（V1.0.13.0 由 22 變 23）。core 的深度檢查只要求下限，新層要在 `extract-game.cjs` 的 `planeNames` 登錄，並讓 `resolveField` 比照相近的層唯讀，否則它歸「未知層」，自訂座標寫得進去。

@@ -6,6 +6,8 @@
 
 ## 冒煙工具
 
+- **Mac 冒煙的 Steam**：Greenworks 只認 Mac 版 Steam；CrossOver 的 Windows Steam 開著也會「Steam is not running」，`--assert` 因 `steam-init.json` 未初始化而失敗（2026-11-09）。
+
 - **存取／排序末尾計數參數**：V1.0.18.0 的裝備庫存入／取出由 ArrForEach 改 Repeat(width−1) 掃空槽，呼叫需在庫序號後補遍歷次數 `0`；裝備排序、倉庫排序同樣補 `0`。三份 Windows 冒煙已確認四方向庫別移動、穿卸與存讀。內丹精煉改為固定 `80+30Q`，工具以精確最大值斷言，不再只驗落在區間。
 
 - **重讀遊戲真正寫出的檔案**：`verify-game --save` 使用手動存檔槽 1，`--assert` 核對隔離副本的 `save/ea1save.dat`。`savedir/ea1save.dat` 是輸入雲存快取，可能仍保留升級前等級；收尾用與 `--assert` 相同的手動存檔路徑交給修改器重讀（2026-11-03）。

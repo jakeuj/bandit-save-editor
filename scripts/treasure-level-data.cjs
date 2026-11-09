@@ -8,9 +8,10 @@ const legacyStorageSids={639417854082032:204416519787196,745461878410324:5745115
 // V1.0.14.0 only lowered the 升级装备魂魄 growth from 1.05 to 1.04 (both the treasure and the inner-pill branch).
 // V1.0.17.0 differs only by object and expression renumbering.
 // V1.0.18.0 rebuilt storage scans; record width, level/cost rules and owner pointers are unchanged.
-const reviewedDigest='0ff9daf6264072649f55d1ab10ef73a6459df9521ad3f04ff68cd44bab89b98c';
+// V1.0.19.0 differs only by object and expression renumbering (no V1.0.18.0 source here: compared V1.0.17.0→V1.0.19.0 normalized).
+const reviewedDigest='3c0c6c276fef62c8fef4fe166aeaa7f37d892b0d73e579b44e75fa7fe03c1e41';
 // Digests whose 升级装备魂魄 growth is 1.04 (V1.0.14.0 on); the older ones use 1.05.
-const growth104Digests=new Set(['5740a6289df43193f4e6656dbec0ee484b94bc69e0b133564ebd2d13e57c6f3e','1a33ab75054250b86dd66e1f26602e636aabaa5923e221bf586756dba86d7439',reviewedDigest]);
+const growth104Digests=new Set(['5740a6289df43193f4e6656dbec0ee484b94bc69e0b133564ebd2d13e57c6f3e','1a33ab75054250b86dd66e1f26602e636aabaa5923e221bf586756dba86d7439','0ff9daf6264072649f55d1ab10ef73a6459df9521ad3f04ff68cd44bab89b98c',reviewedDigest]);
 const reviewedDigests=new Set(['d538a7f4e8ca258d1b5583797806d9f9f125b9898f5e5be78fff3b5fbf6fdcd2','4db0a11781c417bef5206ab4156a7e7f56be6d88d6a615e60d4644aa1c9cabfe','be73fe031f97c1dd637f4faa0b49d8730c2f648e2f805ec6e532b565d68b8b66',...growth104Digests]);
 const groups=['backpackTreasureLevel','treasureLevel'];
 const hash=value=>crypto.createHash('sha256').update(JSON.stringify(value)).digest('hex');

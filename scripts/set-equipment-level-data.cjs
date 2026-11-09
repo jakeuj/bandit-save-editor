@@ -6,8 +6,9 @@ const sourceSids=[713681756866045,605413626718369,290240793057956,64832576118348
 // V1.0.13.0: equip/unequip/storage moves take a 库序号 argument (7 or the new armory 22); the reviewed rules are unchanged.
 // V1.0.17.0 differs only by object and expression renumbering.
 // V1.0.18.0 scans empty storage rows with Repeat instead of ArrForEach; y0–49 copies and equip pointers are unchanged.
-const reviewedDigest='484aa1b33379265725e0a8956ee06b69709e0eeda0dc79a97b63a17297c62ee6';
-const reviewedDigests=new Set(['74f9e5772b73edbdcac8bf4c9111b23bb5b9a42ec86198500ae24a27917be598','aef31814fe92f015076d8d25c1edb910f2b31cc34bdabc51f0e9285c8f5ab377','d40f4f3f4222f4df71fc1a13fe3d958b14b024379b804461fd0aa3a1858d12fc','2aa2909a35971f9fd2cbdad4deacfb5dc98dad4796f6385fa92f907ef50918d3',reviewedDigest]);
+// V1.0.19.0 differs only by object and expression renumbering (no V1.0.18.0 source here: compared V1.0.17.0→V1.0.19.0 normalized).
+const reviewedDigest='d6310b74a67caa60949b78815a6a093290301041e018996a14fc5465c080c872';
+const reviewedDigests=new Set(['74f9e5772b73edbdcac8bf4c9111b23bb5b9a42ec86198500ae24a27917be598','aef31814fe92f015076d8d25c1edb910f2b31cc34bdabc51f0e9285c8f5ab377','d40f4f3f4222f4df71fc1a13fe3d958b14b024379b804461fd0aa3a1858d12fc','484aa1b33379265725e0a8956ee06b69709e0eeda0dc79a97b63a17297c62ee6','2aa2909a35971f9fd2cbdad4deacfb5dc98dad4796f6385fa92f907ef50918d3',reviewedDigest]);
 const groups=['backpackSetEquipmentLevel','setEquipmentLevel'];
 const hash=value=>crypto.createHash('sha256').update(JSON.stringify(value)).digest('hex');
 function reviewedRules(digest,{wp,tz,sx},batch2,affix){
