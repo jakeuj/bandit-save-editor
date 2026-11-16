@@ -2,7 +2,7 @@
 
 《塔防山賊模擬器》的繁體中文存檔修改器。用瀏覽器讀取 `.dat`、修改並匯出副本，存檔全程在本機處理，不會上傳。
 
-**[開啟修改器](https://bandit.jakeuj.com/)** · [操作教學](https://github.com/jakeuj/bandit-save-editor/wiki/操作教學) · [常見問題](https://github.com/jakeuj/bandit-save-editor/wiki/常見問題) · [Wiki 首頁](https://github.com/jakeuj/bandit-save-editor/wiki)
+**[開啟修改器](https://jakeuj.com/bandit-save-editor/)** · [操作教學](https://github.com/jakeuj/bandit-save-editor/wiki/操作教學) · [常見問題](https://github.com/jakeuj/bandit-save-editor/wiki/常見問題) · [Wiki 首頁](https://github.com/jakeuj/bandit-save-editor/wiki)
 
 ## 快速開始
 
@@ -121,6 +121,6 @@ PWA 需以 localhost HTTP 或 HTTPS 提供完整目錄；`file://` 只使用單�
 
 ## 實驗性 macOS 啟動器
 
-另提供 [Mac 原生執行指南](https://bandit.jakeuj.com/mac.html)與準備工具，用於 macOS ARM64 原生執行研究。歷史測試曾確認啟動、Steam 雲存檔清單與 DLC 辨識，以及隔離副本的本機存讀與重啟；這些結果不代表新版遊戲已完成相同驗證，長時間遊玩、真實雲端上傳與成就仍待驗證。
+另提供 [Mac 原生執行指南](https://jakeuj.com/bandit-save-editor/mac.html)與準備工具，用於 macOS ARM64 原生執行研究。歷史測試曾確認啟動、Steam 雲存檔清單與 DLC 辨識，以及隔離副本的本機存讀與重啟；這些結果不代表新版遊戲已完成相同驗證，長時間遊玩、真實雲端上傳與成就仍待驗證。
 
 準備方式與存檔位置見[啟動器說明](launcher/README.md)，版本及實測範圍見 [Mac 執行研究](docs/research/macos-runtime-investigation.md)。

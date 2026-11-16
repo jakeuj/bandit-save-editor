@@ -5,10 +5,10 @@
 ## 正式網址與遷移
 
 - Repo：`jakeuj/bandit-save-editor`
-- 正式入口：`https://bandit.jakeuj.com/`
-- Mac 指南：`https://bandit.jakeuj.com/mac.html`
+- 正式入口：`https://jakeuj.com/bandit-save-editor/`
+- Mac 指南：`https://jakeuj.com/bandit-save-editor/mac.html`
 
-目前使用獨立網域根目錄。此專案曾使用 `https://blog.jakeuj.com/bandit-save-editor/`；遷移時 Pages 已改新網域，HTML 與 sitemap 卻仍指向舊站。每次發布先查實際設定與 repo 的網站連結，不由 repo 名稱推算 github.io，也不只靠舊文件判斷網域：
+2026-11-16 起不設 Pages 自訂網域，由使用者站網域 `jakeuj.com` 掛在 `/bandit-save-editor/`。舊網址 `bandit.jakeuj.com` 由 Cloudflare Worker `jakeuj-legacy-pwa` 301 過來，並在舊的 `/sw.js` 回傳會自我解除註冊的 service worker（設定見 jakeuj.github.io repo 的 `infra/cloudflare/`）。更早曾使用 `https://blog.jakeuj.com/bandit-save-editor/`。站內資產、manifest 與 service worker 都必須維持相對路徑與相對 scope，因為 jakeuj.com 與其他專案共用同一個 origin。每次發布先查實際設定與 repo 的網站連結：
 
 ```sh
 gh api repos/jakeuj/bandit-save-editor/pages --jq '{cname: .cname, html_url: .html_url, build_type: .build_type, https_enforced: .https_enforced}'
@@ -18,14 +18,14 @@ gh repo view jakeuj/bandit-save-editor --json homepageUrl
 網址變更時同步以下位置：
 
 - `index.html`、`mac.html` 的自我 canonical、`og:url`、`og:image` 與 `twitter:image`。搜尋與分享 metadata 放在初始 HTML 的有效 `<head>`，不依賴 JavaScript 補入。
-- `sitemap.xml` 的正式頁面 URL、根目錄 `robots.txt` 的絕對 `Sitemap:` URL；目前允許爬取，robots 的用途是提供 sitemap 探索入口。
+- `sitemap.xml` 的正式頁面 URL。子目錄的 `robots.txt` 無效，sitemap 由 jakeuj.com 根目錄的 robots.txt 提供（jakeuj.github.io repo 的 `portal/sites.json`）。
 - README 的公開入口，以及 GitHub repo 的 `homepageUrl`。研究筆記中的歷史驗證 URL 保留原本證據語境。
 - 分享圖片可編輯來源 `assets/social-card.svg` 內的顯示網域。站內資產維持相對路徑，分享圖使用絕對 HTTPS URL。
 
 在對話已授權更新專案網站連結時執行，並讀回確認：
 
 ```sh
-gh repo edit jakeuj/bandit-save-editor --homepage https://bandit.jakeuj.com/
+gh repo edit jakeuj/bandit-save-editor --homepage https://jakeuj.com/bandit-save-editor/
 gh repo view jakeuj/bandit-save-editor --json homepageUrl
 ```
 
