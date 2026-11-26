@@ -125,7 +125,8 @@ const reviewedVersions = {
   '659df857761b611f113d7609715e4e73bef0e86e74ce202ab5b09f93d37ffae2': { version: 'V1.0.15.0', expressionOffset: 77, runtimes: ['efff92f5ad93a0e014f7afb841da59c422f31d3420872154555f8f21975232d2'] },
   'e7b9e60ebcc9d8557bf00542827bc04f8182002966761b883cb0408fe994d9cd': { version: 'V1.0.17.0', expressionOffset: 184, runtimes: ['b011af449b80e0d3568a9ee2114d45ccf2c13edb14295abf467ef7556178170e'] },
   'd15e6bc454c82252f3e9cede23053073572f917c088f4448dd8f7e65eb0f2ec1': { version: 'V1.0.18.0', expressionOffset: 235, runtimes: ['ecea6489109bbc3feb96c17db2402429922e47ae255a9da97f259711666de72a'] },
-  '2855f4edf230e16477a43eefc4d74ab1fe5c12bb9d9abd37c28083b20c83d8af': { version: 'V1.0.19.0', expressionOffset: 282, runtimes: ['6a404251636c01dbc4099722c14ecf73256ccdff7e12b402252f7b616630c9fa'] }
+  '2855f4edf230e16477a43eefc4d74ab1fe5c12bb9d9abd37c28083b20c83d8af': { version: 'V1.0.19.0', expressionOffset: 282, runtimes: ['6a404251636c01dbc4099722c14ecf73256ccdff7e12b402252f7b616630c9fa'] },
+  'd1ed3e200fcf2191a0c9ae17506469615701797ac54711f3b77a5412e071a3ff': { version: 'V1.1.9.0', expressionOffset: 572, campaignSave: true, runtimes: ['53acf76284cab9f17f3ec931dac9f941e040a62fb6529c81e34172876e65b1e2'] }
 };
 
 function createCatalog(game, reviewed = reviewedVersions[game.fingerprints['data.json']]) {
@@ -182,7 +183,7 @@ function createCatalog(game, reviewed = reviewedVersions[game.fingerprints['data
   const setEquipmentQuality=require('./set-equipment-quality-data.cjs').extract(game,eventDigest,batch2Data,setEquipmentLevel);
   // Reviewed equipment formula factories moved together in V1.0.11.2; keep source references on this build.
   if(reviewed.expressionOffset)for(const rules of [affixReplacement,equipmentQuality])for(const attribute of Object.values(rules.attributes))attribute.expression+=reviewed.expressionOffset;
-  const equipmentWorkflowLimits={version:1,planes:[7,9],backpack:{minTier:1,maxTier:9,minQuality:1,maxQuality:6,quantity:1,owner:0,advanced:false},newItemMarkers:[0,1],unknownStateColumns:[25,26,27],firstSelection:'all-flags-zero-explicit-atomic',identity:'plane-and-current-row',sourceSids:[166680919655131,666416688115651,644557287879738,196601779910507,775039415186059,564254928232839,204416519787196,574511591831477]};
+  const equipmentWorkflowLimits={version:1,planes:[7,9],backpack:{minTier:1,maxTier:9,minQuality:1,maxQuality:6,quantity:1,owner:0,advanced:false},newItemMarkers:[0,1],unknownStateColumns:[25,26,27],firstSelection:'all-flags-zero-explicit-atomic',identity:'plane-and-current-row',sourceSids:reviewed.campaignSave?[166680919655131,666416688115651,644557287879738,628013883644214,268888096105522,564254928232839,639417854082032,745461878410324]:[166680919655131,666416688115651,644557287879738,196601779910507,775039415186059,564254928232839,204416519787196,574511591831477]};
   // Name conversion only; evidence identifiers and source paths remain unchanged.
   const glossaryFile = path.join(__dirname, '../knowledge/traditional-names.json');
   const glossary = fs.existsSync(glossaryFile) ? JSON.parse(fs.readFileSync(glossaryFile, 'utf8')) : {};
@@ -197,7 +198,7 @@ function createCatalog(game, reviewed = reviewedVersions[game.fingerprints['data
   }
   for (const rows of Object.values(catalogs)) for (const r of rows) { r.name = glossary[r.name] || r.name; r.category = glossary[r.category] || r.category; }
   const writes = game.operations.filter(o => o.operation === 'SetXYZ');
-  const planes = planeNames.map((name, z) => {
+  const planes = (reviewed.campaignSave ? [...planeNames, '靈物庫'] : planeNames).map((name, z) => {
     const rows = writes.filter(o => o.params[2]?.constant === z);
     return { z, name, status: rows.length ? '程式證據' : '未辨識', writes: rows.length, reads:game.reads.filter(r=>r.z===z).length, sources: [...new Map(rows.map(o => [o.function, { function: o.function, sheet: o.sheet, sid: o.sid }])).values()], columns: [...new Set(rows.map(o => o.params[1]?.constant).filter(Number.isInteger))].sort((a, b) => a - b) };
   });

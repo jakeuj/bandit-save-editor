@@ -13,6 +13,7 @@
  const key=c=>`${c.x},${c.y},${c.z}`;
  const exists=(o,c)=>[c.x,c.y,c.z].every((n,i)=>Number.isInteger(n)&&n>=0&&n<o.size[i]);
  const cell=(o,c)=>o.data[c.x][c.y][c.z];
+ const hasCampaignSave=o=>o.size[1]>=61&&o.size[2]>=26;
  /**
   * 解析遊戲存檔並保留原始文字；欄位資格仍由各操作檢查。
   * @param {string} text 含 BOM 亦可；大小及三維資料結構須符合支援範圍。

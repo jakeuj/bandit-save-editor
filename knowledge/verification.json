@@ -1,20 +1,20 @@
 {
   "schemaVersion": 2,
-  "date": "2026-11-09",
-  "gameVersion": "V1.0.19.0",
-  "steamBuildId": "26474437",
-  "eventFingerprint": "2855f4edf230e16477a43eefc4d74ab1fe5c12bb9d9abd37c28083b20c83d8af",
-  "runtimeFingerprint": "6a404251636c01dbc4099722c14ecf73256ccdff7e12b402252f7b616630c9fa",
+  "date": "2026-11-26",
+  "gameVersion": "V1.1.9.0",
+  "steamBuildId": "26910122",
+  "eventFingerprint": "d1ed3e200fcf2191a0c9ae17506469615701797ac54711f3b77a5412e071a3ff",
+  "runtimeFingerprint": "53acf76284cab9f17f3ec931dac9f941e040a62fb6529c81e34172876e65b1e2",
   "fingerprints": {
-    "data.json": "2855f4edf230e16477a43eefc4d74ab1fe5c12bb9d9abd37c28083b20c83d8af",
-    "scripts/c3runtime.js": "6a404251636c01dbc4099722c14ecf73256ccdff7e12b402252f7b616630c9fa",
-    "cl.json": "7d0febe7bda7f3fa4c2806a2b601efdbc5a125cb697f32b8611576e6fa3a519a",
-    "js.json": "851dcb9722c23ec039f35e3e636100bfa39ed69ef1e1fe0edf8f8968fe9dd42f",
+    "data.json": "d1ed3e200fcf2191a0c9ae17506469615701797ac54711f3b77a5412e071a3ff",
+    "scripts/c3runtime.js": "53acf76284cab9f17f3ec931dac9f941e040a62fb6529c81e34172876e65b1e2",
+    "cl.json": "4d9b45177e35c141393823f07d510762516b7e5e2a1d80459cf3d2ffa29e7158",
+    "js.json": "69cdb7b5a3d4c26515bc59f8ac7e282acbbcabfc97c70c10b45aecd0373b8ac5",
     "zy.json": "24b707dc7161bff920f207aba3766e80b7655e45122c735248a7a4e6bef083ea",
     "sx.json": "fd8f85edd3483d23be3d81dc6e949ee41c3204ef560ab15f8e59ef4acb35c579",
-    "wp.json": "77b20b396b750fccb527a8d767fac00b0a3dc7eacc21067d1cbf3aa9c9c6d324",
+    "wp.json": "7198ae65bd2f4bdfbea1a4c37bcf415313cc405d2bb3a2fe11831f683dfcf07f",
     "kj.json": "98dca371d8e203503410e5197cd9d7d5332c727b999b1418f384fe1d52092ac8",
-    "jz.json": "6cb5868c159aa763318a19a05a0b321389e67c3ab9d37574aa045ea695594e8d",
+    "jz.json": "56b2ea2ad780d1a37fe025cb009317576206e3b359b99eb73c73c57f9eae7ca2",
     "rw.json": "705f541917d9a62cff9ef5805032fd29496fdc98b03a7f065ff3fc6fab937b4b",
     "tf.json": "6949a2cfe322fd856222ea21454b4a8e434bacb51accd8e96c65d35e86c49cfe",
     "ss.json": "4350cb979c4026ce0d8dc25e7807fde3d29a1d42fbd2e499673614a4f67e1bc7",
@@ -90,7 +90,7 @@
   "lightweight": {
     "randomCharacterBaseAptitudesAscended": {
       "date": "2026-10-24",
-      "gameVersion": "V1.0.19.0",
+      "gameVersion": "V1.1.9.0",
       "flow": "docs/maintenance/lightweight.md",
       "smoke": "沿用 v2.16 原生結丹備料存檔（verify-native-lifecycle.cjs ascend：角色 8 结丹 2 次、穿寶物）當基準；verify-game.cjs 編輯、雲存檔載入、原版存檔、新 PID 讀回，再以修改器重讀遊戲寫出的存檔",
       "baselineSaveSha256": "39a7c42075ccf4fc5d0c2842476a3235c26aa0422a7f100afd4ca716ef0a0ce1",
@@ -101,11 +101,11 @@
         "兩輪存讀一致；修改器重讀遊戲寫出的存檔，上限 15.92／11.94／11.14、總資質 5.75／4.6／4.2，倍率仍 3.98"
       ],
       "smokeGameVersion": "V1.0.11.2",
-      "gameUpdate": "V1.0.19.0 靜態核對沿用（寫入點、已審核事件與引用公式未變）"
+      "gameUpdate": "V1.1.9.0 依 gameUpdate.staticReview 逐項核對沿用"
     },
     "randomCharacterTalentsAscended": {
       "date": "2026-10-24",
-      "gameVersion": "V1.0.19.0",
+      "gameVersion": "V1.1.9.0",
       "flow": "docs/maintenance/lightweight.md",
       "smoke": "沿用 v2.16 原生結丹備料存檔（verify-native-lifecycle.cjs ascend：角色 8 结丹 2 次、穿寶物）當基準；verify-game.cjs 編輯、雲存檔載入、原版存檔、新 PID 讀回，再以修改器重讀遊戲寫出的存檔",
       "baselineSaveSha256": "39a7c42075ccf4fc5d0c2842476a3235c26aa0422a7f100afd4ca716ef0a0ce1",
@@ -116,11 +116,11 @@
         "兩輪存讀一致；天賦 ID、結丹紀錄與 z17 係數 0.8／1.68 不變"
       ],
       "smokeGameVersion": "V1.0.11.2",
-      "gameUpdate": "V1.0.19.0 靜態核對沿用（寫入點、已審核事件與引用公式未變）"
+      "gameUpdate": "V1.1.9.0 依 gameUpdate.staticReview 逐項核對沿用"
     },
     "randomCharacterSkillCapsAscended": {
       "date": "2026-10-24",
-      "gameVersion": "V1.0.19.0",
+      "gameVersion": "V1.1.9.0",
       "flow": "docs/maintenance/lightweight.md",
       "smoke": "沿用 v2.16 原生結丹備料存檔（角色 8 结丹 2 次）當基準；verify-game.cjs 以 setCharacterSkillCaps 編輯、雲存檔載入、原版存檔、新 PID 讀回，再以修改器重讀遊戲寫出的存檔",
       "baselineSaveSha256": "39a7c42075ccf4fc5d0c2842476a3235c26aa0422a7f100afd4ca716ef0a0ce1",
@@ -131,11 +131,11 @@
         "兩輪存讀 44 格一致：九上限／等級／餘額、基礎資質、品質、y50、天賦、z16 與 z17 係數 0.8／1.68；修改器重讀仍有共同生成見證"
       ],
       "smokeGameVersion": "V1.0.11.2",
-      "gameUpdate": "V1.0.19.0 靜態核對沿用（寫入點、已審核事件與引用公式未變）"
+      "gameUpdate": "V1.1.9.0 依 gameUpdate.staticReview 逐項核對沿用"
     },
     "pillAptitudeBonusAscended": {
       "date": "2026-10-24",
-      "gameVersion": "V1.0.19.0",
+      "gameVersion": "V1.1.9.0",
       "flow": "docs/maintenance/lightweight.md",
       "smoke": "verify-native-lifecycle.cjs ascend 先在隔離副本原生做出結丹角色（获得物品→穿戴→渡劫结束 兩次，另穿寶物），存讀後當基準；再 verify-game.cjs 編輯、雲存檔載入、原版存檔、新 PID 讀回，原生服藥與重生",
       "cases": [
@@ -149,11 +149,11 @@
       "resultSha256": "dc6b3e11e56c0200dcf766afe5b6108fb458720b228110e5f941792f2540a876",
       "passed": true,
       "smokeGameVersion": "V1.0.11.2",
-      "gameUpdate": "V1.0.19.0 靜態核對沿用（寫入點、已審核事件與引用公式未變）"
+      "gameUpdate": "V1.1.9.0 依 gameUpdate.staticReview 逐項核對沿用"
     },
     "pillAptitudeBonusDecimal": {
       "date": "2026-10-24",
-      "gameVersion": "V1.0.19.0",
+      "gameVersion": "V1.1.9.0",
       "flow": "docs/maintenance/lightweight.md",
       "smoke": "verify-game.cjs + verify-native-lifecycle.cjs（隔離副本、雲存檔載入、原版存檔、新 PID 讀回、原生服藥與重生）",
       "cases": [
@@ -165,11 +165,11 @@
       "resultSha256": "81ea17df5dcde1363a35be72262f6e8d2c2884085042b7b540668c0fc2d9a4fc",
       "passed": true,
       "smokeGameVersion": "V1.0.11.2",
-      "gameUpdate": "V1.0.19.0 靜態核對沿用（寫入點、已審核事件與引用公式未變）"
+      "gameUpdate": "V1.1.9.0 依 gameUpdate.staticReview 逐項核對沿用"
     },
     "backpackEquipmentLevelAdvanced": {
       "date": "2026-10-24",
-      "gameVersion": "V1.0.19.0",
+      "gameVersion": "V1.1.9.0",
       "flow": "docs/maintenance/lightweight.md",
       "smoke": "verify-game.cjs + verify-native-lifecycle.cjs backpackOverLimit（隔離副本、雲存檔載入、原版存檔、新 PID 讀回、原生搬移／升級／穿卸後再存檔與重啟）",
       "cases": [
@@ -183,11 +183,11 @@
       "resultSha256": "c529c3aa1e6b5b3b087818095629a0a67faad698d2adaf1e0f97df775e5e714d",
       "passed": true,
       "smokeGameVersion": "V1.0.11.2",
-      "gameUpdate": "V1.0.19.0 靜態核對沿用（寫入點、已審核事件與引用公式未變）"
+      "gameUpdate": "V1.1.9.0 依 gameUpdate.staticReview 逐項核對沿用"
     },
     "relicAttributes": {
       "date": "2026-10-24",
-      "gameVersion": "V1.0.19.0",
+      "gameVersion": "V1.1.9.0",
       "flow": "docs/maintenance/lightweight.md",
       "smoke": "verify-game.cjs + verify-native-lifecycle.cjs relics／relicTakeOff（隔離副本、雲存檔載入、原版存檔、新 PID 讀回、原生擺放／取下／再擺放，擺放狀態存讀重啟後再取下）",
       "cases": [
@@ -200,11 +200,11 @@
       "resultSha256": "37302c3e309666ad37227a3655c39aa7289b8ede14e03cda3ffbf821292e4e6a",
       "passed": true,
       "smokeGameVersion": "V1.0.11.2",
-      "gameUpdate": "V1.0.19.0 靜態核對沿用（寫入點、已審核事件與引用公式未變）"
+      "gameUpdate": "V1.1.9.0 依 gameUpdate.staticReview 逐項核對沿用"
     },
     "wallEnhancementLevel": {
       "date": "2026-10-24",
-      "gameVersion": "V1.0.19.0",
+      "gameVersion": "V1.1.9.0",
       "flow": "docs/maintenance/lightweight.md",
       "smoke": "verify-game.cjs 以 setWallEnhancementLevel 編輯（隔離副本、雲存檔載入、原版存檔、新 PID 讀回），再以 verify-native-lifecycle.cjs wall 原生升級與回血，第二輪原版存檔、新 PID 讀回，最後以修改器重讀遊戲寫出的存檔",
       "cases": [
@@ -216,11 +216,11 @@
       "resultSha256": "9b5ea21f6f161692f25e2508fe6deb00b97be3b526859c153030d58e75d7a895",
       "passed": true,
       "smokeGameVersion": "V1.0.11.2",
-      "gameUpdate": "V1.0.19.0 靜態核對沿用（寫入點、已審核事件與引用公式未變）"
+      "gameUpdate": "V1.1.9.0 依 gameUpdate.staticReview 逐項核對沿用"
     },
     "cityLayerLevel": {
       "date": "2026-10-24",
-      "gameVersion": "V1.0.19.0",
+      "gameVersion": "V1.1.9.0",
       "flow": "docs/maintenance/lightweight.md",
       "smoke": "verify-game.cjs 以 setCityLayer 編輯（隔離副本、雲存檔載入、原版存檔、新 PID 讀回），再以 verify-native-lifecycle.cjs city 比對原生 山寨总声望 重算並接續原生流程，第二輪原版存檔、新 PID 讀回，最後以修改器重讀遊戲寫出的存檔",
       "cases": [
@@ -232,11 +232,11 @@
       "resultSha256": "10aec9aae30dea515b4f66aaf647de555996ffd7736b91fbe9eb0de9820c0de1",
       "passed": true,
       "smokeGameVersion": "V1.0.11.2",
-      "gameUpdate": "V1.0.19.0 靜態核對沿用（寫入點、已審核事件與引用公式未變）"
+      "gameUpdate": "V1.1.9.0 依 gameUpdate.staticReview 逐項核對沿用"
     },
     "ascensionQuality": {
       "date": "2026-10-24",
-      "gameVersion": "V1.0.19.0",
+      "gameVersion": "V1.1.9.0",
       "flow": "docs/maintenance/lightweight.md",
       "smoke": "verify-game.cjs 以 setAscensionQuality 編輯（隔離副本、雲存檔載入、原版存檔、新 PID 讀回），再以 verify-native-lifecycle.cjs ascensionQuality 比對原生 角色资质上限倍率／角色资质上限，第二輪原版存檔、新 PID 讀回，最後以修改器重讀遊戲寫出的存檔",
       "cases": [
@@ -248,11 +248,11 @@
       "resultSha256": "e7187225de912028670111ae82476fc078805fed1283a19d39be3c1ea613c311",
       "passed": true,
       "smokeGameVersion": "V1.0.11.2",
-      "gameUpdate": "V1.0.19.0 靜態核對沿用（寫入點、已審核事件與引用公式未變）"
+      "gameUpdate": "V1.1.9.0 依 gameUpdate.staticReview 逐項核對沿用"
     },
     "backpackInnerPillLevel": {
       "date": "2026-10-24",
-      "gameVersion": "V1.0.19.0",
+      "gameVersion": "V1.1.9.0",
       "flow": "docs/maintenance/lightweight.md",
       "smoke": "verify-native-lifecycle.cjs innerPillPrepare 原生備料，verify-game.cjs 以 setInnerPillLevel 編輯兩庫（隔離副本、雲存檔載入、原版存檔、新 PID 讀回），再以 verify-native-lifecycle.cjs innerPillLevel 做原生核對與渡劫，第二輪原版存檔、新 PID 讀回，最後以修改器重讀遊戲寫出的存檔",
       "cases": [
@@ -266,11 +266,11 @@
       "resultSha256": "a606c552fc62d0c4e54e308554626c420b3c17712c3b0f87ed2803e593ae1e2f",
       "passed": true,
       "smokeGameVersion": "V1.0.11.2",
-      "gameUpdate": "V1.0.19.0 靜態核對沿用（寫入點、已審核事件與引用公式未變）"
+      "gameUpdate": "V1.1.9.0 依 gameUpdate.staticReview 逐項核對沿用"
     },
     "innerPillLevel": {
       "date": "2026-10-24",
-      "gameVersion": "V1.0.19.0",
+      "gameVersion": "V1.1.9.0",
       "flow": "docs/maintenance/lightweight.md",
       "smoke": "verify-native-lifecycle.cjs innerPillPrepare 原生備料，verify-game.cjs 以 setInnerPillLevel 編輯兩庫（隔離副本、雲存檔載入、原版存檔、新 PID 讀回），再以 verify-native-lifecycle.cjs innerPillLevel 做原生核對與渡劫，第二輪原版存檔、新 PID 讀回，最後以修改器重讀遊戲寫出的存檔",
       "cases": [
@@ -284,11 +284,11 @@
       "resultSha256": "a606c552fc62d0c4e54e308554626c420b3c17712c3b0f87ed2803e593ae1e2f",
       "passed": true,
       "smokeGameVersion": "V1.0.11.2",
-      "gameUpdate": "V1.0.19.0 靜態核對沿用（寫入點、已審核事件與引用公式未變）"
+      "gameUpdate": "V1.1.9.0 依 gameUpdate.staticReview 逐項核對沿用"
     },
     "ascendedInnerPillLevel": {
       "date": "2026-10-24",
-      "gameVersion": "V1.0.19.0",
+      "gameVersion": "V1.1.9.0",
       "flow": "docs/maintenance/lightweight.md",
       "smoke": "沿用 v2.22 冒煙第二輪遊戲寫出的存檔（角色 8 結丹 3 次）當基準，verify-game.cjs 以 setAscendedInnerPillLevel 編輯（隔離副本、雲存檔載入、原版存檔、新 PID 讀回），再以 verify-native-lifecycle.cjs ascendedInnerPillLevel 做原生核對，第二輪原版存檔、新 PID 讀回，最後以修改器重讀遊戲寫出的存檔",
       "cases": [
@@ -300,11 +300,11 @@
       "resultSha256": "73315a62f83c5409ac890ab8b6233ba657e5a319e9770a9aec0b2d1ab5e3ff42",
       "passed": true,
       "smokeGameVersion": "V1.0.11.2",
-      "gameUpdate": "V1.0.19.0 靜態核對沿用（寫入點、已審核事件與引用公式未變）"
+      "gameUpdate": "V1.1.9.0 依 gameUpdate.staticReview 逐項核對沿用"
     },
     "basicTechnologyLevel": {
       "date": "2026-10-24",
-      "gameVersion": "V1.0.19.0",
+      "gameVersion": "V1.1.9.0",
       "flow": "docs/maintenance/lightweight.md",
       "smoke": "沿用 v2.23 冒煙第二輪遊戲寫出的存檔（基礎科技 13、14、15、17、18、24–27 未掌握）當基準，verify-game.cjs 以 setBasicTechnology 編輯（隔離副本、雲存檔載入、原版存檔、新 PID 讀回），再以 verify-native-lifecycle.cjs basicTechnology 做原生核對，第二輪原版存檔、新 PID 讀回，最後以修改器重讀遊戲寫出的存檔",
       "cases": [
@@ -319,7 +319,7 @@
       "resultSha256": "431156dce5dc5ee15a0364f5cf689b50c5b8127c7b8f21c8623fe33f2ffcae75",
       "passed": true,
       "smokeGameVersion": "V1.0.11.2",
-      "gameUpdate": "V1.0.19.0 靜態核對沿用（寫入點、已審核事件與引用公式未變）",
+      "gameUpdate": "V1.1.9.0 依 gameUpdate.staticReview 逐項核對沿用",
       "extensions": [
         {
           "version": "v2.38",
@@ -336,7 +336,7 @@
     },
     "buildingLevel": {
       "date": "2026-10-24",
-      "gameVersion": "V1.0.19.0",
+      "gameVersion": "V1.1.9.0",
       "flow": "docs/maintenance/lightweight.md",
       "smoke": "沿用 v2.24 冒煙第二輪遊戲寫出的存檔（建築全為 0 級、進階科技多為 0）當基準，verify-game.cjs 先以既有進階模式把研究技術調到 179、城牆技術調到 59，再以 setBuildingLevel 編輯（隔離副本、雲存檔載入、原版存檔、新 PID 讀回），接著以 verify-native-lifecycle.cjs buildingLevel 做原生核對，第二輪原版存檔、新 PID 讀回，最後以修改器重讀遊戲寫出檔",
       "cases": [
@@ -350,11 +350,11 @@
       "resultSha256": "064d00d2b8f915fb299634cf42efb3ce27aeeb342a1da4600692faf14b022104",
       "passed": true,
       "smokeGameVersion": "V1.0.11.2",
-      "gameUpdate": "V1.0.19.0 靜態核對沿用（寫入點、已審核事件與引用公式未變）"
+      "gameUpdate": "V1.1.9.0 依 gameUpdate.staticReview 逐項核對沿用"
     },
     "placedRelicAttributes": {
       "date": "2026-10-24",
-      "gameVersion": "V1.0.19.0",
+      "gameVersion": "V1.1.9.0",
       "flow": "docs/maintenance/lightweight.md",
       "smoke": "沿用 v2.25 冒煙基準（v2.24 第二輪遊戲寫出、沒有置物台）原生備料：verify-native-lifecycle.cjs relicStandPrepare 以 生成单体建筑(67) 在空地塊蓋置物台、照 采集核心碰撞 的完成路徑把工程量歸零並呼叫 建筑建造成功，再以 摆放灵物 擺上背包靈物 #6，原版存檔、新 PID 讀回後複製遊戲寫出檔當編輯基準；verify-game.cjs 先以既有進階模式把靈物技術調到 119、以 setBuildingLevel 把置物台升到 Lv 2，再以 setPlacedRelicAttributes 編輯（隔離副本、雲存檔載入、原版存檔、新 PID 讀回），接著 placedRelicAura 原生核對、兩輪存讀與 relicTakeOff",
       "cases": [
@@ -369,11 +369,11 @@
       "resultSha256": "d3434b31b89995e826f7c2cc85c5dce857eaa56a2158b34fa54c2e2ea39b1d12",
       "passed": true,
       "smokeGameVersion": "V1.0.11.2",
-      "gameUpdate": "V1.0.19.0 靜態核對沿用（寫入點、已審核事件與引用公式未變）"
+      "gameUpdate": "V1.1.9.0 依 gameUpdate.staticReview 逐項核對沿用"
     },
     "pillAptitudeBonusAdvanced": {
       "date": "2026-10-25",
-      "gameVersion": "V1.0.19.0",
+      "gameVersion": "V1.1.9.0",
       "flow": "docs/maintenance/lightweight.md",
       "smoke": "沿用 v2.13 小數丹藥冒煙基準；verify-game.cjs 以 setPillAptitudeBonusAdvanced 編輯（隔離副本、雲存檔載入、原版存檔、新 PID 讀回），verify-native-lifecycle.cjs pillOverLimit 原生核對，兩輪存讀與修改器重讀",
       "cases": [
@@ -385,11 +385,11 @@
       "resultSha256": "b66c6e8020e62918efca0389dd9886f750876c2f78a1c6dd1d1ce37c593554d9",
       "passed": true,
       "smokeGameVersion": "V1.0.11.2",
-      "gameUpdate": "V1.0.19.0 靜態核對沿用（寫入點、已審核事件與引用公式未變）"
+      "gameUpdate": "V1.1.9.0 依 gameUpdate.staticReview 逐項核對沿用"
     },
     "recruitTechnologyAdvanced": {
       "date": "2026-10-25",
-      "gameVersion": "V1.0.19.0",
+      "gameVersion": "V1.1.9.0",
       "flow": "docs/maintenance/lightweight.md",
       "smoke": "v1.0.12.2 完整來源、兩份隔離副本；verify-game.cjs 以 setRecruitTechnologyLevel 編輯（雲存檔載入、原版存檔、新 PID 讀回），verify-native-lifecycle.cjs recruitTechnology 原生核對，再存檔、新 PID 讀回，修改器重讀遊戲寫出檔",
       "cases": [
@@ -408,11 +408,11 @@
       },
       "passed": true,
       "smokeGameVersion": "V1.0.12.2",
-      "gameUpdate": "V1.0.19.0 靜態核對沿用（寫入點、已審核事件與引用公式未變）"
+      "gameUpdate": "V1.1.9.0 依 gameUpdate.staticReview 逐項核對沿用"
     },
     "equipmentAffixCoefficientAdvanced": {
       "date": "2026-10-25",
-      "gameVersion": "V1.0.19.0",
+      "gameVersion": "V1.1.9.0",
       "flow": "docs/maintenance/lightweight.md",
       "smoke": "v1.0.12.2 完整來源、一份原生備料與一份編輯冒煙；備料以 verify-native-lifecycle.cjs affixPrepare 原生取得、穿戴、洗練一次後存檔、新 PID 讀回；編輯以 verify-game.cjs 的 setEquipmentAffixCoefficientAdvanced（雲存檔載入、原版存檔、新 PID 讀回），verify-native-lifecycle.cjs affixOverLimit 原生核對，再存檔、新 PID 讀回，修改器重讀遊戲寫出檔",
       "cases": [
@@ -427,11 +427,11 @@
       "nativeResultSha256": "347d72fbd63ca5bc33b927040b76f53a6d0f6843663b1651605b23cdffcc9707",
       "passed": true,
       "smokeGameVersion": "V1.0.12.2",
-      "gameUpdate": "V1.0.19.0 靜態核對沿用（寫入點、已審核事件與引用公式未變）"
+      "gameUpdate": "V1.1.9.0 代表案例隔離驗證，見 gameUpdate.smokes 的 equipment-and-rune-round-trip"
     },
     "equipmentSixthAffix": {
       "date": "2026-10-25",
-      "gameVersion": "V1.0.19.0",
+      "gameVersion": "V1.1.9.0",
       "flow": "docs/maintenance/lightweight.md",
       "smoke": "v1.0.12.2 完整來源、一份編輯冒煙；基準沿用 v2.30 原生備料存檔（affix-overlimit-20261025/prepared，兩件原生 Q6 普通裝備）；編輯以 verify-game.cjs 的 setEquipmentSixthAffix（雲存檔載入、原版存檔、新 PID 讀回），verify-native-lifecycle.cjs sixthAffix 原生核對，再存檔、新 PID 讀回，修改器重讀遊戲寫出檔",
       "cases": [
@@ -444,11 +444,11 @@
       "nativeResultSha256": "803909c49e3a2e8487faba766313f9914cf2695119fca72f374872b254e4ea95",
       "passed": true,
       "smokeGameVersion": "V1.0.12.2",
-      "gameUpdate": "V1.0.19.0 靜態核對沿用（寫入點、已審核事件與引用公式未變）"
+      "gameUpdate": "V1.1.9.0 依 gameUpdate.staticReview 逐項核對沿用"
     },
     "armoryEquipment": {
       "date": "2026-10-27",
-      "gameVersion": "V1.0.19.0",
+      "gameVersion": "V1.1.9.0",
       "flow": "docs/maintenance/lightweight.md",
       "smoke": "Mac（Apple M4 Max、CrossOver 正式分支 V1.0.14.0）隱藏隔離副本；基準沿用 v2.34 遊戲寫出的 23 層存檔（武庫兩列）；verify-game.cjs 以候選 catalog（armoryEquipment 開）執行 setEquipmentLevel／setEquipmentQuality（plane 22），雲存檔載入、原版存檔、新 PID 讀回；verify-native-lifecycle.cjs armoryEdited 原生核對，再存檔、新 PID 讀回，修改器重讀遊戲寫出檔",
       "cases": [
@@ -462,11 +462,11 @@
       "nativeResultSha256": "715d974f77c22a0d06b4fe49db31e87e969522b85ae39a9d34624870e8ac4573",
       "passed": true,
       "smokeGameVersion": "V1.0.14.0",
-      "gameUpdate": "V1.0.19.0 靜態核對沿用（寫入點、已審核事件與引用公式未變）"
+      "gameUpdate": "V1.1.9.0 代表案例隔離驗證，見 gameUpdate.smokes 的 equipment-and-rune-round-trip"
     },
     "backupSetEquipment": {
       "date": "2026-11-02",
-      "gameVersion": "V1.0.19.0",
+      "gameVersion": "V1.1.9.0",
       "flow": "docs/maintenance/lightweight.md",
       "smoke": "Mac（Apple M4 Max、CrossOver 正式分支 V1.0.17.0）隱藏隔離副本，不開遊戲視窗、沒有 Dock 圖示，結束後沒有殘留程序；基準為 v2.38 冒煙遊戲寫出的 24 層存檔（#30 已解鎖，角色 2 換到套裝 1，原套裝 0 的 z9 列 7,12,14,13,41,0 收在 z23[2,1..6]）；verify-game.cjs 以候選 catalog（只開 backupSetEquipment）執行 setEquipmentLevel，雲存檔載入、原版存檔、新 PID 讀回；verify-native-lifecycle.cjs outfitSwap（含 item 核對）原生換回，再存檔、新 PID 讀回，修改器重讀遊戲寫出檔",
       "cases": [
@@ -482,11 +482,11 @@
       "result": "repo 外 backup-set-edit-20261102/result.json",
       "passed": true,
       "smokeGameVersion": "V1.0.17.0",
-      "gameUpdate": "V1.0.19.0 靜態核對沿用（寫入點、已審核事件與引用公式未變）"
+      "gameUpdate": "V1.1.9.0 依 gameUpdate.staticReview 逐項核對沿用"
     },
     "backupSetInnerPillLevel": {
       "date": "2026-11-02",
-      "gameVersion": "V1.0.19.0",
+      "gameVersion": "V1.1.9.0",
       "flow": "docs/maintenance/lightweight.md",
       "smoke": "Mac（Apple M4 Max、CrossOver 正式分支 V1.0.17.0）隱藏隔離副本，不開遊戲視窗、沒有 Dock 圖示，結束後沒有殘留程序；基準為 v2.38 冒煙遊戲寫出的 24 層存檔（角色 2 在套裝 1，原套裝 0 的 z9 列 7,12,14,13,41,0 收在 z23[2,1..6]）；verify-game.cjs 以候選 catalog（只開 backupSetInnerPillLevel、backupSetAptitude）執行 setInnerPillLevel 與 setPillAptitudeBonus，雲存檔載入、原版存檔、新 PID 讀回；verify-native-lifecycle.cjs outfitSwap（含 item 清單與 aptitudes 核對）原生換回，再存檔、新 PID 讀回，修改器重讀遊戲寫出檔",
       "cases": [
@@ -501,11 +501,11 @@
       "result": "repo 外 backup-set-pill-aptitude-20261102/result.json",
       "passed": true,
       "smokeGameVersion": "V1.0.17.0",
-      "gameUpdate": "V1.0.19.0 靜態核對沿用（寫入點、已審核事件與引用公式未變）"
+      "gameUpdate": "V1.1.9.0 依 gameUpdate.staticReview 逐項核對沿用"
     },
     "backupSetAptitude": {
       "date": "2026-11-02",
-      "gameVersion": "V1.0.19.0",
+      "gameVersion": "V1.1.9.0",
       "flow": "docs/maintenance/lightweight.md",
       "smoke": "Mac（Apple M4 Max、CrossOver 正式分支 V1.0.17.0）隱藏隔離副本，不開遊戲視窗、沒有 Dock 圖示，結束後沒有殘留程序；基準為 v2.38 冒煙遊戲寫出的 24 層存檔（角色 2 在套裝 1，原套裝 0 的 z9 列 7,12,14,13,41,0 收在 z23[2,1..6]）；verify-game.cjs 以候選 catalog（只開 backupSetInnerPillLevel、backupSetAptitude）執行 setInnerPillLevel 與 setPillAptitudeBonus，雲存檔載入、原版存檔、新 PID 讀回；verify-native-lifecycle.cjs outfitSwap（含 item 清單與 aptitudes 核對）原生換回，再存檔、新 PID 讀回，修改器重讀遊戲寫出檔",
       "cases": [
@@ -520,11 +520,11 @@
       "result": "repo 外 backup-set-pill-aptitude-20261102/result.json",
       "passed": true,
       "smokeGameVersion": "V1.0.17.0",
-      "gameUpdate": "V1.0.19.0 靜態核對沿用（寫入點、已審核事件與引用公式未變）"
+      "gameUpdate": "V1.1.9.0 依 gameUpdate.staticReview 逐項核對沿用"
     },
     "randomCharacterSkillCapsInitial": {
       "date": "2026-11-03",
-      "gameVersion": "V1.0.19.0",
+      "gameVersion": "V1.1.9.0",
       "flow": "docs/maintenance/lightweight.md",
       "smokeGameVersion": "V1.0.17.0",
       "smoke": "Windows 隱藏／靜音隔離副本，verify-game 以具名預覽交易產生修改檔；數值更新、三階段原版存檔／新 PID 讀回，4 個不同 PID、6 筆存讀斷言；原始基準與來源雜湊不變，已停止自己的程序。",
@@ -536,11 +536,11 @@
       "resultSha256": "c62d0cbf2aa3892472f04d1d9d02dd15a70f175f7fd0c47fc9e1670af7d84bef",
       "result": "repo 外 skill-caps-modes-20261103/bandit-editor-validation-kYMcm7/skill-caps-modes.json",
       "passed": true,
-      "gameUpdate": "V1.0.19.0 靜態核對沿用（寫入點、已審核事件與引用公式未變）"
+      "gameUpdate": "V1.1.9.0 依 gameUpdate.staticReview 逐項核對沿用"
     },
     "randomCharacterSkillCapsAdvanced": {
       "date": "2026-11-03",
-      "gameVersion": "V1.0.19.0",
+      "gameVersion": "V1.1.9.0",
       "flow": "docs/maintenance/lightweight.md",
       "smokeGameVersion": "V1.0.17.0",
       "smoke": "Windows 隱藏／靜音隔離副本，verify-game 以具名預覽交易產生修改檔；數值更新、三階段原版存檔／新 PID 讀回，4 個不同 PID、6 筆存讀斷言；原始基準與來源雜湊不變，已停止自己的程序。",
@@ -553,7 +553,7 @@
       "resultSha256": "c62d0cbf2aa3892472f04d1d9d02dd15a70f175f7fd0c47fc9e1670af7d84bef",
       "result": "repo 外 skill-caps-modes-20261103/bandit-editor-validation-kYMcm7/skill-caps-modes.json",
       "passed": true,
-      "gameUpdate": "V1.0.19.0 靜態核對沿用（寫入點、已審核事件與引用公式未變）"
+      "gameUpdate": "V1.1.9.0 依 gameUpdate.staticReview 逐項核對沿用"
     }
   },
   "method": "按功能相依選跑；原生、沿用與 UI 未重驗分開記錄",
@@ -5220,41 +5220,83 @@
     }
   },
   "gameUpdate": {
-    "date": "2026-11-09",
-    "from": "V1.0.18.0",
-    "to": "V1.0.19.0",
-    "steamBuildId": "26474437",
+    "date": "2026-11-26",
+    "from": "V1.0.19.0",
+    "to": "V1.1.9.0",
+    "steamBuildId": "26910122",
     "flow": "docs/maintenance/game-update.md",
     "changedSources": [
       "data.json",
       "scripts/c3runtime.js",
       "cl.json",
-      "zy.json",
+      "js.json",
+      "wp.json",
+      "jz.json",
       "zddt.json"
     ],
     "staticReview": [
-      "本機沒有 V1.0.18.0 精簡來源（該版在 Windows 處理）：函式、寫入點與資料表對 V1.0.18.0 catalog 比，已審核事件以 V1.0.17.0 來源正規化攤平比對，扣除 V1.0.18.0 已審核的武庫掃描、穿卸末尾參數與 25 層；`check --previous` 的旗標比較改用相對目前知識的位移（knowledgeDelta 47）",
-      "15 個分析來源只有 data.json、scripts/c3runtime.js 改變，資料表與 V1.0.18.0 相同；函式 756→761（符文属性 改名 符文单条属性，同 SID；新增 符文列表排序、物品品质文本2、战役抽宝权重、抽符文品质概率、符文属性计算），寫入點 881→882",
-      "属性计算 三處回傳值多加 符文属性计算：只計 z24 嵌入且 cl 第 3 欄為「通用」、第 9 欄等於屬性編號的符文，值為 符文单条属性(材料, z4 職業等級)；通用符文屬性不含資質 104–106。職業精通頁與符文嵌入仍只在 开发模式（預設 false、沒有動作會設成 true）分支可達，正常存檔 z24 為 0，修改器的資質、裝備與內丹預覽不受影響；z24 與符文庫存維持唯讀",
-      "新寫入點：渡劫台列表選角（初始化 z1 y7 佔用角色，對應公告）；战役胜利 的進度從 z0 x40 y21 改為 z0 x(当前地图编号) y11，戰役地圖編號 ≥41（开始战役挑战 以 地图-41 計波次），不與城市層數的 x1–27 重疊；其餘差異為初始化 action SID 換號",
-      "已審核摘要：Q8 與 V1.0.18.0 相同；套裝等級、寶物、天賦、Q9、Q10 與 V1.0.17.0→V1.0.19.0 正規化比對一致，只差物件與 expression 編號，登錄新摘要",
-      "函式參數：相對 V1.0.17.0 的 7 項改變中，武庫存取／排序的 遍历次数 已由 V1.0.18.0 補進驗證工具；材料tips 末參數改名、开始战役挑战 多 刷新、战役抽宝 少 层数，驗證工具未呼叫",
-      "修改器引用的 expression 相對 V1.0.18.0 位移 47（expressionOffset 235→282）；catalog 除編號外無變動；Mac 啟動器路徑修正命中數 1/1/4/4 不變，登錄新 c3runtime",
-      "extract-game：Mac 只轉換繁體對照表缺少的名稱，不覆蓋 Windows 補的對照（否則「彌漫」會被改成「瀰漫」）"
+      "以 V1.0.19.0 同版精簡來源逐條比對，函式 761→799，存檔 SetXYZ 882→926。全局載入 SID 981623110000004、靈物移庫 SID 981623112000012 將高度與深度擴到至少 61×26。靈物 z18↔25 搬移 y0–49（SID 981623110000376）。z25、軍功 [4,2,0]、符文庫存 z0 y6、鎖定 z0 y52、職業鑲嵌 z24 與戰役相關座標由欄位權限保護。",
+      "七個裝備公式的本文一致，索引 5577–5586 的引用項目統一 +290，累計 offset 572。原比對上限 ±200，改以公式本文在目標表查找。Mac 路徑修正命中 1/1/4/4，已登錄新版指紋。",
+      "穿戴增加底部選單刷新條件，裝備 y0–49 搬移及穿卸指標相同。武庫新上鎖沿用 y22。詞條洗練的末尾新增自動洗練及原屬性參數，手動驗證明確傳 false、0。其餘參數變更涉及洗練與物品頁、符文取下、精通頁及戰役，新介面流程由遊戲管理。套裝 Q4／Q10 改用對應的新審核摘要，Q10 四個 UI 事件已重建。",
+      "角色招募與收監子樹重建，招募先檢查候選編號 1–3。下獄與解雇保護主角範本 209，解雇退回符文，原退款仍使用 z2 y56。資質、技藝上限、天賦與三種經驗的正常結算規則可沿用。軍功訓練是原版新增的 z4／z5 寫入入口，職業自然成長上限仍為 min(30, 操練上限)。",
+      "cl 的符文仍以 kind 排除在 220 筆可編輯材料之外。js 新增範本 209，既有 11 格資質及 6 格天賦 ID 調整，更新圖鑑並沿用有名角色回填檢查。wp 只變寶物 #701 的第二主屬性 18→13，等級、品質、鎖定、詞條池與 1.04 魂魄公式相同。jz 新增範本，建築上限函式相同。zddt 的正式 27 城與上限 149 相同。",
+      "只對收錄角色、寶物 #701 或詞條審核座標有差異的群組重新判定。普通裝備品質、手動洗練、武庫移轉與寶物升級採隔離副本代表驗證。其餘依靜態逐項核對沿用歷史原生證明。"
     ],
     "smokes": [
       {
         "name": "routine-round-trip",
-        "scenario": "以 V1.0.17.0 遊戲寫出的 24 層存檔為基準（本機沒有 V1.0.18.0 寫出的存檔），修改器改名稱與角色／職業／技藝經驗；雲存檔載入、原版存檔、新 PID 讀回；修改器重讀遊戲寫出檔逐字元往返",
-        "baselineSaveSha256": "a1dc6b3aedb2dbe51a05b247e3eb572d755f2d88202ec5e44279f149fc9daf8a",
-        "finalSaveSha256": "6851e29792d2989811bcc915db6d53135ec3fb6567d78235edf99d39b666e0a5",
+        "scenario": "由 V1.0.19.0 原版寫出的 25 層存檔升到 2501×61×26。修改器改名稱與角色／職業／技藝經驗，原版存檔及新 PID 讀回，精確往返。",
+        "baselineSaveSha256": "6851e29792d2989811bcc915db6d53135ec3fb6567d78235edf99d39b666e0a5",
+        "finalSaveSha256": "1759ff0dbadb305e66961c54d5792b7736ab4490d0cd5b1e153745809c255474",
+        "passed": true
+      },
+      {
+        "name": "equipment-and-rune-round-trip",
+        "scenario": "原版生成裝備與寶物 #701 作基準。降品質、精準詞條的預覽 6.6 與原版一致，背包超限係數原版手動重洗恢復正常區間，武庫移出／存回／穿卸保留 50 欄，寶物 Lv6→Lv7 魂魄扣費。隔離樣本預置符文 221，職業 Lv3 時原版算出 1.3，鑲嵌與職業等級留存。原版寫檔、新 PID 讀回及逐字元往返皆通過。",
+        "baselineSaveSha256": "272cf2e607a876748d1a3068714b9d6ad7b6c99e4e52570a73c20301c441be72",
+        "finalSaveSha256": "b35633949d5cc2b94f3b41ada013fc123d6883a56377f70958d77d51780d0941",
         "passed": true
       }
     ],
-    "rounds": "Mac（Apple M4 Max、CrossOver 正式分支 V1.0.19.0）隱藏隔離副本：雲存檔載入、原版存檔、新 PID 讀回；修改器重讀遊戲寫出的存檔",
-    "carried": "其餘已開群組依靜態核對沿用（61 個旗標無關閉）；複合遷移證明（migration）仍是 V1.0.11.2 的歷史紀錄"
+    "rounds": "Mac（Apple M4 Max、CrossOver 正式分支 V1.1.9.0）隱藏隔離副本：雲存檔載入、原版存檔、新 PID 讀回；修改器重讀遊戲寫出的存檔",
+    "carried": "61 個既有旗標開啟。品質、詞條、武庫及寶物通過本版代表冒煙。#701 兩個涉及的屬性均非資質，jz 與 zddt 未改現有上限，丹藥、資質、備用套裝、城市及其餘群組按靜態核對沿用。複合遷移證明仍是 V1.0.11.2 的歷史紀錄。"
   },
   "gameUpdateHistory": [
+    {
+      "date": "2026-11-09",
+      "from": "V1.0.18.0",
+      "to": "V1.0.19.0",
+      "steamBuildId": "26474437",
+      "flow": "docs/maintenance/game-update.md",
+      "changedSources": [
+        "data.json",
+        "scripts/c3runtime.js",
+        "cl.json",
+        "zy.json",
+        "zddt.json"
+      ],
+      "staticReview": [
+        "本機沒有 V1.0.18.0 精簡來源（該版在 Windows 處理）：函式、寫入點與資料表對 V1.0.18.0 catalog 比，已審核事件以 V1.0.17.0 來源正規化攤平比對，扣除 V1.0.18.0 已審核的武庫掃描、穿卸末尾參數與 25 層；`check --previous` 的旗標比較改用相對目前知識的位移（knowledgeDelta 47）",
+        "15 個分析來源只有 data.json、scripts/c3runtime.js 改變，資料表與 V1.0.18.0 相同；函式 756→761（符文属性 改名 符文单条属性，同 SID；新增 符文列表排序、物品品质文本2、战役抽宝权重、抽符文品质概率、符文属性计算），寫入點 881→882",
+        "属性计算 三處回傳值多加 符文属性计算：只計 z24 嵌入且 cl 第 3 欄為「通用」、第 9 欄等於屬性編號的符文，值為 符文单条属性(材料, z4 職業等級)；通用符文屬性不含資質 104–106。職業精通頁與符文嵌入仍只在 开发模式（預設 false、沒有動作會設成 true）分支可達，正常存檔 z24 為 0，修改器的資質、裝備與內丹預覽不受影響；z24 與符文庫存維持唯讀",
+        "新寫入點：渡劫台列表選角（初始化 z1 y7 佔用角色，對應公告）；战役胜利 的進度從 z0 x40 y21 改為 z0 x(当前地图编号) y11，戰役地圖編號 ≥41（开始战役挑战 以 地图-41 計波次），不與城市層數的 x1–27 重疊；其餘差異為初始化 action SID 換號",
+        "已審核摘要：Q8 與 V1.0.18.0 相同；套裝等級、寶物、天賦、Q9、Q10 與 V1.0.17.0→V1.0.19.0 正規化比對一致，只差物件與 expression 編號，登錄新摘要",
+        "函式參數：相對 V1.0.17.0 的 7 項改變中，武庫存取／排序的 遍历次数 已由 V1.0.18.0 補進驗證工具；材料tips 末參數改名、开始战役挑战 多 刷新、战役抽宝 少 层数，驗證工具未呼叫",
+        "修改器引用的 expression 相對 V1.0.18.0 位移 47（expressionOffset 235→282）；catalog 除編號外無變動；Mac 啟動器路徑修正命中數 1/1/4/4 不變，登錄新 c3runtime",
+        "extract-game：Mac 只轉換繁體對照表缺少的名稱，不覆蓋 Windows 補的對照（否則「彌漫」會被改成「瀰漫」）"
+      ],
+      "smokes": [
+        {
+          "name": "routine-round-trip",
+          "scenario": "以 V1.0.17.0 遊戲寫出的 24 層存檔為基準（本機沒有 V1.0.18.0 寫出的存檔），修改器改名稱與角色／職業／技藝經驗；雲存檔載入、原版存檔、新 PID 讀回；修改器重讀遊戲寫出檔逐字元往返",
+          "baselineSaveSha256": "a1dc6b3aedb2dbe51a05b247e3eb572d755f2d88202ec5e44279f149fc9daf8a",
+          "finalSaveSha256": "6851e29792d2989811bcc915db6d53135ec3fb6567d78235edf99d39b666e0a5",
+          "passed": true
+        }
+      ],
+      "rounds": "Mac（Apple M4 Max、CrossOver 正式分支 V1.0.19.0）隱藏隔離副本：雲存檔載入、原版存檔、新 PID 讀回；修改器重讀遊戲寫出的存檔",
+      "carried": "其餘已開群組依靜態核對沿用（61 個旗標無關閉）；複合遷移證明（migration）仍是 V1.0.11.2 的歷史紀錄"
+    },
     {
       "date": "2026-11-04",
       "from": "V1.0.17.0",

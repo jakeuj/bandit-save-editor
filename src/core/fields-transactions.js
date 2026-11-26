@@ -3,11 +3,17 @@
   const {x,y,z}=c,value=get(m,c),plane=KNOWLEDGE.planes[z];
   let f={...c,id:key(c),label:'未辨識欄位',category:plane?.name||'未知層',entity:'',type:typeof value==='number'?(Number.isInteger(value)?'integer':'decimal'):typeof value,editable:false,known:false,status:'未辨識',reason:'未核實用途；圖鑑唯讀',description:'用途與關聯尚未查清。未知數值座標仍可由既有自訂欄位手動輸入整數。',related:[],source:[]};
   const named=(label,extra={})=>{f={...f,label,known:true,status:'程式證據',reason:'關聯資料／第一版唯讀',...extra};};
-  const basic=BASICS.find(b=>key(b)===key(c));
+  const campaign=hasCampaignSave(m.original);
+  const militaryMerit=campaign&&key(c)==='4,2,0';
+  const basic=militaryMerit?null:BASICS.find(b=>key(b)===key(c));
   if(basic)named(basic.name,{type:'integer',min:0,editable:true,status:'既有功能',reason:''});
+  else if(militaryMerit)named('軍功',{type:'integer',reason:'軍功由戰役獎勵、兌換與職業訓練結算，唯讀'});
+  else if(campaign&&z===0&&y===52)named('符文鎖定',{entity:catalogName('materials',x),reason:'符文鎖定由遊戲管理，唯讀'});
+  else if(campaign&&z===0&&[50,51,53,54].includes(y))named({50:'戰役已通關層數',51:'戰役選擇層數',53:'裝備詞條篩選',54:'自動洗練勾選'}[y]);
   else if(z===0&&y===6&&catalogMaps.materials.get(x)?.kind==='符文')named(catalogName('materials',x),{entity:`符文 #${x}`,type:'integer',reason:'符文數量與鑲嵌狀態由遊戲管理，尚未開放修改，唯讀'});
   else if(z===0&&y===6&&catalogMaps.materials.has(x))named(catalogName('materials',x),{entity:`材料 #${x}`,type:'integer',min:0,editable:true,status:'既有功能',reason:''});
   else if(key(c)==='1,1,0')named('山寨名稱',{type:'string',maxLength:6,verification:'names',editable:!!KNOWLEDGE.verification.names,reason:'名稱群組尚待遊戲驗證'});
+  else if(campaign&&z===0&&y===1&&[38,39].includes(x))named(x===38?'符文自動分解品質':'已建立主角');
   else if(z===0&&y===1){const labels={0:'存檔識別',2:'山寨等級',4:'目前地圖',6:'商店刷新時間',7:'引導任務編號',8:'山寨總聲望',12:'存檔年份',13:'存檔天數',14:'存檔小時',15:'累計遊玩秒數',19:'城牆等級',22:'支援者禮包紀錄',37:'武庫換裝模式'};if(labels[x])named(labels[x]);}
   else if(z===0&&y===17&&x===1)named('招募刷新倒數（秒）',{type:'decimal'});
   else if(z===0&&[11,21,38,44].includes(y)&&cityRows.has(x))named({11:'城市層數',21:'掛機層數',38:'佔領旗標',44:'首次進入旗標'}[y],{entity:cityRows.get(x),reason:'請使用城市層數具名操作；總聲望與掛機層數一起結算',related:[C(x,11,0),C(x,21,0),C(8,1,0)]});
@@ -35,11 +41,13 @@
   else if(z===17)named(({1:'入體內丹範本',3:'入體內丹等階',5:'入體內丹品質',6:'入體內丹等級',7:'入體內丹歸屬角色',8:'入體內丹主屬性品質係數'})[y]||(y>=15&&y<=17?`${aptitudeNames[y-15]}上限係數`:`入體內丹欄位 ${y}`),{entity:catalogName('items',get(m,C(x,1,17))),reason:'入體後原生流程不再修改；結丹係數與等級請使用結丹品質面板的具名操作'});
   else if(z===BACKUP_SET)named(y===0?'目前套裝序號':y<=6?`備用套裝部位 ${y} 裝備列號`:`備用套裝欄位 ${y}`,{entity:activeCharacter(m,x)?get(m,C(x,1,2)):`角色 #${x}`,reason:'換裝由遊戲管理，裝備列號與穿戴歸屬需一起核實，唯讀'});
   else if(z===24)named(y===0?'精通職業選擇':catalogMaps.professions.has(y)?`${catalogName('professions',y)}符文編號`:`職業精通與符文欄位 ${y}`,{entity:activeCharacter(m,x)?get(m,C(x,1,2)):`角色 #${x}`,reason:'職業精通與符文鑲嵌由遊戲管理，尚未開放修改，唯讀'});
+  else if(z===25)named(`靈物庫・${y===11?'鎖定':`欄位 ${y}`}`,{entity:`靈物庫 #${x}`,reason:'靈物移庫由遊戲管理，唯讀'});
   else if([1,6,10,11,13,16,17,18,19,20,21].includes(z))named(`${plane.name}・欄位 ${y}`,{entity:`資料 #${x}`});
   f.source=(evidenceIndex.get(`${z},${y}`)||evidenceIndex.get(`${z},*`)||[]).filter(e=>e.x==='*'||e.x===x).slice(0,4).map(e=>({function:e.function,sheet:e.sheet,sid:e.sid,actionSid:e.actionSid}));
   if(f.known&&f.editable&&f.verification)f={...f,status:'遊戲驗證',reason:''};
   if(f.known)f.description='已定位此資料的用途；關聯狀態與進程仍由遊戲管理。';
   if(basic)f.description=basic.description;
+  if(militaryMerit)f.description=f.reason;
   if(z===0&&y===6&&f.known)f.description=catalogMaps.materials.get(x)?.kind==='符文'?'符文庫存與鑲嵌狀態由遊戲管理，尚未開放修改，唯讀。':'材料數量；直接增加不扣除取得成本。';
   if(f.verification==='names')f.description='繁中介面名稱，1–6 個 UTF-16 字元，不含 ASCII 空格或控制字元。';
   if(z===2&&activeCharacter(m,x)){

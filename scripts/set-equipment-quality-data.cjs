@@ -11,31 +11,33 @@ const dependencies={
  Q7:{sids:[661914404104909],expressions:[243,5329,5330,5332,5370,5371,5372,5373,5374,5375,5376,5377,5378],topic:'extra set bonus independent of y5'},
  Q8:{sids:[791657421740250,639417854082032,654692930556623,745461878410324],expressions:[2874,2875,59,12,15,3],topic:'storage move copies y0-49'},
  Q9:{sids:[924571110308816,685377673296405,257975754908346,501272375624196,314497106398393,731456201592556],expressions:[801,15,3,3610],topic:'equip/unequip owner pointers, synthesis refresh'},
- Q10:{sids:[491911663973794,118557701104625,780562691790658,876108178253015,196601779910507,775039415186059,819450314280438,338766607025535],expressions:[2833,356,2834,2835,2836,4852,1576,2902,4869,4870,4865],topic:'slot generation, refine page limits and refresh'}
+ Q10:{sids:[491911663973794,118557701104625,780562691790658,792778796244403,628013883644214,268888096105522,703713552215011,338766607025535],expressions:[2833,356,2834,2835,2836,4852,1576,2902,4869,4870,4865],topic:'slot generation, refine page limits and refresh'}
 };
 const reviewedDigests={
- Q1:'3ca6d9b9dfc3b01c3b1da9f7dd8c79c3cf06e6f7064296f2290126301aeac30c',
- Q2:'03140745c58a0f1cd9837eff8861967cc90e12bbe01a90dafb2042acad5703d5',
- Q3:'be467a282c1228cfce75fbe7efb44068d3564ab9e3e8df6032ba4c61dd681fa8',
- Q4:'3919b33bea681bf41e59edf8a92e0da5e1524004a4f9f8430955fd3b34aabde9',
+ Q1:'f76c0f60083b5ac78b2fb568cc92557ebbd9433691cd6f78c91e1c0a71227213',
+ Q2:'e4c0e5c90757e2ae4adc9aed52d50581808a72ffabdca12ab6171c4f267117d8',
+ Q3:'f76970bd32f4411747da2f8b2e5d798a610987d9556dd59cbdab9b73a3babb5d',
+ Q4:'89c7b2f465336a10010bd647bc691043f7a7b8bf9171308401a8732f5185bc71',
  Q5:'8bf7f8eb69b73d72a38ab555b4f6201adf4bca2e1ff9b2c615f7c4f624300cd9',
  Q6:'2b5c23a09bed9815cc76f542347911263bcaadf1eb3a3a6aa4be7d8c86bb44c9',
  Q7:'5f1719fe9bacb71e4949bf4e15ce8629c0336cade95625917579f4676a007ac4',
  Q8:'0b8da6797b006ae0ff853ec6f61e4e31ee2d7bb66c46e4559a5997d2acdd31b6',
- Q9:'85a325fc0558fc8c54f047fae205a76f3bd990ffd79e38d67fe1214b20ee7034',
- Q10:'5d9c6ee6666d2e188731470829e2f6cc52f9ee73e7973b2e73542517fb7713ae'
+ Q9:'a22dbaf3c08af57422835a98ba8b89469824d5c814317e0eedf9c8e253258706',
+ Q10:'627d6319662f09d4abde7ca69bbf070c6a1d4b466d7cd6d84a01fe89d0da45e8'
 };
 // V1.0.12.2 digests of the same reviewed events (Q8/Q9 SIDs were rebuilt in V1.0.13.0, so they have none). V1.0.13.0 differs
 // only by object/bound-reference renumbering and the 库序号 argument (7 or the new armory 22) of the equip/unequip/storage moves.
 // V1.0.13.0–V1.0.15.0 Q9/Q10 digests: V1.0.17.0 differs only by object and expression renumbering.
 // V1.0.18.0 Q9 and V1.0.17.0–V1.0.18.0 Q10 digests: V1.0.19.0 differs only by object and expression renumbering.
+// V1.1.9.0 rebuilt the refine UI for auto-refine. Manual pools, persisted slot flags and coefficient rules still agree.
 const previousDigests={
+ Q1:'3ca6d9b9dfc3b01c3b1da9f7dd8c79c3cf06e6f7064296f2290126301aeac30c',
  Q8:'02a08ac78766217c08f69f6712299c2de9ea1b1a5c79eaa08c486fd94bfa7c6b',
- Q9:['cff27728febe1c540fe9d16c1e619279dc70ec7e632ddec1e4963892b23fc9e2','872d9291071cb459fdc74bf17b1d5b5b6914d9a6db90de8513fe6e373d88fe40','3e5dfeef8a80b0ff887d8ea30660a5ce71d7c65a3da6b8ce4f15362230ccf980'],
- Q2:'8e5e3e17aa815b0967bf9045f7a3f88d7e24ed4c270aa1cb6c282e0220607c57',
- Q3:'746f9a73dfd09c9891c433506951e153be8469bd59a2da75e6efa76277eceb12',
- Q4:'2d4529ff52d269bfaf8ab1f2795b7e0993399059fce5832e670fc4b2d381fa0e',
- Q10:['0dff003d8f73542180ec3777c4d1cf09ee09b83a5182a7f8d44032cd745ae1f6','0b4ec7c994ff1624b9a700bb5e3e3282c25a392c9224e43bd6890a4d16e8d4bb','1cba060063a3fc8dfa681bec213a5798e5ab6eceff9103777feeda354a42ef16']
+ Q9:['cff27728febe1c540fe9d16c1e619279dc70ec7e632ddec1e4963892b23fc9e2','872d9291071cb459fdc74bf17b1d5b5b6914d9a6db90de8513fe6e373d88fe40','3e5dfeef8a80b0ff887d8ea30660a5ce71d7c65a3da6b8ce4f15362230ccf980','85a325fc0558fc8c54f047fae205a76f3bd990ffd79e38d67fe1214b20ee7034'],
+ Q2:['8e5e3e17aa815b0967bf9045f7a3f88d7e24ed4c270aa1cb6c282e0220607c57','03140745c58a0f1cd9837eff8861967cc90e12bbe01a90dafb2042acad5703d5'],
+ Q3:['746f9a73dfd09c9891c433506951e153be8469bd59a2da75e6efa76277eceb12','be467a282c1228cfce75fbe7efb44068d3564ab9e3e8df6032ba4c61dd681fa8'],
+ Q4:['2d4529ff52d269bfaf8ab1f2795b7e0993399059fce5832e670fc4b2d381fa0e','3919b33bea681bf41e59edf8a92e0da5e1524004a4f9f8430955fd3b34aabde9'],
+ Q10:['0dff003d8f73542180ec3777c4d1cf09ee09b83a5182a7f8d44032cd745ae1f6','0b4ec7c994ff1624b9a700bb5e3e3282c25a392c9224e43bd6890a4d16e8d4bb','1cba060063a3fc8dfa681bec213a5798e5ab6eceff9103777feeda354a42ef16','5d9c6ee6666d2e188731470829e2f6cc52f9ee73e7973b2e73542517fb7713ae']
 };
 const groups=['backpackSetEquipmentQualityUpgrade','backpackSetEquipmentQualityDowngrade','setEquipmentQualityUpgrade','setEquipmentQualityDowngrade'];
 // Flag registration is deferred to A10; until then these keys must be absent or false. Ordinary-equipment quality flags are separate.
@@ -69,8 +71,10 @@ function extract(game,digestEvents,batch2,setLevel){
  if(['6661d77209c0e98069219965908fd4d6b9ee3dca84763c158dcd5f0a863df665','32a36accc1b97e9bb3498eb3be76950e1e72b2e8f7a0cf9ce293b57aa5e0d820'].includes(game.fingerprints?.['data.json']))return null;
  const wp=JSON.parse(fs.readFileSync(path.join(game.root,'wp.json'),'utf8')).data.map(r=>r.map(c=>c[0]));
  // Keep historical extraction exact while requiring the complete rebuilt subtrees on V1.0.18.0 and later.
- const legacy={639417854082032:204416519787196,745461878410324:574511591831477};
- const selected=game.events.some(e=>e.sid===639417854082032)?dependencies:Object.fromEntries(Object.entries(dependencies).map(([q,d])=>[q,{...d,sids:d.sids.map(s=>legacy[s]||s)}]));
+ const legacy={};
+ if(!game.events.some(e=>e.sid===639417854082032))Object.assign(legacy,{639417854082032:204416519787196,745461878410324:574511591831477});
+ if(!game.events.some(e=>e.sid===792778796244403))Object.assign(legacy,{792778796244403:876108178253015,628013883644214:196601779910507,268888096105522:775039415186059,703713552215011:819450314280438});
+ const selected=Object.fromEntries(Object.entries(dependencies).map(([q,d])=>[q,{...d,sids:d.sids.map(s=>legacy[s]||s)}]));
  const digests=Object.fromEntries(Object.entries(selected).map(([q,d])=>[q,digestEvents(game,d.sids)]));
  return reviewedRules(digests,{wp},batch2,setLevel,selected);
 }

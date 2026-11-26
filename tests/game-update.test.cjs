@@ -7,7 +7,7 @@ const vm = require('node:vm');
 const { spawnSync } = require('node:child_process');
 
 const repo = path.resolve(__dirname, '..');
-const { insertBefore, normalize, announcements, libraryPaths } = require('../scripts/game-update.cjs');
+const { insertBefore, normalize, announcements, libraryPaths, compareReviewedEvents, matchingExpressionDelta } = require('../scripts/game-update.cjs');
 const { reviewedVersions } = require('../scripts/extract-game.cjs');
 
 function copy(t, file) {
@@ -38,6 +38,26 @@ test('apply appends one reviewed runtime to the Mac launcher whitelist', t => {
 test('object renumbering is not an event change', () => {
   assert.equal(normalize('A ["o2","背包",3,[11,42]]'), normalize('A ["o2","仓库",3,[11,57]]'));
   assert.notEqual(normalize('A ["obj","save",1]'), normalize('A ["obj","save",2]'));
+});
+
+test('reviewed events report missing roots and visit both versions of a subtree', () => {
+  const event = children => ({ fn: '裝備', lines: ['A 移庫'], children });
+  const old = new Map([[1, event([2])], [2, event([])]]);
+  const next = new Map([[1, event([3])], [3, event([])]]);
+  assert.deepEqual(compareReviewedEvents(old, next, [1, 4]), [
+    '2 裝備 刪除', '4 兩版事件索引均找不到', '3 裝備 新增'
+  ]);
+});
+
+test('equipment expressions can move more than 200 places and must all share the shift', () => {
+  const a = () => 1, b = () => 2, other = () => 0;
+  const moved = Array(302).fill(other);
+  moved[0] = a;
+  moved[290] = a;
+  moved[291] = b;
+  assert.equal(matchingExpressionDelta([a,b], moved, [0,1]), 290);
+  assert.equal(matchingExpressionDelta([a,b], moved, [0,2]), null);
+  assert.equal(matchingExpressionDelta([a,b], moved.slice(0,291), [0,1]), null);
 });
 
 test('announcements list every version newer than the current knowledge', () => {

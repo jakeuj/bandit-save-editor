@@ -122,6 +122,39 @@ function flatten(g){
 }
 // Object renumbering is not a change; the reviewed digests do include it, so those are re-registered instead.
 const normalize=l=>l.replace(/\["o2","[^"]*"/g,'["o2"').replace(/\[11,\d+\]/g,'[11]');
+function compareReviewedEvents(previous,current,roots){
+ const all=new Set();
+ for(const events of [previous,current]){
+  const visited=new Set();
+  function visit(sid){
+   if(visited.has(sid))return;
+   visited.add(sid);
+   all.add(sid);
+   for(const child of events.get(sid)?.children||[])visit(child);
+  }
+  for(const sid of roots)visit(sid);
+ }
+ const changed=[];
+ for(const sid of all){
+  const before=previous.get(sid),after=current.get(sid);
+  if(!before&&!after)changed.push(`${sid} 兩版事件索引均找不到`);
+  else if(!after)changed.push(`${sid} ${before.fn} 刪除`);
+  else if(!before)changed.push(`${sid} ${after.fn} 新增`);
+  else if(JSON.stringify(before.lines.map(normalize))!==JSON.stringify(after.lines.map(normalize)))changed.push(`${sid} ${after.fn}`);
+ }
+ return changed;
+}
+
+function matchingExpressionDelta(previous,current,indices){
+ if(!indices.length)return 0;
+ const source=indices.map(i=>previous[i]?.toString());
+ if(source.includes(undefined))return null;
+ const first=indices[0];
+ const deltas=current.flatMap((factory,i)=>factory.toString()===source[0]?[i-first]:[]);
+ deltas.sort((a,b)=>Math.abs(a)-Math.abs(b)||b-a);
+ return deltas.find(delta=>indices.every((i,n)=>current[i+delta]?.toString()===source[n]))??null;
+}
+
 function reviewedRoots(catalog){
  const roots=new Set();
  for(const f of ['set-equipment-level','treasure-level','random-character-skill-caps','random-character-talents'])require('./'+f+'-data.cjs').sourceSids.forEach(s=>roots.add(s));
@@ -170,7 +203,7 @@ function check(){
  for(const f of ['yx.json','tz.json','zddt.json'])if(fs.existsSync(path.join(previous,f))&&sha(fs.readFileSync(path.join(source,f)))!==sha(fs.readFileSync(path.join(previous,f))))changedSources.push(f);
  const oldReviewed=reviewedVersions[o.fingerprints['data.json']]||{};
  const report={verdict:null,date:new Date().toLocaleDateString('sv'),from:proof.gameVersion,to:version,steamBuildId:build,package:pkg,source,previous,changedSources,
-  announcements:announcements(gg,proof.gameVersion),blockers,notices,closedFlags:[],catalogChanges:[],tableChanges:{},mac:null,register:null};
+  announcements:announcements(gg,proof.gameVersion),candidateGenerated:false,blockers,notices,closedFlags:[],catalogChanges:[],tableChanges:{},mac:null,register:null};
  if(!changedSources.length){
   notices.push(`遊戲內版號 ${version}、build ${build}，但 15 個分析來源都沒變：只更新 build 與版本紀錄`);
  }
@@ -191,12 +224,7 @@ function check(){
  const resized=g.operations.filter(x=>x.operation!=='SetXYZ'&&!oo.has(opk(x))&&/size/i.test(x.operation));
  if(resized.length)blockers.push('新的陣列尺寸操作（存檔層數可能改變）：'+resized.map(opk).join('；'));
  // Reviewed events and their subtrees, compared without object renumbering.
- const roots=reviewedRoots(catalog),all=new Set();
- const add=(m,s)=>{if(all.has(s))return;all.add(s);for(const c of m.get(s)?.children||[])add(m,c);};
- for(const s of roots){add(N.out,s);add(O.out,s);}
- const reviewedChanged=[];
- for(const s of all){const a=O.out.get(s),b=N.out.get(s);if(!a||!b){reviewedChanged.push(`${s} ${(a||b).fn} ${a?'刪除':'新增'}`);continue;}
-  if(JSON.stringify(a.lines.map(normalize))!==JSON.stringify(b.lines.map(normalize)))reviewedChanged.push(`${s} ${b.fn}`);}
+ const reviewedChanged=compareReviewedEvents(O.out,N.out,reviewedRoots(catalog));
  if(reviewedChanged.length)blockers.push('已審核事件內容改變：'+reviewedChanged.join('；'));
  const added=[...N.out.keys()].filter(s=>!O.out.has(s)),removed=[...O.out.keys()].filter(s=>!N.out.has(s));
  const changed=[...N.out.keys()].filter(s=>O.out.has(s)&&JSON.stringify(N.out.get(s).lines)!==JSON.stringify(O.out.get(s).lines));
@@ -206,14 +234,16 @@ function check(){
  // Expression factories the catalog points at must keep their bodies; a uniform shift becomes the new offset.
  const used=[...new Set([catalog.affixReplacement,catalog.equipmentQuality].flatMap(r=>Object.values(r?.attributes||{}).map(a=>a.expression)).filter(Number.isInteger))];
  const body=(x,i)=>x.expressions[i]?.toString();
- let delta=null;
- for(const d of [0,...Array.from({length:400},(_,i)=>i%2?-(i+1>>1):(i>>1)+1)])if(used.every(i=>body(o,i)!==undefined&&body(g,i+d)===body(o,i))){delta=d;break;}
+ const knowledgeReviewed=reviewedVersions[proof.eventFingerprint]||oldReviewed;
+ const priorOffset=oldReviewed.expressionOffset||0,knowledgeOffset=knowledgeReviewed.expressionOffset||0;
+ const priorIndices=used.map(i=>i+priorOffset-knowledgeOffset);
+ const delta=matchingExpressionDelta(o.expressions,g.expressions,priorIndices);
  if(delta===null)blockers.push('修改器引用的 expression 找不到一致位移：'+used.join(','));
  const exprChanged=[];for(let i=0;i<Math.min(o.expressions.length,g.expressions.length);i++)if(body(o,i)!==body(g,i))exprChanged.push(i);
  report.expressions={used,delta,count:[o.expressions.length,g.expressions.length],changedIndices:exprChanged.length};
- const expressionOffset=(oldReviewed.expressionOffset||0)+(delta||0);
- // The flag comparison shifts the current catalog, which may be newer than --previous (no source of the current version here).
- const knowledgeReviewed=reviewedVersions[proof.eventFingerprint]||oldReviewed,knowledgeDelta=delta===null?null:expressionOffset-(knowledgeReviewed.expressionOffset||0);
+ const expressionOffset=priorOffset+(delta||0);
+ // The flag comparison shifts the current catalog, which may be newer than --previous.
+ const knowledgeDelta=delta===null?null:expressionOffset-knowledgeOffset;
  report.expressions.knowledgeDelta=knowledgeDelta;
  // Mac launcher path patch sites.
  if(pkg&&g.fingerprints['scripts/c3runtime.js']!==o.fingerprints['scripts/c3runtime.js']){
@@ -230,7 +260,7 @@ function check(){
   const before=comparable(catalog,candidate,knowledgeDelta||0);
   for(const k of new Set([...Object.keys(before),...Object.keys(candidate)]))if(!['gameVersion','fingerprints','verification','counts','functions','evidence','planes'].includes(k)&&JSON.stringify(before[k])!==JSON.stringify(candidate[k]))report.catalogChanges.push(k);
   for(const k of report.catalogChanges){const d=jsonDiff(before[k],candidate[k],k,[]);report.tableChanges[k]={count:d.count||0,sample:[...d]};}
-  fs.mkdirSync(path.join(dir,'candidate'),{recursive:true});writeJson(path.join(dir,'candidate/catalog.json'),candidate);
+  fs.mkdirSync(path.join(dir,'candidate'),{recursive:true});writeJson(path.join(dir,'candidate/catalog.json'),candidate);report.candidateGenerated=true;
  }catch(e){blockers.push('候選知識產生失敗（多半是已審核摘要只差物件編號，需登錄新摘要）：'+e.message);}
  report.verdict=blockers.length?'special':report.closedFlags.length?'data':'routine';
  writeJson(path.join(dir,'report.json'),report);
@@ -263,7 +293,7 @@ function apply(){
  const report=check();if(report.verdict==='current')return;
  // --reviewed: a special update whose ✖ items were each checked (and fixed) with the user's go-ahead.
  if(report.verdict==='special'&&!args.includes('--reviewed'))throw Error('特別版更不自動登錄：依 report.json 的 blockers 逐項核對，處理完再加 --reviewed');
- if(!fs.existsSync(path.join(dir0(report),'candidate/catalog.json')))throw Error('候選知識沒有產生，不能登錄');
+ if(!report.candidateGenerated||!fs.existsSync(path.join(dir0(report),'candidate/catalog.json')))throw Error('候選知識沒有產生，不能登錄');
  const dir=workDir(report.to),proof=readJson(proofFile),old=readJson(knowledgeFile),{register}=report;
  const extract=path.join(root,'scripts/extract-game.cjs');
  if(!register.reused)insertBefore(extract,'\n};\n\nfunction createCatalog',`  '${register.dataFingerprint}': ${JSON.stringify(register.entry).replace(/"(\w+)":/g,'$1: ').replace(/"/g,"'").replace(/,(?=\w)/g,', ').replace(/^\{/,'{ ').replace(/\}$/,' }')}`);
@@ -274,11 +304,13 @@ function apply(){
  const {glossary,catalog}=createCatalog(g);
  carryFlags(old,catalog,report.expressions.knowledgeDelta??report.expressions.delta??0);
  writeJson(knowledgeFile,catalog);writeJson(path.join(root,'knowledge/traditional-names.json'),glossary);
- const note=`${report.to} 靜態核對沿用（寫入點、已審核事件與引用公式未變${report.catalogChanges.length?'；資料變動：'+report.catalogChanges.join('、'):''}）`;
+ const note=report.verdict==='special'
+  ?`${report.to} 依 gameUpdate.staticReview 的特別版更紀錄核對沿用`
+  :`${report.to} 靜態核對沿用（寫入點、已審核事件與引用公式未變${report.catalogChanges.length?'；資料變動：'+report.catalogChanges.join('、'):''}）`;
  for(const [name,record]of Object.entries(proof.lightweight||{}))if(catalog.verification[name]!==false){record.gameVersion=report.to;record.gameUpdate=note;}
  const review=[
-  `以 ${report.from} 精簡來源逐條正規化攤平比對：事件新增 ${report.events.added}、修改 ${report.events.changed}、刪除 ${report.events.removed}（${report.events.functions.slice(0,12).join('、')||'無'}）；函式 ${catalog.functions.length}、寫入點 ${catalog.evidence.length}，已審核事件不變`,
-  `修改器引用的 expression 位移 ${report.expressions.delta}（expressionOffset ${register.entry.expressionOffset??0}）；內容改變的 expression ${report.expressions.changedIndices} 個不在引用清單`,
+  `以 ${report.from} 精簡來源逐條正規化攤平比對：事件新增 ${report.events.added}、修改 ${report.events.changed}、刪除 ${report.events.removed}（${report.events.functions.slice(0,12).join('、')||'無'}）；函式 ${catalog.functions.length}、寫入點 ${catalog.evidence.length}，已審核事件${report.verdict==='special'?'見本版逐項核對':'不變'}`,
+  `修改器引用的 expression 位移 ${report.expressions.delta}（expressionOffset ${register.entry.expressionOffset??0}）；同索引的內容差異共 ${report.expressions.changedIndices} 個`,
   ...report.catalogChanges.map(k=>`catalog ${k} 變動 ${report.tableChanges[k].count} 處：${report.tableChanges[k].sample.slice(0,6).join('；')}`),
   ...(report.mac?[`Mac 啟動器路徑修正命中數 ${Object.values(report.mac.path_replacements).join('/')} 不變，登錄新 c3runtime`]:[])
  ];
@@ -351,4 +383,4 @@ if(require.main===module){
  if(args.includes('--help')){console.log('node scripts/game-update.cjs [check|apply|smoke] [--package STEAM_GAME_DIR] [--artifacts OUTSIDE_REPO] [--previous OLD_SOURCE] [--save-file BASE.dat] [--source EXTRACTED --version V --build N] [smoke --scenario EDITS.json --name LABEL]');process.exit(0);}
  Promise.resolve(({check,apply,smoke})[command]()).catch(e=>{console.error(e.message);process.exit(1);});
 }
-module.exports={flatten,normalize,insertBefore,announcements,libraryPaths};
+module.exports={flatten,normalize,insertBefore,announcements,libraryPaths,compareReviewedEvents,matchingExpressionDelta};

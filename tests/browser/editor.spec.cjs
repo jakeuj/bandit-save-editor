@@ -5,6 +5,26 @@ const {test, expect} = require('./fixtures.cjs');
 const {saveFixture} = require('../helpers/save-fixture.cjs');
 const {loadRaw, selectCharacter, previewBase, download, noOverflow} = require('./actions.cjs');
 
+test('resources show campaign merit as readonly and keep legacy technology points editable', async ({page, site}) => {
+  const save = (columns, depth) => {
+    const data = Array.from({length: 221}, () => Array.from({length: columns}, () => Array(depth).fill(0)));
+    data[0][0][1] = 'szmnqea';
+    data[4][2][0] = 17;
+    return JSON.stringify({c2array: true, size: [221, columns, depth], data});
+  };
+  await page.goto(site.url);
+  await loadRaw(page, site, save(61, 26), 'campaign.dat');
+  const field = page.locator('#resourceCards [data-field="4,2,0"]');
+  await expect(field).toHaveAccessibleName('軍功數量');
+  await expect(field).toHaveValue('17');
+  await expect(field).toBeDisabled();
+  await expect(field.locator('..')).toContainText('唯讀');
+
+  await loadRaw(page, site, save(60, 25), 'legacy.dat');
+  await expect(field).toHaveAccessibleName('科技點數量');
+  await expect(field).toBeEnabled();
+});
+
 for (const width of [1280, 390]) {
   test(`HTTP ${width}px: full-size base aptitude preview, restore, download and reload`, async ({page, site}) => {
     await page.setViewportSize({width, height: 844});

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "game": "szmnqea",
-  "gameVersion": "V1.0.19.0",
+  "gameVersion": "V1.1.9.0",
   "setEquipmentLevel": {
     "version": 1,
     "policy": "level-only",
@@ -26,7 +26,7 @@
       601593514747018,
       699971245656002
     ],
-    "sourceDigest": "d6310b74a67caa60949b78815a6a093290301041e018996a14fc5465c080c872",
+    "sourceDigest": "d7119a02ff28decdafaf06c8086a8a3b42ea2d1598df03a714234fae476711a4",
     "sets": {
       "1": {
         "name": "土匪",
@@ -12180,7 +12180,7 @@
       131416746119248,
       773239288013696
     ],
-    "sourceDigest": "3c0c6c276fef62c8fef4fe166aeaa7f37d892b0d73e579b44e75fa7fe03c1e41",
+    "sourceDigest": "15b70d89b29eb12d7db2443c3889288225428dcfa4696d08cb9e0bdef9d5d411",
     "items": {
       "556": {
         "name": "铜护符",
@@ -14363,7 +14363,7 @@
         "slot": 6,
         "mainAttributes": [
           100,
-          18,
+          13,
           71
         ],
         "mainSettings": [
@@ -14832,13 +14832,13 @@
       491911663973794,
       118557701104625,
       780562691790658,
-      876108178253015,
-      196601779910507,
-      775039415186059,
-      819450314280438,
+      792778796244403,
+      628013883644214,
+      268888096105522,
+      703713552215011,
       338766607025535
     ],
-    "sourceDigest": "c56edda2792b959f914ad00a980e065086b836d2d3771f5ab8852f399885cb3b",
+    "sourceDigest": "88aa76b96db6db72ed99fae9ee32fa23b96f9494db725b36abc8cdc73057434c",
     "dependencies": {
       "Q1": {
         "sids": [
@@ -14856,7 +14856,7 @@
           5300
         ],
         "topic": "main/sub coefficient ranges, slot count",
-        "digest": "3ca6d9b9dfc3b01c3b1da9f7dd8c79c3cf06e6f7064296f2290126301aeac30c"
+        "digest": "f76c0f60083b5ac78b2fb568cc92557ebbd9433691cd6f78c91e1c0a71227213"
       },
       "Q2": {
         "sids": [
@@ -14871,7 +14871,7 @@
           3012
         ],
         "topic": "level cap by quality",
-        "digest": "8e5e3e17aa815b0967bf9045f7a3f88d7e24ed4c270aa1cb6c282e0220607c57"
+        "digest": "e4c0e5c90757e2ae4adc9aed52d50581808a72ffabdca12ab6171c4f267117d8"
       },
       "Q3": {
         "sids": [
@@ -14892,7 +14892,7 @@
           3570
         ],
         "topic": "acquisition and synthesis keep y5 and affixes",
-        "digest": "746f9a73dfd09c9891c433506951e153be8469bd59a2da75e6efa76277eceb12"
+        "digest": "f76970bd32f4411747da2f8b2e5d798a610987d9556dd59cbdab9b73a3babb5d"
       },
       "Q4": {
         "sids": [
@@ -14909,7 +14909,7 @@
           2902
         ],
         "topic": "affix pool follows current y1 template",
-        "digest": "2d4529ff52d269bfaf8ab1f2795b7e0993399059fce5832e670fc4b2d381fa0e"
+        "digest": "89c7b2f465336a10010bd647bc691043f7a7b8bf9171308401a8732f5185bc71"
       },
       "Q5": {
         "sids": [
@@ -15012,17 +15012,17 @@
           3610
         ],
         "topic": "equip/unequip owner pointers, synthesis refresh",
-        "digest": "85a325fc0558fc8c54f047fae205a76f3bd990ffd79e38d67fe1214b20ee7034"
+        "digest": "a22dbaf3c08af57422835a98ba8b89469824d5c814317e0eedf9c8e253258706"
       },
       "Q10": {
         "sids": [
           491911663973794,
           118557701104625,
           780562691790658,
-          876108178253015,
-          196601779910507,
-          775039415186059,
-          819450314280438,
+          792778796244403,
+          628013883644214,
+          268888096105522,
+          703713552215011,
           338766607025535
         ],
         "expressions": [
@@ -15039,7 +15039,7 @@
           4865
         ],
         "topic": "slot generation, refine page limits and refresh",
-        "digest": "5d9c6ee6666d2e188731470829e2f6cc52f9ee73e7973b2e73542517fb7713ae"
+        "digest": "627d6319662f09d4abde7ca69bbf070c6a1d4b466d7cd6d84a01fe89d0da45e8"
       }
     },
     "quality": {
@@ -21832,7 +21832,7 @@
       748584357810010,
       176292127127652
     ],
-    "sourceDigest": "e7b959cc5858a45dcbaaa007d6b7ea1b2325e41c0eaf9262ac7924521776a2a1",
+    "sourceDigest": "2af8f3228e6a06ca399a761696530961d8162662d6c3bc6f636f370cf096619e",
     "initial": {
       "quality": 1,
       "ranges": {
@@ -21855,7 +21855,7 @@
         213875126173692,
         480540019440160
       ],
-      "sourceDigest": "7dcf48a222a36e93ab615dd9246a78bb47acd1457647b0bba7b9cf891a365a19"
+      "sourceDigest": "d6a286c253d9b26ad007faeca54808b3677513c4236dbd0056f742db79a273de"
     }
   },
   "randomCharacterTalents": {
@@ -22207,7 +22207,7 @@
       211049884056972,
       176292127127652
     ],
-    "sourceDigest": "6e59d4308e40342fe877cf268625cb503c15a9757a0fc8d25ad5135966d509ea"
+    "sourceDigest": "588db6ce12ec3415552e2062ac3951ad98ce8e8cbdd1a772cd289ff1e08551ad"
   },
   "equipmentQuality": {
     "version": 1,
@@ -25620,43 +25620,43 @@
         "kind": "aptitude",
         "unit": "",
         "format": "小数",
-        "expression": 5578
+        "expression": 5868
       },
       "2": {
         "kind": "aptitude",
         "unit": "",
         "format": "小数",
-        "expression": 5578
+        "expression": 5868
       },
       "3": {
         "kind": "aptitude",
         "unit": "",
         "format": "小数",
-        "expression": 5578
+        "expression": 5868
       },
       "4": {
         "kind": "attack",
         "unit": "",
         "format": "整数",
-        "expression": 5577
+        "expression": 5867
       },
       "5": {
         "kind": "attack",
         "unit": "",
         "format": "整数",
-        "expression": 5577
+        "expression": 5867
       },
       "6": {
         "kind": "attack",
         "unit": "",
         "format": "整数",
-        "expression": 5577
+        "expression": 5867
       },
       "12": {
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5581,
+        "expression": 5871,
         "base": 2,
         "tier": 0.75,
         "level": 0.01
@@ -25665,7 +25665,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5582,
+        "expression": 5872,
         "base": 8,
         "tier": 3,
         "level": 0.4
@@ -25674,7 +25674,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25683,7 +25683,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25692,7 +25692,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25701,7 +25701,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25710,7 +25710,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25719,7 +25719,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25728,7 +25728,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25737,7 +25737,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25746,7 +25746,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25755,7 +25755,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25764,7 +25764,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25773,7 +25773,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25782,7 +25782,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25791,7 +25791,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25800,7 +25800,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25809,7 +25809,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25818,7 +25818,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25827,7 +25827,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25836,61 +25836,61 @@
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5583
+        "expression": 5873
       },
       "41": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5583
+        "expression": 5873
       },
       "42": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5583
+        "expression": 5873
       },
       "43": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5583
+        "expression": 5873
       },
       "44": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5583
+        "expression": 5873
       },
       "45": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5583
+        "expression": 5873
       },
       "46": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5583
+        "expression": 5873
       },
       "47": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5583
+        "expression": 5873
       },
       "48": {
         "kind": "work",
         "unit": "",
         "format": "整数",
-        "expression": 5583
+        "expression": 5873
       },
       "51": {
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5581,
+        "expression": 5871,
         "base": 2,
         "tier": 0.75,
         "level": 0.01
@@ -25899,7 +25899,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5582,
+        "expression": 5872,
         "base": 8,
         "tier": 3,
         "level": 0.4
@@ -25908,7 +25908,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25917,7 +25917,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25926,7 +25926,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25935,7 +25935,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25944,7 +25944,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25953,7 +25953,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25962,7 +25962,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25971,7 +25971,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25980,7 +25980,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25989,7 +25989,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -25998,7 +25998,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -26007,7 +26007,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -26016,7 +26016,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5584,
+        "expression": 5874,
         "base": 2,
         "tier": 0.75,
         "level": 0.1
@@ -26025,7 +26025,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5584,
+        "expression": 5874,
         "base": 2,
         "tier": 0.75,
         "level": 0.1
@@ -26034,7 +26034,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -26043,7 +26043,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -26052,7 +26052,7 @@
         "kind": "percent",
         "unit": "%",
         "format": "百分比",
-        "expression": 5586,
+        "expression": 5876,
         "base": 4,
         "tier": 1.5,
         "level": 0.2
@@ -26120,11 +26120,11 @@
       166680919655131,
       666416688115651,
       644557287879738,
-      196601779910507,
-      775039415186059,
+      628013883644214,
+      268888096105522,
       564254928232839,
-      204416519787196,
-      574511591831477
+      639417854082032,
+      745461878410324
     ]
   },
   "affixReplacement": {
@@ -26142,266 +26142,266 @@
         "base": 2,
         "tier": 0.75,
         "level": 0.01,
-        "expression": 5581
+        "expression": 5871
       },
       "13": {
         "unit": "%",
         "base": 8,
         "tier": 3,
         "level": 0.4,
-        "expression": 5582
+        "expression": 5872
       },
       "17": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "18": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "19": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "20": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "21": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "23": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "24": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "25": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "26": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "27": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "31": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "32": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "33": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "35": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "36": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "37": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "38": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "51": {
         "unit": "%",
         "base": 2,
         "tier": 0.75,
         "level": 0.01,
-        "expression": 5581
+        "expression": 5871
       },
       "52": {
         "unit": "%",
         "base": 8,
         "tier": 3,
         "level": 0.4,
-        "expression": 5582
+        "expression": 5872
       },
       "53": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "54": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "55": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "56": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "57": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "58": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "59": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "60": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "61": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "62": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "63": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "64": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "71": {
         "unit": "%",
         "base": 2,
         "tier": 0.75,
         "level": 0.1,
-        "expression": 5584
+        "expression": 5874
       },
       "72": {
         "unit": "%",
         "base": 2,
         "tier": 0.75,
         "level": 0.1,
-        "expression": 5584
+        "expression": 5874
       },
       "110": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "111": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       },
       "112": {
         "unit": "%",
         "base": 4,
         "tier": 1.5,
         "level": 0.2,
-        "expression": 5586
+        "expression": 5876
       }
     }
   },
@@ -26457,7 +26457,7 @@
   "cityLayers": {
     "source": {
       "file": "zddt.json",
-      "sha256": "43f90d603721c0c9d1b03bb85f632854b3698b30669b8205e96a3f949959a6c8"
+      "sha256": "7733cd13982d00db6e1e190cb13cc4e5e9c5357b1174490f2e1f9816d5894e62"
     },
     "layerCap": 150,
     "maxLayer": 149,
@@ -26573,15 +26573,15 @@
     ]
   },
   "fingerprints": {
-    "data.json": "2855f4edf230e16477a43eefc4d74ab1fe5c12bb9d9abd37c28083b20c83d8af",
-    "scripts/c3runtime.js": "6a404251636c01dbc4099722c14ecf73256ccdff7e12b402252f7b616630c9fa",
-    "cl.json": "7d0febe7bda7f3fa4c2806a2b601efdbc5a125cb697f32b8611576e6fa3a519a",
-    "js.json": "851dcb9722c23ec039f35e3e636100bfa39ed69ef1e1fe0edf8f8968fe9dd42f",
+    "data.json": "d1ed3e200fcf2191a0c9ae17506469615701797ac54711f3b77a5412e071a3ff",
+    "scripts/c3runtime.js": "53acf76284cab9f17f3ec931dac9f941e040a62fb6529c81e34172876e65b1e2",
+    "cl.json": "4d9b45177e35c141393823f07d510762516b7e5e2a1d80459cf3d2ffa29e7158",
+    "js.json": "69cdb7b5a3d4c26515bc59f8ac7e282acbbcabfc97c70c10b45aecd0373b8ac5",
     "zy.json": "24b707dc7161bff920f207aba3766e80b7655e45122c735248a7a4e6bef083ea",
     "sx.json": "fd8f85edd3483d23be3d81dc6e949ee41c3204ef560ab15f8e59ef4acb35c579",
-    "wp.json": "77b20b396b750fccb527a8d767fac00b0a3dc7eacc21067d1cbf3aa9c9c6d324",
+    "wp.json": "7198ae65bd2f4bdfbea1a4c37bcf415313cc405d2bb3a2fe11831f683dfcf07f",
     "kj.json": "98dca371d8e203503410e5197cd9d7d5332c727b999b1418f384fe1d52092ac8",
-    "jz.json": "6cb5868c159aa763318a19a05a0b321389e67c3ab9d37574aa045ea695594e8d",
+    "jz.json": "56b2ea2ad780d1a37fe025cb009317576206e3b359b99eb73c73c57f9eae7ca2",
     "rw.json": "705f541917d9a62cff9ef5805032fd29496fdc98b03a7f065ff3fc6fab937b4b",
     "tf.json": "6949a2cfe322fd856222ea21454b4a8e434bacb51accd8e96c65d35e86c49cfe",
     "ss.json": "4350cb979c4026ce0d8dc25e7807fde3d29a1d42fbd2e499673614a4f67e1bc7",
@@ -51206,7 +51206,7 @@
         "setLink": "",
         "mainAttributes": [
           100,
-          18,
+          13,
           71
         ],
         "affixIds": [
@@ -55799,7 +55799,7 @@
       "181": {
         "base": [
           87,
-          65,
+          81,
           83
         ],
         "talents": [
@@ -55815,7 +55815,7 @@
       },
       "182": {
         "base": [
-          89,
+          112,
           67,
           85
         ],
@@ -55833,7 +55833,7 @@
       "183": {
         "base": [
           76,
-          95,
+          105,
           60
         ],
         "talents": [
@@ -55919,7 +55919,7 @@
         "base": [
           61,
           80,
-          102
+          112
         ],
         "talents": [
           10,
@@ -55970,10 +55970,10 @@
         "base": [
           100,
           66,
-          81
+          95
         ],
         "talents": [
-          6,
+          74,
           45,
           52
         ],
@@ -55990,7 +55990,7 @@
           68
         ],
         "talents": [
-          6,
+          37,
           68,
           63
         ],
@@ -56002,12 +56002,12 @@
       },
       "193": {
         "base": [
-          86,
+          101,
           66,
           81
         ],
         "talents": [
-          7,
+          52,
           19,
           48
         ],
@@ -56054,13 +56054,13 @@
       "196": {
         "base": [
           95,
-          69,
-          86
+          83,
+          101
         ],
         "talents": [
           18,
           70,
-          7
+          47
         ],
         "talentLevels": [
           5,
@@ -56127,7 +56127,7 @@
         ],
         "talents": [
           64,
-          40,
+          71,
           41
         ],
         "talentLevels": [
@@ -56139,8 +56139,8 @@
       "201": {
         "base": [
           91,
-          69,
-          90
+          93,
+          115
         ],
         "talents": [
           38,
@@ -56161,7 +56161,7 @@
         ],
         "talents": [
           19,
-          6,
+          9,
           46
         ],
         "talentLevels": [
@@ -56207,7 +56207,7 @@
       "205": {
         "base": [
           61,
-          94,
+          115,
           88
         ],
         "talents": [
@@ -56270,6 +56270,23 @@
           3,
           2,
           4
+        ]
+      },
+      "209": {
+        "base": [
+          30,
+          30,
+          30
+        ],
+        "talents": [
+          40,
+          41,
+          42
+        ],
+        "talentLevels": [
+          1,
+          1,
+          1
         ]
       }
     },
@@ -58002,23 +58019,23 @@
     }
   },
   "counts": {
-    "functions": 761,
-    "setXYZ": 882,
-    "arrayActions": 895,
-    "readSites": 3044
+    "functions": 799,
+    "setXYZ": 926,
+    "arrayActions": 941,
+    "readSites": 3174
   },
   "planes": [
     {
       "z": 0,
       "name": "山寨與全局",
       "status": "程式證據",
-      "writes": 270,
-      "reads": 603,
+      "writes": 291,
+      "reads": 644,
       "sources": [
         {
           "function": "初始化／事件",
           "sheet": "主事件",
-          "sid": 740979987036499
+          "sid": 302853508434146
         },
         {
           "function": "初始化设置",
@@ -58073,12 +58090,12 @@
         {
           "function": "角色解雇",
           "sheet": "主事件",
-          "sid": 502618651036283
+          "sid": 766163488552315
         },
         {
           "function": "角色下狱",
           "sheet": "主事件",
-          "sid": 597260434606864
+          "sid": 824442765350411
         },
         {
           "function": "新刷新招募数据",
@@ -58088,12 +58105,12 @@
         {
           "function": "招募随机角色",
           "sheet": "主事件",
-          "sid": 478649300948700
+          "sid": 674854980311133
         },
         {
           "function": "随机角色收监",
           "sheet": "主事件",
-          "sid": 332890375954733
+          "sid": 535147169646988
         },
         {
           "function": "未招募角色收监",
@@ -58126,6 +58143,16 @@
           "sid": 402073940452902
         },
         {
+          "function": "符文加锁切换",
+          "sheet": "主事件",
+          "sid": 981511113000023
+        },
+        {
+          "function": "重置筛选",
+          "sheet": "主事件",
+          "sid": 221180390079926
+        },
+        {
           "function": "刷新所有城市商铺",
           "sheet": "主事件",
           "sid": 726235157484422
@@ -58154,6 +58181,11 @@
           "function": "招募指定角色",
           "sheet": "主事件",
           "sid": 761654901914604
+        },
+        {
+          "function": "招募指定角色军功",
+          "sheet": "主事件",
+          "sid": 285371110862089
         },
         {
           "function": "招募免费角色",
@@ -58234,6 +58266,11 @@
           "function": "城市召回",
           "sheet": "主事件",
           "sid": 857670492132625
+        },
+        {
+          "function": "创建主角",
+          "sheet": "主事件",
+          "sid": 643997599301356
         },
         {
           "function": "生成战斗地图",
@@ -58353,7 +58390,7 @@
         {
           "function": "战役胜利",
           "sheet": "主事件",
-          "sid": 214888479328948
+          "sid": 395508978520792
         },
         {
           "function": "战斗碰撞伤害",
@@ -58374,6 +58411,11 @@
           "function": "获得铜钱",
           "sheet": "主事件",
           "sid": 416904581905874
+        },
+        {
+          "function": "获得军功",
+          "sheet": "主事件",
+          "sid": 674603607103118
         },
         {
           "function": "获得经验",
@@ -58426,6 +58468,11 @@
           "sid": 892651586973632
         },
         {
+          "function": "失去军功",
+          "sheet": "主事件",
+          "sid": 817232051853234
+        },
+        {
           "function": "失去材料",
           "sheet": "主事件",
           "sid": 300636303816826
@@ -58472,7 +58519,12 @@
         46,
         47,
         48,
-        49
+        49,
+        50,
+        51,
+        52,
+        53,
+        54
       ]
     },
     {
@@ -58480,7 +58532,7 @@
       "name": "存檔識別與建築",
       "status": "程式證據",
       "writes": 55,
-      "reads": 406,
+      "reads": 411,
       "sources": [
         {
           "function": "存档",
@@ -58525,7 +58577,7 @@
         {
           "function": "角色解雇",
           "sheet": "主事件",
-          "sid": 119400161137080
+          "sid": 196199782786706
         },
         {
           "function": "城市派驻",
@@ -58592,8 +58644,8 @@
       "z": 2,
       "name": "角色基本資料",
       "status": "程式證據",
-      "writes": 145,
-      "reads": 640,
+      "writes": 154,
+      "reads": 663,
       "sources": [
         {
           "function": "初始化／事件",
@@ -58613,7 +58665,7 @@
         {
           "function": "角色解雇",
           "sheet": "主事件",
-          "sid": 305073651052035
+          "sid": 834670516083378
         },
         {
           "function": "角色重生",
@@ -58623,7 +58675,7 @@
         {
           "function": "角色下狱",
           "sheet": "主事件",
-          "sid": 806259585632860
+          "sid": 370708448905566
         },
         {
           "function": "转职",
@@ -58643,7 +58695,7 @@
         {
           "function": "招募随机角色",
           "sheet": "主事件",
-          "sid": 402265182569649
+          "sid": 565464426461198
         },
         {
           "function": "招募随机角色2",
@@ -58653,7 +58705,7 @@
         {
           "function": "随机角色收监",
           "sheet": "主事件",
-          "sid": 497823431034339
+          "sid": 792120153322945
         },
         {
           "function": "未招募角色收监",
@@ -58684,6 +58736,11 @@
           "function": "招募指定角色",
           "sheet": "主事件",
           "sid": 774561584743241
+        },
+        {
+          "function": "招募指定角色军功",
+          "sheet": "主事件",
+          "sid": 152571762188596
         },
         {
           "function": "招募免费角色",
@@ -58719,6 +58776,11 @@
           "function": "渡劫结束",
           "sheet": "主事件",
           "sid": 963468871617308
+        },
+        {
+          "function": "创建主角",
+          "sheet": "主事件",
+          "sid": 643997599301356
         },
         {
           "function": "生成地图角色",
@@ -58771,6 +58833,7 @@
         1,
         3,
         4,
+        5,
         6,
         7,
         8,
@@ -58814,7 +58877,7 @@
       "name": "招募候選角色",
       "status": "程式證據",
       "writes": 78,
-      "reads": 114,
+      "reads": 118,
       "sources": [
         {
           "function": "初始化角色",
@@ -58829,7 +58892,7 @@
         {
           "function": "招募随机角色",
           "sheet": "主事件",
-          "sid": 497207030995812
+          "sid": 986584661639168
         },
         {
           "function": "招募随机角色2",
@@ -58839,7 +58902,7 @@
         {
           "function": "随机角色收监",
           "sheet": "主事件",
-          "sid": 541253863518917
+          "sid": 109848676643466
         },
         {
           "function": "初始化／事件",
@@ -58908,18 +58971,18 @@
       "z": 4,
       "name": "角色職業等級",
       "status": "程式證據",
-      "writes": 16,
-      "reads": 43,
+      "writes": 22,
+      "reads": 66,
       "sources": [
         {
           "function": "初始化／事件",
           "sheet": "主事件",
-          "sid": 289024331548821
+          "sid": 615808540609732
         },
         {
           "function": "角色解雇",
           "sheet": "主事件",
-          "sid": 305073651052035
+          "sid": 834670516083378
         },
         {
           "function": "转职",
@@ -58929,7 +58992,7 @@
         {
           "function": "招募随机角色",
           "sheet": "主事件",
-          "sid": 402265182569649
+          "sid": 565464426461198
         },
         {
           "function": "招募随机角色2",
@@ -58939,7 +59002,7 @@
         {
           "function": "随机角色收监",
           "sheet": "主事件",
-          "sid": 497823431034339
+          "sid": 792120153322945
         },
         {
           "function": "未招募角色收监",
@@ -58952,6 +59015,11 @@
           "sid": 774561584743241
         },
         {
+          "function": "招募指定角色军功",
+          "sheet": "主事件",
+          "sid": 152571762188596
+        },
+        {
           "function": "招募免费角色",
           "sheet": "主事件",
           "sid": 985366889549768
@@ -58960,6 +59028,16 @@
           "function": "招募测试角色1",
           "sheet": "主事件",
           "sid": 620534381049002
+        },
+        {
+          "function": "职业训练",
+          "sheet": "主事件",
+          "sid": 102272022962426
+        },
+        {
+          "function": "职业训练最大",
+          "sheet": "主事件",
+          "sid": 502364221058418
         },
         {
           "function": "获得职业经验",
@@ -58975,13 +59053,23 @@
       "z": 5,
       "name": "角色職業經驗",
       "status": "程式證據",
-      "writes": 5,
-      "reads": 6,
+      "writes": 7,
+      "reads": 8,
       "sources": [
         {
           "function": "角色解雇",
           "sheet": "主事件",
-          "sid": 305073651052035
+          "sid": 834670516083378
+        },
+        {
+          "function": "职业训练",
+          "sheet": "主事件",
+          "sid": 995764691718712
+        },
+        {
+          "function": "职业训练最大",
+          "sheet": "主事件",
+          "sid": 502364221058418
         },
         {
           "function": "获得职业经验",
@@ -59203,7 +59291,7 @@
       "z": 12,
       "name": "角色衍生屬性",
       "status": "程式證據",
-      "writes": 25,
+      "writes": 27,
       "reads": 21,
       "sources": [
         {
@@ -59214,12 +59302,12 @@
         {
           "function": "角色解雇",
           "sheet": "主事件",
-          "sid": 305073651052035
+          "sid": 834670516083378
         },
         {
           "function": "招募随机角色",
           "sheet": "主事件",
-          "sid": 589480535668937
+          "sid": 664281571164420
         },
         {
           "function": "招募随机角色2",
@@ -59229,7 +59317,7 @@
         {
           "function": "随机角色收监",
           "sheet": "主事件",
-          "sid": 848656463856862
+          "sid": 296515355821016
         },
         {
           "function": "未招募角色收监",
@@ -59240,6 +59328,11 @@
           "function": "招募指定角色",
           "sheet": "主事件",
           "sid": 513846283346733
+        },
+        {
+          "function": "招募指定角色军功",
+          "sheet": "主事件",
+          "sid": 619169970125940
         },
         {
           "function": "招募免费角色",
@@ -59360,7 +59453,7 @@
         {
           "function": "角色解雇",
           "sheet": "主事件",
-          "sid": 305073651052035
+          "sid": 834670516083378
         },
         {
           "function": "角色重生",
@@ -59500,7 +59593,7 @@
         {
           "function": "角色解雇",
           "sheet": "主事件",
-          "sid": 305073651052035
+          "sid": 834670516083378
         },
         {
           "function": "删除角色位置记录",
@@ -59655,7 +59748,7 @@
       "name": "職業精通與符文",
       "status": "程式證據",
       "writes": 3,
-      "reads": 16,
+      "reads": 22,
       "sources": [
         {
           "function": "初始化／事件",
@@ -59676,6 +59769,15 @@
       "columns": [
         0
       ]
+    },
+    {
+      "z": 25,
+      "name": "靈物庫",
+      "status": "未辨識",
+      "writes": 0,
+      "reads": 0,
+      "sources": [],
+      "columns": []
     }
   ],
   "catalogs": {
@@ -61222,2170 +61324,2170 @@
       },
       {
         "id": 221,
-        "name": "暴擊傷害符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 222,
-        "name": "暴擊傷害符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 223,
-        "name": "暴擊傷害符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 224,
-        "name": "暴擊傷害符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 225,
-        "name": "暴擊傷害符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 226,
-        "name": "暴擊傷害符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 227,
-        "name": "普攻傷害符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 228,
-        "name": "普攻傷害符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 229,
-        "name": "普攻傷害符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 230,
-        "name": "普攻傷害符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 231,
-        "name": "普攻傷害符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 232,
-        "name": "普攻傷害符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 233,
-        "name": "技能傷害符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 234,
-        "name": "技能傷害符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 235,
-        "name": "技能傷害符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 236,
-        "name": "技能傷害符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 237,
-        "name": "技能傷害符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 238,
-        "name": "技能傷害符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 239,
-        "name": "物理增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 240,
-        "name": "物理增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 241,
-        "name": "物理增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 242,
-        "name": "物理增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 243,
-        "name": "物理增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 244,
-        "name": "物理增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 245,
-        "name": "穿刺增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 246,
-        "name": "穿刺增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 247,
-        "name": "穿刺增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 248,
-        "name": "穿刺增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 249,
-        "name": "穿刺增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 250,
-        "name": "穿刺增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 251,
-        "name": "法術增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 252,
-        "name": "法術增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 253,
-        "name": "法術增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 254,
-        "name": "法術增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 255,
-        "name": "法術增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 256,
-        "name": "法術增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 257,
-        "name": "對金系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 258,
-        "name": "對金系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 259,
-        "name": "對金系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 260,
-        "name": "對金系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 261,
-        "name": "對金系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 262,
-        "name": "對金系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 263,
-        "name": "對水系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 264,
-        "name": "對水系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 265,
-        "name": "對水系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 266,
-        "name": "對水系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 267,
-        "name": "對水系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 268,
-        "name": "對水系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 269,
-        "name": "對火系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 270,
-        "name": "對火系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 271,
-        "name": "對火系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 272,
-        "name": "對火系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 273,
-        "name": "對火系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 274,
-        "name": "對火系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 275,
-        "name": "對木系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 276,
-        "name": "對木系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 277,
-        "name": "對木系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 278,
-        "name": "對木系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 279,
-        "name": "對木系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 280,
-        "name": "對木系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 281,
-        "name": "對土系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 282,
-        "name": "對土系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 283,
-        "name": "對土系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 284,
-        "name": "對土系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 285,
-        "name": "對土系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 286,
-        "name": "對土系增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 287,
-        "name": "小怪增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 288,
-        "name": "小怪增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 289,
-        "name": "小怪增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 290,
-        "name": "小怪增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 291,
-        "name": "小怪增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 292,
-        "name": "小怪增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 293,
-        "name": "精英增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 294,
-        "name": "精英增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 295,
-        "name": "精英增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 296,
-        "name": "精英增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 297,
-        "name": "精英增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 298,
-        "name": "精英增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 299,
-        "name": "首領增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 300,
-        "name": "首領增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 301,
-        "name": "首領增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 302,
-        "name": "首領增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 303,
-        "name": "首領增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 304,
-        "name": "首領增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 305,
-        "name": "最終增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 306,
-        "name": "最終增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 307,
-        "name": "最終增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 308,
-        "name": "最終增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 309,
-        "name": "最終增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 310,
-        "name": "最終增傷符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 311,
-        "name": "掠奪銅錢符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 312,
-        "name": "掠奪銅錢符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 313,
-        "name": "掠奪銅錢符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 314,
-        "name": "掠奪銅錢符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 315,
-        "name": "掠奪銅錢符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 316,
-        "name": "掠奪銅錢符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 317,
-        "name": "等級經驗符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 318,
-        "name": "等級經驗符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 319,
-        "name": "等級經驗符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 320,
-        "name": "等級經驗符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 321,
-        "name": "等級經驗符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 322,
-        "name": "等級經驗符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 323,
-        "name": "技藝經驗符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 324,
-        "name": "技藝經驗符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 325,
-        "name": "技藝經驗符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 326,
-        "name": "技藝經驗符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 327,
-        "name": "技藝經驗符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 328,
-        "name": "技藝經驗符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 329,
-        "name": "職業經驗符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 330,
-        "name": "職業經驗符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 331,
-        "name": "職業經驗符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 332,
-        "name": "職業經驗符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 333,
-        "name": "職業經驗符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 334,
-        "name": "職業經驗符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 335,
-        "name": "內丹成長符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 336,
-        "name": "內丹成長符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 337,
-        "name": "內丹成長符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 338,
-        "name": "內丹成長符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 339,
-        "name": "內丹成長符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 340,
-        "name": "內丹成長符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 341,
-        "name": "工作暴幅符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 342,
-        "name": "工作暴幅符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 343,
-        "name": "工作暴幅符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 344,
-        "name": "工作暴幅符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 345,
-        "name": "工作暴幅符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 346,
-        "name": "工作暴幅符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 347,
-        "name": "採集加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 348,
-        "name": "採集加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 349,
-        "name": "採集加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 350,
-        "name": "採集加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 351,
-        "name": "採集加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 352,
-        "name": "採集加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 353,
-        "name": "製造加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 354,
-        "name": "製造加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 355,
-        "name": "製造加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 356,
-        "name": "製造加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 357,
-        "name": "製造加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 358,
-        "name": "製造加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 359,
-        "name": "發展加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 360,
-        "name": "發展加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 361,
-        "name": "發展加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 362,
-        "name": "發展加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 363,
-        "name": "發展加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 364,
-        "name": "發展加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 365,
-        "name": "伐木加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 366,
-        "name": "伐木加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 367,
-        "name": "伐木加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 368,
-        "name": "伐木加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 369,
-        "name": "伐木加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 370,
-        "name": "伐木加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 371,
-        "name": "採礦加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 372,
-        "name": "採礦加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 373,
-        "name": "採礦加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 374,
-        "name": "採礦加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 375,
-        "name": "採礦加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 376,
-        "name": "採礦加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 377,
-        "name": "種植加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 378,
-        "name": "種植加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 379,
-        "name": "種植加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 380,
-        "name": "種植加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 381,
-        "name": "種植加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 382,
-        "name": "種植加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 383,
-        "name": "鍛造加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 384,
-        "name": "鍛造加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 385,
-        "name": "鍛造加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 386,
-        "name": "鍛造加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 387,
-        "name": "鍛造加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 388,
-        "name": "鍛造加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 389,
-        "name": "工藝加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 390,
-        "name": "工藝加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 391,
-        "name": "工藝加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 392,
-        "name": "工藝加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 393,
-        "name": "工藝加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 394,
-        "name": "工藝加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 395,
-        "name": "煉丹加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 396,
-        "name": "煉丹加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 397,
-        "name": "煉丹加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 398,
-        "name": "煉丹加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 399,
-        "name": "煉丹加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 400,
-        "name": "煉丹加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 401,
-        "name": "建造加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 402,
-        "name": "建造加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 403,
-        "name": "建造加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 404,
-        "name": "建造加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 405,
-        "name": "建造加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 406,
-        "name": "建造加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 407,
-        "name": "研究加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 408,
-        "name": "研究加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 409,
-        "name": "研究加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 410,
-        "name": "研究加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 411,
-        "name": "研究加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 412,
-        "name": "研究加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 413,
-        "name": "操練加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 414,
-        "name": "操練加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 415,
-        "name": "操練加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 416,
-        "name": "操練加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 417,
-        "name": "操練加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 418,
-        "name": "操練加成符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 419,
-        "name": "最終增產符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 420,
-        "name": "最終增產符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 421,
-        "name": "最終增產符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 422,
-        "name": "最終增產符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 423,
-        "name": "最終增產符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 424,
-        "name": "最終增產符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 425,
-        "name": "皮甲克制符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 426,
-        "name": "皮甲克制符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 427,
-        "name": "皮甲克制符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 428,
-        "name": "皮甲克制符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 429,
-        "name": "皮甲克制符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 430,
-        "name": "皮甲克制符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 431,
-        "name": "重甲克制符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 432,
-        "name": "重甲克制符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 433,
-        "name": "重甲克制符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 434,
-        "name": "重甲克制符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 435,
-        "name": "重甲克制符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 436,
-        "name": "重甲克制符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 437,
-        "name": "布甲克制符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 438,
-        "name": "布甲克制符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 439,
-        "name": "布甲克制符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 440,
-        "name": "布甲克制符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 441,
-        "name": "布甲克制符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 442,
-        "name": "布甲克制符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 443,
-        "name": "聖甲克制符文",
+        "name": "符文",
         "category": "通用",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 444,
-        "name": "聖甲克制符文",
+        "name": "符文",
         "category": "通用",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 445,
-        "name": "聖甲克制符文",
+        "name": "符文",
         "category": "通用",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 446,
-        "name": "聖甲克制符文",
+        "name": "符文",
         "category": "通用",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 447,
-        "name": "聖甲克制符文",
+        "name": "符文",
         "category": "通用",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 448,
-        "name": "聖甲克制符文",
+        "name": "符文",
         "category": "通用",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 449,
-        "name": "拳擊I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 450,
-        "name": "自我激勵符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 1,
         "kind": "符文"
       },
       {
         "id": 451,
-        "name": "砍斧I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 452,
-        "name": "砍一大片符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 453,
-        "name": "鼓勵他人符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 2,
         "kind": "符文"
       },
       {
         "id": 454,
-        "name": "砍斧II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 455,
-        "name": "巨斧揮舞符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 456,
-        "name": "刺殺I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 457,
-        "name": "潛行狀態符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 458,
-        "name": "火球I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 459,
-        "name": "烈火扇擊符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 460,
-        "name": "牛馬精神符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 3,
         "kind": "符文"
       },
       {
         "id": 461,
-        "name": "揮砍I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 462,
-        "name": "斬敵衝擊符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 463,
-        "name": "砍斧III符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 464,
-        "name": "凶猛暈擊符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 465,
-        "name": "射擊I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 466,
-        "name": "射擊姿態符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 467,
-        "name": "刺殺II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 468,
-        "name": "鷹擊獵殺符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 469,
-        "name": "火球II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 470,
-        "name": "軍心奮起符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 471,
-        "name": "冰擊I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 472,
-        "name": "暴風雪降符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 473,
-        "name": "匠心獨運符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 474,
-        "name": "資源豐收符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 4,
         "kind": "符文"
       },
       {
         "id": 475,
-        "name": "刑斬I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 476,
-        "name": "斷獄刑場I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 477,
-        "name": "旋風拳I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 478,
-        "name": "風暴持續I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 479,
-        "name": "橫掃I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 480,
-        "name": "破軍斧擊I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 481,
-        "name": "狂斬II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 482,
-        "name": "血魔狂暴I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 483,
-        "name": "齊射I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 484,
-        "name": "雷霆速射I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 485,
-        "name": "貫射I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 486,
-        "name": "暴雨貫射I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 487,
-        "name": "影刃I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 488,
-        "name": "鷹擊爆發I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 489,
-        "name": "影彈I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 490,
-        "name": "煙霧彈I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 491,
-        "name": "雷符I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 492,
-        "name": "軍師號令I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 493,
-        "name": "毒咒I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 494,
-        "name": "毒霧彌漫I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 495,
-        "name": "炎爆I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 496,
-        "name": "烈焰風暴符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 497,
-        "name": "冰環爆發I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 498,
-        "name": "精泉玉液I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 499,
-        "name": "鍛造專注I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 500,
-        "name": "工藝專注I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 501,
-        "name": "種植專注I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 502,
-        "name": "挖礦專注I符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 5,
         "kind": "符文"
       },
       {
         "id": 503,
-        "name": "刑斬II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 504,
-        "name": "斷獄刑場II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 505,
-        "name": "旋風拳II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 506,
-        "name": "風暴持續II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 507,
-        "name": "橫掃II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 508,
-        "name": "破天斧擊II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 509,
-        "name": "狂斬II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 510,
-        "name": "血魔狂暴II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 511,
-        "name": "齊射II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 512,
-        "name": "雷霆速射II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 513,
-        "name": "貫射II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 514,
-        "name": "暴雨貫射II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 515,
-        "name": "影刃II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 516,
-        "name": "鷹擊爆發II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 517,
-        "name": "影彈II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 518,
-        "name": "煙霧彈II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 519,
-        "name": "雷符II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 520,
-        "name": "軍師號令II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 521,
-        "name": "毒咒II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 522,
-        "name": "毒霧彌漫II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 523,
-        "name": "炎爆II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 524,
-        "name": "爆炎風暴符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 525,
-        "name": "冰環爆發II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 526,
-        "name": "精泉玉液II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 527,
-        "name": "鍛造專注II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 528,
-        "name": "工藝專注II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 529,
-        "name": "種植專注II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 6,
         "kind": "符文"
       },
       {
         "id": 530,
-        "name": "挖礦專注II符文",
+        "name": "符文",
         "category": "覺醒",
         "tier": 6,
         "kind": "符文"
@@ -64430,6 +64532,11 @@
       {
         "id": 208,
         "name": "潘金蓮",
+        "category": ""
+      },
+      {
+        "id": 209,
+        "name": "主角",
         "category": ""
       }
     ],
@@ -71730,6 +71837,96 @@
         "id": 152,
         "name": "小型軍帳",
         "category": "城市"
+      },
+      {
+        "id": 153,
+        "name": "軍需官",
+        "category": "城市"
+      },
+      {
+        "id": 154,
+        "name": "符文師",
+        "category": "城市"
+      },
+      {
+        "id": 155,
+        "name": "招募官",
+        "category": "城市"
+      },
+      {
+        "id": 156,
+        "name": "訓練官",
+        "category": "城市"
+      },
+      {
+        "id": 157,
+        "name": "道場",
+        "category": "地面"
+      },
+      {
+        "id": 158,
+        "name": "道場地面",
+        "category": "地面"
+      },
+      {
+        "id": 159,
+        "name": "主殿",
+        "category": "城市"
+      },
+      {
+        "id": 160,
+        "name": "煉丹房",
+        "category": "城市"
+      },
+      {
+        "id": 161,
+        "name": "悟道堂",
+        "category": "城市"
+      },
+      {
+        "id": 162,
+        "name": "傳習館",
+        "category": "城市"
+      },
+      {
+        "id": 163,
+        "name": "松樹盆景",
+        "category": "裝飾"
+      },
+      {
+        "id": 164,
+        "name": "石欄牆段",
+        "category": "裝飾"
+      },
+      {
+        "id": 165,
+        "name": "竹叢",
+        "category": "裝飾"
+      },
+      {
+        "id": 166,
+        "name": "石燈",
+        "category": "裝飾"
+      },
+      {
+        "id": 167,
+        "name": "太極圖",
+        "category": "裝飾"
+      },
+      {
+        "id": 168,
+        "name": "淬體爐",
+        "category": "城市"
+      },
+      {
+        "id": 169,
+        "name": "百工台",
+        "category": "城市"
+      },
+      {
+        "id": 170,
+        "name": "悟道碑",
+        "category": "城市"
       }
     ],
     "quests": [
@@ -73994,6 +74191,11 @@
       "sid": 979750683098039
     },
     {
+      "name": "符文价格",
+      "sheet": "主事件",
+      "sid": 144710196570531
+    },
+    {
       "name": "刷新角色丹药",
       "sheet": "主事件",
       "sid": 957964845471699
@@ -74434,6 +74636,11 @@
       "sid": 240477057233049
     },
     {
+      "name": "符文数量分解确认",
+      "sheet": "主事件",
+      "sid": 981511114000029
+    },
+    {
       "name": "出售物品",
       "sheet": "主事件",
       "sid": 619954817441323
@@ -74452,6 +74659,11 @@
       "name": "出售材料",
       "sheet": "主事件",
       "sid": 499472072231707
+    },
+    {
+      "name": "符文分解",
+      "sheet": "主事件",
+      "sid": 760020298518973
     },
     {
       "name": "失去物品",
@@ -74494,9 +74706,44 @@
       "sid": 761577193118513
     },
     {
+      "name": "符文批量分解",
+      "sheet": "主事件",
+      "sid": 712581094675709
+    },
+    {
       "name": "图纸类型文本",
       "sheet": "主事件",
       "sid": 826000860053699
+    },
+    {
+      "name": "符文锁定判断",
+      "sheet": "主事件",
+      "sid": 981511113000009
+    },
+    {
+      "name": "符文加锁切换",
+      "sheet": "主事件",
+      "sid": 981511113000032
+    },
+    {
+      "name": "重置筛选",
+      "sheet": "主事件",
+      "sid": 411436419268495
+    },
+    {
+      "name": "词条筛选权重",
+      "sheet": "主事件",
+      "sid": 200033316367917
+    },
+    {
+      "name": "词条筛选判断",
+      "sheet": "主事件",
+      "sid": 430007151354953
+    },
+    {
+      "name": "词条排序数量",
+      "sheet": "主事件",
+      "sid": 622367316125917
     },
     {
       "name": "刷新资源页面",
@@ -74522,6 +74769,11 @@
       "name": "材料等阶转换",
       "sheet": "主事件",
       "sid": 902334369197177
+    },
+    {
+      "name": "资源名",
+      "sheet": "主事件",
+      "sid": 444899590792157
     },
     {
       "name": "刷新兽材页面",
@@ -74657,6 +74909,11 @@
       "name": "招募指定角色",
       "sheet": "主事件",
       "sid": 961627064939722
+    },
+    {
+      "name": "招募指定角色军功",
+      "sheet": "主事件",
+      "sid": 338431279712419
     },
     {
       "name": "招募免费角色",
@@ -74964,6 +75221,56 @@
       "sid": 763075301790003
     },
     {
+      "name": "灵物库数量",
+      "sheet": "主事件",
+      "sid": 981623110000078
+    },
+    {
+      "name": "绘制灵物库图标",
+      "sheet": "主事件",
+      "sid": 981623110000135
+    },
+    {
+      "name": "绘制灵物库单栏",
+      "sheet": "主事件",
+      "sid": 981623110000161
+    },
+    {
+      "name": "刷新灵物库",
+      "sheet": "主事件",
+      "sid": 981623110000251
+    },
+    {
+      "name": "刷新灵物库页面",
+      "sheet": "主事件",
+      "sid": 981623110000253
+    },
+    {
+      "name": "灵物仓库转移",
+      "sheet": "主事件",
+      "sid": 981623110000389
+    },
+    {
+      "name": "刷新军功兑换页面",
+      "sheet": "主事件",
+      "sid": 330866192929802
+    },
+    {
+      "name": "刷新军功兑换",
+      "sheet": "主事件",
+      "sid": 184244728816271
+    },
+    {
+      "name": "军功兑换最大页码计算",
+      "sheet": "主事件",
+      "sid": 318239264964431
+    },
+    {
+      "name": "兑换符文",
+      "sheet": "主事件",
+      "sid": 145826718720892
+    },
+    {
       "name": "刷新城主府页面",
       "sheet": "主事件",
       "sid": 915694833351288
@@ -75037,6 +75344,41 @@
       "name": "名将录最大页码计算",
       "sheet": "主事件",
       "sid": 476486358482201
+    },
+    {
+      "name": "刷新传奇招募",
+      "sheet": "主事件",
+      "sid": 286566905756128
+    },
+    {
+      "name": "传奇招募费用",
+      "sheet": "主事件",
+      "sid": 423002707907930
+    },
+    {
+      "name": "刷新职业训练页面",
+      "sheet": "主事件",
+      "sid": 823246122032577
+    },
+    {
+      "name": "职业训练军功",
+      "sheet": "主事件",
+      "sid": 699694375490029
+    },
+    {
+      "name": "职业等级上限",
+      "sheet": "主事件",
+      "sid": 549467759758287
+    },
+    {
+      "name": "职业训练",
+      "sheet": "主事件",
+      "sid": 868831807274589
+    },
+    {
+      "name": "职业训练最大",
+      "sheet": "主事件",
+      "sid": 539784667304000
     },
     {
       "name": "刷新领土管理页面",
@@ -75249,6 +75591,21 @@
       "sid": 818762202024735
     },
     {
+      "name": "刷新创建主角",
+      "sheet": "主事件",
+      "sid": 571807348654198
+    },
+    {
+      "name": "创建主角",
+      "sheet": "主事件",
+      "sid": 643997599301356
+    },
+    {
+      "name": "刷新主角修行",
+      "sheet": "主事件",
+      "sid": 510339789387387
+    },
+    {
       "name": "技能tips",
       "sheet": "主事件",
       "sid": 842897337517237
@@ -75267,6 +75624,11 @@
       "name": "职业经验文本",
       "sheet": "主事件",
       "sid": 725829448827012
+    },
+    {
+      "name": "技能编号",
+      "sheet": "主事件",
+      "sid": 197616025348528
     },
     {
       "name": "视角移动",
@@ -75974,12 +76336,17 @@
       "sid": 316241056309469
     },
     {
+      "name": "自动洗练词条判断",
+      "sheet": "主事件",
+      "sid": 865871569466355
+    },
+    {
       "name": "刷新开启战役",
       "sheet": "主事件",
       "sid": 742677845988959
     },
     {
-      "name": "刷新战役进度",
+      "name": "刷新战役选择",
       "sheet": "主事件",
       "sid": 809774568700869
     },
@@ -76032,6 +76399,11 @@
       "name": "抽符文品质概率",
       "sheet": "主事件",
       "sid": 749411264636578
+    },
+    {
+      "name": "副本元素",
+      "sheet": "主事件",
+      "sid": 779450274667407
     },
     {
       "name": "强制结束战斗",
@@ -76149,6 +76521,11 @@
       "sid": 339983562035688
     },
     {
+      "name": "觉醒buff存在判断",
+      "sheet": "主事件",
+      "sid": 138349900503382
+    },
+    {
       "name": "暴击判断",
       "sheet": "主事件",
       "sid": 274798418814027
@@ -76247,6 +76624,11 @@
       "name": "获得铜钱",
       "sheet": "主事件",
       "sid": 416904581905874
+    },
+    {
+      "name": "获得军功",
+      "sheet": "主事件",
+      "sid": 674603607103118
     },
     {
       "name": "获得经验",
@@ -76362,6 +76744,11 @@
       "name": "失去魂魄",
       "sheet": "主事件",
       "sid": 892651586973632
+    },
+    {
+      "name": "失去军功",
+      "sheet": "主事件",
+      "sid": 817232051853234
     },
     {
       "name": "失去材料",
@@ -77297,7 +77684,7 @@
     },
     {
       "sid": 643939998445172,
-      "actionSid": 980785029332186,
+      "actionSid": 871142817525977,
       "function": "初始化／事件",
       "sheet": "主事件",
       "x": "*",
@@ -77312,7 +77699,7 @@
     },
     {
       "sid": 168223690030527,
-      "actionSid": 985905678598799,
+      "actionSid": 929349596909464,
       "function": "初始化／事件",
       "sheet": "主事件",
       "x": "*",
@@ -77342,7 +77729,7 @@
     },
     {
       "sid": 946060107800777,
-      "actionSid": 303635112628527,
+      "actionSid": 610381371576136,
       "function": "初始化／事件",
       "sheet": "主事件",
       "x": "*",
@@ -77402,7 +77789,7 @@
     },
     {
       "sid": 107425826227921,
-      "actionSid": 460049899310496,
+      "actionSid": 154290203202997,
       "function": "初始化／事件",
       "sheet": "主事件",
       "x": "*",
@@ -77476,6 +77863,21 @@
       ]
     },
     {
+      "sid": 107425826227921,
+      "actionSid": 299709988459816,
+      "function": "初始化／事件",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 50,
+      "z": 0,
+      "refs": [
+        12,
+        null,
+        null,
+        null
+      ]
+    },
+    {
       "sid": 665811823670708,
       "actionSid": 209363050657379,
       "function": "初始化／事件",
@@ -77507,7 +77909,7 @@
     },
     {
       "sid": 289024331548821,
-      "actionSid": 637886358857462,
+      "actionSid": 839582228474340,
       "function": "初始化／事件",
       "sheet": "主事件",
       "x": "*",
@@ -77516,6 +77918,81 @@
       "refs": [
         12,
         12,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 615808540609732,
+      "actionSid": 466372829309287,
+      "function": "初始化／事件",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 1,
+      "z": 4,
+      "refs": [
+        12,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 825667937817137,
+      "actionSid": 896176581928364,
+      "function": "初始化／事件",
+      "sheet": "主事件",
+      "x": 1,
+      "y": 11,
+      "z": 0,
+      "refs": [
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 825667937817137,
+      "actionSid": 132321815824172,
+      "function": "初始化／事件",
+      "sheet": "主事件",
+      "x": 1,
+      "y": 50,
+      "z": 0,
+      "refs": [
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 825667937817137,
+      "actionSid": 394659972767428,
+      "function": "初始化／事件",
+      "sheet": "主事件",
+      "x": 2,
+      "y": 50,
+      "z": 0,
+      "refs": [
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 825667937817137,
+      "actionSid": 780303805580381,
+      "function": "初始化／事件",
+      "sheet": "主事件",
+      "x": 3,
+      "y": 50,
+      "z": 0,
+      "refs": [
+        null,
+        null,
         null,
         null
       ]
@@ -77697,7 +78174,7 @@
         12,
         15,
         null,
-        67
+        76
       ]
     },
     {
@@ -77712,7 +78189,7 @@
         null,
         null,
         null,
-        71
+        80
       ]
     },
     {
@@ -77877,7 +78354,7 @@
         null,
         null,
         null,
-        179
+        187
       ]
     },
     {
@@ -77892,7 +78369,7 @@
         null,
         null,
         null,
-        179
+        187
       ]
     },
     {
@@ -78147,7 +78624,7 @@
         null,
         null,
         null,
-        254
+        260
       ]
     },
     {
@@ -78177,7 +78654,7 @@
         null,
         null,
         null,
-        481
+        486
       ]
     },
     {
@@ -78252,7 +78729,7 @@
         12,
         null,
         null,
-        545
+        550
       ]
     },
     {
@@ -78267,7 +78744,7 @@
         12,
         null,
         null,
-        546
+        551
       ]
     },
     {
@@ -78282,7 +78759,7 @@
         12,
         null,
         null,
-        547
+        552
       ]
     },
     {
@@ -78297,7 +78774,7 @@
         12,
         null,
         null,
-        548
+        553
       ]
     },
     {
@@ -78312,7 +78789,7 @@
         12,
         null,
         null,
-        549
+        554
       ]
     },
     {
@@ -78327,7 +78804,7 @@
         12,
         null,
         null,
-        550
+        555
       ]
     },
     {
@@ -78342,7 +78819,7 @@
         12,
         null,
         null,
-        551
+        556
       ]
     },
     {
@@ -78357,7 +78834,7 @@
         12,
         null,
         null,
-        552
+        557
       ]
     },
     {
@@ -78372,7 +78849,7 @@
         12,
         null,
         null,
-        553
+        558
       ]
     },
     {
@@ -78387,7 +78864,7 @@
         12,
         null,
         null,
-        554
+        559
       ]
     },
     {
@@ -78402,7 +78879,7 @@
         12,
         null,
         null,
-        555
+        560
       ]
     },
     {
@@ -78417,7 +78894,7 @@
         12,
         null,
         null,
-        556
+        561
       ]
     },
     {
@@ -78432,7 +78909,7 @@
         12,
         null,
         null,
-        557
+        562
       ]
     },
     {
@@ -78447,7 +78924,7 @@
         12,
         null,
         null,
-        558
+        563
       ]
     },
     {
@@ -78462,7 +78939,7 @@
         12,
         null,
         null,
-        559
+        564
       ]
     },
     {
@@ -78477,7 +78954,7 @@
         12,
         null,
         null,
-        560
+        565
       ]
     },
     {
@@ -78492,7 +78969,7 @@
         12,
         null,
         null,
-        561
+        566
       ]
     },
     {
@@ -78507,7 +78984,7 @@
         12,
         null,
         null,
-        562
+        567
       ]
     },
     {
@@ -78520,9 +78997,9 @@
       "z": 2,
       "refs": [
         12,
-        563,
+        568,
         null,
-        564
+        569
       ]
     },
     {
@@ -78537,7 +79014,7 @@
         null,
         null,
         null,
-        1205
+        1230
       ]
     },
     {
@@ -78552,7 +79029,7 @@
         null,
         null,
         null,
-        1206
+        1231
       ]
     },
     {
@@ -78759,8 +79236,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1496,
-        1015,
+        1523,
+        1039,
         null,
         null
       ]
@@ -78774,8 +79251,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1497,
-        1015,
+        1524,
+        1039,
         null,
         null
       ]
@@ -78789,8 +79266,8 @@
       "y": "*",
       "z": 10,
       "refs": [
-        1027,
-        1015,
+        1051,
+        1039,
         null,
         null
       ]
@@ -78804,8 +79281,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1496,
-        1015,
+        1523,
+        1039,
         null,
         null
       ]
@@ -78819,8 +79296,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1497,
-        1015,
+        1524,
+        1039,
         null,
         null
       ]
@@ -78834,8 +79311,8 @@
       "y": "*",
       "z": 10,
       "refs": [
-        1027,
-        1015,
+        1051,
+        1039,
         null,
         null
       ]
@@ -78849,10 +79326,10 @@
       "y": 16,
       "z": 0,
       "refs": [
-        62,
+        67,
         null,
         null,
-        62
+        67
       ]
     },
     {
@@ -78987,7 +79464,7 @@
         12,
         null,
         null,
-        1544
+        1573
       ]
     },
     {
@@ -78999,8 +79476,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1496,
-        1015,
+        1523,
+        1039,
         null,
         15
       ]
@@ -79014,10 +79491,10 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1497,
-        1015,
+        1524,
+        1039,
         null,
-        1551
+        1581
       ]
     },
     {
@@ -79029,10 +79506,10 @@
       "y": "*",
       "z": 10,
       "refs": [
-        1027,
-        1015,
+        1051,
+        1039,
         null,
-        1551
+        1581
       ]
     },
     {
@@ -79044,8 +79521,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1015,
-        1015,
+        1039,
+        1039,
         null,
         15
       ]
@@ -79077,7 +79554,7 @@
         15,
         null,
         null,
-        987
+        1006
       ]
     },
     {
@@ -79182,7 +79659,7 @@
         15,
         null,
         null,
-        1689
+        1718
       ]
     },
     {
@@ -79197,7 +79674,7 @@
         15,
         null,
         null,
-        987
+        1006
       ]
     },
     {
@@ -79539,8 +80016,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1749,
-        1015,
+        1777,
+        1039,
         null,
         12
       ]
@@ -79554,8 +80031,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1749,
-        1015,
+        1777,
+        1039,
         null,
         null
       ]
@@ -79854,7 +80331,7 @@
       "y": 13,
       "z": 0,
       "refs": [
-        1073,
+        1097,
         null,
         null,
         null
@@ -79914,7 +80391,7 @@
       "y": 15,
       "z": 0,
       "refs": [
-        1073,
+        1097,
         null,
         null,
         null
@@ -79959,10 +80436,10 @@
       "y": 3,
       "z": 21,
       "refs": [
-        62,
+        67,
         null,
         null,
-        62
+        67
       ]
     },
     {
@@ -79974,7 +80451,7 @@
       "y": 4,
       "z": 21,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -79989,7 +80466,7 @@
       "y": 7,
       "z": 21,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -80004,7 +80481,7 @@
       "y": 8,
       "z": 21,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -80019,7 +80496,7 @@
       "y": 9,
       "z": 21,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -80034,10 +80511,10 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1817,
-        1818,
+        1845,
+        1846,
         null,
-        1819
+        1847
       ]
     },
     {
@@ -80049,8 +80526,8 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1817,
-        1818,
+        1845,
+        1846,
         null,
         null
       ]
@@ -80217,7 +80694,7 @@
         null,
         null,
         null,
-        1851
+        1879
       ]
     },
     {
@@ -80382,7 +80859,7 @@
         null,
         null,
         null,
-        1879
+        1907
       ]
     },
     {
@@ -80397,7 +80874,7 @@
         null,
         null,
         null,
-        1879
+        1907
       ]
     },
     {
@@ -80412,7 +80889,7 @@
         15,
         null,
         null,
-        62
+        67
       ]
     },
     {
@@ -80427,42 +80904,42 @@
         15,
         null,
         null,
-        62
+        67
       ]
     },
     {
-      "sid": 758063250685934,
-      "actionSid": 223902039659773,
+      "sid": 777093623250592,
+      "actionSid": 793610617124359,
       "function": "角色解雇",
       "sheet": "主事件",
       "x": "*",
       "y": 18,
       "z": 0,
       "refs": [
-        1992,
+        2023,
         null,
         null,
         null
       ]
     },
     {
-      "sid": 502618651036283,
-      "actionSid": 757801857672412,
+      "sid": 766163488552315,
+      "actionSid": 646334669063602,
       "function": "角色解雇",
       "sheet": "主事件",
       "x": "*",
       "y": 18,
       "z": 0,
       "refs": [
-        1992,
+        2023,
         null,
         null,
         null
       ]
     },
     {
-      "sid": 305073651052035,
-      "actionSid": 459623802242655,
+      "sid": 834670516083378,
+      "actionSid": 540805427858735,
       "function": "角色解雇",
       "sheet": "主事件",
       "x": "*",
@@ -80476,8 +80953,8 @@
       ]
     },
     {
-      "sid": 305073651052035,
-      "actionSid": 549536601660282,
+      "sid": 834670516083378,
+      "actionSid": 655031082004802,
       "function": "角色解雇",
       "sheet": "主事件",
       "x": "*",
@@ -80491,8 +80968,8 @@
       ]
     },
     {
-      "sid": 305073651052035,
-      "actionSid": 685827371713090,
+      "sid": 834670516083378,
+      "actionSid": 176195252277256,
       "function": "角色解雇",
       "sheet": "主事件",
       "x": "*",
@@ -80506,8 +80983,8 @@
       ]
     },
     {
-      "sid": 305073651052035,
-      "actionSid": 114379491584821,
+      "sid": 834670516083378,
+      "actionSid": 740504791276207,
       "function": "角色解雇",
       "sheet": "主事件",
       "x": "*",
@@ -80521,8 +80998,8 @@
       ]
     },
     {
-      "sid": 305073651052035,
-      "actionSid": 695681823924038,
+      "sid": 834670516083378,
+      "actionSid": 517297033057069,
       "function": "角色解雇",
       "sheet": "主事件",
       "x": "*",
@@ -80536,8 +81013,8 @@
       ]
     },
     {
-      "sid": 305073651052035,
-      "actionSid": 141701161639620,
+      "sid": 834670516083378,
+      "actionSid": 809075365569659,
       "function": "角色解雇",
       "sheet": "主事件",
       "x": "*",
@@ -80551,8 +81028,8 @@
       ]
     },
     {
-      "sid": 119400161137080,
-      "actionSid": 132294704731147,
+      "sid": 196199782786706,
+      "actionSid": 945873726200672,
       "function": "角色解雇",
       "sheet": "主事件",
       "x": "*",
@@ -80694,30 +81171,30 @@
       "y": 1,
       "z": 2,
       "refs": [
-        62,
+        67,
         null,
         null,
         12
       ]
     },
     {
-      "sid": 597260434606864,
-      "actionSid": 218946962855488,
+      "sid": 824442765350411,
+      "actionSid": 348595865094497,
       "function": "角色下狱",
       "sheet": "主事件",
       "x": "*",
       "y": 18,
       "z": 0,
       "refs": [
-        1992,
+        2023,
         null,
         null,
         null
       ]
     },
     {
-      "sid": 806259585632860,
-      "actionSid": 844777042905342,
+      "sid": 370708448905566,
+      "actionSid": 110816800625193,
       "function": "角色下狱",
       "sheet": "主事件",
       "x": "*",
@@ -80731,8 +81208,8 @@
       ]
     },
     {
-      "sid": 806259585632860,
-      "actionSid": 425894402721444,
+      "sid": 370708448905566,
+      "actionSid": 975152483203149,
       "function": "角色下狱",
       "sheet": "主事件",
       "x": "*",
@@ -80746,8 +81223,8 @@
       ]
     },
     {
-      "sid": 806259585632860,
-      "actionSid": 833558181520161,
+      "sid": 370708448905566,
+      "actionSid": 401333167619047,
       "function": "角色下狱",
       "sheet": "主事件",
       "x": "*",
@@ -80761,8 +81238,8 @@
       ]
     },
     {
-      "sid": 806259585632860,
-      "actionSid": 527155343152636,
+      "sid": 370708448905566,
+      "actionSid": 192737060583790,
       "function": "角色下狱",
       "sheet": "主事件",
       "x": "*",
@@ -80877,7 +81354,7 @@
         15,
         null,
         null,
-        62
+        67
       ]
     },
     {
@@ -80922,7 +81399,7 @@
         15,
         null,
         null,
-        2346
+        2403
       ]
     },
     {
@@ -80937,7 +81414,7 @@
         15,
         null,
         null,
-        2347
+        2404
       ]
     },
     {
@@ -80952,7 +81429,7 @@
         15,
         null,
         null,
-        2348
+        2405
       ]
     },
     {
@@ -81072,7 +81549,7 @@
         15,
         null,
         null,
-        2365
+        2422
       ]
     },
     {
@@ -81087,7 +81564,7 @@
         15,
         null,
         null,
-        2365
+        2422
       ]
     },
     {
@@ -81102,7 +81579,7 @@
         15,
         null,
         null,
-        2365
+        2422
       ]
     },
     {
@@ -81117,7 +81594,7 @@
         15,
         null,
         null,
-        2368
+        2425
       ]
     },
     {
@@ -81132,7 +81609,7 @@
         15,
         null,
         null,
-        2368
+        2425
       ]
     },
     {
@@ -81147,7 +81624,7 @@
         15,
         null,
         null,
-        2368
+        2425
       ]
     },
     {
@@ -81162,7 +81639,7 @@
         15,
         null,
         null,
-        2368
+        2425
       ]
     },
     {
@@ -81177,7 +81654,7 @@
         15,
         null,
         null,
-        2368
+        2425
       ]
     },
     {
@@ -81192,7 +81669,7 @@
         15,
         null,
         null,
-        2368
+        2425
       ]
     },
     {
@@ -81207,7 +81684,7 @@
         15,
         null,
         null,
-        2368
+        2425
       ]
     },
     {
@@ -81222,7 +81699,7 @@
         15,
         null,
         null,
-        2368
+        2425
       ]
     },
     {
@@ -81237,7 +81714,7 @@
         15,
         null,
         null,
-        2368
+        2425
       ]
     },
     {
@@ -81250,9 +81727,9 @@
       "z": 3,
       "refs": [
         15,
-        2369,
+        2426,
         null,
-        2370
+        2427
       ]
     },
     {
@@ -81265,9 +81742,9 @@
       "z": 3,
       "refs": [
         15,
-        2369,
+        2426,
         null,
-        2371
+        2428
       ]
     },
     {
@@ -81282,7 +81759,7 @@
         15,
         null,
         null,
-        2372
+        2429
       ]
     },
     {
@@ -81297,7 +81774,7 @@
         15,
         null,
         null,
-        2373
+        2430
       ]
     },
     {
@@ -81312,7 +81789,7 @@
         15,
         null,
         null,
-        2374
+        2431
       ]
     },
     {
@@ -81327,7 +81804,7 @@
         15,
         null,
         null,
-        2376
+        2433
       ]
     },
     {
@@ -81342,7 +81819,7 @@
         15,
         null,
         null,
-        2377
+        2434
       ]
     },
     {
@@ -81357,7 +81834,7 @@
         15,
         null,
         null,
-        2378
+        2435
       ]
     },
     {
@@ -81372,7 +81849,7 @@
         15,
         null,
         null,
-        2379
+        2436
       ]
     },
     {
@@ -81387,7 +81864,7 @@
         15,
         null,
         null,
-        2380
+        2437
       ]
     },
     {
@@ -81402,7 +81879,7 @@
         15,
         null,
         null,
-        2382
+        2439
       ]
     },
     {
@@ -81550,9 +82027,9 @@
       "z": 3,
       "refs": [
         15,
-        2385,
+        2442,
         null,
-        138
+        147
       ]
     },
     {
@@ -81657,7 +82134,7 @@
         15,
         null,
         null,
-        2388
+        2445
       ]
     },
     {
@@ -81672,7 +82149,7 @@
         15,
         null,
         null,
-        2389
+        2446
       ]
     },
     {
@@ -81687,7 +82164,7 @@
         15,
         null,
         null,
-        2390
+        2447
       ]
     },
     {
@@ -81702,7 +82179,7 @@
         15,
         null,
         null,
-        2391
+        2448
       ]
     },
     {
@@ -81717,7 +82194,7 @@
         15,
         null,
         null,
-        2392
+        2449
       ]
     },
     {
@@ -81732,7 +82209,7 @@
         15,
         null,
         null,
-        2393
+        2450
       ]
     },
     {
@@ -81747,7 +82224,7 @@
         15,
         null,
         null,
-        2394
+        2451
       ]
     },
     {
@@ -81762,7 +82239,7 @@
         15,
         null,
         null,
-        2395
+        2452
       ]
     },
     {
@@ -81777,7 +82254,7 @@
         15,
         null,
         null,
-        2396
+        2453
       ]
     },
     {
@@ -81792,7 +82269,7 @@
         15,
         null,
         null,
-        2397
+        2454
       ]
     },
     {
@@ -81912,7 +82389,7 @@
         15,
         null,
         null,
-        2399
+        2456
       ]
     },
     {
@@ -81927,7 +82404,7 @@
         15,
         null,
         null,
-        2400
+        2457
       ]
     },
     {
@@ -81942,7 +82419,7 @@
         15,
         null,
         null,
-        2402
+        2459
       ]
     },
     {
@@ -81957,7 +82434,7 @@
         15,
         null,
         null,
-        2403
+        2460
       ]
     },
     {
@@ -81972,7 +82449,7 @@
         15,
         null,
         null,
-        2406
+        2463
       ]
     },
     {
@@ -82077,7 +82554,7 @@
         15,
         15,
         null,
-        2411
+        2467
       ]
     },
     {
@@ -82096,8 +82573,8 @@
       ]
     },
     {
-      "sid": 909963012425650,
-      "actionSid": 537231363680519,
+      "sid": 191098450886722,
+      "actionSid": 774218883414576,
       "function": "招募随机角色",
       "sheet": "主事件",
       "x": "*",
@@ -82107,12 +82584,12 @@
         12,
         15,
         null,
-        2495
+        2553
       ]
     },
     {
-      "sid": 834941377542149,
-      "actionSid": 959050890265485,
+      "sid": 695811372307314,
+      "actionSid": 651279277205720,
       "function": "招募随机角色",
       "sheet": "主事件",
       "x": "*",
@@ -82120,14 +82597,14 @@
       "z": 12,
       "refs": [
         12,
-        1198,
+        1223,
         null,
-        2496
+        2554
       ]
     },
     {
-      "sid": 834941377542149,
-      "actionSid": 249331816619487,
+      "sid": 695811372307314,
+      "actionSid": 435270373793988,
       "function": "招募随机角色",
       "sheet": "主事件",
       "x": "*",
@@ -82135,14 +82612,14 @@
       "z": 12,
       "refs": [
         12,
-        2497,
+        2555,
         null,
-        2498
+        2556
       ]
     },
     {
-      "sid": 456318634310088,
-      "actionSid": 711206187165477,
+      "sid": 113886884203083,
+      "actionSid": 649024191466532,
       "function": "招募随机角色",
       "sheet": "主事件",
       "x": "*",
@@ -82156,8 +82633,8 @@
       ]
     },
     {
-      "sid": 456318634310088,
-      "actionSid": 371087144474975,
+      "sid": 113886884203083,
+      "actionSid": 509309319943935,
       "function": "招募随机角色",
       "sheet": "主事件",
       "x": "*",
@@ -82171,8 +82648,8 @@
       ]
     },
     {
-      "sid": 456318634310088,
-      "actionSid": 666914581441268,
+      "sid": 113886884203083,
+      "actionSid": 487746591486230,
       "function": "招募随机角色",
       "sheet": "主事件",
       "x": "*",
@@ -82186,8 +82663,8 @@
       ]
     },
     {
-      "sid": 456318634310088,
-      "actionSid": 868697697603572,
+      "sid": 113886884203083,
+      "actionSid": 146586607027153,
       "function": "招募随机角色",
       "sheet": "主事件",
       "x": "*",
@@ -82201,8 +82678,8 @@
       ]
     },
     {
-      "sid": 456318634310088,
-      "actionSid": 862371372214374,
+      "sid": 113886884203083,
+      "actionSid": 382024589135226,
       "function": "招募随机角色",
       "sheet": "主事件",
       "x": "*",
@@ -82212,12 +82689,12 @@
         12,
         null,
         null,
-        2405
+        2462
       ]
     },
     {
-      "sid": 456318634310088,
-      "actionSid": 663320054891029,
+      "sid": 113886884203083,
+      "actionSid": 197406537319676,
       "function": "招募随机角色",
       "sheet": "主事件",
       "x": "*",
@@ -82225,29 +82702,29 @@
       "z": 4,
       "refs": [
         12,
-        2499,
+        2557,
         null,
         null
       ]
     },
     {
-      "sid": 423587129703490,
-      "actionSid": 746133539264220,
+      "sid": 883293689603072,
+      "actionSid": 919552231174604,
       "function": "招募随机角色",
       "sheet": "主事件",
       "x": "*",
       "y": 18,
       "z": 0,
       "refs": [
-        2501,
+        2559,
         null,
         null,
         null
       ]
     },
     {
-      "sid": 776418657960162,
-      "actionSid": 221408070701668,
+      "sid": 135003576484898,
+      "actionSid": 802558082950914,
       "function": "招募随机角色",
       "sheet": "主事件",
       "x": "*",
@@ -82261,8 +82738,8 @@
       ]
     },
     {
-      "sid": 564152387768918,
-      "actionSid": 455912838547913,
+      "sid": 252992887326843,
+      "actionSid": 558994078727106,
       "function": "招募随机角色",
       "sheet": "主事件",
       "x": "*",
@@ -82272,12 +82749,12 @@
         12,
         15,
         null,
-        2495
+        2553
       ]
     },
     {
-      "sid": 589480535668937,
-      "actionSid": 513783970899754,
+      "sid": 664281571164420,
+      "actionSid": 846975696688289,
       "function": "招募随机角色",
       "sheet": "主事件",
       "x": "*",
@@ -82285,14 +82762,14 @@
       "z": 12,
       "refs": [
         12,
-        1198,
+        1223,
         null,
-        2496
+        2554
       ]
     },
     {
-      "sid": 589480535668937,
-      "actionSid": 252223294305410,
+      "sid": 664281571164420,
+      "actionSid": 838625765348009,
       "function": "招募随机角色",
       "sheet": "主事件",
       "x": "*",
@@ -82300,14 +82777,14 @@
       "z": 12,
       "refs": [
         12,
-        2497,
+        2555,
         null,
-        2498
+        2556
       ]
     },
     {
-      "sid": 402265182569649,
-      "actionSid": 826513941735334,
+      "sid": 565464426461198,
+      "actionSid": 302299248970170,
       "function": "招募随机角色",
       "sheet": "主事件",
       "x": "*",
@@ -82321,8 +82798,8 @@
       ]
     },
     {
-      "sid": 402265182569649,
-      "actionSid": 661831883716910,
+      "sid": 565464426461198,
+      "actionSid": 108793409069379,
       "function": "招募随机角色",
       "sheet": "主事件",
       "x": "*",
@@ -82336,8 +82813,8 @@
       ]
     },
     {
-      "sid": 402265182569649,
-      "actionSid": 926801323772742,
+      "sid": 565464426461198,
+      "actionSid": 412347110952803,
       "function": "招募随机角色",
       "sheet": "主事件",
       "x": "*",
@@ -82351,8 +82828,8 @@
       ]
     },
     {
-      "sid": 402265182569649,
-      "actionSid": 267655730416245,
+      "sid": 565464426461198,
+      "actionSid": 867924561812536,
       "function": "招募随机角色",
       "sheet": "主事件",
       "x": "*",
@@ -82366,8 +82843,8 @@
       ]
     },
     {
-      "sid": 402265182569649,
-      "actionSid": 238031485323408,
+      "sid": 565464426461198,
+      "actionSid": 487719290129781,
       "function": "招募随机角色",
       "sheet": "主事件",
       "x": "*",
@@ -82377,12 +82854,12 @@
         12,
         null,
         null,
-        2405
+        2462
       ]
     },
     {
-      "sid": 402265182569649,
-      "actionSid": 668381166420968,
+      "sid": 565464426461198,
+      "actionSid": 651432320442012,
       "function": "招募随机角色",
       "sheet": "主事件",
       "x": "*",
@@ -82390,29 +82867,29 @@
       "z": 4,
       "refs": [
         12,
-        2499,
+        2557,
         null,
         null
       ]
     },
     {
-      "sid": 478649300948700,
-      "actionSid": 796189150907246,
+      "sid": 674854980311133,
+      "actionSid": 349108714010038,
       "function": "招募随机角色",
       "sheet": "主事件",
       "x": "*",
       "y": 18,
       "z": 0,
       "refs": [
-        2501,
+        2559,
         null,
         null,
         null
       ]
     },
     {
-      "sid": 497207030995812,
-      "actionSid": 186714886747744,
+      "sid": 986584661639168,
+      "actionSid": 398139975888916,
       "function": "招募随机角色",
       "sheet": "主事件",
       "x": "*",
@@ -82437,7 +82914,7 @@
         12,
         15,
         null,
-        2495
+        2553
       ]
     },
     {
@@ -82450,9 +82927,9 @@
       "z": 12,
       "refs": [
         12,
-        1198,
+        1223,
         null,
-        2496
+        2554
       ]
     },
     {
@@ -82465,9 +82942,9 @@
       "z": 12,
       "refs": [
         12,
-        2497,
+        2555,
         null,
-        2498
+        2556
       ]
     },
     {
@@ -82542,7 +83019,7 @@
         12,
         null,
         null,
-        2405
+        2462
       ]
     },
     {
@@ -82555,7 +83032,7 @@
       "z": 4,
       "refs": [
         12,
-        2499,
+        2557,
         null,
         null
       ]
@@ -82576,8 +83053,8 @@
       ]
     },
     {
-      "sid": 514308911218290,
-      "actionSid": 140530013410248,
+      "sid": 486315940760924,
+      "actionSid": 287641161777864,
       "function": "随机角色收监",
       "sheet": "主事件",
       "x": "*",
@@ -82587,12 +83064,12 @@
         12,
         15,
         null,
-        2495
+        2553
       ]
     },
     {
-      "sid": 725733836529900,
-      "actionSid": 510870330181312,
+      "sid": 661339155348023,
+      "actionSid": 311615787642837,
       "function": "随机角色收监",
       "sheet": "主事件",
       "x": "*",
@@ -82600,14 +83077,14 @@
       "z": 12,
       "refs": [
         12,
-        1198,
+        1223,
         null,
-        2496
+        2554
       ]
     },
     {
-      "sid": 725733836529900,
-      "actionSid": 148601069317333,
+      "sid": 661339155348023,
+      "actionSid": 565856093638713,
       "function": "随机角色收监",
       "sheet": "主事件",
       "x": "*",
@@ -82615,14 +83092,14 @@
       "z": 12,
       "refs": [
         12,
-        2497,
+        2555,
         null,
-        2498
+        2556
       ]
     },
     {
-      "sid": 974771335732533,
-      "actionSid": 272482681051278,
+      "sid": 582256926214385,
+      "actionSid": 384502276689851,
       "function": "随机角色收监",
       "sheet": "主事件",
       "x": "*",
@@ -82636,8 +83113,8 @@
       ]
     },
     {
-      "sid": 974771335732533,
-      "actionSid": 840594432199907,
+      "sid": 582256926214385,
+      "actionSid": 170914783894317,
       "function": "随机角色收监",
       "sheet": "主事件",
       "x": "*",
@@ -82651,8 +83128,8 @@
       ]
     },
     {
-      "sid": 974771335732533,
-      "actionSid": 429971738977255,
+      "sid": 582256926214385,
+      "actionSid": 608057618157712,
       "function": "随机角色收监",
       "sheet": "主事件",
       "x": "*",
@@ -82666,8 +83143,8 @@
       ]
     },
     {
-      "sid": 974771335732533,
-      "actionSid": 987221864295671,
+      "sid": 582256926214385,
+      "actionSid": 349012340994371,
       "function": "随机角色收监",
       "sheet": "主事件",
       "x": "*",
@@ -82681,8 +83158,8 @@
       ]
     },
     {
-      "sid": 974771335732533,
-      "actionSid": 349344145710201,
+      "sid": 582256926214385,
+      "actionSid": 871107560979776,
       "function": "随机角色收监",
       "sheet": "主事件",
       "x": "*",
@@ -82692,12 +83169,12 @@
         12,
         null,
         null,
-        2405
+        2462
       ]
     },
     {
-      "sid": 974771335732533,
-      "actionSid": 916062675746800,
+      "sid": 582256926214385,
+      "actionSid": 463013104755744,
       "function": "随机角色收监",
       "sheet": "主事件",
       "x": "*",
@@ -82705,14 +83182,14 @@
       "z": 4,
       "refs": [
         12,
-        2499,
+        2557,
         null,
         null
       ]
     },
     {
-      "sid": 974771335732533,
-      "actionSid": 547699022276392,
+      "sid": 582256926214385,
+      "actionSid": 743168891124152,
       "function": "随机角色收监",
       "sheet": "主事件",
       "x": "*",
@@ -82726,23 +83203,23 @@
       ]
     },
     {
-      "sid": 506892558640131,
-      "actionSid": 379698346970698,
+      "sid": 539996642964299,
+      "actionSid": 639496973530784,
       "function": "随机角色收监",
       "sheet": "主事件",
       "x": "*",
       "y": 18,
       "z": 0,
       "refs": [
-        2501,
+        2559,
         null,
         null,
         null
       ]
     },
     {
-      "sid": 985417416646358,
-      "actionSid": 490781372944265,
+      "sid": 168050179945272,
+      "actionSid": 216642315590474,
       "function": "随机角色收监",
       "sheet": "主事件",
       "x": "*",
@@ -82756,8 +83233,8 @@
       ]
     },
     {
-      "sid": 504731611181373,
-      "actionSid": 920050181080336,
+      "sid": 926701166934847,
+      "actionSid": 606713646189214,
       "function": "随机角色收监",
       "sheet": "主事件",
       "x": "*",
@@ -82767,12 +83244,12 @@
         12,
         15,
         null,
-        2495
+        2553
       ]
     },
     {
-      "sid": 848656463856862,
-      "actionSid": 597416383433377,
+      "sid": 296515355821016,
+      "actionSid": 394865126391529,
       "function": "随机角色收监",
       "sheet": "主事件",
       "x": "*",
@@ -82780,14 +83257,14 @@
       "z": 12,
       "refs": [
         12,
-        1198,
+        1223,
         null,
-        2496
+        2554
       ]
     },
     {
-      "sid": 848656463856862,
-      "actionSid": 581117971837906,
+      "sid": 296515355821016,
+      "actionSid": 835732252580385,
       "function": "随机角色收监",
       "sheet": "主事件",
       "x": "*",
@@ -82795,14 +83272,14 @@
       "z": 12,
       "refs": [
         12,
-        2497,
+        2555,
         null,
-        2498
+        2556
       ]
     },
     {
-      "sid": 497823431034339,
-      "actionSid": 421903177618989,
+      "sid": 792120153322945,
+      "actionSid": 595989957423921,
       "function": "随机角色收监",
       "sheet": "主事件",
       "x": "*",
@@ -82816,8 +83293,8 @@
       ]
     },
     {
-      "sid": 497823431034339,
-      "actionSid": 197139456368674,
+      "sid": 792120153322945,
+      "actionSid": 557757477126741,
       "function": "随机角色收监",
       "sheet": "主事件",
       "x": "*",
@@ -82831,8 +83308,8 @@
       ]
     },
     {
-      "sid": 497823431034339,
-      "actionSid": 618510425605497,
+      "sid": 792120153322945,
+      "actionSid": 675268437336729,
       "function": "随机角色收监",
       "sheet": "主事件",
       "x": "*",
@@ -82846,8 +83323,8 @@
       ]
     },
     {
-      "sid": 497823431034339,
-      "actionSid": 322819528291733,
+      "sid": 792120153322945,
+      "actionSid": 512207083460904,
       "function": "随机角色收监",
       "sheet": "主事件",
       "x": "*",
@@ -82861,8 +83338,8 @@
       ]
     },
     {
-      "sid": 497823431034339,
-      "actionSid": 649609704385675,
+      "sid": 792120153322945,
+      "actionSid": 589886142214120,
       "function": "随机角色收监",
       "sheet": "主事件",
       "x": "*",
@@ -82872,12 +83349,12 @@
         12,
         null,
         null,
-        2405
+        2462
       ]
     },
     {
-      "sid": 497823431034339,
-      "actionSid": 109819118622555,
+      "sid": 792120153322945,
+      "actionSid": 124444824149904,
       "function": "随机角色收监",
       "sheet": "主事件",
       "x": "*",
@@ -82885,14 +83362,14 @@
       "z": 4,
       "refs": [
         12,
-        2499,
+        2557,
         null,
         null
       ]
     },
     {
-      "sid": 497823431034339,
-      "actionSid": 379986528160560,
+      "sid": 792120153322945,
+      "actionSid": 851079596269837,
       "function": "随机角色收监",
       "sheet": "主事件",
       "x": "*",
@@ -82906,23 +83383,23 @@
       ]
     },
     {
-      "sid": 332890375954733,
-      "actionSid": 400907239570953,
+      "sid": 535147169646988,
+      "actionSid": 705822772591249,
       "function": "随机角色收监",
       "sheet": "主事件",
       "x": "*",
       "y": 18,
       "z": 0,
       "refs": [
-        2501,
+        2559,
         null,
         null,
         null
       ]
     },
     {
-      "sid": 541253863518917,
-      "actionSid": 278955451104695,
+      "sid": 109848676643466,
+      "actionSid": 758188865959936,
       "function": "随机角色收监",
       "sheet": "主事件",
       "x": "*",
@@ -82947,7 +83424,7 @@
         12,
         15,
         null,
-        2411
+        2467
       ]
     },
     {
@@ -82960,9 +83437,9 @@
       "z": 12,
       "refs": [
         12,
-        1198,
+        1223,
         null,
-        2505
+        2563
       ]
     },
     {
@@ -82975,9 +83452,9 @@
       "z": 12,
       "refs": [
         12,
-        2497,
+        2555,
         null,
-        2506
+        2564
       ]
     },
     {
@@ -83052,7 +83529,7 @@
         12,
         null,
         null,
-        2507
+        2565
       ]
     },
     {
@@ -83065,7 +83542,7 @@
       "z": 4,
       "refs": [
         12,
-        2499,
+        2557,
         null,
         null
       ]
@@ -83112,7 +83589,7 @@
         null,
         null,
         null,
-        2567
+        2625
       ]
     },
     {
@@ -83142,7 +83619,7 @@
         null,
         null,
         null,
-        71
+        80
       ]
     },
     {
@@ -83157,7 +83634,7 @@
         15,
         null,
         null,
-        2577
+        2636
       ]
     },
     {
@@ -83187,7 +83664,7 @@
         null,
         null,
         null,
-        71
+        80
       ]
     },
     {
@@ -83202,7 +83679,7 @@
         null,
         null,
         null,
-        71
+        80
       ]
     },
     {
@@ -83214,7 +83691,7 @@
       "y": 0,
       "z": 3,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -83229,10 +83706,10 @@
       "y": 0,
       "z": 3,
       "refs": [
-        62,
+        67,
         null,
         null,
-        62
+        67
       ]
     },
     {
@@ -83289,7 +83766,7 @@
       "y": 3,
       "z": 21,
       "refs": [
-        1708,
+        1736,
         null,
         null,
         15
@@ -83319,7 +83796,7 @@
       "y": 3,
       "z": 21,
       "refs": [
-        1708,
+        1736,
         null,
         null,
         15
@@ -83349,7 +83826,7 @@
       "y": 3,
       "z": 21,
       "refs": [
-        1708,
+        1736,
         null,
         null,
         15
@@ -83545,9 +84022,9 @@
       "z": 7,
       "refs": [
         12,
-        2938,
+        3005,
         null,
-        351
+        357
       ]
     },
     {
@@ -83560,9 +84037,9 @@
       "z": 7,
       "refs": [
         12,
-        2939,
+        3006,
         null,
-        2940
+        3007
       ]
     },
     {
@@ -83652,7 +84129,7 @@
         12,
         null,
         null,
-        2948
+        3015
       ]
     },
     {
@@ -83667,7 +84144,7 @@
         12,
         null,
         null,
-        2949
+        3016
       ]
     },
     {
@@ -83697,7 +84174,7 @@
         12,
         null,
         null,
-        2950
+        3017
       ]
     },
     {
@@ -83740,9 +84217,9 @@
       "z": 7,
       "refs": [
         12,
-        2938,
+        3005,
         null,
-        351
+        357
       ]
     },
     {
@@ -83755,9 +84232,9 @@
       "z": 7,
       "refs": [
         12,
-        2939,
+        3006,
         null,
-        2940
+        3007
       ]
     },
     {
@@ -84192,7 +84669,7 @@
         12,
         null,
         null,
-        238
+        244
       ]
     },
     {
@@ -84222,7 +84699,7 @@
         12,
         null,
         null,
-        2961
+        3028
       ]
     },
     {
@@ -84237,7 +84714,7 @@
         12,
         null,
         null,
-        2961
+        3028
       ]
     },
     {
@@ -84252,7 +84729,7 @@
         12,
         null,
         null,
-        2961
+        3028
       ]
     },
     {
@@ -84267,7 +84744,7 @@
         12,
         null,
         null,
-        2961
+        3028
       ]
     },
     {
@@ -84282,7 +84759,7 @@
         12,
         null,
         null,
-        2961
+        3028
       ]
     },
     {
@@ -84297,7 +84774,7 @@
         12,
         null,
         null,
-        2962
+        3029
       ]
     },
     {
@@ -84325,7 +84802,7 @@
       "z": 2,
       "refs": [
         15,
-        810,
+        826,
         null,
         15
       ]
@@ -84355,7 +84832,7 @@
       "z": 2,
       "refs": [
         15,
-        810,
+        826,
         null,
         15
       ]
@@ -84385,7 +84862,7 @@
       "z": 2,
       "refs": [
         15,
-        810,
+        826,
         null,
         null
       ]
@@ -84447,7 +84924,7 @@
         15,
         15,
         null,
-        2983
+        3050
       ]
     },
     {
@@ -84477,7 +84954,7 @@
         15,
         15,
         15,
-        2984
+        3051
       ]
     },
     {
@@ -84537,7 +85014,7 @@
         15,
         null,
         null,
-        3132
+        3200
       ]
     },
     {
@@ -84552,7 +85029,7 @@
         15,
         null,
         null,
-        3132
+        3200
       ]
     },
     {
@@ -84567,7 +85044,7 @@
         null,
         null,
         null,
-        3137
+        3205
       ]
     },
     {
@@ -84582,7 +85059,7 @@
         15,
         null,
         null,
-        3132
+        3200
       ]
     },
     {
@@ -84597,7 +85074,7 @@
         null,
         null,
         null,
-        3138
+        3206
       ]
     },
     {
@@ -84612,7 +85089,7 @@
         15,
         null,
         null,
-        3132
+        3200
       ]
     },
     {
@@ -84646,8 +85123,8 @@
       ]
     },
     {
-      "sid": 672652542027397,
-      "actionSid": 768137725892026,
+      "sid": 623205092530421,
+      "actionSid": 299935412234369,
       "function": "初始化／事件",
       "sheet": "主事件",
       "x": 21,
@@ -84657,12 +85134,27 @@
         null,
         null,
         null,
-        62
+        67
       ]
     },
     {
-      "sid": 774632238671780,
-      "actionSid": 337889344449116,
+      "sid": 765739102196376,
+      "actionSid": 551264107502134,
+      "function": "初始化／事件",
+      "sheet": "主事件",
+      "x": 38,
+      "y": 1,
+      "z": 0,
+      "refs": [
+        null,
+        null,
+        null,
+        67
+      ]
+    },
+    {
+      "sid": 182373391563189,
+      "actionSid": 971939344281032,
       "function": "初始化／事件",
       "sheet": "主事件",
       "x": 9,
@@ -84672,12 +85164,12 @@
         null,
         null,
         null,
-        62
+        67
       ]
     },
     {
-      "sid": 812944102784892,
-      "actionSid": 196763045638790,
+      "sid": 910548496020842,
+      "actionSid": 778819614979203,
       "function": "初始化／事件",
       "sheet": "主事件",
       "x": 10,
@@ -84687,12 +85179,12 @@
         null,
         null,
         null,
-        62
+        67
       ]
     },
     {
-      "sid": 654862860574104,
-      "actionSid": 841140575624085,
+      "sid": 691684568264601,
+      "actionSid": 935030115965641,
       "function": "初始化／事件",
       "sheet": "主事件",
       "x": 18,
@@ -84702,12 +85194,12 @@
         null,
         null,
         null,
-        62
+        67
       ]
     },
     {
-      "sid": 441344730190335,
-      "actionSid": 769330920822049,
+      "sid": 553510298939703,
+      "actionSid": 891597385345051,
       "function": "初始化／事件",
       "sheet": "主事件",
       "x": 33,
@@ -84717,12 +85209,12 @@
         null,
         null,
         null,
-        62
+        67
       ]
     },
     {
-      "sid": 462919000900462,
-      "actionSid": 692257982097505,
+      "sid": 926323319212774,
+      "actionSid": 398911881368563,
       "function": "初始化／事件",
       "sheet": "主事件",
       "x": 34,
@@ -84732,12 +85224,42 @@
         null,
         null,
         null,
-        62
+        67
       ]
     },
     {
-      "sid": 645736359680951,
-      "actionSid": 892606803983315,
+      "sid": 373104166848713,
+      "actionSid": 268015829666172,
+      "function": "初始化／事件",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 53,
+      "z": 0,
+      "refs": [
+        67,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 188785953998914,
+      "actionSid": 998123477327491,
+      "function": "初始化／事件",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 53,
+      "z": 0,
+      "refs": [
+        67,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 997659447226013,
+      "actionSid": 412946517680669,
       "function": "初始化／事件",
       "sheet": "主事件",
       "x": 20,
@@ -84747,7 +85269,37 @@
         null,
         null,
         null,
-        62
+        67
+      ]
+    },
+    {
+      "sid": 740813375895707,
+      "actionSid": 361461305646249,
+      "function": "初始化／事件",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 53,
+      "z": 0,
+      "refs": [
+        67,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 951354858362992,
+      "actionSid": 249132035309347,
+      "function": "初始化／事件",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 53,
+      "z": 0,
+      "refs": [
+        67,
+        null,
+        null,
+        null
       ]
     },
     {
@@ -84759,7 +85311,7 @@
       "y": 22,
       "z": 7,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -84774,7 +85326,7 @@
       "y": 22,
       "z": 7,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -84789,7 +85341,7 @@
       "y": 11,
       "z": 18,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -84804,7 +85356,7 @@
       "y": 11,
       "z": 18,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -84819,7 +85371,7 @@
       "y": 22,
       "z": 22,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -84834,10 +85386,25 @@
       "y": 22,
       "z": 22,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
+      ]
+    },
+    {
+      "sid": 981623119000033,
+      "actionSid": 981623119000001,
+      "function": "初始化／事件",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 22,
+      "z": "*",
+      "refs": [
+        67,
+        null,
+        67,
+        3354
       ]
     },
     {
@@ -84871,6 +85438,51 @@
       ]
     },
     {
+      "sid": 981511113000020,
+      "actionSid": 981511113000019,
+      "function": "符文加锁切换",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 52,
+      "z": 0,
+      "refs": [
+        15,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 981511113000023,
+      "actionSid": 981511113000022,
+      "function": "符文加锁切换",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 52,
+      "z": 0,
+      "refs": [
+        15,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 221180390079926,
+      "actionSid": 321211609734791,
+      "function": "重置筛选",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 53,
+      "z": 0,
+      "refs": [
+        12,
+        null,
+        null,
+        null
+      ]
+    },
+    {
       "sid": 475560761438192,
       "actionSid": 718885256894048,
       "function": "初始化／事件",
@@ -84879,7 +85491,7 @@
       "y": 8,
       "z": 0,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -84894,7 +85506,7 @@
       "y": 8,
       "z": 0,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -84924,10 +85536,10 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3334,
+        3440,
         15,
         null,
-        138
+        147
       ]
     },
     {
@@ -84939,10 +85551,10 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3335,
+        3441,
         15,
         null,
-        138
+        147
       ]
     },
     {
@@ -84954,10 +85566,10 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3336,
+        3442,
         15,
         null,
-        3337
+        3443
       ]
     },
     {
@@ -84969,7 +85581,7 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3334,
+        3440,
         15,
         null,
         null
@@ -84984,7 +85596,7 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3335,
+        3441,
         15,
         null,
         null
@@ -84999,7 +85611,7 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3336,
+        3442,
         15,
         null,
         null
@@ -85029,7 +85641,7 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3353,
+        3458,
         15,
         null,
         null
@@ -85044,7 +85656,7 @@
       "y": "*",
       "z": 11,
       "refs": [
-        3354,
+        3459,
         15,
         null,
         null
@@ -85062,7 +85674,7 @@
         null,
         null,
         null,
-        3408
+        3513
       ]
     },
     {
@@ -85107,7 +85719,7 @@
         null,
         null,
         null,
-        3419
+        3524
       ]
     },
     {
@@ -85119,7 +85731,7 @@
       "y": 36,
       "z": 0,
       "refs": [
-        2077,
+        2113,
         null,
         null,
         null
@@ -85164,7 +85776,7 @@
       "y": 52,
       "z": 2,
       "refs": [
-        3473,
+        3578,
         null,
         null,
         null
@@ -85197,7 +85809,7 @@
         12,
         15,
         null,
-        2411
+        2467
       ]
     },
     {
@@ -85210,9 +85822,9 @@
       "z": 12,
       "refs": [
         12,
-        1198,
+        1223,
         null,
-        2505
+        2563
       ]
     },
     {
@@ -85225,9 +85837,9 @@
       "z": 12,
       "refs": [
         12,
-        2497,
+        2555,
         null,
-        2506
+        2564
       ]
     },
     {
@@ -85302,7 +85914,7 @@
         12,
         null,
         null,
-        2507
+        2565
       ]
     },
     {
@@ -85315,7 +85927,7 @@
       "z": 4,
       "refs": [
         12,
-        2499,
+        2557,
         null,
         null
       ]
@@ -85324,6 +85936,156 @@
       "sid": 761654901914604,
       "actionSid": 533472928342689,
       "function": "招募指定角色",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 18,
+      "z": 0,
+      "refs": [
+        15,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 452654633898850,
+      "actionSid": 302312898336098,
+      "function": "招募指定角色军功",
+      "sheet": "主事件",
+      "x": "*",
+      "y": "*",
+      "z": 2,
+      "refs": [
+        12,
+        15,
+        null,
+        2467
+      ]
+    },
+    {
+      "sid": 619169970125940,
+      "actionSid": 616001276151884,
+      "function": "招募指定角色军功",
+      "sheet": "主事件",
+      "x": "*",
+      "y": "*",
+      "z": 12,
+      "refs": [
+        12,
+        1223,
+        null,
+        2563
+      ]
+    },
+    {
+      "sid": 619169970125940,
+      "actionSid": 930293825468430,
+      "function": "招募指定角色军功",
+      "sheet": "主事件",
+      "x": "*",
+      "y": "*",
+      "z": 12,
+      "refs": [
+        12,
+        2555,
+        null,
+        2564
+      ]
+    },
+    {
+      "sid": 152571762188596,
+      "actionSid": 136492697137036,
+      "function": "招募指定角色军功",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 0,
+      "z": 2,
+      "refs": [
+        12,
+        null,
+        null,
+        12
+      ]
+    },
+    {
+      "sid": 152571762188596,
+      "actionSid": 717508200555958,
+      "function": "招募指定角色军功",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 13,
+      "z": 2,
+      "refs": [
+        12,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 152571762188596,
+      "actionSid": 869606009256126,
+      "function": "招募指定角色军功",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 14,
+      "z": 2,
+      "refs": [
+        12,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 152571762188596,
+      "actionSid": 977767087310736,
+      "function": "招募指定角色军功",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 15,
+      "z": 2,
+      "refs": [
+        12,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 152571762188596,
+      "actionSid": 350208088854826,
+      "function": "招募指定角色军功",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 51,
+      "z": 2,
+      "refs": [
+        12,
+        null,
+        null,
+        2565
+      ]
+    },
+    {
+      "sid": 152571762188596,
+      "actionSid": 134852800290102,
+      "function": "招募指定角色军功",
+      "sheet": "主事件",
+      "x": "*",
+      "y": "*",
+      "z": 4,
+      "refs": [
+        12,
+        2557,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 285371110862089,
+      "actionSid": 916066131214545,
+      "function": "招募指定角色军功",
       "sheet": "主事件",
       "x": "*",
       "y": 18,
@@ -85347,7 +86109,7 @@
         12,
         15,
         null,
-        2411
+        2467
       ]
     },
     {
@@ -85360,9 +86122,9 @@
       "z": 12,
       "refs": [
         12,
-        1198,
+        1223,
         null,
-        2505
+        2563
       ]
     },
     {
@@ -85375,9 +86137,9 @@
       "z": 12,
       "refs": [
         12,
-        2497,
+        2555,
         null,
-        2506
+        2564
       ]
     },
     {
@@ -85452,7 +86214,7 @@
         12,
         null,
         null,
-        2507
+        2565
       ]
     },
     {
@@ -85465,7 +86227,7 @@
       "z": 4,
       "refs": [
         12,
-        2499,
+        2557,
         null,
         null
       ]
@@ -85497,7 +86259,7 @@
         12,
         15,
         null,
-        2411
+        2467
       ]
     },
     {
@@ -85510,9 +86272,9 @@
       "z": 12,
       "refs": [
         12,
-        1198,
+        1223,
         null,
-        2505
+        2563
       ]
     },
     {
@@ -85525,9 +86287,9 @@
       "z": 12,
       "refs": [
         12,
-        2497,
+        2555,
         null,
-        2506
+        2564
       ]
     },
     {
@@ -85557,7 +86319,7 @@
         12,
         null,
         null,
-        1847
+        1875
       ]
     },
     {
@@ -85632,7 +86394,7 @@
         12,
         null,
         null,
-        2507
+        2565
       ]
     },
     {
@@ -85645,7 +86407,7 @@
       "z": 4,
       "refs": [
         12,
-        2499,
+        2557,
         null,
         null
       ]
@@ -85674,7 +86436,7 @@
       "y": 31,
       "z": 0,
       "refs": [
-        244,
+        250,
         null,
         null,
         null
@@ -85689,7 +86451,7 @@
       "y": 31,
       "z": 0,
       "refs": [
-        244,
+        250,
         null,
         null,
         null
@@ -85704,7 +86466,7 @@
       "y": 31,
       "z": 0,
       "refs": [
-        244,
+        250,
         null,
         null,
         null
@@ -85719,7 +86481,7 @@
       "y": 31,
       "z": 0,
       "refs": [
-        244,
+        250,
         null,
         null,
         null
@@ -85734,7 +86496,7 @@
       "y": 32,
       "z": 0,
       "refs": [
-        244,
+        250,
         null,
         null,
         null
@@ -85749,7 +86511,7 @@
       "y": 32,
       "z": 0,
       "refs": [
-        244,
+        250,
         null,
         null,
         null
@@ -85764,7 +86526,7 @@
       "y": 32,
       "z": 0,
       "refs": [
-        244,
+        250,
         null,
         null,
         null
@@ -85779,7 +86541,7 @@
       "y": 32,
       "z": 0,
       "refs": [
-        244,
+        250,
         null,
         null,
         null
@@ -85794,7 +86556,7 @@
       "y": 33,
       "z": 0,
       "refs": [
-        244,
+        250,
         null,
         null,
         null
@@ -85809,7 +86571,7 @@
       "y": 33,
       "z": 0,
       "refs": [
-        244,
+        250,
         null,
         null,
         null
@@ -85824,7 +86586,7 @@
       "y": 33,
       "z": 0,
       "refs": [
-        244,
+        250,
         null,
         null,
         null
@@ -85839,7 +86601,7 @@
       "y": 33,
       "z": 0,
       "refs": [
-        244,
+        250,
         null,
         null,
         null
@@ -85854,7 +86616,7 @@
       "y": 31,
       "z": 0,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -85869,7 +86631,7 @@
       "y": 31,
       "z": 0,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -85884,7 +86646,7 @@
       "y": 32,
       "z": 0,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -85899,7 +86661,7 @@
       "y": 32,
       "z": 0,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -85914,7 +86676,7 @@
       "y": 33,
       "z": 0,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -85929,7 +86691,7 @@
       "y": 33,
       "z": 0,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -85944,7 +86706,7 @@
       "y": 3,
       "z": 21,
       "refs": [
-        1708,
+        1736,
         null,
         null,
         15
@@ -86232,7 +86994,7 @@
         12,
         null,
         null,
-        244
+        250
       ]
     },
     {
@@ -86307,7 +87069,7 @@
         12,
         null,
         null,
-        3661
+        3768
       ]
     },
     {
@@ -86319,7 +87081,7 @@
       "y": 30,
       "z": 0,
       "refs": [
-        244,
+        250,
         null,
         null,
         null
@@ -86334,7 +87096,7 @@
       "y": 30,
       "z": 0,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -86349,7 +87111,7 @@
       "y": 30,
       "z": 0,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -86367,7 +87129,7 @@
         15,
         null,
         15,
-        2856
+        2924
       ]
     },
     {
@@ -86412,7 +87174,7 @@
         15,
         null,
         15,
-        3697
+        3804
       ]
     },
     {
@@ -86427,7 +87189,7 @@
         15,
         null,
         15,
-        3698
+        3805
       ]
     },
     {
@@ -86439,7 +87201,7 @@
       "y": 34,
       "z": 0,
       "refs": [
-        244,
+        250,
         null,
         null,
         null
@@ -86469,7 +87231,7 @@
       "y": 20,
       "z": 0,
       "refs": [
-        809,
+        825,
         null,
         null,
         null
@@ -86499,7 +87261,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        1992,
+        2023,
         null,
         null,
         null
@@ -86529,7 +87291,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        1992,
+        2023,
         null,
         null,
         null
@@ -86544,7 +87306,7 @@
       "y": 18,
       "z": 0,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -86562,7 +87324,7 @@
         12,
         15,
         null,
-        3872
+        3980
       ]
     },
     {
@@ -86592,7 +87354,7 @@
         12,
         15,
         null,
-        3873
+        3981
       ]
     },
     {
@@ -86608,6 +87370,51 @@
         15,
         null,
         null
+      ]
+    },
+    {
+      "sid": 981623110000376,
+      "actionSid": 981623110000373,
+      "function": "灵物仓库转移",
+      "sheet": "主事件",
+      "x": "*",
+      "y": "*",
+      "z": "*",
+      "refs": [
+        15,
+        15,
+        15,
+        3050
+      ]
+    },
+    {
+      "sid": 981623110000376,
+      "actionSid": 981623110000374,
+      "function": "灵物仓库转移",
+      "sheet": "主事件",
+      "x": "*",
+      "y": "*",
+      "z": "*",
+      "refs": [
+        15,
+        15,
+        15,
+        null
+      ]
+    },
+    {
+      "sid": 981623110000471,
+      "actionSid": 981623110000431,
+      "function": "初始化／事件",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 11,
+      "z": "*",
+      "refs": [
+        67,
+        null,
+        67,
+        4020
       ]
     },
     {
@@ -86634,7 +87441,7 @@
       "y": 20,
       "z": 0,
       "refs": [
-        809,
+        825,
         null,
         null,
         null
@@ -86667,7 +87474,7 @@
         15,
         null,
         null,
-        3966
+        4122
       ]
     },
     {
@@ -86695,7 +87502,7 @@
       "z": 0,
       "refs": [
         15,
-        2047,
+        2080,
         null,
         15
       ]
@@ -86754,8 +87561,8 @@
       "y": "*",
       "z": 0,
       "refs": [
-        3976,
-        3980,
+        4132,
+        4136,
         null,
         null
       ]
@@ -86836,6 +87643,96 @@
       ]
     },
     {
+      "sid": 995764691718712,
+      "actionSid": 962330361125946,
+      "function": "职业训练",
+      "sheet": "主事件",
+      "x": "*",
+      "y": "*",
+      "z": 5,
+      "refs": [
+        15,
+        15,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 995764691718712,
+      "actionSid": 771263449816572,
+      "function": "职业训练",
+      "sheet": "主事件",
+      "x": "*",
+      "y": "*",
+      "z": 4,
+      "refs": [
+        15,
+        15,
+        null,
+        4239
+      ]
+    },
+    {
+      "sid": 102272022962426,
+      "actionSid": 230306195518313,
+      "function": "职业训练",
+      "sheet": "主事件",
+      "x": "*",
+      "y": "*",
+      "z": 4,
+      "refs": [
+        15,
+        15,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 230753860251539,
+      "actionSid": 921120561954036,
+      "function": "职业训练最大",
+      "sheet": "主事件",
+      "x": "*",
+      "y": "*",
+      "z": 4,
+      "refs": [
+        15,
+        15,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 502364221058418,
+      "actionSid": 886228752442926,
+      "function": "职业训练最大",
+      "sheet": "主事件",
+      "x": "*",
+      "y": "*",
+      "z": 5,
+      "refs": [
+        15,
+        15,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 502364221058418,
+      "actionSid": 945895213407632,
+      "function": "职业训练最大",
+      "sheet": "主事件",
+      "x": "*",
+      "y": "*",
+      "z": 4,
+      "refs": [
+        15,
+        15,
+        null,
+        4239
+      ]
+    },
+    {
       "sid": 914945173647532,
       "actionSid": 471068977255357,
       "function": "摆放灵物",
@@ -86907,7 +87804,7 @@
         12,
         15,
         null,
-        4048
+        4279
       ]
     },
     {
@@ -86937,7 +87834,7 @@
         12,
         15,
         null,
-        4049
+        4280
       ]
     },
     {
@@ -86982,7 +87879,7 @@
         15,
         null,
         null,
-        4213
+        4444
       ]
     },
     {
@@ -86997,7 +87894,7 @@
         15,
         null,
         null,
-        4214
+        4445
       ]
     },
     {
@@ -87010,7 +87907,7 @@
       "z": 16,
       "refs": [
         15,
-        4215,
+        4446,
         null,
         15
       ]
@@ -87025,7 +87922,7 @@
       "z": 16,
       "refs": [
         15,
-        4216,
+        4447,
         null,
         15
       ]
@@ -87102,7 +87999,7 @@
         15,
         null,
         null,
-        4219
+        4450
       ]
     },
     {
@@ -87117,7 +88014,7 @@
         15,
         null,
         null,
-        4219
+        4450
       ]
     },
     {
@@ -87132,7 +88029,7 @@
         15,
         null,
         null,
-        4219
+        4450
       ]
     },
     {
@@ -87147,7 +88044,7 @@
         12,
         15,
         null,
-        2984
+        3051
       ]
     },
     {
@@ -87204,10 +88101,70 @@
       "y": 7,
       "z": 1,
       "refs": [
-        62,
+        67,
         null,
         null,
-        62
+        67
+      ]
+    },
+    {
+      "sid": 643997599301356,
+      "actionSid": 920084213025673,
+      "function": "创建主角",
+      "sheet": "主事件",
+      "x": 39,
+      "y": 1,
+      "z": 0,
+      "refs": [
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 643997599301356,
+      "actionSid": 975648101692521,
+      "function": "创建主角",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 1,
+      "z": 2,
+      "refs": [
+        15,
+        null,
+        null,
+        15
+      ]
+    },
+    {
+      "sid": 643997599301356,
+      "actionSid": 971715179764023,
+      "function": "创建主角",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 5,
+      "z": 2,
+      "refs": [
+        15,
+        null,
+        null,
+        1875
+      ]
+    },
+    {
+      "sid": 643997599301356,
+      "actionSid": 101971529932097,
+      "function": "创建主角",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 51,
+      "z": 2,
+      "refs": [
+        15,
+        null,
+        null,
+        250
       ]
     },
     {
@@ -87237,7 +88194,7 @@
         15,
         null,
         null,
-        4439
+        4684
       ]
     },
     {
@@ -87294,10 +88251,10 @@
       "y": "*",
       "z": 10,
       "refs": [
-        4468,
+        4713,
         15,
         null,
-        4471
+        4716
       ]
     },
     {
@@ -87324,10 +88281,10 @@
       "y": 7,
       "z": 1,
       "refs": [
-        62,
+        67,
         null,
         null,
-        62
+        67
       ]
     },
     {
@@ -87339,7 +88296,7 @@
       "y": 7,
       "z": 1,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -87387,7 +88344,7 @@
         15,
         15,
         null,
-        4491
+        4736
       ]
     },
     {
@@ -87429,10 +88386,10 @@
       "y": "*",
       "z": 6,
       "refs": [
-        349,
+        355,
         12,
         null,
-        4494
+        4739
       ]
     },
     {
@@ -87444,10 +88401,10 @@
       "y": "*",
       "z": 6,
       "refs": [
-        1615,
+        1645,
         12,
         null,
-        4495
+        4740
       ]
     },
     {
@@ -87477,7 +88434,7 @@
         12,
         null,
         null,
-        4494
+        4739
       ]
     },
     {
@@ -87492,7 +88449,7 @@
         12,
         null,
         null,
-        1626
+        1656
       ]
     },
     {
@@ -87507,7 +88464,7 @@
         12,
         null,
         null,
-        1626
+        1656
       ]
     },
     {
@@ -87522,7 +88479,7 @@
         12,
         null,
         null,
-        4497
+        4742
       ]
     },
     {
@@ -87670,9 +88627,9 @@
       "z": 20,
       "refs": [
         12,
-        2007,
+        2040,
         null,
-        1470
+        1497
       ]
     },
     {
@@ -87685,9 +88642,9 @@
       "z": 20,
       "refs": [
         12,
-        2006,
+        2039,
         null,
-        1471
+        1498
       ]
     },
     {
@@ -87867,7 +88824,7 @@
         null,
         null,
         null,
-        138
+        147
       ]
     },
     {
@@ -87882,7 +88839,7 @@
         null,
         null,
         null,
-        4590
+        4834
       ]
     },
     {
@@ -87897,7 +88854,7 @@
         null,
         null,
         null,
-        4596
+        4840
       ]
     },
     {
@@ -87912,7 +88869,7 @@
         null,
         null,
         null,
-        4597
+        4841
       ]
     },
     {
@@ -87927,7 +88884,7 @@
         null,
         null,
         null,
-        4596
+        4840
       ]
     },
     {
@@ -87942,7 +88899,7 @@
         null,
         null,
         null,
-        4597
+        4841
       ]
     },
     {
@@ -87987,7 +88944,7 @@
         15,
         15,
         null,
-        4491
+        4736
       ]
     },
     {
@@ -88059,7 +89016,7 @@
       "y": 5,
       "z": 21,
       "refs": [
-        1708,
+        1736,
         null,
         null,
         null
@@ -88074,7 +89031,7 @@
       "y": 5,
       "z": 21,
       "refs": [
-        1708,
+        1736,
         null,
         null,
         null
@@ -88122,7 +89079,7 @@
         15,
         null,
         null,
-        4690
+        4933
       ]
     },
     {
@@ -88137,7 +89094,7 @@
         null,
         null,
         null,
-        4691
+        4934
       ]
     },
     {
@@ -88152,7 +89109,7 @@
         15,
         null,
         null,
-        4692
+        4935
       ]
     },
     {
@@ -88167,7 +89124,7 @@
         15,
         null,
         null,
-        4690
+        4933
       ]
     },
     {
@@ -88182,7 +89139,7 @@
         null,
         null,
         null,
-        4691
+        4934
       ]
     },
     {
@@ -88197,7 +89154,7 @@
         15,
         null,
         null,
-        4692
+        4935
       ]
     },
     {
@@ -88212,7 +89169,7 @@
         15,
         null,
         null,
-        4709
+        4952
       ]
     },
     {
@@ -88227,7 +89184,7 @@
         15,
         null,
         null,
-        4710
+        4953
       ]
     },
     {
@@ -88242,7 +89199,7 @@
         15,
         null,
         null,
-        4711
+        4954
       ]
     },
     {
@@ -88257,7 +89214,7 @@
         15,
         null,
         null,
-        4712
+        4955
       ]
     },
     {
@@ -88272,7 +89229,7 @@
         15,
         null,
         null,
-        4713
+        4956
       ]
     },
     {
@@ -88287,7 +89244,7 @@
         15,
         null,
         null,
-        4714
+        4957
       ]
     },
     {
@@ -88422,7 +89379,7 @@
         15,
         null,
         null,
-        4731
+        4974
       ]
     },
     {
@@ -88467,7 +89424,7 @@
         15,
         null,
         null,
-        4733
+        4976
       ]
     },
     {
@@ -88482,7 +89439,7 @@
         15,
         null,
         null,
-        4734
+        4977
       ]
     },
     {
@@ -88509,7 +89466,7 @@
       "y": 35,
       "z": 0,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -88524,7 +89481,7 @@
       "y": 35,
       "z": 0,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -88540,9 +89497,9 @@
       "z": 0,
       "refs": [
         15,
-        4771,
+        5014,
         null,
-        4772
+        5015
       ]
     },
     {
@@ -88557,7 +89514,7 @@
         null,
         null,
         null,
-        4774
+        5017
       ]
     },
     {
@@ -88570,9 +89527,9 @@
       "z": 0,
       "refs": [
         15,
-        4771,
+        5014,
         null,
-        4772
+        5015
       ]
     },
     {
@@ -88587,7 +89544,7 @@
         15,
         null,
         null,
-        4781
+        5024
       ]
     },
     {
@@ -88617,7 +89574,7 @@
         15,
         null,
         null,
-        4734
+        4977
       ]
     },
     {
@@ -88632,7 +89589,7 @@
         15,
         null,
         null,
-        4784
+        5027
       ]
     },
     {
@@ -88662,7 +89619,7 @@
         15,
         null,
         null,
-        4787
+        5030
       ]
     },
     {
@@ -88677,7 +89634,7 @@
         15,
         null,
         null,
-        1318
+        1344
       ]
     },
     {
@@ -88782,7 +89739,7 @@
         15,
         null,
         null,
-        4733
+        4976
       ]
     },
     {
@@ -88797,7 +89754,7 @@
         15,
         null,
         null,
-        4734
+        4977
       ]
     },
     {
@@ -88857,7 +89814,7 @@
         null,
         null,
         null,
-        4890
+        5133
       ]
     },
     {
@@ -88872,7 +89829,7 @@
         null,
         null,
         null,
-        4891
+        5134
       ]
     },
     {
@@ -88887,7 +89844,7 @@
         null,
         null,
         null,
-        4902
+        5145
       ]
     },
     {
@@ -88902,7 +89859,7 @@
         null,
         null,
         null,
-        62
+        67
       ]
     },
     {
@@ -88915,9 +89872,9 @@
       "z": "*",
       "refs": [
         15,
-        2938,
+        3005,
         15,
-        5053
+        5310
       ]
     },
     {
@@ -88930,9 +89887,9 @@
       "z": "*",
       "refs": [
         15,
-        5054,
+        5311,
         15,
-        5055
+        5312
       ]
     },
     {
@@ -88945,39 +89902,99 @@
       "z": "*",
       "refs": [
         15,
-        3011,
+        3078,
         15,
         null
       ]
     },
     {
-      "sid": 740979987036499,
-      "actionSid": 491557335347054,
+      "sid": 826359505652340,
+      "actionSid": 989405645442216,
       "function": "初始化／事件",
       "sheet": "主事件",
       "x": "*",
-      "y": 21,
+      "y": 54,
+      "z": 0,
+      "refs": [
+        67,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 286899271753685,
+      "actionSid": 815074670504400,
+      "function": "初始化／事件",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 54,
+      "z": 0,
+      "refs": [
+        67,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "sid": 997430745101613,
+      "actionSid": 181928016635369,
+      "function": "初始化／事件",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 51,
       "z": 0,
       "refs": [
         15,
         null,
         null,
-        62
+        5361
+      ]
+    },
+    {
+      "sid": 302853508434146,
+      "actionSid": 148723431101515,
+      "function": "初始化／事件",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 51,
+      "z": 0,
+      "refs": [
+        15,
+        null,
+        null,
+        5364
       ]
     },
     {
       "sid": 214888479328948,
-      "actionSid": 605594294691943,
+      "actionSid": 222785338681479,
       "function": "战役胜利",
       "sheet": "主事件",
       "x": "*",
-      "y": 11,
+      "y": 50,
       "z": 0,
       "refs": [
         15,
         null,
         null,
-        4734
+        5394
+      ]
+    },
+    {
+      "sid": 395508978520792,
+      "actionSid": 164811285545337,
+      "function": "战役胜利",
+      "sheet": "主事件",
+      "x": "*",
+      "y": 51,
+      "z": 0,
+      "refs": [
+        15,
+        null,
+        null,
+        5395
       ]
     },
     {
@@ -88992,7 +90009,7 @@
         null,
         null,
         null,
-        5199
+        5476
       ]
     },
     {
@@ -89007,7 +90024,7 @@
         15,
         null,
         null,
-        5275
+        5554
       ]
     },
     {
@@ -89022,7 +90039,7 @@
         15,
         null,
         null,
-        5371
+        5659
       ]
     },
     {
@@ -89037,7 +90054,7 @@
         15,
         null,
         null,
-        5374
+        5662
       ]
     },
     {
@@ -89052,7 +90069,7 @@
         15,
         null,
         null,
-        4692
+        4935
       ]
     },
     {
@@ -89067,7 +90084,7 @@
         15,
         null,
         null,
-        232
+        238
       ]
     },
     {
@@ -89097,7 +90114,7 @@
         15,
         15,
         null,
-        5381
+        5669
       ]
     },
     {
@@ -89112,7 +90129,7 @@
         15,
         15,
         null,
-        5383
+        5671
       ]
     },
     {
@@ -89127,7 +90144,7 @@
         15,
         15,
         null,
-        5384
+        4239
       ]
     },
     {
@@ -89142,7 +90159,7 @@
         15,
         15,
         null,
-        4387
+        4628
       ]
     },
     {
@@ -89199,10 +90216,10 @@
       "y": "*",
       "z": 6,
       "refs": [
-        5397,
-        1818,
+        5684,
+        1846,
         null,
-        5398
+        5685
       ]
     },
     {
@@ -89217,7 +90234,7 @@
         15,
         null,
         null,
-        5399
+        5686
       ]
     },
     {
@@ -89277,7 +90294,7 @@
         15,
         null,
         null,
-        5402
+        5689
       ]
     },
     {
@@ -89292,7 +90309,7 @@
         15,
         null,
         null,
-        5405
+        5692
       ]
     },
     {
@@ -89367,7 +90384,7 @@
         15,
         null,
         null,
-        5408
+        5695
       ]
     },
     {
@@ -89382,7 +90399,7 @@
         15,
         null,
         null,
-        5410
+        5697
       ]
     },
     {
@@ -89457,7 +90474,7 @@
         15,
         null,
         null,
-        5414
+        5701
       ]
     },
     {
@@ -89472,7 +90489,7 @@
         15,
         null,
         null,
-        5417
+        5704
       ]
     },
     {
@@ -89532,7 +90549,7 @@
         15,
         null,
         null,
-        5416
+        5703
       ]
     },
     {
@@ -89547,7 +90564,7 @@
         15,
         null,
         null,
-        5414
+        5701
       ]
     },
     {
@@ -89562,7 +90579,7 @@
         15,
         null,
         null,
-        5417
+        5704
       ]
     },
     {
@@ -89619,10 +90636,10 @@
       "y": 4,
       "z": 1,
       "refs": [
-        62,
+        67,
         null,
         null,
-        5434
+        5721
       ]
     },
     {
@@ -89634,7 +90651,7 @@
       "y": 4,
       "z": 1,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -89652,7 +90669,7 @@
         null,
         null,
         null,
-        5436
+        5723
       ]
     },
     {
@@ -89667,7 +90684,7 @@
         15,
         null,
         null,
-        5438
+        5725
       ]
     },
     {
@@ -89697,7 +90714,22 @@
         null,
         null,
         null,
-        5442
+        5729
+      ]
+    },
+    {
+      "sid": 674603607103118,
+      "actionSid": 742451869622424,
+      "function": "获得军功",
+      "sheet": "主事件",
+      "x": 4,
+      "y": 2,
+      "z": 0,
+      "refs": [
+        null,
+        null,
+        null,
+        5733
       ]
     },
     {
@@ -89712,7 +90744,7 @@
         null,
         null,
         null,
-        5446
+        5736
       ]
     },
     {
@@ -89727,7 +90759,7 @@
         null,
         null,
         null,
-        5449
+        5739
       ]
     },
     {
@@ -89742,7 +90774,7 @@
         15,
         null,
         null,
-        5455
+        5745
       ]
     },
     {
@@ -89757,7 +90789,7 @@
         15,
         null,
         null,
-        5457
+        5747
       ]
     },
     {
@@ -89772,7 +90804,7 @@
         15,
         null,
         null,
-        5458
+        5748
       ]
     },
     {
@@ -89800,9 +90832,9 @@
       "z": 2,
       "refs": [
         15,
-        2047,
+        2080,
         null,
-        5479
+        5769
       ]
     },
     {
@@ -89815,9 +90847,9 @@
       "z": 2,
       "refs": [
         15,
-        2047,
+        2080,
         null,
-        5481
+        5771
       ]
     },
     {
@@ -89830,9 +90862,9 @@
       "z": 2,
       "refs": [
         15,
-        563,
+        568,
         null,
-        5482
+        5772
       ]
     },
     {
@@ -89845,7 +90877,7 @@
       "z": 2,
       "refs": [
         15,
-        2047,
+        2080,
         null,
         null
       ]
@@ -89859,10 +90891,10 @@
       "y": 7,
       "z": 21,
       "refs": [
-        62,
+        67,
         null,
         null,
-        62
+        67
       ]
     },
     {
@@ -89874,10 +90906,10 @@
       "y": 9,
       "z": 21,
       "refs": [
-        62,
+        67,
         null,
         null,
-        5485
+        5775
       ]
     },
     {
@@ -89889,7 +90921,7 @@
       "y": 8,
       "z": 21,
       "refs": [
-        62,
+        67,
         null,
         null,
         null
@@ -89904,10 +90936,10 @@
       "y": 4,
       "z": 21,
       "refs": [
-        62,
+        67,
         null,
         null,
-        5489
+        5779
       ]
     },
     {
@@ -90162,7 +91194,7 @@
         15,
         null,
         null,
-        5516
+        5806
       ]
     },
     {
@@ -90177,7 +91209,7 @@
         null,
         null,
         null,
-        5520
+        5810
       ]
     },
     {
@@ -90192,7 +91224,7 @@
         null,
         null,
         null,
-        5522
+        5812
       ]
     },
     {
@@ -90207,7 +91239,7 @@
         null,
         null,
         null,
-        5524
+        5814
       ]
     },
     {
@@ -90222,7 +91254,22 @@
         null,
         null,
         null,
-        5526
+        5816
+      ]
+    },
+    {
+      "sid": 817232051853234,
+      "actionSid": 247683732583895,
+      "function": "失去军功",
+      "sheet": "主事件",
+      "x": 4,
+      "y": 2,
+      "z": 0,
+      "refs": [
+        null,
+        null,
+        null,
+        5810
       ]
     },
     {
@@ -90237,7 +91284,7 @@
         15,
         null,
         null,
-        5528
+        5819
       ]
     }
   ],

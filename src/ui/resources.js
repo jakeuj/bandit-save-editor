@@ -1,7 +1,9 @@
 
   function resourceCard(f){
     const available=C.exists(model.original,f)&&typeof C.cell(model.original,f)==='number',value=available?C.get(model,f):null,descriptor=available?C.resolveField(model,f):null,writable=available&&(!descriptor.known||descriptor.editable),changed=model.changes.has(C.key(f));
-    return `<article class="resource-card ${changed?'changed':''}"><div class="resource-title"><span>${esc(f.name)}</span><span class="tag">${changed?'已修改':f.description?'資源':'自訂'}</span></div><p class="resource-desc">${esc(f.description||`座標 [${f.x}, ${f.y}, ${f.z}]`)}</p><input class="value-input" type="number" step="1" ${f.description?'min="0"':''} max="9007199254740991" data-field="${C.key(f)}" value="${available?value:''}" aria-label="${esc(f.name)}數量" ${writable?'':'disabled'}><div class="card-foot"><span>${available?'原始 '+fmt(C.cell(model.original,f)):'此存檔無對應數值欄位'}</span>${changed?`<button data-restore="${C.key(f)}">還原</button>`:'<span>可直接輸入</span>'}</div></article>`;
+    const readonly=descriptor?.known&&!descriptor.editable;
+    const name=readonly&&f.description?descriptor.label:f.name,description=readonly&&f.description?descriptor.reason:f.description;
+    return `<article class="resource-card ${changed?'changed':''}"><div class="resource-title"><span>${esc(name)}</span><span class="tag">${changed?'已修改':f.description?'資源':'自訂'}</span></div><p class="resource-desc">${esc(description||`座標 [${f.x}, ${f.y}, ${f.z}]`)}</p><input class="value-input" type="number" step="1" ${f.description?'min="0"':''} max="9007199254740991" data-field="${C.key(f)}" value="${available?value:''}" aria-label="${esc(name)}數量" ${writable?'':'disabled'}><div class="card-foot"><span>${available?'原始 '+fmt(C.cell(model.original,f)):'此存檔無對應數值欄位'}</span>${changed?`<button data-restore="${C.key(f)}">還原</button>`:writable?'<span>可直接輸入</span>':readonly?'<span>唯讀</span>':''}</div></article>`;
   }
   function renderResources(){
     if(!model)

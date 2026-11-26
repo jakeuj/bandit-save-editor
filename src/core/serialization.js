@@ -1,5 +1,6 @@
  function labelFor(o,c){
-  const basic=BASICS.find(v=>key(v)===key(c));if(basic)return basic.name;
+  const basic=BASICS.find(v=>key(v)===key(c));
+  if(basic&&!(hasCampaignSave(o)&&key(c)==='4,2,0'))return basic.name;
   if(c.y===6&&c.z===0){const mat=MATERIALS.find(v=>v.x===c.x);if(mat)return `${mat.name}（材料 #${mat.id}）`;}
   if(c.z===2&&c.y>=40&&c.y<=48){const name=o.data[c.x]?.[1]?.[2];return `${typeof name==='string'?name:`角色 #${c.x}`}・技藝經驗 #${c.y-39}`;}
   if(key(c)==='1,17,0')return '招募刷新倒數（秒）';

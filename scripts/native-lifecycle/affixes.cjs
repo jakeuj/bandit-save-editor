@@ -19,7 +19,7 @@ async function affixPrepare(state, s) {
       ({id, part} = await evaluate(state, `(()=>{${prefix}const wp=r.GetObjectClassByName('wp').GetInstances()[0].GetSdkInstance(),part=wp.At(${template},6,0),id=a.At(${wear},15+part,2);if(a.At(id,1,9)!==${template}||a.At(id,7,9)!==${wear})throw Error('Obtained item was not worn');return {id,part};})()`));
       plane = 9;
     }
-    const wash = await evaluate(state, `(()=>{${prefix}const souls=a.At(3,2,0),cost=call('词条洗练魂魄',a.At(${id},3,${plane}),call('装备已洗词条数',${id},${plane},0));call('词条洗练',${id},${slot},${plane});return {cost,spent:souls-a.At(3,2,0),record:record(${id},${plane})};})()`);
+    const wash = await evaluate(state, `(()=>{${prefix}const souls=a.At(3,2,0),cost=call('词条洗练魂魄',a.At(${id},3,${plane}),call('装备已洗词条数',${id},${plane},0));call('词条洗练',${id},${slot},${plane},false,0);return {cost,spent:souls-a.At(3,2,0),record:record(${id},${plane})};})()`);
     const r = wash.record;
     assert.deepEqual([r[1], r[2], r[5], r[6]], [template, 1, quality, level], 'Obtained item');
     assert.equal(wash.spent, wash.cost, 'Native wash cost');
@@ -65,7 +65,7 @@ async function affixOverLimit(state, s) {
   let washed = null;
   if (rewash) {
     const {id, plane, slot, quality} = rewash;
-    washed = await evaluate(state, `(()=>{${prefix}const before=record(${id},${plane}),souls=a.At(3,2,0),count=call('装备已洗词条数',${id},${plane},0),cost=call('词条洗练魂魄',before[3],count);call('词条洗练',${id},${slot},${plane});const after=record(${id},${plane});return {before,after,count,countAfter:call('装备已洗词条数',${id},${plane},0),cost,spent:souls-a.At(3,2,0)};})()`);
+    washed = await evaluate(state, `(()=>{${prefix}const before=record(${id},${plane}),souls=a.At(3,2,0),count=call('装备已洗词条数',${id},${plane},0),cost=call('词条洗练魂魄',before[3],count);call('词条洗练',${id},${slot},${plane},false,0);const after=record(${id},${plane});return {before,after,count,countAfter:call('装备已洗词条数',${id},${plane},0),cost,spent:souls-a.At(3,2,0)};})()`);
     const c = washed.after[14 + slot];
     assert.ok(washed.before[14 + slot] > 60 + 10 * quality, 'Rewash row was not over the native range');
     assert.ok(c >= 10 * (quality - 1) && c <= 60 + 10 * quality && Math.abs(c * 100 - Math.round(c * 100)) < 1e-6, 'Rewash did not roll an in-range coefficient: ' + c);
@@ -111,7 +111,7 @@ async function sixthAffix(state, s) {
   }
   const washed = [];
   for (const v of targets) {
-    const w = await evaluate(state, `(()=>{${prefix}const before=record(${v.id},${v.plane}),souls=a.At(3,2,0),count=call('装备已洗词条数',${v.id},${v.plane},0),cost=call('词条洗练魂魄',before[3],count);call('词条洗练',${v.id},${v.selected},${v.plane});const after=record(${v.id},${v.plane});return {before,after,count,countAfter:call('装备已洗词条数',${v.id},${v.plane},0),cost,spent:souls-a.At(3,2,0)};})()`);
+    const w = await evaluate(state, `(()=>{${prefix}const before=record(${v.id},${v.plane}),souls=a.At(3,2,0),count=call('装备已洗词条数',${v.id},${v.plane},0),cost=call('词条洗练魂魄',before[3],count);call('词条洗练',${v.id},${v.selected},${v.plane},false,0);const after=record(${v.id},${v.plane});return {before,after,count,countAfter:call('装备已洗词条数',${v.id},${v.plane},0),cost,spent:souls-a.At(3,2,0)};})()`);
     const c = w.after[14 + v.selected];
     assert.ok(c >= 50 && c <= 120 && Math.abs(c * 100 - Math.round(c * 100)) < 1e-6, 'Wash did not roll a Q6 coefficient: ' + c);
     assert.ok(w.after[8 + v.selected] > 0, 'Wash cleared the affix');

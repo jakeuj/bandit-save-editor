@@ -4,11 +4,13 @@ const path = require('node:path');
 // Reviewed static rules only. A matching digest is not a native verification result.
 const sourceSids = [390673545485827,907064845535449,890068128550912,360229107749216,858555530911324,884525457994003,940056460112238,180031394399295,748584357810010,176292127127652];
 const initialSourceSids = [822838674776648,820431404775607,213875126173692,480540019440160];
-const reviewedInitialDigest = '7dcf48a222a36e93ab615dd9246a78bb47acd1457647b0bba7b9cf891a365a19';
+const reviewedInitialDigest = 'd6a286c253d9b26ad007faeca54808b3677513c4236dbd0056f742db79a273de';
+const reviewedInitialDigests = new Set(['7dcf48a222a36e93ab615dd9246a78bb47acd1457647b0bba7b9cf891a365a19', reviewedInitialDigest]);
 // V1.0.17.0: 角色重生／角色解雇 also unequip the new backup set (z23) and 司职卸任 takes a 属性刷新 argument; the cap rules are unchanged.
-const reviewedDigest = 'e7b959cc5858a45dcbaaa007d6b7ea1b2325e41c0eaf9262ac7924521776a2a1';
+// V1.1.9.0 guards recruitment slots and blocks dismissal of the protagonist; both cap generators keep their ranges.
+const reviewedDigest = '2af8f3228e6a06ca399a761696530961d8162662d6c3bc6f636f370cf096619e';
 // V1.0.10.2 through V1.0.13.0: the reviewed skill rules agree after resolving bound-reference renumbering.
-const reviewedDigests = new Set(['1754eb477c345e31ef8251bc2f405b6299e0b780355bff57fbc526fa312e52d0', '752f9932ac9f233524c7af09a8e91e3c88f09a555090bdcb2692f43e72c42cc3', '54cc0530f54a82b96aea1823e270a7e34262b8357239b7c0514f4499bd027f0d', 'e931bd43946f2d02175d8c5c759d404f6764ee91560d0f3d980350d045b26b83', reviewedDigest]);
+const reviewedDigests = new Set(['1754eb477c345e31ef8251bc2f405b6299e0b780355bff57fbc526fa312e52d0', '752f9932ac9f233524c7af09a8e91e3c88f09a555090bdcb2692f43e72c42cc3', '54cc0530f54a82b96aea1823e270a7e34262b8357239b7c0514f4499bd027f0d', 'e931bd43946f2d02175d8c5c759d404f6764ee91560d0f3d980350d045b26b83', 'e7b959cc5858a45dcbaaa007d6b7ea1b2325e41c0eaf9262ac7924521776a2a1', reviewedDigest]);
 function reviewedRules(digest, growth, rows) {
   if (!reviewedDigests.has(digest)) throw Error('技藝上限來源事件／SID已改變，需重新核對');
   const talents = {};
@@ -34,7 +36,7 @@ function extract(game, digestEvents) {
   return {...reviewedRules(digest,growth,rows),initial:reviewedInitialRules(digestEvents(game,initialSourceSids))};
 }
 function reviewedInitialRules(digest) {
-  if(digest!==reviewedInitialDigest)throw Error('初始角色技藝上限來源事件／SID已改變，需重新核對');
+  if(!reviewedInitialDigests.has(digest))throw Error('初始角色技藝上限來源事件／SID已改變，需重新核對');
   return {quality:1,ranges:{base:[1,30],primary:[36,44],secondary:[26,34]},sourceSids:initialSourceSids,sourceDigest:digest};
 }
 // A source or selection-rule change invalidates this group independently of v2.7.
