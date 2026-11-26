@@ -65,6 +65,7 @@ Mac 啟動與存檔位置讀 [launcher 說明](../launcher/README.md)；規劃�
 <a id="本機開發快取"></a>
 
 - [本機開發快取](maintenance/migration.md#本機開發快取)
+- [本機驗證暫存清理](maintenance/migration.md#本機驗證暫存清理)
 
 <a id="日常更新入口"></a>
 

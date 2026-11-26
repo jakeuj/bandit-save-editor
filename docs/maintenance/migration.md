@@ -12,6 +12,14 @@
 
 首次確認快取可執行時，只跑一份隱藏、靜音的隔離副本：確認真實 Steam 初始化、載入、原生存檔，再停止並以新 PID 重啟讀回，核對原始存檔及快取未變後停止程序。成功才更新本機 `executableVerified` 與 `nativeSmoke`，保存 repo 外報告位置、報告雜湊及來源／runtime 配對；這是環境冒煙，不開啟功能權限，也不需要全套或 computer use。之後核對快取時，來源、runtime 及報告雜湊相符就保留成功紀錄，不重跑冒煙。
 
+## 本機驗證暫存清理
+
+使用者要求清理本專案的舊暫存時，先盤點 `~/bandit-verification/artifacts`、驗證用 `~/bandit-verification/mac-port` 與已確認屬本專案的測試暫存目錄。從實際路徑辨識副本，確認對應的遊戲或測試程序已結束後，再處理舊隔離執行目錄、重複解包、runtime 下載快取及可重建的測試輸出。仍用於開發或續跑的快取依本頁相應流程處理。
+
+保留各版的精簡 `source*`、版更 `report.json` 與 `smoke/final-save.dat`，供下次比對、冒煙與交接。玩家使用的 Steam／CrossOver 安裝及 `~/bandit-mac-port` 日常啟動環境保留。驗證用 `mac-port/game` 也可能由準備工具複製玩家進度，先辨識 `savedir`、`backup`、`record.dat` 和手動存檔（包括檔名含反斜線的 `save\eaNsave.dat`）。用途不明的存檔及獨立備份保留原位。
+
+macOS 上將確認可清理的項目移到垃圾桶，完成後核對原位置及保留檔案。永久刪除或清空垃圾桶依使用者當次的明確指示處理。回報移走的檔案用量及範圍。若問硬碟還剩多少，以 `df -h /System/Volumes/Data` 查目前可用空間。垃圾桶內的檔案仍佔磁碟，APFS 複本共用資料區塊時，逐項加總的檔案用量也可能不同於實際回收量。
+
 ## 日常更新入口
 
 遊戲版更先走[遊戲改版的自動流程](game-update.md#自動流程遊戲版更)：`scripts/game-update.cjs` 自行解精簡來源並比對，不需要先跑下列 `--plan`。本節留給要用 `--plan` 分析未知來源或維護本機索引時。

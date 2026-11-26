@@ -1,6 +1,6 @@
 ---
 name: bandit-save-editor
-description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模擬器存檔修改器）的資源與成長編輯、存檔知識、離線版、SEO／分享預覽、GitHub Pages、專案 Wiki／Project／Discussions／Issues，以及 repo 內的實驗性 macOS ARM64 啟動器。用於此專案的遊戲版更（使用者說「遊戲版更」）、進度查詢（現在做到哪、下一步做什麼）、續做下一版、開發、驗證、發布、Wiki／Project／公告／Issue 維護與 Mac／CrossOver 啟動調查；其他專案的一般 GitHub 操作或其他遊戲不適用。
+description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模擬器存檔修改器）的資源與成長編輯、存檔知識、離線版、SEO／分享預覽、GitHub Pages、專案 Wiki／Project／Discussions／Issues，以及 repo 內的實驗性 macOS ARM64 啟動器。用於此專案的遊戲版更（「遊戲版更」或本遊戲語境的「版更」）、進度查詢（現在做到哪、下一步做什麼）、續做下一版、開發、驗證、清理驗證暫存、發布、Wiki／Project／公告／Issue 維護與 Mac／CrossOver 啟動調查；其他專案的一般 GitHub 操作或其他遊戲不適用。
 ---
 
 # 山寨帳房 Repo 維護
@@ -17,7 +17,7 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 
 ## 遊戲版更
 
-使用者說「遊戲版更」（或說遊戲又更新了要跟上）時，依[遊戲改版的自動流程](../../../docs/maintenance/game-update.md#自動流程遊戲版更)從 `node scripts/game-update.cjs check` 開始一路做完：例行與資料變動的版更在冒煙、測試通過後直接提交推送，不逐步詢問；判定為特別或任一步失敗才停下，回報報告的 ✖ 項目與建議做法，不提交。
+使用者說「遊戲版更」、表示遊戲更新了要跟上，或在本遊戲語境中只說「版更」時，依[遊戲改版的自動流程](../../../docs/maintenance/game-update.md#自動流程遊戲版更)從 `node scripts/game-update.cjs check` 開始。例行與資料變動的版更在冒煙和測試通過後直接提交推送。判定為特別版更或流程失敗時，先回報差異或阻擋項目，停在提交前。使用者確認進入特別版更後，依同一流程繼續審核、驗證及發布。
 
 ## 進度查詢與承接
 
@@ -43,7 +43,8 @@ description: 維護 jakeuj/bandit-save-editor（山寨帳房／塔防山賊模�
 | 技藝上限：共同生成見證、進階 1–100、寫入與還原 | [技藝上限維護](../../../docs/maintenance/skill-caps.md)「初始角色與進階 1–100」及其實作摘要；區分一般模式的來源見證與進階模式資格，以及私有預覽與模型寫入 |
 | 技藝上限：草稿／全部填入 100、逐項原因、離線驗證 | 依任務讀[技藝上限維護](../../../docs/maintenance/skill-caps.md)的「介面改善」、「降低上限逐項提示」或「進階模式離線驗證」；離線選跑與證據界線見[測試指引](../../../docs/testing.md#證據分工) |
 | 裝備、丹藥、資質、天賦、批次或職業圖鑑 | [功能導覽](references/feature-guide.md) 的對應條目，接著讀該功能研究（舊功能另有 `sdd/` 歷史紀錄；新功能不建 SDD） |
-| 遊戲改版、來源快取、原生驗證 | `docs/maintenance/game-update.md`（「遊戲版更」走該頁自動流程與 `scripts/game-update.cjs`）、`docs/maintenance/migration.md`、[操作補充](references/operations.md) 的版本更新入口；冒煙工具與原生陷阱見 `docs/maintenance/native-lessons.md` |
+| 遊戲改版、來源快取、原生驗證 | `docs/maintenance/game-update.md`（遊戲版更走該頁自動流程與 `scripts/game-update.cjs`）、`docs/maintenance/migration.md`、[操作補充](references/operations.md) 的版本更新入口；冒煙工具與原生陷阱見 `docs/maintenance/native-lessons.md` |
+| 清理本專案暫存、確認清理後可用空間 | [本機驗證暫存清理](../../../docs/maintenance/migration.md#本機驗證暫存清理) |
 | 開發測試與驗收 | `docs/testing.md`；新增功能依 `docs/maintenance/lightweight.md`，隱藏原生測試先讀 `docs/maintenance/migration.md`「本機開發快取」並核對 `.local/game-sources.json` 的 `preferredDevelopmentSourceId` |
 | PWA、直接開檔、離線驗收 | `docs/maintenance/pwa.md`、`docs/testing.md` |
 | 提交、發布、版本標示、SEO、分享預覽 | `docs/maintenance/release.md`、[Pages 參考](references/pages.md)；交付證據界線見[操作補充](references/operations.md) |

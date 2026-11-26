@@ -6,7 +6,7 @@
 
 ## 自動流程（「遊戲版更」）
 
-遊戲幾乎每天更新，2026-11-02 起使用者說「遊戲版更」就照本節一路做完，不逐步詢問：這句話同時同意該次的隱藏隔離冒煙、提交與推送。只有判定為「特別」才停下來回報。Wiki、公告、Issue 仍預設不同步（第 9 步）。
+使用者說「遊戲版更」、表示遊戲更新了要跟上，或在本遊戲語境中只說「版更」，即依本節執行，包含這次的隱藏隔離冒煙、提交與推送。特別版更先等使用者確認再繼續。明確指定修改器版號時，依[發布指引](release.md)處理。Wiki、公告與 Issue 的同步依第 9 步。
 
 1. **判定**：`node scripts/game-update.cjs check`。它讀 Steam `package.nw` 的 `gg.json` 版號與 appmanifest build，跟 `verification.json` 比；有新版就把精簡來源（含 `zddt.json`）解到 repo 外 `~/bandit-verification/artifacts/v<版本>-update-<日期>/source`，自動找上一版來源（data.json／c3runtime 指紋等於目前知識的那份），做下方第 2–4 步的比對，產生候選 catalog，結果寫 `report.json` 並印出結論：
    - **已是最新**：回一句結束，不提交。版號相同但 build 不同時照常比對；15 個來源都沒變就只更新 `verification.json` 的 build，不加修改器版號（公告版號與遊戲內版號不同的情形，見下方踩過的坑）。
@@ -46,7 +46,7 @@ Steam 正式分支只留最新版，換機器後舊版來源可能已拿不到�
 - **已審核事件**：拿本機較舊的完整來源做正規化攤平比對（第 2 步），差異再用 `tests/fixtures/v1.0.11.2-release` 的凍結 catalog（寫入點）與工具註解歸屬到正確版本，不要全算在新版（`套装合成` 的選擇庫序號是 V1.0.11.2 的改動）。
 - 正規化時，expression 節點裡的 `[4,N]` 是系統函式綁定（文件說的 sysNN），去掉編號，不是物件；`[2,N,…]` 才是物件；函式呼叫 ACE 的 `a[0]` 是 -2、`a[1]` 是函式名。
 - 精簡來源沒有 `zddt.json`，版本改變時 `cityLayers` 會變 null：從 `package.nw` 取出 `zddt.json` 放進來源副本再重產（V1.0.13.0）。
-- V1.0.13.0–V1.0.15.0 用的 repo 外分析腳本（`v1.0.15.0-update-20261030/analysis/*.cjs`）已併入 `scripts/game-update.cjs`（`flatten`、正規化比對、expression 位移、catalog 逐格比）。各版 artifacts 裡的精簡來源與 `smoke/final-save.dat` 請留著，下一版的 `check` 與 `smoke` 從那裡找上一版。重播舊改版用 `check --source 已解來源 --version V --build N --previous 上一版來源`（2026-11-02 用 V1.0.14.0→V1.0.15.0 重播，候選 catalog 除旗標外與 v2.36 相同）。
+- V1.0.13.0–V1.0.15.0 用的 repo 外分析腳本（`v1.0.15.0-update-20261030/analysis/*.cjs`）已併入 `scripts/game-update.cjs`（`flatten`、正規化比對、expression 位移、catalog 逐格比）。各版 artifacts 裡的精簡來源與 `smoke/final-save.dat` 請留著，下一版的 `check` 與 `smoke` 從那裡找上一版。只需移除可重建副本時，見[本機驗證暫存清理](migration.md#本機驗證暫存清理)。重播舊改版用 `check --source 已解來源 --version V --build N --previous 上一版來源`（2026-11-02 用 V1.0.14.0→V1.0.15.0 重播，候選 catalog 除旗標外與 v2.36 相同）。
 
 ## 踩過的坑
 
